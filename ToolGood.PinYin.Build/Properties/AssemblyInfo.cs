@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("ToolGood.Words")]
-[assembly: AssemblyDescription("ToolGood.Words")]
+[assembly: AssemblyTitle("ToolGood.PinYin.Build")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ToolGood.com")]
-[assembly: AssemblyProduct("ToolGood.Words")]
-[assembly: AssemblyCopyright("Copyright © toolgood.com  2016")]
-[assembly: AssemblyTrademark("ToolGood")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("ToolGood.PinYin.Build")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 //将 ComVisible 设置为 false 将使此程序集中的类型
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("4a5ba2b0-8c34-4891-89bc-f1536ae424d1")]
+[assembly: Guid("1b1a8cef-44f8-4aa3-bc82-ba7dc45e494e")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -255,33 +255,46 @@ namespace ToolGood.Words
         {
             bool hasChange = false;
             if (Nodes.Count == 0) {
-                Nodes.Add(new NodeInfo() { Start = start, Node = _root });
-            }
-            var length = Nodes.Count;
-            for (int i = 0; i < length; i++) {
-                var ptr = Nodes[i].Node;
-
+                var ptr = _root;
                 TreeNode trans = null;
+
                 while (trans == null) {
                     trans = ptr.GetTransition(c);
-                    if (ptr == _root) break;
-                    if (trans == null) ptr = ptr.Failure;
+                    if (ptr == _root) { break; }
                 }
-                if (trans != null && trans != _root) {
+                if (trans != null ) {
                     hasChange = true;
                     Nodes.Add(new NodeInfo() { Start = start, Node = trans });
                 }
-            }
+            } else {
+                var length = Nodes.Count;
+                var _rootSearch = false;
+                for (int i = 0; i < length; i++) {
+                    var ptr = Nodes[i].Node;
 
-            Nodes.RemoveAll(q => q.Start < start - _jumpLength);
-            for (int i = Nodes.Count - 1; i >= 0; i--) {
-                if (Nodes[i].Node == _root) Nodes.RemoveAt(i);
-                if (i > 0) {
-                    if (Nodes[i].Start == Nodes[i - 1].Start && Nodes[i].Node == Nodes[i - 1].Node) {
-                        Nodes.RemoveAt(i);
+                    TreeNode trans = null;
+                    while (trans == null) {
+                        trans = ptr.GetTransition(c);
+                        if (ptr == _root) { _rootSearch = true; break; }
+                        if (trans == null) {
+                            ptr = ptr.Failure;
+                            if (_rootSearch && ptr == _root) break;
+                        }
+                    }
+                    if (trans != null && trans != _root) {
+                        hasChange = true;
+                        Nodes.Add(new NodeInfo() { Start = start, Node = trans });
                     }
                 }
+                Nodes.RemoveAll(q => q.Start < start - _jumpLength);
             }
+
+
+
+
+            //for (int i = Nodes.Count - 1; i >= 0; i--) {
+            //    if (Nodes[i].Node == _root) Nodes.RemoveAt(i);
+            //}
             return hasChange;
         }
 

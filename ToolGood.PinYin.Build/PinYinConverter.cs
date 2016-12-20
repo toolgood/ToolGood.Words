@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-namespace ToolGood.Words
+
+namespace ToolGood.PinYin.Build
 {
     /// <summary>
     /// 汉字拼音转换类
@@ -505,7 +506,7 @@ namespace ToolGood.Words
         //static Regex regex = new Regex("[\u4e00-\u9fa5]$");
         #endregion
         #endregion
-     
+
         /// <summary>
         /// 获取单字拼音
         /// </summary>

@@ -43,7 +43,25 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string GetPinYin(string text)
         {
-            return PinYinConverter.Get(text);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < text.Length; i++) {
+                var c = text[i];
+                if (c>=0x4e00 && c<=0x9fff) {
+                    sb.Append(PinYinDict.GetFirstPinYin(c));
+                } else {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+        /// <summary>
+        /// 获取所有拼音
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static List<string> GetAllPinYin(char s)
+        {
+            return PinYinDict.GetAllPinYin(s);
         }
 
 
@@ -59,6 +77,9 @@ namespace ToolGood.Words
             return Regex.Replace(d, ".", m => "负元空零壹贰叁肆伍陆柒捌玖空空空空空空空分角拾佰仟萬億兆京垓秭穰"[m.Value[0] - '-'].ToString());
         }
 
+        const string nums1 = "⓪①②③④⑤⑥⑦⑧⑨⑴⑵⑶⑷⑸⑹⑺⑻⑼⒈⒉⒊⒋⒌⒍⒎⒏⒐❶❷❸❹❺❻❼❽❾➀➁➂➃➄➅➆➇➈➊➋➌➍➎➏➐➑➒㈠㈡㈢㈣㈤㈥㈦㈧㈨㊀㊁㊂㊃㊄㊅㊆㊇㊈";
+        const string nums2 = "0123456789123456789123456789123456789123456789123456789123456789";
+
         /// <summary>
         /// 转成 侦测字符串
         /// 1、转小写;2、全角转半角;3、相似文字修改
@@ -67,24 +88,25 @@ namespace ToolGood.Words
         /// <returns></returns>
         internal static string ToSenseWord(string s)
         {
-            var a = "āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜüńňêɑɡ①②③④⑤⑥⑦⑧⑨㈠㈡㈢㈣㈤㈥㈦㈧㈨⒈⒉⒊⒋⒌⒍⒎⒏⒐ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅰⅱⅲⅳⅴⅵⅶⅷⅸ";
-            var b = "aaaaooooeeeeiiiiuuuuuuuuunnneamg123456789123456789123456789123456789123456789";
+            var ts = s.ToArray();
+            for (int i = 0; i < ts.Length; i++) {
+                var c = ts[i];
+                if ('A' <= c && c <= 'Z') {
+                    ts[i] = (char)(c | 0x20);
+                } else if (c == 12288) {
+                    ts[i] = ' ';
 
-            s = ToSimplifiedChinese(s);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < s.Length; i++) {
-                var c = s[i];
-                if ('A' <= c && c <= 'Z') { sb.Append((char)(c | 0x20)); continue; }
-                if (c == 12288) { sb.Append(' '); continue; }
-                if (c > 65280 && c < 65375) { sb.Append((char)(c - 65248)); continue; }
-
-                var index = a.IndexOf(c);
-                if (index > -1) { sb.Append(b[index]); continue; }
-
-                sb.Append(c);
+                } else if (c > 65280 && c < 65375) {
+                    ts[i] = (char)(c - 65248);
+                } else if (c >= 0x4e00 && c <= 0x9fff) {
+                    char value;
+                    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
+                } else if (c >= 9450 && c <= 12840) {//处理数字 
+                    var index = nums1.IndexOf(c);
+                    if (index > -1) { ts[i] = nums2[index]; }
+                }
             }
-
-            return sb.ToString();
+            return new string(ts);
         }
 
         #region 半角 全角 转换
