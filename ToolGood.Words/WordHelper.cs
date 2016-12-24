@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
 
 namespace ToolGood.Words
 {
@@ -22,6 +21,7 @@ namespace ToolGood.Words
                 return false;
             }
         }
+
         /// <summary>
         /// 获取首字母
         /// </summary>
@@ -37,23 +37,31 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取拼音全拼
+        /// 获取拼音全拼  不支持多音
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string GetPinYin(string text)
+        //[Obsolete("请使用GetPinYin方法，此方法不支持多音")]
+        public static string GetPinYinFirst(string text)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
                 var c = text[i];
-                if (c>=0x4e00 && c<=0x9fff) {
-                    sb.Append(PinYinDict.GetFirstPinYin(c));
-                } else {
-                    sb.Append(c);
-                }
+                sb.Append(PinYinDict.GetFirstPinYin(c));
             }
             return sb.ToString();
         }
+
+        ///// <summary>
+        ///// 获取拼音全拼 支持多音
+        ///// </summary>
+        ///// <param name="text"></param>
+        ///// <returns></returns>
+        //public static string GetPinYin(string text)
+        //{
+        //    return PinYinDict.GetPinYin(text);
+        //}
+
         /// <summary>
         /// 获取所有拼音
         /// </summary>
@@ -86,27 +94,44 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        internal static string ToSenseWord(string s)
+        public static string ToSenseWord(string s)
         {
-            var ts = s.ToArray();
+            StringBuilder ts = new StringBuilder(s);
             for (int i = 0; i < ts.Length; i++) {
                 var c = ts[i];
                 if ('A' <= c && c <= 'Z') {
                     ts[i] = (char)(c | 0x20);
-                } else if (c == 12288) {
-                    ts[i] = ' ';
-
-                } else if (c > 65280 && c < 65375) {
-                    ts[i] = (char)(c - 65248);
-                } else if (c >= 0x4e00 && c <= 0x9fff) {
-                    char value;
-                    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
-                } else if (c >= 9450 && c <= 12840) {//处理数字 
+                } else if (c < 9450) {
+                } else if (c <= 12840) {//处理数字 
                     var index = nums1.IndexOf(c);
                     if (index > -1) { ts[i] = nums2[index]; }
+                } else if (c == 12288) {
+                    ts[i] = ' ';
+                } else if (c < 65280) {
+                } else if (c < 65375) {
+                    ts[i] = (char)(c - 65248);
+                } else if (c < 0x4e00) {
+                } else if (c <= 0x9fff) {
+                    char value;
+                    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
                 }
+
+                //if ('A' <= c && c <= 'Z') {
+                //    ts[i] = (char)(c | 0x20);
+                //} else if (c == 12288) {
+                //    ts[i] = ' ';
+
+                //} else if (c > 65280 && c < 65375) {
+                //    ts[i] = (char)(c - 65248);
+                //} else if (c >= 0x4e00 && c <= 0x9fff) {
+                //    char value;
+                //    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
+                //} else if (c >= 9450 && c <= 12840) {//处理数字 
+                //    var index = nums1.IndexOf(c);
+                //    if (index > -1) { ts[i] = nums2[index]; }
+                //}
             }
-            return new string(ts);
+            return ts.ToString();
         }
 
         #region 半角 全角 转换

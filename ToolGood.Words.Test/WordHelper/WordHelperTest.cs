@@ -11,6 +11,15 @@ namespace ToolGood.Words.Test
     class WordHelperTest
     {
         [Test]
+        public void GetPinYin()
+        {
+            var a = WordHelper.GetPinYinFirst("阿");
+            Assert.AreEqual("A", a);
+
+        }
+
+
+        [Test]
         public void HasChinese()
         {
             var b = WordHelper.HasChinese("xhdsf");
@@ -39,7 +48,7 @@ namespace ToolGood.Words.Test
         public void ToSBC_ToDBC()
         {
             var s = WordHelper.ToSBC("abcABC123");
-            var t= WordHelper.ToDBC(s);
+            var t = WordHelper.ToDBC(s);
             Assert.AreEqual("ａｂｃＡＢＣ１２３", s);
             Assert.AreEqual("abcABC123", t);
 

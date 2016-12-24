@@ -66,36 +66,95 @@ namespace ToolGood.Words
             };
         #endregion
 
+        #region pyWord
+        private const string words = "";
+        private static short[] wordIndex = new short[] {
+
+        };
+        private static short[] wordPy = new short[] {
+
+        };
+        private static PinYinSearch _pyDict;
+        private static PinYinSearch getPyDict()
+        {
+            if (_pyDict == null) {
+                _pyDict = new PinYinSearch();
+                _pyDict.BuildTree(words.Split('|'));
+            }
+            return _pyDict;
+        }
+
+        private static int getWordPy(StringBuilder sb, int index)
+        {
+            var start = wordIndex[index];
+            var end = wordIndex[index + 1];
+            for (int i = start; i < end; i++) {
+                sb.Append(pyName[wordPy[i]]);
+            }
+            return end - start;
+        }
+
+        #endregion
 
         public static List<string> GetAllPinYin(char c)
         {
-            if (c < 0x4e00 && c > 0x9fff) {
-                throw new Exception("");
-            }
-            var index = c - 0x4e00;
-            List<string> list = new List<string>();
-            var start = pyIndex[index];
-            var end = pyIndex[index + 1];
-            if (end > start) {
-                for (int i = start; i < end; i++) {
-                    list.Add(pyName[pyData[i]]);
+            if (c >= 0x4e00 && c <= 0x9fff) {
+                var index = c - 0x4e00;
+                List<string> list = new List<string>();
+                var start = pyIndex[index];
+                var end = pyIndex[index + 1];
+                if (end > start) {
+                    for (int i = start; i < end; i++) {
+                        list.Add(pyName[pyData[i]]);
+                    }
                 }
+                return list;
             }
-            return list;
+            return new List<string>();
         }
 
         public static string GetFirstPinYin(char c)
         {
-            if (c < 0x4e00 && c > 0x9fff) {
-                throw new Exception("");
+            if (c >= 0x4e00 && c <= 0x9fff) {
+                var index = c - 0x4e00;
+                var start = pyIndex[index];
+                var end = pyIndex[index + 1];
+                if (end > start) {
+                    return pyName[pyData[start]];
+                }
             }
-            var index = c - 0x4e00;
-            var start = pyIndex[index];
-            var end= pyIndex[index+1];
-            if (end>start) {
-                return pyName[pyData[start]];
+            return c.ToString();
+        }
+
+        public static string GetPinYin(string text)
+        {
+            var bs = new int[text.Length];
+            for (int i = 0; i < text.Length; i++) { bs[i] = -1; }
+
+            var dict = getPyDict();
+            var all = dict.FindAll(text);
+
+            for (int i = all.Count - 1; i >= 0; i--) {
+                var item = all[i];
+                for (int j = item.End; j >= item.Start; j--) {
+                    if (bs[j] > -1) { break; }
+                    bs[j] = item.Index;
+                }
             }
-            return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            var index = 0;
+            while (index < text.Length) {
+                var b = bs[index];
+                if (b == -1) {
+                    sb.Append(GetFirstPinYin(text[index]));
+                    index++;
+                } else {
+                    var l = getWordPy(sb, text[index]);
+                    index += l;
+                }
+            }
+            return sb.ToString();
         }
 
 

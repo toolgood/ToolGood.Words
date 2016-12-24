@@ -13,7 +13,7 @@ namespace ToolGood.Words.Test
         public void Test()
         {
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-            IllegalWords iwords = new IllegalWords(s.Split('|'), 2);
+            IllegalWordsSearch iwords = new IllegalWordsSearch(s.Split('|'), 2);
 
             string test = "我是中国人";
             var all = iwords.FindAll(test);

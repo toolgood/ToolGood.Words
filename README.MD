@@ -2,11 +2,11 @@ ToolGood.Words
 ====
 
 
-支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词汇查询
+支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词(敏感词)查询
 
 ``` csharp
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-            IllegalWords iwords = new IllegalWords(s.Split('|'), 2);
+            IllegalWordsSearch iwords = new IllegalWordsSearch(s.Split('|'), 2);
 
             string test = "我是中国人";
             var all = iwords.FindAll(test);
