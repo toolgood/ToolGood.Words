@@ -11,43 +11,28 @@ namespace ToolGood.Words.Contrast
 {
     class Program
     {
-        //static HashFilter hf = new HashFilter();
-        static TrieSearch tf = new TrieSearch();
-        //static TrieSearch2 ts1 = new TrieSearch2();
         static TrieFilter tf1 = new TrieFilter();
         static FastFilter ff = new FastFilter();
-
+        static StringSearch word = new StringSearch();
         static TextSearch search;
-        //static StringSearch stringSearch;
-        //static IllegalWords words_1 = new IllegalWords();
-        //static IllegalWords words_1_quick;
-        //static IllegalWords words_2;
-        //static IllegalWords words_2_quick;
 
 
         static void Main(string[] args)
         {
             ReadBadWord();
             var text = File.ReadAllText("Talk.txt");
-            //ts1.HasBadWord(text);
 
-            Run("TrieSearch", () => { tf.HasBadWord(text); });
-            //Run("TrieSearch 1 ", () => { ts1.HasBadWord(text); });
             Run("TextSearch  ", () => { search.ContainsAny(text); });
-
-
             Run("TrieFilter", () => { tf1.HasBadWord(text); });
             Run("FastFilter", () => { ff.HasBadWord(text); });
+            Run("StringSearch  ", () => { word.ContainsAny(text); });
 
             Console.WriteLine("----------------------- Find All -----------------------------------");
 
-            Run("TrieSearch", () => { tf.FindAll(text); });
-            //Run("TrieSearch 1 ", () => { ts1.FindAll(text); });
             Run("TextSearch  ", () => { search.FindAll(text); });
-
             Run("TrieFilter", () => { tf1.FindAll(text); });
-
             Run("FastFilter", () => { ff.FindAll(text); });
+            Run("StringSearch  ", () => { word.FindAll(text); });
 
             Console.ReadKey();
 
@@ -67,16 +52,12 @@ namespace ToolGood.Words.Contrast
 
         static void ReadBadWord()
         {
-            //stringSearch = new StringSearch();
             List<string> list = new List<string>();
             using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
                 string key = sw.ReadLine();
                 while (key != null) {
                     if (key != string.Empty) {
-                        //hf.AddKey(key);
-                        tf.AddKey(key);
                         tf1.AddKey(key);
-                        //ts1.AddKey(key);
 
                         ff.AddKey(key);
 
@@ -87,7 +68,7 @@ namespace ToolGood.Words.Contrast
             }
             search = new TextSearch();
             search.Keywords = list.ToArray();
-
+            word.SetKeywords(list);
         }
 
 

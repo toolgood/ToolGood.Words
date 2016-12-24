@@ -33,6 +33,11 @@ namespace ToolGood.Words
         public string Keyword { get; private set; }
         public static TextSearchResult Empty { get { return new TextSearchResult(); } }
 
+        public override string ToString()
+        {
+            return Keyword;
+        }
+
     }
     /// <summary>
     /// 完整字符搜索

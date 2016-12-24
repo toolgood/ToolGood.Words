@@ -52,4 +52,43 @@ ToolGood.Words
             Assert.AreEqual("all", all[1].SearchString);
 ```
 
+字符搜索优化`StringSearch`
+
+TextSearch   : 184ms
+TrieFilter : 175ms
+FastFilter : 106ms
+StringSearch   : 32ms
+----------------------- Find All -----------------------------------
+TextSearch   : 1,572ms
+TrieFilter : 1,360ms
+FastFilter : 308ms
+StringSearch   : 376ms
+
+
+注:`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
+
+注: 在 Find All测试中,`FastFilter`只能检测出7个:
+    [0]: "主席"
+    [1]: "赵洪祝"
+    [2]: "中国"
+    [3]: "铁道部"
+    [4]: "党"
+    [5]: "胡锦涛"
+    [6]: "倒台"
+
+`StringSearch`检测出14个:
+    [0]: "党"
+    [1]: "党委"
+    [2]: "西藏"
+    [3]: "党"
+    [4]: "党委"
+    [5]: "主席"
+    [6]: "赵洪祝"
+    [7]: "中国"
+    [8]: "铁道部"
+    [9]: "党"
+    [10]: "胡锦涛"
+    [11]: "锦涛"
+    [12]: "倒台"
+    [13]: "黑社会"
 
