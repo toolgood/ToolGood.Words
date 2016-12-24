@@ -55,14 +55,23 @@ ToolGood.Words
 字符搜索优化`StringSearch`
 
 TextSearch   : 184ms
+
 TrieFilter : 175ms
+
 FastFilter : 106ms
+
 StringSearch   : 32ms
+
 ----------------------- Find All -----------------------------------
+
 TextSearch   : 1,572ms
+
 TrieFilter : 1,360ms
+
 FastFilter : 308ms
+
 StringSearch   : 376ms
+
 
 
 注:`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
