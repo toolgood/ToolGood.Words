@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChineseConverter">
+      <HintPath>..\lib\ChineseConverter.dll</HintPath>
+    </Reference>
     <Reference Include="ChnCharInfo">
       <HintPath>..\lib\ChnCharInfo.dll</HintPath>
     </Reference>

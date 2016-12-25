@@ -54,23 +54,32 @@ ToolGood.Words
 
 字符搜索优化`StringSearch`
 
-TextSearch   : 184ms
+TextSearch   : 141ms
 
-TrieFilter : 175ms
+TrieFilter : 158ms
 
-FastFilter : 106ms
+FastFilter : 105ms
 
-StringSearch   : 32ms
+StringSearch   : 30ms
+
+IllegalWordsSearch jump 1   : 770ms
+
+IllegalWordsSearch jump 2   : 729ms
 
 ----------------------- Find All -----------------------------------
 
-TextSearch   : 1,572ms
+TextSearch   : 1,488ms
 
-TrieFilter : 1,360ms
+TrieFilter : 1,333ms
 
-FastFilter : 308ms
+FastFilter : 301ms
 
-StringSearch   : 376ms
+StringSearch   : 358ms
+
+IllegalWordsSearch jump 1   : 3,070ms
+
+IllegalWordsSearch jump 2   : 3,213ms
+
 
 
 

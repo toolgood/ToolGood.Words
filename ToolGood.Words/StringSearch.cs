@@ -231,15 +231,24 @@ namespace ToolGood.Words
                 }
                 list = newNodes;
             }
-            addNode(tn, _root, dict);
+            addNode(tn, tn, _root, dict);
             _first = _root.ToArray();
         }
-        void addNode(TreeNode treeNode, TrieNode tridNode, Dictionary<TreeNode, TrieNode> dict)
+        void addNode(TreeNode treeNode, TreeNode root, TrieNode tridNode, Dictionary<TreeNode, TrieNode> dict)
         {
             foreach (var item in treeNode.Transitions) {
                 var node = dict[item];
                 tridNode.Add(item, node);
-                addNode(item, node, dict);
+                addNode(item, root, node, dict);
+            }
+            if (treeNode!= root) {
+                var topNode = root.GetTransition(treeNode.Char);
+                if (topNode != null) {
+                    foreach (var item in topNode.Transitions) {
+                        var node = dict[item];
+                        tridNode.Add(item, node);
+                    }
+                }
             }
         }
         void simplifyNode(TreeNode treeNode, TreeNode root, Dictionary<TreeNode, TrieNode> dict)
@@ -273,14 +282,14 @@ namespace ToolGood.Words
             TrieNode ptr = null;
             for (int i = 0; i < text.Length; i++) {
                 TrieNode tn;
-                if (ptr==null) {
+                if (ptr == null) {
                     tn = _first[text[i]];
                 } else {
-                    if (ptr.TryGetValue(text[i], out tn)==false) {
+                    if (ptr.TryGetValue(text[i], out tn) == false) {
                         tn = _first[text[i]];
                     }
                 }
-                if (tn!=null) {
+                if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
                             return item;

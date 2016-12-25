@@ -101,19 +101,16 @@ namespace ToolGood.Words
                 var c = ts[i];
                 if ('A' <= c && c <= 'Z') {
                     ts[i] = (char)(c | 0x20);
-                } else if (c < 9450) {
-                } else if (c <= 12840) {//处理数字 
+                } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
                     var index = nums1.IndexOf(c);
                     if (index > -1) { ts[i] = nums2[index]; }
                 } else if (c == 12288) {
                     ts[i] = ' ';
-                } else if (c < 65280) {
-                } else if (c < 65375) {
-                    ts[i] = (char)(c - 65248);
-                } else if (c < 0x4e00) {
-                } else if (c <= 0x9fff) {
+                } else if (c < 0x4e00) { } else if (c <= 0x9fff) {
                     char value;
                     if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
+                } else if (c < 65280) { } else if (c < 65375) {
+                    ts[i] = (char)(c - 65248);
                 }
 
                 //if ('A' <= c && c <= 'Z') {
@@ -133,6 +130,27 @@ namespace ToolGood.Words
             }
             return ts.ToString();
         }
+
+        //internal static char getSenseChar(char c)
+        //{
+        //    if ('A' <= c && c <= 'Z') {
+        //        return (char)(c | 0x20);
+        //    } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
+        //        var index = nums1.IndexOf(c);
+        //        if (index > -1) { return nums2[index]; }
+        //    } else if (c == 12288) {
+        //        return ' ';
+        //    } else if (c < 0x4e00) { } else if (c <= 0x9fff) {
+        //        char value;
+        //        if (Dict.TraditionalToSimplified(c, out value)) {
+        //            return value;
+        //        }
+        //    } else if (c < 65280) { } else if (c < 65375) {
+        //        return (char)(c - 65248);
+        //    }
+        //    return c;
+        //}
+
 
         #region 半角 全角 转换
         /// <summary>
