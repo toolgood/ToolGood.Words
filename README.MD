@@ -60,24 +60,27 @@ ToolGood.Words
 
 字符搜索优化`StringSearch`
 
-StringSearch   : 31ms
+TrieFilter : 153ms
 
-StringSearch  ToSenseWord : 191ms
+FastFilter : 109ms
 
-IllegalWordsSearch FindFirst   : 53ms
+StringSearch   : 32ms
 
-IllegalWordsSearch ContainsAny   : 47ms
+StringSearch  ToSenseWord : 199ms
+
+IllegalWordsSearch FindFirst   : 54ms
+
+IllegalWordsSearch ContainsAny   : 52ms
 
 ----------------------- Find All -----------------------------------
 
-TrieFilter : 1,381ms
+TrieFilter : 1,453ms
 
-FastFilter : 331ms
+FastFilter : 395ms
 
-StringSearch   : 384ms
+StringSearch   : 405ms
 
-IllegalWordsSearch  : 1,192ms
-
+IllegalWordsSearch  : 1,201ms
 
 
 
