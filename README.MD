@@ -5,10 +5,12 @@ ToolGood.Words
 支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词(敏感词)查询
 
 ``` csharp
-            string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-            IllegalWordsSearch iwords = new IllegalWordsSearch(s.Split('|'), 2);
-
+             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
             string test = "我是中国人";
+
+            IllegalWordsSearch iwords = new IllegalWordsSearch( 2);
+            iwords.SetKeywords(s.Split('|'));
+
             var all = iwords.FindAll(test);
             Assert.AreEqual("中国", all[0].SearchString);
             Assert.AreEqual("国人", all[1].SearchString);
@@ -16,14 +18,11 @@ ToolGood.Words
             test = "我是中国zg人";
             all = iwords.FindAll(test);
             Assert.AreEqual("中国", all[0].SearchString);
-            Assert.AreEqual("国zg人", all[1].SearchString);
-            Assert.AreEqual("国人", all[1].Keyword);
-            Assert.AreEqual("zg人", all[2].SearchString);
+            Assert.AreEqual("zg人", all[1].SearchString);
 
             test = "中间国zg人";
             all = iwords.FindAll(test);
-            Assert.AreEqual("国zg人", all[0].SearchString);
-            Assert.AreEqual("zg人", all[1].SearchString);
+            Assert.AreEqual("zg人", all[0].SearchString);
 
             test = "fuck al.l";
             all = iwords.FindAll(test);
@@ -31,14 +30,11 @@ ToolGood.Words
             Assert.AreEqual("al.l", all[1].SearchString);
             Assert.AreEqual(2, all.Count);
 
-            test = "ht@tp://toolgood.com";
+            test = "ht@tp://ToolGood.com";
             all = iwords.FindAll(test);
-            Assert.AreEqual("ht@tp://", all[0].SearchString);
-            Assert.AreEqual("http://", all[0].Keyword);
-            Assert.AreEqual("toolgood", all[1].SearchString);
-            Assert.AreNotEqual("ToolGood", all[1].Keyword);
-            Assert.AreEqual("toolgood", all[1].Keyword);
-            Assert.AreEqual(2, all.Count);
+            Assert.AreEqual("toolgood", all[0].Keyword);
+            Assert.AreEqual("ToolGood", all[0].SearchString);
+            Assert.AreEqual(1, all.Count);
 
 
             test = "asssert all";
@@ -50,35 +46,37 @@ ToolGood.Words
             all = iwords.FindAll(test);
             Assert.AreEqual("19", all[0].SearchString);
             Assert.AreEqual("all", all[1].SearchString);
+
+            test = "我是【中]国【人";
+            all = iwords.FindAll(test);
+            Assert.AreEqual("中]国", all[0].SearchString);
+            Assert.AreEqual("国【人", all[1].SearchString);
+
+            test = "我是【中国【人";
+            all = iwords.FindAll(test);
+            Assert.AreEqual("中国", all[0].SearchString);
+            Assert.AreEqual(1, all.Count);
 ```
 
 字符搜索优化`StringSearch`
 
-TextSearch   : 141ms
+StringSearch   : 31ms
 
-TrieFilter : 158ms
+StringSearch  ToSenseWord : 191ms
 
-FastFilter : 105ms
+IllegalWordsSearch FindFirst   : 53ms
 
-StringSearch   : 30ms
-
-IllegalWordsSearch jump 1   : 770ms
-
-IllegalWordsSearch jump 2   : 729ms
+IllegalWordsSearch ContainsAny   : 47ms
 
 ----------------------- Find All -----------------------------------
 
-TextSearch   : 1,488ms
+TrieFilter : 1,381ms
 
-TrieFilter : 1,333ms
+FastFilter : 331ms
 
-FastFilter : 301ms
+StringSearch   : 384ms
 
-StringSearch   : 358ms
-
-IllegalWordsSearch jump 1   : 3,070ms
-
-IllegalWordsSearch jump 2   : 3,213ms
+IllegalWordsSearch  : 1,192ms
 
 
 
@@ -110,3 +108,21 @@ IllegalWordsSearch jump 2   : 3,213ms
     [12]: "倒台"
     [13]: "黑社会"
 
+`IllegalWordsSearch`检出15个：
+    [0]: {63|党}
+    [1]: {63|党委}
+    [2]: {81|西藏}
+    [3]: {83|党}
+    [4]: {83|党委}
+    [5]: {143|主席}
+    [6]: {185|赵洪祝}
+    [7]: {204|中国}
+    [8]: {221|铁道部}
+    [9]: {235|党}
+    [10]: {244|胡锦涛}
+    [11]: {245|锦涛}
+    [12]: {323|倒台}
+    [13]: {324|台}
+    [14]: {364|黑社会}
+
+注：`IllegalWordsSearch`比`StringSearch`多一个`台`，原因：关键字繁体转简体

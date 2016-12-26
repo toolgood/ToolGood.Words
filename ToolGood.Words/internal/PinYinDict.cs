@@ -74,15 +74,15 @@ namespace ToolGood.Words
         private static short[] wordPy = new short[] {
 
         };
-        private static PinYinSearch _pyDict;
-        private static PinYinSearch getPyDict()
-        {
-            if (_pyDict == null) {
-                _pyDict = new PinYinSearch();
-                _pyDict.BuildTree(words.Split('|'));
-            }
-            return _pyDict;
-        }
+        //private static PinYinSearch _pyDict;
+        //private static PinYinSearch getPyDict()
+        //{
+        //    if (_pyDict == null) {
+        //        _pyDict = new PinYinSearch();
+        //        _pyDict.BuildTree(words.Split('|'));
+        //    }
+        //    return _pyDict;
+        //}
 
         private static int getWordPy(StringBuilder sb, int index)
         {
@@ -126,36 +126,36 @@ namespace ToolGood.Words
             return c.ToString();
         }
 
-        public static string GetPinYin(string text)
-        {
-            var bs = new int[text.Length];
-            for (int i = 0; i < text.Length; i++) { bs[i] = -1; }
+        //public static string GetPinYin(string text)
+        //{
+        //    var bs = new int[text.Length];
+        //    for (int i = 0; i < text.Length; i++) { bs[i] = -1; }
 
-            var dict = getPyDict();
-            var all = dict.FindAll(text);
+        //    var dict = getPyDict();
+        //    var all = dict.FindAll(text);
 
-            for (int i = all.Count - 1; i >= 0; i--) {
-                var item = all[i];
-                for (int j = item.End; j >= item.Start; j--) {
-                    if (bs[j] > -1) { break; }
-                    bs[j] = item.Index;
-                }
-            }
+        //    for (int i = all.Count - 1; i >= 0; i--) {
+        //        var item = all[i];
+        //        for (int j = item.End; j >= item.Start; j--) {
+        //            if (bs[j] > -1) { break; }
+        //            bs[j] = item.Index;
+        //        }
+        //    }
 
-            StringBuilder sb = new StringBuilder();
-            var index = 0;
-            while (index < text.Length) {
-                var b = bs[index];
-                if (b == -1) {
-                    sb.Append(GetFirstPinYin(text[index]));
-                    index++;
-                } else {
-                    var l = getWordPy(sb, text[index]);
-                    index += l;
-                }
-            }
-            return sb.ToString();
-        }
+        //    StringBuilder sb = new StringBuilder();
+        //    var index = 0;
+        //    while (index < text.Length) {
+        //        var b = bs[index];
+        //        if (b == -1) {
+        //            sb.Append(GetFirstPinYin(text[index]));
+        //            index++;
+        //        } else {
+        //            var l = getWordPy(sb, text[index]);
+        //            index += l;
+        //        }
+        //    }
+        //    return sb.ToString();
+        //}
 
 
 

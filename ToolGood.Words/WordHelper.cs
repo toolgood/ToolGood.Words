@@ -8,6 +8,7 @@ namespace ToolGood.Words
 {
     public static class WordHelper
     {
+        #region 判断输入是否为中文
         /// <summary>
         /// 判断输入是否为中文  
         /// </summary>
@@ -21,7 +22,9 @@ namespace ToolGood.Words
                 return false;
             }
         }
+        #endregion
 
+        #region 拼音 操作
         /// <summary>
         /// 获取首字母
         /// </summary>
@@ -71,8 +74,9 @@ namespace ToolGood.Words
         {
             return PinYinDict.GetAllPinYin(s);
         }
+        #endregion
 
-
+        #region 数字转中文大写
         /// <summary>
         /// 数字转中文大写
         /// </summary>
@@ -85,72 +89,66 @@ namespace ToolGood.Words
             return Regex.Replace(d, ".", m => "负元空零壹贰叁肆伍陆柒捌玖空空空空空空空分角拾佰仟萬億兆京垓秭穰"[m.Value[0] - '-'].ToString());
         }
 
-        const string nums1 = "⓪①②③④⑤⑥⑦⑧⑨⑴⑵⑶⑷⑸⑹⑺⑻⑼⒈⒉⒊⒋⒌⒍⒎⒏⒐❶❷❸❹❺❻❼❽❾➀➁➂➃➄➅➆➇➈➊➋➌➍➎➏➐➑➒㈠㈡㈢㈣㈤㈥㈦㈧㈨㊀㊁㊂㊃㊄㊅㊆㊇㊈";
-        const string nums2 = "0123456789123456789123456789123456789123456789123456789123456789";
+        #endregion
 
+        #region 字符串 转成 脏词检测字符串
         /// <summary>
         /// 转成 侦测字符串
-        /// 1、转小写;2、全角转半角;3、相似文字修改
+        /// 1、转小写;2、全角转半角; 3、相似文字修改；4、繁体转简体
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
         public static string ToSenseWord(string s)
         {
             StringBuilder ts = new StringBuilder(s);
-            for (int i = 0; i < ts.Length; i++) {
-                var c = ts[i];
-                if ('A' <= c && c <= 'Z') {
+            for (int i = 0; i < s.Length; i++) {
+                var c = s[i];
+                if (c < 'A') { } else if (c <= 'Z') {
                     ts[i] = (char)(c | 0x20);
                 } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-                    var index = nums1.IndexOf(c);
-                    if (index > -1) { ts[i] = nums2[index]; }
+                    var index = Dict.nums1.IndexOf(c);
+                    if (index > -1) { ts[i] = Dict.nums2[index]; }
                 } else if (c == 12288) {
                     ts[i] = ' ';
-                } else if (c < 0x4e00) { } else if (c <= 0x9fff) {
-                    char value;
-                    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
+                } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+                    var k = Dict.Simplified[c - 0x4e00];
+                    if (k != c) {
+                        ts[i] = k;
+                    }
                 } else if (c < 65280) { } else if (c < 65375) {
-                    ts[i] = (char)(c - 65248);
+                    var k = (c - 65248);
+                    if ('A' <= k && k <= 'Z') { k = k | 0x20; }
+                    ts[i] = (char)k;
                 }
-
-                //if ('A' <= c && c <= 'Z') {
-                //    ts[i] = (char)(c | 0x20);
-                //} else if (c == 12288) {
-                //    ts[i] = ' ';
-
-                //} else if (c > 65280 && c < 65375) {
-                //    ts[i] = (char)(c - 65248);
-                //} else if (c >= 0x4e00 && c <= 0x9fff) {
-                //    char value;
-                //    if (Dict.TraditionalToSimplified(ts[i], out value)) { ts[i] = value; }
-                //} else if (c >= 9450 && c <= 12840) {//处理数字 
-                //    var index = nums1.IndexOf(c);
-                //    if (index > -1) { ts[i] = nums2[index]; }
-                //}
             }
             return ts.ToString();
         }
 
-        //internal static char getSenseChar(char c)
-        //{
-        //    if ('A' <= c && c <= 'Z') {
-        //        return (char)(c | 0x20);
-        //    } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-        //        var index = nums1.IndexOf(c);
-        //        if (index > -1) { return nums2[index]; }
-        //    } else if (c == 12288) {
-        //        return ' ';
-        //    } else if (c < 0x4e00) { } else if (c <= 0x9fff) {
-        //        char value;
-        //        if (Dict.TraditionalToSimplified(c, out value)) {
-        //            return value;
-        //        }
-        //    } else if (c < 65280) { } else if (c < 65375) {
-        //        return (char)(c - 65248);
-        //    }
-        //    return c;
-        //}
+        internal static string RemoveNontext(string text)
+        {
+            StringBuilder sb = new StringBuilder(text);
+            for (int i = 0; i < text.Length; i++) {
+                var c = text[i];
+                bool remove = true;
 
+                if (c == ' ') {
+                    remove = false;
+                } else if (c < 2) {
+                    remove = false;
+                } else if (c < '0') { } else if (c <= '9') {
+                    remove = false;
+                } else if (c < 'a') { } else if (c <= 'z') {
+                    remove = false;
+                } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+                    remove = false;
+                }
+                if (remove) {
+                    sb[i] = (char)1;
+                }
+            }
+            return sb.ToString();
+        }
+        #endregion
 
         #region 半角 全角 转换
         /// <summary>
@@ -160,16 +158,16 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string ToSBC(string input)
         {
-            char[] c = input.ToCharArray();
-            for (int i = 0; i < c.Length; i++) {
-                if (c[i] == 32) {
-                    c[i] = (char)12288;
-                    continue;
+            StringBuilder sb = new StringBuilder(input);
+            for (int i = 0; i < input.Length; i++) {
+                var c = input[i];
+                if (c == 32) {
+                    sb[i] = (char)12288;
+                } else if (c < 127) {
+                    sb[i] = (char)(c + 65248);
                 }
-                if (c[i] < 127)
-                    c[i] = (char)(c[i] + 65248);
             }
-            return new string(c);
+            return sb.ToString();
         }
         /// <summary>
         /// 转半角的函数
@@ -178,16 +176,16 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string ToDBC(string input)
         {
-            char[] c = input.ToCharArray();
-            for (int i = 0; i < c.Length; i++) {
-                if (c[i] == 12288) {
-                    c[i] = (char)32;
-                    continue;
+            StringBuilder sb = new StringBuilder(input);
+            for (int i = 0; i < input.Length; i++) {
+                var c = input[i];
+                if (c == 12288) {
+                    sb[i] = (char)32;
+                } else if (c > 65280 && c < 65375) {
+                    sb[i] = (char)(c - 65248);
                 }
-                if (c[i] > 65280 && c[i] < 65375)
-                    c[i] = (char)(c[i] - 65248);
             }
-            return new string(c);
+            return sb.ToString();
         }
         #endregion
 
@@ -199,14 +197,17 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string ToTraditionalChinese(string text)
         {
-            var ts = text.ToArray();
-            for (int i = 0; i < ts.Length; i++) {
-                char value;
-                if (Dict.SimplifiedToTraditional(ts[i], out value)) {
-                    ts[i] = value;
+            StringBuilder sb = new StringBuilder(text);
+            for (int i = 0; i < text.Length; i++) {
+                var c = text[i];
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    var k = Dict.Traditional[c - 0x4e00];
+                    if (k != c) {
+                        sb[i] = k;
+                    }
                 }
             }
-            return new string(ts);
+            return sb.ToString();
         }
         /// <summary>
         /// 转简体中文
@@ -215,14 +216,17 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string ToSimplifiedChinese(string text)
         {
-            var ts = text.ToArray();
-            for (int i = 0; i < ts.Length; i++) {
-                char value;
-                if (Dict.TraditionalToSimplified(ts[i], out value)) {
-                    ts[i] = value;
+            StringBuilder sb = new StringBuilder(text);
+            for (int i = 0; i < text.Length; i++) {
+                var c = text[i];
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    var k = Dict.Simplified[c - 0x4e00];
+                    if (k != c) {
+                        sb[i] = k;
+                    }
                 }
             }
-            return new string(ts);
+            return sb.ToString();
         }
         #endregion
     }

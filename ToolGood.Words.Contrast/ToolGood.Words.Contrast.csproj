@@ -50,6 +50,8 @@
     <Compile Include="FilterTest\TrieFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="word\Dict.cs" />
+    <Compile Include="word\WordTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj">

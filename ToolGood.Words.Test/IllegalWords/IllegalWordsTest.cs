@@ -15,10 +15,6 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
             string test = "我是中国人";
 
-            StringSearch ss = new StringSearch();
-            ss.SetKeywords(s.Split('|'));
-            var allss = ss.FindAll(test);
-
             IllegalWordsSearch iwords = new IllegalWordsSearch( 2);
             iwords.SetKeywords(s.Split('|'));
 
@@ -29,14 +25,11 @@ namespace ToolGood.Words.Test
             test = "我是中国zg人";
             all = iwords.FindAll(test);
             Assert.AreEqual("中国", all[0].SearchString);
-            Assert.AreEqual("国zg人", all[2].SearchString);
-            Assert.AreEqual("国人", all[2].Keyword);
             Assert.AreEqual("zg人", all[1].SearchString);
 
             test = "中间国zg人";
             all = iwords.FindAll(test);
-            Assert.AreEqual("国zg人", all[1].SearchString);
-            Assert.AreEqual("zg人", all[2].SearchString);
+            Assert.AreEqual("zg人", all[0].SearchString);
 
             test = "fuck al.l";
             all = iwords.FindAll(test);
@@ -44,14 +37,11 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("al.l", all[1].SearchString);
             Assert.AreEqual(2, all.Count);
 
-            test = "ht@tp://toolgood.com";
+            test = "ht@tp://ToolGood.com";
             all = iwords.FindAll(test);
-            Assert.AreEqual("ht@tp://", all[0].SearchString);
-            Assert.AreEqual("http://", all[0].Keyword);
-            Assert.AreEqual("toolgood", all[1].SearchString);
-            Assert.AreNotEqual("ToolGood", all[1].Keyword);
-            Assert.AreEqual("toolgood", all[1].Keyword);
-            Assert.AreEqual(2, all.Count);
+            Assert.AreEqual("toolgood", all[0].Keyword);
+            Assert.AreEqual("ToolGood", all[0].SearchString);
+            Assert.AreEqual(1, all.Count);
 
 
             test = "asssert all";
@@ -64,58 +54,17 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("19", all[0].SearchString);
             Assert.AreEqual("all", all[1].SearchString);
 
+            test = "我是【中]国【人";
+            all = iwords.FindAll(test);
+            Assert.AreEqual("中]国", all[0].SearchString);
+            Assert.AreEqual("国【人", all[1].SearchString);
+
+            test = "我是【中国【人";
+            all = iwords.FindAll(test);
+            Assert.AreEqual("中国", all[0].SearchString);
+            Assert.AreEqual(1, all.Count);
+
         }
 
-        //[Test]
-        //public void Test2()
-        //{
-        //    string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-        //    IllegalWordsSearch2 iwords = new IllegalWordsSearch2( 2);
-        //    iwords.SetKeywords(s.Split('|'));
-
-        //    string test = "我是中国人";
-        //    var all = iwords.FindAll(test);
-        //    Assert.AreEqual("中国", all[0].SearchString);
-        //    Assert.AreEqual("国人", all[1].SearchString);
-
-        //    test = "我是中国zg人";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("中国", all[0].SearchString);
-        //    Assert.AreEqual("国zg人", all[1].SearchString);
-        //    Assert.AreEqual("国人", all[1].Keyword);
-        //    Assert.AreEqual("zg人", all[2].SearchString);
-
-        //    test = "中间国zg人";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("国zg人", all[0].SearchString);
-        //    Assert.AreEqual("zg人", all[1].SearchString);
-
-        //    test = "fuck al.l";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("fuck", all[0].SearchString);
-        //    Assert.AreEqual("al.l", all[1].SearchString);
-        //    Assert.AreEqual(2, all.Count);
-
-        //    test = "ht@tp://toolgood.com";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("ht@tp://", all[0].SearchString);
-        //    Assert.AreEqual("http://", all[0].Keyword);
-        //    Assert.AreEqual("toolgood", all[1].SearchString);
-        //    Assert.AreNotEqual("ToolGood", all[1].Keyword);
-        //    Assert.AreEqual("toolgood", all[1].Keyword);
-        //    Assert.AreEqual(2, all.Count);
-
-
-        //    test = "asssert all";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("all", all[0].SearchString);
-        //    Assert.AreEqual(1, all.Count);
-
-        //    test = "19w 1919 all";
-        //    all = iwords.FindAll(test);
-        //    Assert.AreEqual("19", all[0].SearchString);
-        //    Assert.AreEqual("all", all[1].SearchString);
-
-        //}
     }
 }

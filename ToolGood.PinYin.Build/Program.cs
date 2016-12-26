@@ -14,42 +14,13 @@ namespace ToolGood.PinYin.Build
 
         static void Main(string[] args)
         {
-            List<Tuple<int, int, string>> list = new List<Tuple<int, int, string>>();
-            var index = 1;
-            var start = (int)'丟';
-            var end = (int)'丟';
-            var str = "丟";
-            while (index < t2s1.Length) {
-                var c = t2s1[index];
-                if (c > end + 100) {
-                    var key = Tuple.Create(start, end, str);
-                    list.Add(key);
-                    start = c;
-                    end = c;
-                    str = c.ToString();
-                } else {
-                    end = (int)c;
-                    str += c;
-                }
-                index++;
-            }
-
-            for (int i = 0; i < list.Count; i++) {
-
-            }
-
-
-
-
-
-
-            index = 0x4e00;
+            var index = 0x4e00;
             var tt = "";
             while (index <= 0x9fa5) {
                 tt += (char)index;
                 index++;
             }
-            var st = ChineseConverter.Convert(tt, ChineseConversionDirection.TraditionalToSimplified);
+            var st = ChineseConverter.Convert(tt, ChineseConversionDirection.SimplifiedToTraditional);
             var cccc = (int)'丟';
             var ccc2c = (int)'龜';
 
