@@ -22,6 +22,12 @@ ToolGood.Words
     WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
 ``` 
 
+#### 数字转成中文大写
+``` csharp
+    var t = WordsHelper.ToChineseRMB(12345678901.12);
+    Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
+``` 
+
 #### 拼音操作
 
 ``` csharp

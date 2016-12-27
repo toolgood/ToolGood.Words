@@ -66,8 +66,7 @@ namespace ToolGood.Words.Test
         public void ToTraditionalChinese()
         {
             var tw = WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
-
-            Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", tw);
+            Assert.AreEqual("壹佰貳拾叁億肆仟伍佰陸拾柒萬捌仟玖佰零壹元壹角貳分", tw);
         }
 
 
