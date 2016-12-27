@@ -79,6 +79,7 @@ ToolGood.Words
     var f = iwords.FindFirst(test);
     Assert.AreEqual(true, f.Success);
     Assert.AreEqual("中国", f.Keyword);
+    Assert.AreEqual("中国", f.SrcString);
     Assert.AreEqual(2, f.Start);
     Assert.AreEqual(3, f.End);
 
@@ -107,14 +108,13 @@ ToolGood.Words
     Assert.AreEqual("ToolGood", all[0].SrcString);
     Assert.AreEqual(1, all.Count);
 
-
     test = "asssert all";
-    all = iwords.FindAll(test);
+    all = iwords.FindAll(test);//搜索时，排除英文截断，如asssert，不会匹配as
     Assert.AreEqual("all", all[0].SrcString);
     Assert.AreEqual(1, all.Count);
 
     test = "19w 1919 all";
-    all = iwords.FindAll(test);
+    all = iwords.FindAll(test);//搜索时，排除数字截断，如1919，不会匹配
     Assert.AreEqual("19", all[0].SrcString);
     Assert.AreEqual("all", all[1].SrcString);
 
