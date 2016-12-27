@@ -217,8 +217,8 @@ namespace ToolGood.Words
         {
             HashSet<string> list = new HashSet<string>();
             foreach (var item in _keywords) {
-                list.Add(WordHelper.ToSenseWord(item));
-                var c = WordHelper.ToSenseWord(item);
+                list.Add(WordsHelper.ToSenseWords(item));
+                var c = WordsHelper.ToSenseWords(item);
             }
             list.Remove("");
             var tn = BuildTreeWithBFS(list);
@@ -359,13 +359,13 @@ namespace ToolGood.Words
                 return r;
             });
             if (r) return true;
-            var searchText = WordHelper.ToSenseWord(text);
+            var searchText = WordsHelper.ToSenseWords(text);
             search(searchText, (keyword, ch, end) => {
                 r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
                 return r;
             });
             if (r) return true;
-            searchText = WordHelper.RemoveNontext(searchText);
+            searchText = WordsHelper.RemoveNontext(searchText);
             search(searchText, (keyword, ch, end) => {
                 r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
                 return r;
@@ -384,14 +384,14 @@ namespace ToolGood.Words
                 return result != null;
             });
             if (result != null) return result;
-            var searchText = WordHelper.ToSenseWord(text);
+            var searchText = WordsHelper.ToSenseWords(text);
             search(searchText, (keyword, ch, end) => {
                 var start = end + 1 - keyword.Length;
                 result = GetIllegalResult(keyword, ch, start, end, text, searchText);
                 return result != null;
             });
             if (result != null) return result;
-            searchText = WordHelper.RemoveNontext(searchText);
+            searchText = WordsHelper.RemoveNontext(searchText);
             search(searchText, (keyword, ch, end) => {
                 var start = end;
                 for (int i = 0; i < keyword.Length; i++) {
@@ -412,7 +412,7 @@ namespace ToolGood.Words
         public List<IllegalWordsSearchResult> FindAll(string text)
         {
             List<IllegalWordsSearchResult> newlist = new List<IllegalWordsSearchResult>();
-            string searchText = WordHelper.ToSenseWord(text);
+            string searchText = WordsHelper.ToSenseWords(text);
             searchAll(searchText, (keyword, ch, end) => {
                 var start = end + 1 - keyword.Length;
                 var r = GetIllegalResult(keyword, ch, start, end, text, searchText);
@@ -421,7 +421,7 @@ namespace ToolGood.Words
             searchText = removeChecks(searchText, newlist);
             //list.AddRange(newlist);
             //newlist.Clear();
-            searchText = WordHelper.RemoveNontext(searchText);
+            searchText = WordsHelper.RemoveNontext(searchText);
             searchAll(searchText, (keyword, ch, end) => {
                 var start = end;
                 for (int i = 0; i < keyword.Length ; i++) {

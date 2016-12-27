@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ToolGood.Words
 {
-    public static class WordHelper
+    public static class WordsHelper
     {
         #region 判断输入是否为中文
         /// <summary>
@@ -44,7 +44,7 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        //[Obsolete("请使用GetPinYin方法，此方法不支持多音")]
+        [Obsolete("请使用GetPinYin方法，此方法不支持多音")]
         public static string GetPinYinFirst(string text)
         {
             StringBuilder sb = new StringBuilder();
@@ -55,15 +55,15 @@ namespace ToolGood.Words
             return sb.ToString();
         }
 
-        ///// <summary>
-        ///// 获取拼音全拼 支持多音
-        ///// </summary>
-        ///// <param name="text"></param>
-        ///// <returns></returns>
-        //public static string GetPinYin(string text)
-        //{
-        //    return PinYinDict.GetPinYin(text);
-        //}
+        /// <summary>
+        /// 获取拼音全拼 支持多音
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string GetPinYin(string text)
+        {
+            return PinYinDict.GetPinYin(text);
+        }
 
         /// <summary>
         /// 获取所有拼音
@@ -98,7 +98,7 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string ToSenseWord(string s)
+        public static string ToSenseWords(string s)
         {
             StringBuilder ts = new StringBuilder(s);
             for (int i = 0; i < s.Length; i++) {

@@ -13,8 +13,12 @@ namespace ToolGood.Words.Test
         [Test]
         public void GetPinYin()
         {
-            var a = WordHelper.GetPinYinFirst("阿");
+            var a = WordsHelper.GetPinYinFirst("阿");
             Assert.AreEqual("A", a);
+
+
+            var b = WordsHelper.GetPinYin("摩擦棒");
+            Assert.AreEqual("MoCaBang", b);
 
         }
 
@@ -22,33 +26,33 @@ namespace ToolGood.Words.Test
         [Test]
         public void HasChinese()
         {
-            var b = WordHelper.HasChinese("xhdsf");
+            var b = WordsHelper.HasChinese("xhdsf");
             Assert.AreEqual(false, b);
 
-            var c = WordHelper.HasChinese("我爱中国");
+            var c = WordsHelper.HasChinese("我爱中国");
             Assert.AreEqual(true, c);
 
-            var d = WordHelper.HasChinese("I爱中国");
+            var d = WordsHelper.HasChinese("I爱中国");
             Assert.AreEqual(true, d);
         }
         [Test]
         public void ToChineseRMB()
         {
-            var t = WordHelper.ToChineseRMB(12345678901.12);
+            var t = WordsHelper.ToChineseRMB(12345678901.12);
             Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
         }
         [Test]
         public void ToSimplifiedChinese()
         {
-            var tw = WordHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
+            var tw = WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
 
             Assert.AreEqual("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分", tw);
         }
         [Test]
         public void ToSBC_ToDBC()
         {
-            var s = WordHelper.ToSBC("abcABC123");
-            var t = WordHelper.ToDBC(s);
+            var s = WordsHelper.ToSBC("abcABC123");
+            var t = WordsHelper.ToDBC(s);
             Assert.AreEqual("ａｂｃＡＢＣ１２３", s);
             Assert.AreEqual("abcABC123", t);
 

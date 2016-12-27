@@ -50,7 +50,7 @@
     <Compile Include="internal\Dict.cs" />
     <Compile Include="internal\PinYinDict.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WordHelper.cs" />
+    <Compile Include="WordsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ToolGood.Words.snk" />

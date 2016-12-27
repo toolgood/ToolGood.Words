@@ -8,14 +8,16 @@ namespace ToolGood.PinYin.WordsBuild
     public class PinYinWords
     {
         public string Words { get; set; }
-        public int Length { get; set; }
-        public List<string> PinYins { get; set; }
+        public string PinYins { get; set; }
+
+        private List<string> PinYinList { get; set; }
 
         public int[] GetPinYinIndex()
         {
-            int[] pys = new int[Length];
-            for (int i = 0; i < Length; i++) {
-                pys[i] = GetPyName(PinYins[i]);
+            PinYinList = PinYins.Split('\'').ToList();
+            int[] pys = new int[Words.Length];
+            for (int i = 0; i < Words.Length; i++) {
+                pys[i] = GetPyName(PinYinList[i]);
             }
             return pys;
         }
@@ -24,7 +26,7 @@ namespace ToolGood.PinYin.WordsBuild
         private  int GetPyName(string name)
         {
             name = name.Replace("0", "").Replace("1", "").Replace("2", "").Replace("3", "").Replace("4", "")
-                .Replace("5", "").Replace("6", "").Replace("7", "").Replace("8", "").Replace("9", "");
+                .Replace("5", "").Replace("6", "").Replace("7", "").Replace("8", "").Replace("9", "").ToUpper();
             if (name.Length > 1) {
                 name = name[0] + name.Substring(1).ToLower();
             }
@@ -76,5 +78,17 @@ namespace ToolGood.PinYin.WordsBuild
              "Ei","Chua","Nou","Tei"
        };
         #endregion
+
+
+       
+
+        public override int GetHashCode()
+        {
+            return Words.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return Words + "|" + PinYins;
+        }
     }
 }
