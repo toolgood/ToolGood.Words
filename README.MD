@@ -114,7 +114,7 @@ ToolGood.Words
     Assert.AreEqual(1, all.Count);
 
     test = "19w 1919 all";
-    all = iwords.FindAll(test);//搜索时，排除数字截断，如1919，不会匹配
+    all = iwords.FindAll(test);//搜索时，排除数字截断，如1919，不会匹配19
     Assert.AreEqual("19", all[0].SrcString);
     Assert.AreEqual("all", all[1].SrcString);
 
@@ -137,8 +137,6 @@ TrieFilter : 153ms
 FastFilter : 109ms
 
 StringSearch   : 32ms
-
-StringSearch（ToSenseWord） : 199ms
 
 IllegalWordsSearch（FindFirst） : 54ms
 
