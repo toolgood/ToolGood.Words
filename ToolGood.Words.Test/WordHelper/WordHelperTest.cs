@@ -13,12 +13,26 @@ namespace ToolGood.Words.Test
         [Test]
         public void GetPinYin()
         {
-            var a = WordsHelper.GetPinYinFirst("阿");
+            var a = WordsHelper.GetPinYinFast("阿");
             Assert.AreEqual("A", a);
 
 
             var b = WordsHelper.GetPinYin("摩擦棒");
             Assert.AreEqual("MoCaBang", b);
+
+            var py = WordsHelper.GetPinYinFast("我爱中国");
+            Assert.AreEqual("WoAiZhongGuo", py);
+
+            py = WordsHelper.GetPinYin("我爱中国");
+            Assert.AreEqual("WoAiZhongGuo", py);
+
+            py = WordsHelper.GetFirstPinYin("我爱中国");
+            Assert.AreEqual("WAZG", py);
+
+            var pys = WordsHelper.GetAllPinYin('传');
+            Assert.AreEqual("Chuan", pys[0]);
+            Assert.AreEqual("Zhuan", pys[1]);
+
 
         }
 
@@ -48,6 +62,15 @@ namespace ToolGood.Words.Test
 
             Assert.AreEqual("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分", tw);
         }
+        [Test]
+        public void ToTraditionalChinese()
+        {
+            var tw = WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
+
+            Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", tw);
+        }
+
+
         [Test]
         public void ToSBC_ToDBC()
         {

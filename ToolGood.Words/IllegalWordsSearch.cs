@@ -13,7 +13,7 @@ namespace ToolGood.Words
             Success = true;
             End = end;
             Start = start;
-            SearchString = srcText.Substring(Start, end - Start + 1);
+            SrcString = srcText.Substring(Start, end - Start + 1);
         }
 
         private IllegalWordsSearchResult()
@@ -21,14 +21,14 @@ namespace ToolGood.Words
             Success = false;
             Start = 0;
             End = 0;
-            SearchString = null;
+            SrcString = null;
             Keyword = null;
         }
 
         public bool Success { get; private set; }
         public int Start { get; private set; }
         public int End { get; private set; }
-        public string SearchString { get; private set; }
+        public string SrcString { get; private set; }
         public string Keyword { get; private set; }
 
         public static IllegalWordsSearchResult Empty { get { return new IllegalWordsSearchResult(); } }
@@ -45,7 +45,7 @@ namespace ToolGood.Words
         }
         public override string ToString()
         {
-            return Start.ToString() + "|" + SearchString;
+            return Start.ToString() + "|" + SrcString;
         }
     }
 

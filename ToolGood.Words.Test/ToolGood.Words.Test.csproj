@@ -45,11 +45,10 @@
     <Compile Include="PetaTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchText\SearchTextTest.cs" />
     <Compile Include="WordHelper\WordHelperTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SearchText\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj">
       <Project>{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}</Project>

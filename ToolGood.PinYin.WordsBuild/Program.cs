@@ -74,7 +74,7 @@ namespace ToolGood.PinYin.WordsBuild
                     if (pyw.Words.Length >= length) continue;
                     w = w.Replace(pyw.Words, pyw.PinYins);
                 }
-                var py = WordsHelper.GetPinYinFirst(w).ToLower().Replace("'", "");
+                var py = WordsHelper.GetPinYinFast(w).ToLower().Replace("'", "");
                 var py1 = item.PinYins.Replace("'", "");
 
                 if (py != py1) {
@@ -94,7 +94,7 @@ namespace ToolGood.PinYin.WordsBuild
 
             foreach (var item in t) {
                 var w = item.Word;
-                var py = WordsHelper.GetPinYinFirst(w).ToLower();
+                var py = WordsHelper.GetPinYinFast(w).ToLower();
                 var py1 = item.PinYinString.Replace("'", "");
                 if (py != py1) {
                     list.Add(Tuple.Create(w, item.PinYinString));
@@ -115,7 +115,7 @@ namespace ToolGood.PinYin.WordsBuild
 
                     w = w.Replace(pyw.Words, pyw.PinYins);
                 }
-                var py = WordsHelper.GetPinYinFirst(w).ToLower().Replace("'", "");
+                var py = WordsHelper.GetPinYinFast(w).ToLower().Replace("'", "");
                 var py1 = item.Item2.Replace("'", "");
 
                 if (py != py1) {

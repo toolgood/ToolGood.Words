@@ -45,7 +45,7 @@ namespace ToolGood.Words
         /// <param name="text"></param>
         /// <returns></returns>
         [Obsolete("请使用GetPinYin方法，此方法不支持多音")]
-        public static string GetPinYinFirst(string text)
+        public static string GetPinYinFast(string text)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
