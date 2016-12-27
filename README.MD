@@ -130,6 +130,7 @@ ToolGood.Words
 ```
 
 ##### 性能对比
+设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
 
 TrieFilter : 153ms
 
