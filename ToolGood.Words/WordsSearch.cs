@@ -5,23 +5,23 @@ using System.Text;
 
 namespace ToolGood.Words
 {
-    public class IllegalWordsSearchResult
+    public class WordsSearchResult
     {
-        internal IllegalWordsSearchResult(string keyword, int start, int end, string srcText)
+        internal WordsSearchResult(string keyword, int start, int end, long index)
         {
             Keyword = keyword;
             Success = true;
             End = end;
             Start = start;
-            SrcString = srcText.Substring(Start, end - Start + 1);
+            Index = index;
         }
 
-        private IllegalWordsSearchResult()
+        private WordsSearchResult()
         {
             Success = false;
             Start = 0;
             End = 0;
-            SrcString = null;
+            Index = -1;
             Keyword = null;
         }
         /// <summary>
@@ -37,15 +37,16 @@ namespace ToolGood.Words
         /// </summary>
         public int End { get; private set; }
         /// <summary>
-        /// 原始文本
-        /// </summary>
-        public string SrcString { get; private set; }
-        /// <summary>
         /// 关键字
         /// </summary>
         public string Keyword { get; private set; }
+        /// <summary>
+        /// 索引
+        /// </summary>
+        public long Index { get; private set; }
 
-        public static IllegalWordsSearchResult Empty { get { return new IllegalWordsSearchResult(); } }
+
+        public static WordsSearchResult Empty { get { return new WordsSearchResult(); } }
 
         private int _hash = -1;
         public override int GetHashCode()
@@ -59,11 +60,14 @@ namespace ToolGood.Words
         }
         public override string ToString()
         {
-            return Start.ToString() + "|" + SrcString;
+            return Start.ToString() + "|" + Keyword;
         }
     }
 
-    public class IllegalWordsSearch
+    /// <summary>
+    /// 带返回位置
+    /// </summary>
+    public class WordsSearch
     {
         #region class
         class TreeNode
@@ -73,16 +77,16 @@ namespace ToolGood.Words
             public TreeNode(TreeNode parent, char c)
             {
                 _char = c; _parent = parent;
-                _results = new List<string>();
+                _results = new Dictionary<string, long>();
 
                 _transitionsAr = new List<TreeNode>();
                 _transHash = new Dictionary<char, TreeNode>();
             }
 
-            public void AddResult(string result)
+            public void AddResult(string result, long index)
             {
-                if (_results.Contains(result)) return;
-                _results.Add(result);
+                if (_results.ContainsKey(result)) return;
+                _results.Add(result, index);
             }
 
             public void AddTransition(TreeNode node)
@@ -108,7 +112,7 @@ namespace ToolGood.Words
             private char _char;
             private TreeNode _parent;
             private TreeNode _failure;
-            private List<string> _results;
+            private Dictionary<string, long> _results;
             private List<TreeNode> _transitionsAr;
             private Dictionary<char, TreeNode> _transHash;
 
@@ -145,7 +149,7 @@ namespace ToolGood.Words
             /// <summary>
             /// Returns list of patterns ending by this letter
             /// </summary>
-            public List<string> Results
+            public Dictionary<string, long> Results
             {
                 get { return _results; }
             }
@@ -154,9 +158,8 @@ namespace ToolGood.Words
         }
         class TrieNode
         {
-            //public byte Type { get; set; }
             public bool End { get; set; }
-            public HashSet<string> Results { get; set; }
+            public Dictionary<string, long> Results { get; set; }
             private Dictionary<char, TrieNode> m_values;
             private uint minflag = uint.MaxValue;
             private uint maxflag = uint.MinValue;
@@ -164,7 +167,7 @@ namespace ToolGood.Words
             public TrieNode()
             {
                 m_values = new Dictionary<char, TrieNode>();
-                Results = new HashSet<string>();
+                Results = new Dictionary<string, long>();
             }
 
             public bool TryGetValue(char c, out TrieNode node)
@@ -185,8 +188,9 @@ namespace ToolGood.Words
                     m_values.Add(c, node);
                     foreach (var item in t.Results) {
                         node.End = true;
-                        //node.Type = GetType(c);
-                        node.Results.Add(item);
+                        if (node.Results.ContainsKey(item.Key)==false) {
+                            node.Results.Add(item.Key, item.Value);
+                        }
                     }
                 }
             }
@@ -199,55 +203,46 @@ namespace ToolGood.Words
                 }
                 return first;
             }
-            //public static byte GetType(char c)
-            //{
-            //    if (c < '0') { } else if (c <= '9') {
-            //        return 1;
-            //    } else if (c < 'A') { } else if (c <= 'Z') {
-            //        return 2;
-            //    } else if (c < 'a') { } else if (c <= 'z') {
-            //        return 2;
-            //    } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-            //        return 3;
-            //    }
-            //    return 0;
-            //}
         }
         #endregion
 
-        #region Local fields
         private TrieNode _root = new TrieNode();
         private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
-        private int _jumpLength;
-        #endregion
-
-        public IllegalWordsSearch(int jumpLength = 1)
-        {
-            _jumpLength = jumpLength;
-        }
 
         #region SetKeywords
+
         public void SetKeywords(ICollection<string> _keywords)
         {
-            HashSet<string> list = new HashSet<string>();
+            Dictionary<string, long> dict = new Dictionary<string, long>();
+            int index = 0;
             foreach (var item in _keywords) {
-                list.Add(WordsHelper.ToSenseWords(item));
-                var c = WordsHelper.ToSenseWords(item);
+                dict[item] = index++;
             }
-            list.Remove("");
-            var tn = BuildTreeWithBFS(list);
+            SetKeywords(dict);
+        }
+        public void SetKeywords(ICollection<string> _keywords, ICollection<long> indexs)
+        {
+            if (_keywords.Count != indexs.Count) { throw new Exception("数量不一样"); }
+            Dictionary<string, long> dict = new Dictionary<string, long>();
+            long index = 0;
+            var ind = indexs.ToArray();
+            foreach (var item in _keywords) {
+                dict[item] = ind[index++];
+            }
+            SetKeywords(dict);
+
+        }
+        public void SetKeywords(IDictionary<string, long> _keywords)
+        {
+            var tn = BuildTreeWithBFS(_keywords);
             SimplifyTree(tn);
         }
-        TreeNode BuildTreeWithBFS(ICollection<string> _keywords)
+
+        TreeNode BuildTreeWithBFS(IDictionary<string, long> _keywords)
         {
             var root = new TreeNode(null, ' ');
-            foreach (string p in _keywords) {
-                string t = p;
-                //if (_quick) {
-                //    t = p.ToLower();
-                //} else {
-                //    t = WordHelper.ToSenseWord(p);
-                //}
+            foreach (var p in _keywords) {
+                string t = p.Key;
 
                 // add pattern to tree
                 TreeNode nd = root;
@@ -262,7 +257,7 @@ namespace ToolGood.Words
                     }
                     nd = ndNew;
                 }
-                nd.AddResult(t);
+                nd.AddResult(p.Key, p.Value);
             }
 
             List<TreeNode> nodes = new List<TreeNode>();
@@ -287,8 +282,8 @@ namespace ToolGood.Words
                         nd.Failure = root;
                     else {
                         nd.Failure = r.GetTransition(c);
-                        foreach (string result in nd.Failure.Results)
-                            nd.AddResult(result);
+                        foreach (var result in nd.Failure.Results)
+                            nd.AddResult(result.Key, result.Value);
                     }
 
                     // add child nodes to BFS list 
@@ -340,7 +335,6 @@ namespace ToolGood.Words
                 }
             }
         }
-
         void simplifyNode(TreeNode treeNode, TreeNode root, Dictionary<TreeNode, TrieNode> dict)
         {
             List<TreeNode> list = new List<TreeNode>();
@@ -362,233 +356,80 @@ namespace ToolGood.Words
                 }
             }
         }
+
         #endregion
 
-        #region ContainsAny
         public bool ContainsAny(string text)
         {
-            bool r = false;
-            search(text, (keyword, ch, end) => {
-                r = !isInEnglishOrInNumber(keyword, ch, end, text);
-                return r;
-            });
-            if (r) return true;
-            var searchText = WordsHelper.ToSenseWords(text);
-            search(searchText, (keyword, ch, end) => {
-                r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
-                return r;
-            });
-            if (r) return true;
-            searchText = WordsHelper.RemoveNontext(searchText);
-            search(searchText, (keyword, ch, end) => {
-                r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
-                return r;
-            });
-            return r;
-        }
-        #endregion
-
-        #region FindFirst
-        public IllegalWordsSearchResult FindFirst(string text)
-        {
-            IllegalWordsSearchResult result = null;
-            search(text, (keyword, ch, end) => {
-                var start = end + 1 - keyword.Length;
-                result = GetIllegalResult(keyword, ch, start, end, text, text);
-                return result != null;
-            });
-            if (result != null) return result;
-            var searchText = WordsHelper.ToSenseWords(text);
-            search(searchText, (keyword, ch, end) => {
-                var start = end + 1 - keyword.Length;
-                result = GetIllegalResult(keyword, ch, start, end, text, searchText);
-                return result != null;
-            });
-            if (result != null) return result;
-            searchText = WordsHelper.RemoveNontext(searchText);
-            search(searchText, (keyword, ch, end) => {
-                var start = end;
-                for (int i = 0; i < keyword.Length; i++) {
-                    var n = searchText[start--];
-                    while (n == 1) { n = searchText[start--]; }
-                }
-                start++;
-                result = GetIllegalResult(keyword, ch, start, end, text, searchText);
-                return result != null;
-            });
-            if (result != null) return result;
-            return IllegalWordsSearchResult.Empty;
-        }
-
-        #endregion
-
-        #region FindAll
-        public List<IllegalWordsSearchResult> FindAll(string text)
-        {
-            List<IllegalWordsSearchResult> newlist = new List<IllegalWordsSearchResult>();
-            string searchText = WordsHelper.ToSenseWords(text);
-            searchAll(searchText, (keyword, ch, end) => {
-                var start = end + 1 - keyword.Length;
-                var r = GetIllegalResult(keyword, ch, start, end, text, searchText);
-                if (r != null) newlist.Add(r);
-            });
-            searchText = removeChecks(searchText, newlist);
-            //list.AddRange(newlist);
-            //newlist.Clear();
-            searchText = WordsHelper.RemoveNontext(searchText);
-            searchAll(searchText, (keyword, ch, end) => {
-                var start = end;
-                for (int i = 0; i < keyword.Length ; i++) {
-                    var n = searchText[start--];
-                    while (n == 1) { n = searchText[start--]; }
-                }
-                start++;
-                var r = GetIllegalResult(keyword, ch, start, end, text, searchText);
-                if (r != null) newlist.Add(r);
-            });
-            return newlist;
-        }
-        #endregion
-
-
-        #region isInEnglishOrInNumber  search searchAll GetIllegalResult
-        const string bitType = "00000000000000000000000000000000000000000000000011111111110000000zzzzzzzzzzzzzzzzzzzzzzzzzz000000zzzzzzzzzzzzzzzzzzzzzzzzzz00000";
-        private bool isInEnglishOrInNumber(string keyword, char ch, int end, string searchText)
-        {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
-                    var c = searchText[end + 1];
-                    if (c < 127) {
-                        int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 244) {
-                            return true;
-                        }
+            TrieNode ptr = null;
+            for (int i = 0; i < text.Length; i++) {
+                TrieNode tn;
+                if (ptr == null) {
+                    tn = _first[text[i]];
+                } else {
+                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                        tn = _first[text[i]];
                     }
                 }
-            }
-            var start = end + 1 - keyword.Length;
-            if (start > 0) {
-                var c = searchText[start - 1];
-                if (c < 127) {
-                    var k = keyword[0];
-                    if (k < 127) {
-                        int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 244) {
-                            return true;
-                        }
+                if (tn != null) {
+                    if (tn.End) {
+                        return true;
                     }
                 }
+                ptr = tn;
             }
             return false;
         }
-        private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, string searchText)
-        {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
-                    var c = searchText[end + 1];
-                    if (c < 127) {
-                        int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 244) {
-                            return null;
-                        }
 
-                    }
-                }
-            }
-            if (start > 0) {
-                var c = searchText[start - 1];
-                if (c < 127) {
-                    var k = keyword[0];
-                    if (k < 127) {
-                        int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 244) {
-                            return null;
-                        }
-                    }
-                }
-            }
-            return new IllegalWordsSearchResult(keyword, start, end, srcText);
-        }
-
-        // func :关键字，结尾字符，结尾索引，是否退出搜索
-        private void search(string text, Func<string, char, int, bool> func)
+        public WordsSearchResult FindFirst(string text)
         {
             TrieNode ptr = null;
-            int jumpCount = 0;
             for (int i = 0; i < text.Length; i++) {
-                var ch = text[i];
-                if (ch == 1) {
-                    jumpCount++;
-                    if (jumpCount > _jumpLength) { jumpCount = 0; ptr = null; }
-                    continue;
-                }
                 TrieNode tn;
                 if (ptr == null) {
-                    tn = _first[ch];
+                    tn = _first[text[i]];
                 } else {
-                    if (ptr.TryGetValue(ch, out tn) == false) {
-                        tn = _first[ch];
+                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                        tn = _first[text[i]];
                     }
                 }
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            var r = func(item, ch, i);
-                            if (r) return;
+                            return new WordsSearchResult(item.Key, i + 1 - item.Key.Length, i, item.Value);
                         }
                     }
                 }
                 ptr = tn;
             }
+            return WordsSearchResult.Empty;
         }
-        private void searchAll(string text, Action<string, char, int> action)
+
+        public List<WordsSearchResult> FindAll(string text)
         {
             TrieNode ptr = null;
-            int jumpCount = 0;
+            List<WordsSearchResult> list = new List<WordsSearchResult>();
+
             for (int i = 0; i < text.Length; i++) {
-                var ch = text[i];
-                if (ch == 1) {
-                    jumpCount++;
-                    if (jumpCount > _jumpLength) { jumpCount = 0; ptr = null; }
-                    continue;
-                }
-                jumpCount = 0;
-                if (ch == 0) { ptr = null; continue; }
-
-
                 TrieNode tn;
                 if (ptr == null) {
-                    tn = _first[ch];
+                    tn = _first[text[i]];
                 } else {
-                    if (ptr.TryGetValue(ch, out tn) == false) {
-                        tn = _first[ch];
+                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                        tn = _first[text[i]];
                     }
                 }
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            action(item, ch, i);
+                            list.Add(new WordsSearchResult(item.Key, i + 1 - item.Key.Length, i, item.Value));
                         }
                     }
                 }
                 ptr = tn;
             }
+            return list;
         }
-
-        // 删除 已符合数据
-        private string removeChecks(string text, List<IllegalWordsSearchResult> results)
-        {
-            StringBuilder sb = new StringBuilder(text);
-            foreach (var r in results) {
-                for (int i = r.Start; i <= r.End; i++) {
-                    sb[i] = (char)0;
-                }
-            }
-            return sb.ToString();
-        }
-
-        #endregion
-
 
     }
 }

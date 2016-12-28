@@ -30,7 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\ToolGood.Words.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -47,10 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IllegalWordsSearch.cs" />
+    <Compile Include="PinYinSearch.cs" />
     <Compile Include="StringSearch.cs" />
     <Compile Include="internal\Dict.cs" />
     <Compile Include="internal\PinYinDict.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WordsSearch.cs" />
     <Compile Include="WordsHelper.cs" />
   </ItemGroup>
   <ItemGroup>

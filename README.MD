@@ -1,31 +1,21 @@
 ToolGood.Words
 ==================
-支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词(敏感词)查询
+支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词(敏感词)查询。
 
 
-#### 繁体简体互换
+#### 繁体简体互换、全角半角、数字转成中文大写
 
 ``` csharp
     //转成简体
     WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
     //转成繁体
     WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
-``` 
-
-
-#### 全角半角互换
-
-``` csharp
     //转成全角
     WordsHelper.ToSBC("abcABC123");
     //转成半角
     WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
-``` 
-
-#### 数字转成中文大写
-``` csharp
-    var t = WordsHelper.ToChineseRMB(12345678901.12);
-    Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
+    //数字转成中文大写
+    WordsHelper.ToChineseRMB(12345678901.12);
 ``` 
 
 #### 拼音操作
@@ -44,6 +34,8 @@ ToolGood.Words
 ``` 
 
 #### 字符串搜索
+`StringSearch`和`WordsSearch`类都是搜索字符串的类，区别是：`WordsSearch`的`FindFirst`，`FindAll`返回的类型有关键字所在位置。
+
 
 ``` csharp
     string s = "中国|国人|zg人";
@@ -61,6 +53,23 @@ ToolGood.Words
     var all = iwords.FindAll(test);
     Assert.AreEqual("中国", all[0]);
     Assert.AreEqual("国人", all[1]);
+    Assert.AreEqual(2, all.Count);
+
+    WordsSearch iwords = new WordsSearch();
+    iwords.SetKeywords(s.Split('|'));
+
+    b = iwords.ContainsAny(test);
+    Assert.AreEqual(true, b);
+
+    f = iwords.FindFirst(test);
+    Assert.AreEqual("中国", f.Keyword);
+
+    all = iwords.FindAll(test);
+    Assert.AreEqual("中国", all[0].Keyword);
+    Assert.AreEqual(2, all[0].Start);
+    Assert.AreEqual(3, all[0].End);
+    Assert.AreEqual(0, all[0].Index);//返回索引Index,默认从0开始
+    Assert.AreEqual("国人", all[1].Keyword);
     Assert.AreEqual(2, all.Count);
 ``` 
 
@@ -131,28 +140,24 @@ ToolGood.Words
 
 ##### 性能对比
 设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
-
-TrieFilter : 153ms
-
-FastFilter : 109ms
-
-StringSearch   : 32ms
-
-IllegalWordsSearch（FindFirst） : 54ms
-
-IllegalWordsSearch（ContainsAny） : 52ms
-
-TrieFilter（Find All） : 1,453ms
-
-FastFilter （Find All）: 395ms
-
-StringSearch（Find All）: 405ms
-
-IllegalWordsSearch（Find All）: 1,201ms
+```
+    TrieFilter : 151ms
+    FastFilter : 106ms
+    StringSearch（ContainsAny） : 31ms
+    StringSearch（FindFirst） : 47ms
+    WordsSearch（ContainsAny） : 31ms
+    WordsSearch（FindFirst） : 84ms
+    IllegalWordsSearch（FindFirst） : 68ms
+    IllegalWordsSearch（ContainsAny） : 47ms
+    TrieFilter（FindAll） : 1,281ms
+    FastFilter（FindAll） : 305ms
+    StringSearch（FindAll） : 364ms
+    WordsSearch（FindAll） : 438ms
+    IllegalWordsSearch（FindAll） : 1,175ms
+```
 
 
-
-注:`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
+注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
 
 注: 在 Find All测试中,`FastFilter`只能检测出7个:
     [0]: "主席"
