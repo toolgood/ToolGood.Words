@@ -22,15 +22,11 @@ ToolGood.Words
 
 ``` csharp
     //获取全拼
-    var py = WordsHelper.GetPinYin("我爱中国");
-    Assert.AreEqual("WoAiZhongGuo", py);
+    WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
     //获取首字母
-    py = WordsHelper.GetFirstPinYin("我爱中国");
-    Assert.AreEqual("WAZG", py);
+    WordsHelper.GetFirstPinYin("我爱中国");//WAZG
     //获取全部拼音
-    var pys = WordsHelper.GetAllPinYin('传');
-    Assert.AreEqual("Chuan", pys[0]);
-    Assert.AreEqual("Zhuan", pys[1]);
+    WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
 ``` 
 
 ### 字符串搜索
