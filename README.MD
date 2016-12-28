@@ -1,9 +1,9 @@
 ToolGood.Words
 ==================
-支持 繁体简体转化, 支持全角 半角转化, 获取拼音首字母, 获取 拼音字母 , 非法词(敏感词)查询。
+支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)搜索。
 
 
-#### 繁体简体互换、全角半角、数字转成中文大写
+### 繁体简体互换、全角半角互换、数字转成中文大写
 
 ``` csharp
     //转成简体
@@ -18,7 +18,7 @@ ToolGood.Words
     WordsHelper.ToChineseRMB(12345678901.12);
 ``` 
 
-#### 拼音操作
+### 拼音操作
 
 ``` csharp
     //获取全拼
@@ -33,9 +33,8 @@ ToolGood.Words
     Assert.AreEqual("Zhuan", pys[1]);
 ``` 
 
-#### 字符串搜索
+### 字符串搜索
 `StringSearch`和`WordsSearch`类都是搜索字符串的类，区别是：`WordsSearch`的`FindFirst`，`FindAll`返回的类型有关键字所在位置。
-
 
 ``` csharp
     string s = "中国|国人|zg人";
@@ -73,7 +72,7 @@ ToolGood.Words
     Assert.AreEqual(2, alls.Count);
 ``` 
 
-#### 查找非法词(敏感词)
+### 查找非法词(敏感词)
 
 ``` csharp
     string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
@@ -159,7 +158,9 @@ ToolGood.Words
 
 注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
 
-注: 在 Find All测试中,`FastFilter`只能检测出7个:
+注: 在 Find All测试中,
+
+`FastFilter`只能检测出7个:
     [0]: "主席"
     [1]: "赵洪祝"
     [2]: "中国"
