@@ -64,13 +64,13 @@ ToolGood.Words
     f = iwords.FindFirst(test);
     Assert.AreEqual("中国", f.Keyword);
 
-    all = iwords.FindAll(test);
-    Assert.AreEqual("中国", all[0].Keyword);
-    Assert.AreEqual(2, all[0].Start);
-    Assert.AreEqual(3, all[0].End);
-    Assert.AreEqual(0, all[0].Index);//返回索引Index,默认从0开始
-    Assert.AreEqual("国人", all[1].Keyword);
-    Assert.AreEqual(2, all.Count);
+    var alls = iwords.FindAll(test);
+    Assert.AreEqual("中国", alls[0].Keyword);
+    Assert.AreEqual(2, alls[0].Start);
+    Assert.AreEqual(3, alls[0].End);
+    Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
+    Assert.AreEqual("国人", alls[1].Keyword);
+    Assert.AreEqual(2, alls.Count);
 ``` 
 
 #### 查找非法词(敏感词)
