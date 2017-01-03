@@ -6,8 +6,10 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
-    public class IllegalWordsQuickSearch: IllegalWordsSearch
+    public class IllegalWordsQuickSearch : IllegalWordsSearch
     {
+        public IllegalWordsQuickSearch(int jumpLength = 1) : base(jumpLength) { }
+
         #region ContainsAny
         public override bool ContainsAny(string text)
         {
@@ -82,7 +84,7 @@ namespace ToolGood.Words
             searchText = WordsHelper.RemoveNontext(searchText);
             searchAll(searchText, (keyword, ch, end) => {
                 var start = end;
-                for (int i = 0; i < keyword.Length ; i++) {
+                for (int i = 0; i < keyword.Length; i++) {
                     var n = searchText[start--];
                     while (n == 1) { n = searchText[start--]; }
                 }
@@ -96,7 +98,7 @@ namespace ToolGood.Words
 
 
         #region isInEnglishOrInNumber  search searchAll GetIllegalResult
-        
+
         private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, string searchText)
         {
             if (end < searchText.Length - 1) {

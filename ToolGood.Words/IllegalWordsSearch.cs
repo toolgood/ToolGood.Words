@@ -230,6 +230,16 @@ namespace ToolGood.Words
             _jumpLength = jumpLength;
         }
 
+        public override void SetKeywords(ICollection<string> _keywords)
+        {
+            HashSet<string> kws = new HashSet<string>();
+            foreach (var item in _keywords) {
+                kws.Add(WordsHelper.ToSenseIllegalWords(item));
+            }
+            base.SetKeywords(kws);
+        }
+
+
         public virtual bool ContainsAny(string text)
         {
             StringBuilder sb = new StringBuilder(text);

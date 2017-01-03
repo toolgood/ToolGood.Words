@@ -11,7 +11,7 @@ namespace ToolGood.Words.internals
         protected TrieNode[] _first = new TrieNode[char.MaxValue + 1];
 
         #region SetKeywords
-        public void SetKeywords(ICollection<string> _keywords)
+        public virtual void SetKeywords(ICollection<string> _keywords)
         {
             var tn = BuildTreeWithBFS(_keywords);
             SimplifyTree(tn);
