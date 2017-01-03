@@ -96,35 +96,7 @@ namespace ToolGood.Words
 
 
         #region isInEnglishOrInNumber  search searchAll GetIllegalResult
-        const string bitType = "00000000000000000000000000000000000000000000000011111111110000000zzzzzzzzzzzzzzzzzzzzzzzzzz000000zzzzzzzzzzzzzzzzzzzzzzzzzz00000";
-        private bool isInEnglishOrInNumber(string keyword, char ch, int end, string searchText)
-        {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
-                    var c = searchText[end + 1];
-                    if (c < 127) {
-                        int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 244) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            var start = end + 1 - keyword.Length;
-            if (start > 0) {
-                var c = searchText[start - 1];
-                if (c < 127) {
-                    var k = keyword[0];
-                    if (k < 127) {
-                        int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 244) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+        
         private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, string searchText)
         {
             if (end < searchText.Length - 1) {
@@ -132,7 +104,7 @@ namespace ToolGood.Words
                     var c = searchText[end + 1];
                     if (c < 127) {
                         int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 244) {
+                        if (d == 98 || d == 194) {
                             return null;
                         }
 
@@ -145,7 +117,7 @@ namespace ToolGood.Words
                     var k = keyword[0];
                     if (k < 127) {
                         int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 244) {
+                        if (d == 98 || d == 194) {
                             return null;
                         }
                     }
