@@ -3,33 +3,33 @@ ToolGood.Words
 支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)搜索。
 
 
-### 繁体简体互换、全角半角互换、数字转成中文大写
+## 繁体简体互换、全角半角互换、数字转成中文大写
 
 ``` csharp
-    //转成简体
+    // 转成简体
     WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
-    //转成繁体
+    // 转成繁体
     WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
-    //转成全角
+    // 转成全角
     WordsHelper.ToSBC("abcABC123");
-    //转成半角
+    // 转成半角
     WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
-    //数字转成中文大写
+    // 数字转成中文大写
     WordsHelper.ToChineseRMB(12345678901.12);
 ``` 
 
-### 拼音操作
+## 拼音操作
 
 ``` csharp
-    //获取全拼
+    // 获取全拼
     WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
-    //获取首字母
+    // 获取首字母
     WordsHelper.GetFirstPinYin("我爱中国");//WAZG
-    //获取全部拼音
+    // 获取全部拼音
     WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
 ``` 
 
-### 字符串搜索
+## 字符串搜索
 `StringSearch`和`WordsSearch`类都是搜索字符串的类，区别是：`WordsSearch`的`FindFirst`，`FindAll`返回的类型有关键字所在位置。
 
 ``` csharp
@@ -68,7 +68,7 @@ ToolGood.Words
     Assert.AreEqual(2, alls.Count);
 ``` 
 
-### 查找非法词(敏感词)
+## 查找非法词(敏感词)
 
 ``` csharp
     string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";

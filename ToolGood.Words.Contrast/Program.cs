@@ -15,7 +15,8 @@ namespace ToolGood.Words.Contrast
         static FastFilter ff = new FastFilter();
         static StringSearch word = new StringSearch();
         static WordsSearch search = new WordsSearch();
-        static IllegalWordsSearch iword1 = new IllegalWordsSearch();
+        static IllegalWordsQuickSearch iword1 = new IllegalWordsQuickSearch();
+        static IllegalWordsSearch iword2 = new IllegalWordsSearch();
 
         static void Main(string[] args)
         {
@@ -43,21 +44,32 @@ namespace ToolGood.Words.Contrast
             //Run("GetDisablePostion9  ", () => { WordTest.GetDisablePostion9(text); });
             //Run("GetDisablePostion8  ", () => { WordTest.GetDisablePostion8(text); });
 
+            Console.Write("-------------------- ToSenseIllegalWords --------------------\r\n");
 
-            //Run("TextSearch  ", () => { search.ContainsAny(text); });
+            Run("ToSenseIllegalWords", () => { WordsHelper.ToSenseIllegalWords(text); });
+
+
+
+            Console.Write("-------------------- FindFirst OR ContainsAny --------------------\r\n");
             Run("TrieFilter", () => { tf1.HasBadWord(text); });
             Run("FastFilter", () => { ff.HasBadWord(text); });
             Run("StringSearch（ContainsAny）", () => { word.ContainsAny(text); });
             Run("StringSearch（FindFirst）", () => { word.FindFirst(text); });
             Run("WordsSearch（ContainsAny）", () => { search.ContainsAny(text); });
             Run("WordsSearch（FindFirst）", () => { search.FindFirst(text); });
-            Run("IllegalWordsSearch（FindFirst）", () => { iword1.FindFirst(text); });
-            Run("IllegalWordsSearch（ContainsAny）", () => { iword1.ContainsAny(text); });
+            Run("IllegalWordsQuickSearch（FindFirst）", () => { iword1.FindFirst(text); });
+            Run("IllegalWordsQuickSearch（ContainsAny）", () => { iword1.ContainsAny(text); });
+
+            Run("IllegalWordsSearch（FindFirst）", () => { iword2.FindFirst(text); });
+            Run("IllegalWordsSearch（ContainsAny）", () => { iword2.ContainsAny(text); });
+
+            Console.Write("-------------------- Find All --------------------\r\n");
             Run("TrieFilter（FindAll）", () => { tf1.FindAll(text); });
             Run("FastFilter（FindAll）", () => { ff.FindAll(text); });
             Run("StringSearch（FindAll）", () => { word.FindAll(text); });
             Run("WordsSearch（FindAll）", () => { search.FindAll(text); });
-            Run("IllegalWordsSearch（FindAll）", () => { iword1.FindAll(text); });
+            Run("IllegalWordsQuickSearch（FindAll）", () => { iword1.FindAll(text); });
+            Run("IllegalWordsSearch（FindAll）", () => { iword2.FindAll(text); });
 
             Console.ReadKey();
 
@@ -96,6 +108,7 @@ namespace ToolGood.Words.Contrast
             word.SetKeywords(list);
             search.SetKeywords(list);
             iword1.SetKeywords(list);
+            iword2.SetKeywords(list);
             //iword3 = new IllegalWordsSearch2(list);
         }
 

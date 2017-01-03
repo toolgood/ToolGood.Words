@@ -5,8 +5,10 @@ using System.Text;
 
 namespace ToolGood.Words
 {
-    public class StringSearch
+
+    public class IllegalWordsQuickSearch
     {
+        #region class
         class TreeNode
         {
             #region Constructor & Methods
@@ -95,6 +97,7 @@ namespace ToolGood.Words
         }
         class TrieNode
         {
+            //public byte Type { get; set; }
             public bool End { get; set; }
             public HashSet<string> Results { get; set; }
             private Dictionary<char, TrieNode> m_values;
@@ -125,6 +128,7 @@ namespace ToolGood.Words
                     m_values.Add(c, node);
                     foreach (var item in t.Results) {
                         node.End = true;
+                        //node.Type = GetType(c);
                         node.Results.Add(item);
                     }
                 }
@@ -138,15 +142,43 @@ namespace ToolGood.Words
                 }
                 return first;
             }
+            //public static byte GetType(char c)
+            //{
+            //    if (c < '0') { } else if (c <= '9') {
+            //        return 1;
+            //    } else if (c < 'A') { } else if (c <= 'Z') {
+            //        return 2;
+            //    } else if (c < 'a') { } else if (c <= 'z') {
+            //        return 2;
+            //    } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+            //        return 3;
+            //    }
+            //    return 0;
+            //}
         }
+        #endregion
 
+        #region Local fields
         private TrieNode _root = new TrieNode();
         private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
+        private int _jumpLength;
+        #endregion
+
+        public IllegalWordsQuickSearch(int jumpLength = 1)
+        {
+            _jumpLength = jumpLength;
+        }
 
         #region SetKeywords
         public void SetKeywords(ICollection<string> _keywords)
         {
-            var tn = BuildTreeWithBFS(_keywords);
+            HashSet<string> list = new HashSet<string>();
+            foreach (var item in _keywords) {
+                list.Add(WordsHelper.ToSenseIllegalWords(item));
+                var c = WordsHelper.ToSenseIllegalWords(item);
+            }
+            list.Remove("");
+            var tn = BuildTreeWithBFS(list);
             SimplifyTree(tn);
         }
         TreeNode BuildTreeWithBFS(ICollection<string> _keywords)
@@ -241,7 +273,7 @@ namespace ToolGood.Words
                 tridNode.Add(item, node);
                 addNode(item, root, node, dict);
             }
-            if (treeNode!= root) {
+            if (treeNode != root) {
                 var topNode = root.GetTransition(treeNode.Char);
                 if (topNode != null) {
                     foreach (var item in topNode.Transitions) {
@@ -251,6 +283,7 @@ namespace ToolGood.Words
                 }
             }
         }
+
         void simplifyNode(TreeNode treeNode, TreeNode root, Dictionary<TreeNode, TrieNode> dict)
         {
             List<TreeNode> list = new List<TreeNode>();
@@ -272,110 +305,249 @@ namespace ToolGood.Words
                 }
             }
         }
+        #endregion
 
+        #region ContainsAny
+        public bool ContainsAny(string text)
+        {
+            bool r = false;
+            search(text, (keyword, ch, end) => {
+                r = !isInEnglishOrInNumber(keyword, ch, end, text);
+                return r;
+            });
+            if (r) return true;
+            var searchText = WordsHelper.ToSenseIllegalWords(text);
+            search(searchText, (keyword, ch, end) => {
+                r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
+                return r;
+            });
+            if (r) return true;
+            searchText = WordsHelper.RemoveNontext(searchText);
+            search(searchText, (keyword, ch, end) => {
+                r = !isInEnglishOrInNumber(keyword, ch, end, searchText);
+                return r;
+            });
+            return r;
+        }
+        #endregion
 
+        #region FindFirst
+        public IllegalWordsSearchResult FindFirst(string text)
+        {
+            IllegalWordsSearchResult result = null;
+            search(text, (keyword, ch, end) => {
+                var start = end + 1 - keyword.Length;
+                result = GetIllegalResult(keyword, ch, start, end, text, text);
+                return result != null;
+            });
+            if (result != null) return result;
+            var searchText = WordsHelper.ToSenseIllegalWords(text);
+            search(searchText, (keyword, ch, end) => {
+                var start = end + 1 - keyword.Length;
+                result = GetIllegalResult(keyword, ch, start, end, text, searchText);
+                return result != null;
+            });
+            if (result != null) return result;
+            searchText = WordsHelper.RemoveNontext(searchText);
+            search(searchText, (keyword, ch, end) => {
+                var start = end;
+                for (int i = 0; i < keyword.Length; i++) {
+                    var n = searchText[start--];
+                    while (n == 1) { n = searchText[start--]; }
+                }
+                start++;
+                result = GetIllegalResult(keyword, ch, start, end, text, searchText);
+                return result != null;
+            });
+            if (result != null) return result;
+            return IllegalWordsSearchResult.Empty;
+        }
 
         #endregion
 
-        public string FindFirst(string text)
+        #region FindAll
+        public List<IllegalWordsSearchResult> FindAll(string text)
         {
-            TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
-                        tn = _first[text[i]];
-                    }
+            List<IllegalWordsSearchResult> newlist = new List<IllegalWordsSearchResult>();
+            string searchText = WordsHelper.ToSenseIllegalWords(text);
+            searchAll(searchText, (keyword, ch, end) => {
+                var start = end + 1 - keyword.Length;
+                var r = GetIllegalResult(keyword, ch, start, end, text, searchText);
+                if (r != null) newlist.Add(r);
+            });
+            searchText = removeChecks(searchText, newlist);
+            //list.AddRange(newlist);
+            //newlist.Clear();
+            searchText = WordsHelper.RemoveNontext(searchText);
+            searchAll(searchText, (keyword, ch, end) => {
+                var start = end;
+                for (int i = 0; i < keyword.Length ; i++) {
+                    var n = searchText[start--];
+                    while (n == 1) { n = searchText[start--]; }
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var item in tn.Results) {
-                            return item;
-                        }
-                    }
-                }
-                ptr = tn;
-            }
-            return null;
+                start++;
+                var r = GetIllegalResult(keyword, ch, start, end, text, searchText);
+                if (r != null) newlist.Add(r);
+            });
+            return newlist;
         }
+        #endregion
 
-        public List<string> FindAll(string text)
+        public string Replace(string text, char replaceChar = '*')
         {
-            TrieNode ptr = null;
-            List<string> list = new List<string>();
-
-            for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
-                        tn = _first[text[i]];
-                    }
-                }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var item in tn.Results) {
-                            list.Add(item);
-                        }
-                    }
-                }
-                ptr = tn;
-            }
-            return list;
-        }
-
-        public bool ContainsAny(string text)
-        {
-            TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
-                        tn = _first[text[i]];
-                    }
-                }
-                if (tn != null) {
-                    if (tn.End) {
-                        return true;
-                    }
-                }
-                ptr = tn;
-            }
-            return false;
-        }
-
-        public string Replace(string text,char replaceChar='*')
-        {
+            var all = FindAll(text);
             StringBuilder result = new StringBuilder(text);
-
-            TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
-                        tn = _first[text[i]];
+            all = all.OrderBy(q => q.Start).ThenBy(q => q.End).ToList();
+            for (int i = all.Count - 1; i >= 1; i--) {
+                var r = all[i];
+                for (int j = r.Start; j <= r.End; j++) {
+                    if (result[j] != replaceChar) {
+                        result[j] = replaceChar;
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                       var length= tn.Results.Max(q => q.Length);
-                        var start = i + 1 - length;
-                        for (int j = start; j <= i; j++) {
-                            result[j] = replaceChar;
-                        }
-                    }
-                }
-                ptr = tn;
             }
             return result.ToString();
         }
+
+
+        #region isInEnglishOrInNumber  search searchAll GetIllegalResult
+        const string bitType = "00000000000000000000000000000000000000000000000011111111110000000zzzzzzzzzzzzzzzzzzzzzzzzzz000000zzzzzzzzzzzzzzzzzzzzzzzzzz00000";
+        private bool isInEnglishOrInNumber(string keyword, char ch, int end, string searchText)
+        {
+            if (end < searchText.Length - 1) {
+                if (ch < 127) {
+                    var c = searchText[end + 1];
+                    if (c < 127) {
+                        int d = bitType[c] + bitType[ch];
+                        if (d == 98 || d == 244) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            var start = end + 1 - keyword.Length;
+            if (start > 0) {
+                var c = searchText[start - 1];
+                if (c < 127) {
+                    var k = keyword[0];
+                    if (k < 127) {
+                        int d = bitType[c] + bitType[k];
+                        if (d == 98 || d == 244) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, string searchText)
+        {
+            if (end < searchText.Length - 1) {
+                if (ch < 127) {
+                    var c = searchText[end + 1];
+                    if (c < 127) {
+                        int d = bitType[c] + bitType[ch];
+                        if (d == 98 || d == 244) {
+                            return null;
+                        }
+
+                    }
+                }
+            }
+            if (start > 0) {
+                var c = searchText[start - 1];
+                if (c < 127) {
+                    var k = keyword[0];
+                    if (k < 127) {
+                        int d = bitType[c] + bitType[k];
+                        if (d == 98 || d == 244) {
+                            return null;
+                        }
+                    }
+                }
+            }
+            return new IllegalWordsSearchResult(keyword, start, end, srcText);
+        }
+
+        // func :关键字，结尾字符，结尾索引，是否退出搜索
+        private void search(string text, Func<string, char, int, bool> func)
+        {
+            TrieNode ptr = null;
+            int jumpCount = 0;
+            for (int i = 0; i < text.Length; i++) {
+                var ch = text[i];
+                if (ch == 1) {
+                    jumpCount++;
+                    if (jumpCount > _jumpLength) { jumpCount = 0; ptr = null; }
+                    continue;
+                }
+                TrieNode tn;
+                if (ptr == null) {
+                    tn = _first[ch];
+                } else {
+                    if (ptr.TryGetValue(ch, out tn) == false) {
+                        tn = _first[ch];
+                    }
+                }
+                if (tn != null) {
+                    if (tn.End) {
+                        foreach (var item in tn.Results) {
+                            var r = func(item, ch, i);
+                            if (r) return;
+                        }
+                    }
+                }
+                ptr = tn;
+            }
+        }
+        private void searchAll(string text, Action<string, char, int> action)
+        {
+            TrieNode ptr = null;
+            int jumpCount = 0;
+            for (int i = 0; i < text.Length; i++) {
+                var ch = text[i];
+                if (ch == 1) {
+                    jumpCount++;
+                    if (jumpCount > _jumpLength) { jumpCount = 0; ptr = null; }
+                    continue;
+                }
+                jumpCount = 0;
+                if (ch == 0) { ptr = null; continue; }
+
+
+                TrieNode tn;
+                if (ptr == null) {
+                    tn = _first[ch];
+                } else {
+                    if (ptr.TryGetValue(ch, out tn) == false) {
+                        tn = _first[ch];
+                    }
+                }
+                if (tn != null) {
+                    if (tn.End) {
+                        foreach (var item in tn.Results) {
+                            action(item, ch, i);
+                        }
+                    }
+                }
+                ptr = tn;
+            }
+        }
+
+        // 删除 已符合数据
+        private string removeChecks(string text, List<IllegalWordsSearchResult> results)
+        {
+            StringBuilder sb = new StringBuilder(text);
+            foreach (var r in results) {
+                for (int i = r.Start; i <= r.End; i++) {
+                    sb[i] = (char)0;
+                }
+            }
+            return sb.ToString();
+        }
+
+        #endregion
+
 
     }
 }

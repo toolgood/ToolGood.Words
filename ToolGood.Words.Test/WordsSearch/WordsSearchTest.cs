@@ -15,17 +15,17 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            WordsSearch iwords = new WordsSearch();
-            iwords.SetKeywords(s.Split('|'));
+            WordsSearch wordsSearch = new WordsSearch();
+            wordsSearch.SetKeywords(s.Split('|'));
 
-            var b = iwords.ContainsAny(test);
+            var b = wordsSearch.ContainsAny(test);
             Assert.AreEqual(true, b);
 
 
-            var f = iwords.FindFirst(test);
+            var f = wordsSearch.FindFirst(test);
             Assert.AreEqual("中国", f.Keyword);
 
-            var alls = iwords.FindAll(test);
+            var alls = wordsSearch.FindAll(test);
             Assert.AreEqual("中国", alls[0].Keyword);
             Assert.AreEqual(2, alls[0].Start);
             Assert.AreEqual(3, alls[0].End);

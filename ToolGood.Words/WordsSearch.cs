@@ -431,5 +431,33 @@ namespace ToolGood.Words
             return list;
         }
 
+        public string Replace(string text, char replaceChar = '*')
+        {
+            StringBuilder result = new StringBuilder(text);
+
+            TrieNode ptr = null;
+            for (int i = 0; i < text.Length; i++) {
+                TrieNode tn;
+                if (ptr == null) {
+                    tn = _first[text[i]];
+                } else {
+                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                        tn = _first[text[i]];
+                    }
+                }
+                if (tn != null) {
+                    if (tn.End) {
+                        var length = tn.Results.Max(q => q.Key.Length);
+                        var start = i + 1 - length;
+                        for (int j = start; j <= i; j++) {
+                            result[j] = replaceChar;
+                        }
+                    }
+                }
+                ptr = tn;
+            }
+            return result.ToString();
+        }
+
     }
 }

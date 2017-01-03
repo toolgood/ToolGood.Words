@@ -13,9 +13,18 @@ namespace ToolGood.Words.Test
         public void Test()
         {
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-            string test = "我是中国人";
+            string test = "我是中国x人";
 
-            IllegalWordsSearch iwords = new IllegalWordsSearch( 2);
+
+            IllegalWordsSearch iwords2 = new IllegalWordsSearch(2);
+            iwords2.SetKeywords(s.Split('|'));
+
+
+          iwords2.FindAll(test);
+
+
+
+            IllegalWordsQuickSearch iwords = new IllegalWordsQuickSearch( 2);
             iwords.SetKeywords(s.Split('|'));
 
 

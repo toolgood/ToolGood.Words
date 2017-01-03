@@ -69,7 +69,7 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        internal static string ToSenseWords(string s)
+        public static string ToSenseIllegalWords(string s)
         {
             StringBuilder ts = new StringBuilder(s);
             for (int i = 0; i < s.Length; i++) {
