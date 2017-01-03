@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ToolGood.Words.internals;
+
 
 namespace ToolGood.Words
 {
@@ -64,143 +66,9 @@ namespace ToolGood.Words
         }
     }
 
-
     public class IllegalWordsSearch
     {
         #region class
-        class TreeNode
-        {
-            #region Constructor & Methods
-
-            public TreeNode(TreeNode parent, char c)
-            {
-                _char = c; _parent = parent;
-                _results = new List<string>();
-
-                _transitionsAr = new List<TreeNode>();
-                _transHash = new Dictionary<char, TreeNode>();
-            }
-
-            public void AddResult(string result)
-            {
-                if (_results.Contains(result)) return;
-                _results.Add(result);
-            }
-
-            public void AddTransition(TreeNode node)
-            {
-                _transHash.Add(node.Char, node);
-                _transitionsAr.Add(node);
-            }
-
-            public TreeNode GetTransition(char c)
-            {
-                TreeNode tn;
-                if (_transHash.TryGetValue(c, out tn)) { return tn; }
-                return null;
-            }
-
-            public bool ContainsTransition(char c)
-            {
-                return _transHash.ContainsKey(c);
-            }
-            #endregion
-
-            #region Properties
-            private char _char;
-            private TreeNode _parent;
-            private TreeNode _failure;
-            private List<string> _results;
-            private List<TreeNode> _transitionsAr;
-            private Dictionary<char, TreeNode> _transHash;
-
-            public char Char
-            {
-                get { return _char; }
-            }
-
-            public TreeNode Parent
-            {
-                get { return _parent; }
-            }
-
-
-            /// <summary>
-            /// Failure function - descendant node
-            /// </summary>
-            public TreeNode Failure
-            {
-                get { return _failure; }
-                set { _failure = value; }
-            }
-
-
-            /// <summary>
-            /// Transition function - list of descendant nodes
-            /// </summary>
-            public List<TreeNode> Transitions
-            {
-                get { return _transitionsAr; }
-            }
-
-
-            /// <summary>
-            /// Returns list of patterns ending by this letter
-            /// </summary>
-            public List<string> Results
-            {
-                get { return _results; }
-            }
-
-            #endregion
-        }
-        class TrieNode
-        {
-            //public byte Type { get; set; }
-            public bool End { get; set; }
-            public HashSet<string> Results { get; set; }
-            private Dictionary<char, TrieNode> m_values;
-            private uint minflag = uint.MaxValue;
-            private uint maxflag = uint.MinValue;
-
-            public TrieNode()
-            {
-                m_values = new Dictionary<char, TrieNode>();
-                Results = new HashSet<string>();
-            }
-
-            public bool TryGetValue(char c, out TrieNode node)
-            {
-                if (minflag <= (uint)c && maxflag >= (uint)c) {
-                    return m_values.TryGetValue(c, out node);
-                }
-                node = null;
-                return false;
-            }
-
-            public void Add(TreeNode t, TrieNode node)
-            {
-                var c = t.Char;
-                if (m_values.ContainsKey(c) == false) {
-                    if (minflag > c) { minflag = c; }
-                    if (maxflag < c) { maxflag = c; }
-                    m_values.Add(c, node);
-                    foreach (var item in t.Results) {
-                        node.End = true;
-                        node.Results.Add(item);
-                    }
-                }
-            }
-
-            public TrieNode[] ToArray()
-            {
-                TrieNode[] first = new TrieNode[char.MaxValue + 1];
-                foreach (var item in m_values) {
-                    first[item.Key] = item.Value;
-                }
-                return first;
-            }
-        }
         class NodeInfo
         {
             public int Index;
@@ -247,7 +115,7 @@ namespace ToolGood.Words
 
             }
         }
-        class SearchHelper:IDisposable
+        class SearchHelper : IDisposable
         {
             NodeInfo mainNode;
             List<NodeInfo> nodes = new List<NodeInfo>();
@@ -297,7 +165,7 @@ namespace ToolGood.Words
                                 hasEnd = true;
                             }
                         } else {
-                        
+
                             mainNode = null;
                         }
                     }
@@ -326,7 +194,7 @@ namespace ToolGood.Words
             {
                 List<Tuple<int, int, string>> list = new List<Tuple<int, int, string>>();
 
-                if (mainNode!=null) {
+                if (mainNode != null) {
                     if (mainNode.End) {
                         foreach (var keywords in mainNode.Node.Results) {
                             var p = mainNode;
@@ -337,7 +205,7 @@ namespace ToolGood.Words
                         }
                     }
                 }
-             
+
                 foreach (var node in nodes) {
                     foreach (var keywords in node.Node.Results) {
                         var p = node;
@@ -354,10 +222,9 @@ namespace ToolGood.Words
 
         #region Local fields
         const string bitType = "00000000000000000000000000000000000000000000000011111111110000000aaaaaaaaaaaaaaaaaaaaaaaaaa000000aaaaaaaaaaaaaaaaaaaaaaaaaa00000";
-
-        private TrieNode _root = new TrieNode();
-        private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
-        private int _jumpLength;
+        protected TrieNode _root = new TrieNode();
+        protected TrieNode[] _first = new TrieNode[char.MaxValue + 1];
+        protected int _jumpLength;
         #endregion
 
         public IllegalWordsSearch(int jumpLength = 1)
@@ -503,7 +370,7 @@ namespace ToolGood.Words
         }
         #endregion
 
-        public bool ContainsAny(string text)
+        public virtual bool ContainsAny(string text)
         {
             StringBuilder sb = new StringBuilder(text);
             TrieNode ptr = null;
@@ -550,7 +417,7 @@ namespace ToolGood.Words
             return false;
         }
 
-        public IllegalWordsSearchResult FindFirst(string text)
+        public virtual IllegalWordsSearchResult FindFirst(string text)
         {
             StringBuilder sb = new StringBuilder(text);
             TrieNode ptr = null;
@@ -570,7 +437,7 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var find in tn.Results) {
-                            var r = GetIllegalResult(find, c, i+1-find.Length, i, text, sb);
+                            var r = GetIllegalResult(find, c, i + 1 - find.Length, i, text, sb);
                             if (r != null) return r;
                         }
                     }
@@ -595,7 +462,7 @@ namespace ToolGood.Words
             return IllegalWordsSearchResult.Empty;
         }
 
-        public List<IllegalWordsSearchResult> FindAll(string text)
+        public virtual List<IllegalWordsSearchResult> FindAll(string text)
         {
             StringBuilder sb = new StringBuilder(text);
             SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
@@ -617,7 +484,7 @@ namespace ToolGood.Words
             return result;
         }
 
-        public string Replace(string text, char replaceChar = '*')
+        public virtual string Replace(string text, char replaceChar = '*')
         {
             var all = FindAll(text);
             StringBuilder result = new StringBuilder(text);
@@ -625,7 +492,7 @@ namespace ToolGood.Words
             for (int i = all.Count - 1; i >= 1; i--) {
                 var r = all[i];
                 for (int j = r.Start; j <= r.End; j++) {
-                    if (result[j]!=replaceChar) {
+                    if (result[j] != replaceChar) {
                         result[j] = replaceChar;
                     }
                 }
@@ -695,7 +562,7 @@ namespace ToolGood.Words
             return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
 
-        internal bool ToSenseWords(char c, out char w)
+        private bool ToSenseWords(char c, out char w)
         {
             if (c < 'A') { } else if (c <= 'Z') {
                 w = (char)(c | 0x20);

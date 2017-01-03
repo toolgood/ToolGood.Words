@@ -47,10 +47,12 @@
   <ItemGroup>
     <Compile Include="IllegalWordsQuickSearch.cs" />
     <Compile Include="IllegalWordsSearch.cs" />
+    <Compile Include="internals\TreeNode.cs" />
+    <Compile Include="internals\TrieNode.cs" />
     <Compile Include="PinYinSearch.cs" />
     <Compile Include="StringSearch.cs" />
-    <Compile Include="internal\Dict.cs" />
-    <Compile Include="internal\PinYinDict.cs" />
+    <Compile Include="internals\Dict.cs" />
+    <Compile Include="internals\PinYinDict.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WordsSearch.cs" />
     <Compile Include="WordsHelper.cs" />

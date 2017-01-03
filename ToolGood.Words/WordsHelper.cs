@@ -61,8 +61,6 @@ namespace ToolGood.Words
 
         #endregion
 
-
-
         #region 字符串 转成 脏词检测字符串
         /// <summary>
         /// 转成 侦测字符串
@@ -177,7 +175,6 @@ namespace ToolGood.Words
         }
 
         #endregion
-
 
         #region 半角 全角 转换
         /// <summary>

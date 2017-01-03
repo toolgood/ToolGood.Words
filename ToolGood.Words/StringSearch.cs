@@ -2,144 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ToolGood.Words.internals;
+
 
 namespace ToolGood.Words
 {
     public class StringSearch
     {
-        class TreeNode
-        {
-            #region Constructor & Methods
-
-            public TreeNode(TreeNode parent, char c)
-            {
-                _char = c; _parent = parent;
-                _results = new List<string>();
-
-                _transitionsAr = new List<TreeNode>();
-                _transHash = new Dictionary<char, TreeNode>();
-            }
-
-            public void AddResult(string result)
-            {
-                if (_results.Contains(result)) return;
-                _results.Add(result);
-            }
-
-            public void AddTransition(TreeNode node)
-            {
-                _transHash.Add(node.Char, node);
-                _transitionsAr.Add(node);
-            }
-
-            public TreeNode GetTransition(char c)
-            {
-                TreeNode tn;
-                if (_transHash.TryGetValue(c, out tn)) { return tn; }
-                return null;
-            }
-
-            public bool ContainsTransition(char c)
-            {
-                return _transHash.ContainsKey(c);
-            }
-            #endregion
-
-            #region Properties
-            private char _char;
-            private TreeNode _parent;
-            private TreeNode _failure;
-            private List<string> _results;
-            private List<TreeNode> _transitionsAr;
-            private Dictionary<char, TreeNode> _transHash;
-
-            public char Char
-            {
-                get { return _char; }
-            }
-
-            public TreeNode Parent
-            {
-                get { return _parent; }
-            }
-
-
-            /// <summary>
-            /// Failure function - descendant node
-            /// </summary>
-            public TreeNode Failure
-            {
-                get { return _failure; }
-                set { _failure = value; }
-            }
-
-
-            /// <summary>
-            /// Transition function - list of descendant nodes
-            /// </summary>
-            public List<TreeNode> Transitions
-            {
-                get { return _transitionsAr; }
-            }
-
-
-            /// <summary>
-            /// Returns list of patterns ending by this letter
-            /// </summary>
-            public List<string> Results
-            {
-                get { return _results; }
-            }
-
-            #endregion
-        }
-        class TrieNode
-        {
-            public bool End { get; set; }
-            public HashSet<string> Results { get; set; }
-            private Dictionary<char, TrieNode> m_values;
-            private uint minflag = uint.MaxValue;
-            private uint maxflag = uint.MinValue;
-
-            public TrieNode()
-            {
-                m_values = new Dictionary<char, TrieNode>();
-                Results = new HashSet<string>();
-            }
-
-            public bool TryGetValue(char c, out TrieNode node)
-            {
-                if (minflag <= (uint)c && maxflag >= (uint)c) {
-                    return m_values.TryGetValue(c, out node);
-                }
-                node = null;
-                return false;
-            }
-
-            public void Add(TreeNode t, TrieNode node)
-            {
-                var c = t.Char;
-                if (m_values.ContainsKey(c) == false) {
-                    if (minflag > c) { minflag = c; }
-                    if (maxflag < c) { maxflag = c; }
-                    m_values.Add(c, node);
-                    foreach (var item in t.Results) {
-                        node.End = true;
-                        node.Results.Add(item);
-                    }
-                }
-            }
-
-            public TrieNode[] ToArray()
-            {
-                TrieNode[] first = new TrieNode[char.MaxValue + 1];
-                foreach (var item in m_values) {
-                    first[item.Key] = item.Value;
-                }
-                return first;
-            }
-        }
-
         private TrieNode _root = new TrieNode();
         private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
 
@@ -154,11 +23,6 @@ namespace ToolGood.Words
             var root = new TreeNode(null, ' ');
             foreach (string p in _keywords) {
                 string t = p;
-                //if (_quick) {
-                //    t = p.ToLower();
-                //} else {
-                //    t = WordHelper.ToSenseWord(p);
-                //}
 
                 // add pattern to tree
                 TreeNode nd = root;
