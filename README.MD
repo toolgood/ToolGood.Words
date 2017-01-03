@@ -2,6 +2,15 @@ ToolGood.Words
 ==================
 支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)搜索。
 
+文件夹说明：
+```
+ToolGood.PinYin.Build:      生成词的拼音
+ToolGood.PinYin.WordsBuild: 生成多音词的拼音
+ToolGood.Words.Contrast:    字符串搜索对比
+ToolGood.Words.Test:        单元测试
+ToolGood.Words:             本项目源代码
+```
+
 
 ## 繁体简体互换、全角半角互换、数字转成中文大写
 

@@ -58,6 +58,7 @@ namespace ToolGood.Words
         {
             return PinYinDict.GetAllPinYin(s);
         }
+
         #endregion
 
 
