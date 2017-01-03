@@ -30,7 +30,18 @@ ToolGood.Words
 ``` 
 
 ## 字符串搜索
-`StringSearch`和`WordsSearch`类都是搜索字符串的类，区别是：`WordsSearch`的`FindFirst`，`FindAll`返回的类型有关键字所在位置。
+`StringSearch`: 搜索`FindFirst`/`FindAll`方法返回结果为`string`类型。
+
+`WordsSearch`: 搜索`FindFirst`/`FindAll`方法返回结果为`WordsSearchResult`类型,
+`WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
+
+`IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，匹配大小写，全角英文、数字，匹配特殊数字，
+搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，开始位置、结束位置。
+
+`IllegalWordsQuickSearch`: `IllegalWordsSearch`简化版本。
+
+共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
+
 
 ``` csharp
     string s = "中国|国人|zg人";
@@ -49,108 +60,31 @@ ToolGood.Words
     Assert.AreEqual("中国", all[0]);
     Assert.AreEqual("国人", all[1]);
     Assert.AreEqual(2, all.Count);
-
-    WordsSearch iwords = new WordsSearch();
-    iwords.SetKeywords(s.Split('|'));
-
-    b = iwords.ContainsAny(test);
-    Assert.AreEqual(true, b);
-
-    f = iwords.FindFirst(test);
-    Assert.AreEqual("中国", f.Keyword);
-
-    var alls = iwords.FindAll(test);
-    Assert.AreEqual("中国", alls[0].Keyword);
-    Assert.AreEqual(2, alls[0].Start);
-    Assert.AreEqual(3, alls[0].End);
-    Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
-    Assert.AreEqual("国人", alls[1].Keyword);
-    Assert.AreEqual(2, alls.Count);
 ``` 
-
-## 查找非法词(敏感词)
-
-``` csharp
-    string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
-    string test = "我是中国人";
-
-    IllegalWordsSearch iwords = new IllegalWordsSearch( 2);
-    iwords.SetKeywords(s.Split('|'));
-
-    var b = iwords.ContainsAny(test);
-    Assert.AreEqual(true, b);
-
-    var f = iwords.FindFirst(test);
-    Assert.AreEqual(true, f.Success);
-    Assert.AreEqual("中国", f.Keyword);
-    Assert.AreEqual("中国", f.SrcString);
-    Assert.AreEqual(2, f.Start);
-    Assert.AreEqual(3, f.End);
-
-    var all = iwords.FindAll(test);
-    Assert.AreEqual("中国", all[0].SrcString);
-    Assert.AreEqual("国人", all[1].SrcString);
-
-    test = "我是中国zg人";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("中国", all[0].SrcString);
-    Assert.AreEqual("zg人", all[1].SrcString);
-
-    test = "中间国zg人";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("zg人", all[0].SrcString);
-
-    test = "fuck al.l";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("fuck", all[0].SrcString);
-    Assert.AreEqual("al.l", all[1].SrcString);
-    Assert.AreEqual(2, all.Count);
-
-    test = "ht@tp://ToolGood.com";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("toolgood", all[0].Keyword);
-    Assert.AreEqual("ToolGood", all[0].SrcString);
-    Assert.AreEqual(1, all.Count);
-
-    test = "asssert all";
-    all = iwords.FindAll(test);//搜索时，排除英文截断，如asssert，不会匹配as
-    Assert.AreEqual("all", all[0].SrcString);
-    Assert.AreEqual(1, all.Count);
-
-    test = "19w 1919 all";
-    all = iwords.FindAll(test);//搜索时，排除数字截断，如1919，不会匹配19
-    Assert.AreEqual("19", all[0].SrcString);
-    Assert.AreEqual("all", all[1].SrcString);
-
-    test = "我是【中]国【人";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("中]国", all[0].SrcString);
-    Assert.AreEqual("国【人", all[1].SrcString);
-
-    test = "我是【中国【人";
-    all = iwords.FindAll(test);
-    Assert.AreEqual("中国", all[0].SrcString);
-    Assert.AreEqual(1, all.Count);
-```
 
 ##### 性能对比
 设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
 ```
-    TrieFilter : 151ms
-    FastFilter : 106ms
-    StringSearch（ContainsAny） : 31ms
-    StringSearch（FindFirst） : 47ms
-    WordsSearch（ContainsAny） : 31ms
-    WordsSearch（FindFirst） : 84ms
-    IllegalWordsSearch（FindFirst） : 68ms
-    IllegalWordsSearch（ContainsAny） : 47ms
-    TrieFilter（FindAll） : 1,281ms
-    FastFilter（FindAll） : 305ms
-    StringSearch（FindAll） : 364ms
-    WordsSearch（FindAll） : 438ms
-    IllegalWordsSearch（FindAll） : 1,175ms
+-------------------- FindFirst OR ContainsAny --------------------
+TrieFilter : 147ms
+FastFilter : 102ms
+StringSearch（ContainsAny） : 31ms
+StringSearch（FindFirst） : 44ms
+WordsSearch（ContainsAny） : 30ms
+WordsSearch（FindFirst） : 50ms
+IllegalWordsQuickSearch（FindFirst） : 53ms
+IllegalWordsQuickSearch（ContainsAny） : 45ms
+IllegalWordsSearch（FindFirst） : 160ms
+IllegalWordsSearch（ContainsAny） : 154ms
+-------------------- Find All --------------------
+TrieFilter（FindAll） : 1,340ms
+FastFilter（FindAll） : 302ms
+StringSearch（FindAll） : 377ms
+WordsSearch（FindAll） : 425ms
+IllegalWordsQuickSearch（FindAll） : 1,068ms
+IllegalWordsSearch（FindAll） : 2,519ms
 ```
-
+注:C#自带正则很慢，`IsMatch`效率不到`StringSearch.ContainsAny`的千分之一。
 
 注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
 
