@@ -33,6 +33,10 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("国人", alls[1].Keyword);
             Assert.AreEqual(2, alls.Count);
 
+            var t = wordsSearch.Replace (test,'*');
+            Assert.AreEqual("我是***",t);
+
+
         }
 
     }

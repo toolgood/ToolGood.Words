@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace ToolGood.Words
 {
+    /// <summary>
+    /// 未优化
+    /// </summary>
     public class PinYinSearch
     {
         #region class
@@ -37,7 +40,7 @@ namespace ToolGood.Words
                 return node;
             }
 
-            public void SetKeywords(KeywordsInfo keyword)
+            public void SetKeywords(ref KeywordsInfo keyword)
             {
                 End = true;
                 if (keywords == null) {
@@ -45,7 +48,7 @@ namespace ToolGood.Words
                 }
                 keywords.Add(keyword);
             }
-            public void SetKeywords_sm(KeywordsInfo keyword)
+            public void SetKeywords_sm(ref KeywordsInfo keyword)
             {
                 sm_End = true;
                 if (sm_keywords == null) {
@@ -172,15 +175,15 @@ namespace ToolGood.Words
                         if (_searchType.HasFlag(PinYinSearchType.FirstPinYin)) {
                             set.Add(keyList[j][0].ToString().ToLower());
                         }
-                        if (_searchType.HasFlag(PinYinSearchType.PinYin)) {
-                            set.Add(keyList[j].ToLower());
-                        }
+                        //if (_searchType.HasFlag(PinYinSearchType.PinYin)) {
+                        //    set.Add(keyList[j].ToLower());
+                        //}
                         if (_searchType.HasFlag(PinYinSearchType.AllPinYin)) {
                             var pinyins = WordsHelper.GetAllPinYin(c);
                             if (_searchType.HasFlag(PinYinSearchType.FirstPinYin)) {
                                 foreach (var py in pinyins) { set.Add(py[0].ToString().ToLower()); }
                             }
-                            foreach (var py in pinyins) { set.Add(py.ToLower()); }
+                            //foreach (var py in pinyins) { set.Add(py.ToLower()); }
                         }
                     } else if (!(c >= '0' && c <= '9') || !(c >= 'a' && c <= 'z')) {
                         if (_searchType.HasFlag(PinYinSearchType.SpaceReplaceSymbol)) {
@@ -221,7 +224,7 @@ namespace ToolGood.Words
                         tn = tn.Add(t[i]);
                     }
                 }
-                tn.SetKeywords(item.KeywordsInfo);
+                tn.SetKeywords(ref item.KeywordsInfo);
             }
             foreach (var item in list) {
                 setKeywords(item, 0, _root);
@@ -244,7 +247,7 @@ namespace ToolGood.Words
                 if (index < info.list.Count - 1) {
                     setKeywords(info, index + 1, tn);
                 } else {
-                    tn.SetKeywords(info.KeywordsInfo);
+                    tn.SetKeywords(ref info.KeywordsInfo);
                 }
             }
         }
@@ -270,7 +273,7 @@ namespace ToolGood.Words
                     } else {
                         tn = tn.Add(t[i]);
                     }
-                    tn.SetKeywords_sm(info.KeywordsInfo);
+                    tn.SetKeywords_sm(ref info.KeywordsInfo);
                 }
                 if (index < info.list.Count - 1) {
                     setKeywords_sm(info, index + 1, tn);
@@ -323,7 +326,7 @@ namespace ToolGood.Words
         /// </summary>
         FirstPinYin = 1,
         /// <summary>
-        /// 拼音
+        /// 拼音，吃内存
         /// </summary>
         PinYin = 2,
         /// <summary>

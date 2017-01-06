@@ -50,16 +50,7 @@ namespace ToolGood.Words
 
         public static IllegalWordsSearchResult Empty { get { return new IllegalWordsSearchResult(); } }
 
-        private int _hash = -1;
-        public override int GetHashCode()
-        {
-            if (_hash == -1) {
-                var i = Start << 5;
-                i += End - Start;
-                _hash = i << 1 + (Success ? 1 : 0);
-            }
-            return _hash;
-        }
+
         public override string ToString()
         {
             return Start.ToString() + "|" + SrcString;
@@ -89,7 +80,7 @@ namespace ToolGood.Words
                     } else if (c >= 0x4e00 && c <= 0x9fa5) {
                         t = Type + 'z';
                     } else {
-                        return false;
+                        return true;
                     }
                     if (t == 98 || t == 194 || t == 244) {
                         return false;
@@ -346,7 +337,11 @@ namespace ToolGood.Words
                 if (sh.FindChar(c, i)) {
                     foreach (var keywordInfos in sh.GetKeywords()) {
                         var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
-                        if (r != null) result.Add(r);
+                        if (r != null) {
+                            if (result.Any(q=>q.Start==r.Start && q.End==r.End)==false) {
+                                result.Add(r);
+                            }
+                        }
                     }
                 }
             }
@@ -359,7 +354,7 @@ namespace ToolGood.Words
             var all = FindAll(text);
             StringBuilder result = new StringBuilder(text);
             all = all.OrderBy(q => q.Start).ThenBy(q => q.End).ToList();
-            for (int i = all.Count - 1; i >= 1; i--) {
+            for (int i = all.Count - 1; i >= 0; i--) {
                 var r = all[i];
                 for (int j = r.Start; j <= r.End; j++) {
                     if (result[j] != replaceChar) {

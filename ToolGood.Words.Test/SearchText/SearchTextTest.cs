@@ -32,6 +32,10 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("国人", all[1]);
             Assert.AreEqual(2, all.Count);
 
+            var str = iwords.Replace(test, '*');
+            Assert.AreEqual("我是***", str);
+
+
         }
 
 
