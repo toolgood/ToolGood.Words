@@ -44,7 +44,7 @@ ToolGood.Words:             本项目源代码
 * `StringSearch`: 搜索`FindFirst`方法返回结果为`string`类型。
 * `WordsSearch`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
-* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，匹配大小写，全角英文、数字，匹配特殊数字，
+* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，转化特殊数字**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，开始位置、结束位置。
 * `IllegalWordsQuickSearch`: `IllegalWordsSearch`简化版本。
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
@@ -67,6 +67,9 @@ ToolGood.Words:             本项目源代码
     Assert.AreEqual("中国", all[0]);
     Assert.AreEqual("国人", all[1]);
     Assert.AreEqual(2, all.Count);
+
+    var str = iwords.Replace(test, '*');
+    Assert.AreEqual("我是***", str);
 ``` 
 
 ##### 性能对比
