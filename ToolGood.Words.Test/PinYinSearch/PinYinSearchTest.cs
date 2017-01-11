@@ -6,7 +6,7 @@ using PetaTest;
 
 namespace ToolGood.Words.Test
 {
-    [TestFixture]
+    //[TestFixture]
     public class PinYinSearchTest
     {
         [Test]

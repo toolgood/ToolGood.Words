@@ -28,6 +28,70 @@ namespace Sinan.Util
             }
             return subnode;
         }
+
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            toString(sb);
+            return sb.ToString();
+        }
+        private void toString(StringBuilder sb)
+        {
+            var index = 0;
+            if (m_values.Count == 0) return;
+            if (m_values.Count==1) {
+                foreach (var item in m_values) {
+                    AddString(sb, item.Key);
+                    item.Value.toString(sb);
+                }
+                return;
+            }
+
+            sb.Append("(");
+            foreach (var item in m_values) {
+                if (index>0) {
+                    sb.Append("|");
+                }
+                AddString(sb, item.Key);
+                item.Value.toString(sb);
+                index++;
+            }
+            sb.Append(")");
+        }
+        private void AddString(StringBuilder sb,char item)
+        {
+            if (item== '(') {
+                sb.Append(@"\(");
+            } else if (item== '.') {
+                sb.Append(@"\.");
+            } else if (item== '*') {
+                sb.Append(@"\*");
+            } else if (item== '+') {
+                sb.Append(@"\+");
+            } else if (item== ')') {
+                sb.Append(@"\)");
+            } else if (item== '\\') {
+                sb.Append(@"\\");
+            } else if (item== '[') {
+                sb.Append(@"\[");
+            } else if (item== ']') {
+                sb.Append(@"\]");
+            } else if (item== '{') {
+                sb.Append(@"\{");
+            } else if (item== '}') {
+                sb.Append(@"\}");
+            } else if (item== '^') {
+                sb.Append(@"\^");
+            } else if (item== '$') {
+                sb.Append(@"\$");
+            } else if (item == '?') {
+                sb.Append(@"\?");
+            } else {
+                sb.Append(item);
+            }
+        }
+
     }
 
     public class TrieFilter : TrieNode, Sinan.Util.IWordFilter
@@ -143,5 +207,8 @@ namespace Sinan.Util
             }
             return chars == null ? text : new string(chars);
         }
+
+
+  
     }
 }

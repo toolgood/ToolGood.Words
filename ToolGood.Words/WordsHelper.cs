@@ -16,11 +16,7 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string GetFirstPinYin(string text)
         {
-            var ts = text.ToArray();
-            for (int i = 0; i < ts.Length; i++) {
-                ts[i] = Dict.GetFirstPinYin(ts[i]);
-            }
-            return new string(ts);
+            return PinYinDict.GetFirstPinYin(text);
         }
 
         /// <summary>
@@ -34,7 +30,7 @@ namespace ToolGood.Words
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
                 var c = text[i];
-                sb.Append(PinYinDict.GetFirstPinYin(c));
+                sb.Append(PinYinDict.GetPinYinFast(c));
             }
             return sb.ToString();
         }

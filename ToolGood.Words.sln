@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words", "ToolGood.Words.csproj", "{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.Build", "ToolGood.PinYin.Build\ToolGood.PinYin.Build.csproj", "{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Test", "..\ToolGood.Words.Test\ToolGood.Words.Test.csproj", "{37920783-B278-422F-8632-E00D6ED7F8C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.WordsBuild", "ToolGood.PinYin.WordsBuild\ToolGood.PinYin.WordsBuild.csproj", "{9C6B8FE2-E465-42FB-90FD-02D00B240778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.Build", "..\ToolGood.PinYin.Build\ToolGood.PinYin.Build.csproj", "{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words", "ToolGood.Words\ToolGood.Words.csproj", "{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.WordsBuild", "..\ToolGood.PinYin.WordsBuild\ToolGood.PinYin.WordsBuild.csproj", "{9C6B8FE2-E465-42FB-90FD-02D00B240778}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Contrast", "ToolGood.Words.Contrast\ToolGood.Words.Contrast.csproj", "{ED41B333-03FB-41C3-A25C-18763D626D77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Contrast", "..\ToolGood.Words.Contrast\ToolGood.Words.Contrast.csproj", "{ED41B333-03FB-41C3-A25C-18763D626D77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Test", "ToolGood.Words.Test\ToolGood.Words.Test.csproj", "{37920783-B278-422F-8632-E00D6ED7F8C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,10 +27,18 @@ Global
 		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

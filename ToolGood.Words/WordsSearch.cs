@@ -7,7 +7,7 @@ namespace ToolGood.Words
 {
     public class WordsSearchResult
     {
-        internal WordsSearchResult(string keyword, int start, int end, long index)
+        internal WordsSearchResult(string keyword, int start, int end, int index)
         {
             Keyword = keyword;
             Success = true;
@@ -43,7 +43,7 @@ namespace ToolGood.Words
         /// <summary>
         /// 索引
         /// </summary>
-        public long Index { get; private set; }
+        public int Index { get; private set; }
 
 
         public static WordsSearchResult Empty { get { return new WordsSearchResult(); } }
@@ -77,13 +77,13 @@ namespace ToolGood.Words
             public TreeNode(TreeNode parent, char c)
             {
                 _char = c; _parent = parent;
-                _results = new Dictionary<string, long>();
+                _results = new Dictionary<string, int>();
 
                 _transitionsAr = new List<TreeNode>();
                 _transHash = new Dictionary<char, TreeNode>();
             }
 
-            public void AddResult(string result, long index)
+            public void AddResult(string result, int index)
             {
                 if (_results.ContainsKey(result)) return;
                 _results.Add(result, index);
@@ -112,7 +112,7 @@ namespace ToolGood.Words
             private char _char;
             private TreeNode _parent;
             private TreeNode _failure;
-            private Dictionary<string, long> _results;
+            private Dictionary<string, int> _results;
             private List<TreeNode> _transitionsAr;
             private Dictionary<char, TreeNode> _transHash;
 
@@ -149,7 +149,7 @@ namespace ToolGood.Words
             /// <summary>
             /// Returns list of patterns ending by this letter
             /// </summary>
-            public Dictionary<string, long> Results
+            public Dictionary<string, int> Results
             {
                 get { return _results; }
             }
@@ -159,7 +159,7 @@ namespace ToolGood.Words
         class TrieNode
         {
             public bool End { get; set; }
-            public Dictionary<string, long> Results { get; set; }
+            public Dictionary<string, int> Results { get; set; }
             private Dictionary<char, TrieNode> m_values;
             private uint minflag = uint.MaxValue;
             private uint maxflag = uint.MinValue;
@@ -167,7 +167,7 @@ namespace ToolGood.Words
             public TrieNode()
             {
                 m_values = new Dictionary<char, TrieNode>();
-                Results = new Dictionary<string, long>();
+                Results = new Dictionary<string, int>();
             }
 
             public bool TryGetValue(char c, out TrieNode node)
@@ -213,17 +213,17 @@ namespace ToolGood.Words
 
         public void SetKeywords(ICollection<string> _keywords)
         {
-            Dictionary<string, long> dict = new Dictionary<string, long>();
+            Dictionary<string, int> dict = new Dictionary<string, int>();
             int index = 0;
             foreach (var item in _keywords) {
                 dict[item] = index++;
             }
             SetKeywords(dict);
         }
-        public void SetKeywords(ICollection<string> _keywords, ICollection<long> indexs)
+        public void SetKeywords(ICollection<string> _keywords, ICollection<int> indexs)
         {
             if (_keywords.Count != indexs.Count) { throw new Exception("数量不一样"); }
-            Dictionary<string, long> dict = new Dictionary<string, long>();
+            Dictionary<string, int> dict = new Dictionary<string, int>();
             long index = 0;
             var ind = indexs.ToArray();
             foreach (var item in _keywords) {
@@ -232,13 +232,13 @@ namespace ToolGood.Words
             SetKeywords(dict);
 
         }
-        public void SetKeywords(IDictionary<string, long> _keywords)
+        public void SetKeywords(IDictionary<string, int> _keywords)
         {
             var tn = BuildTreeWithBFS(_keywords);
             SimplifyTree(tn);
         }
 
-        TreeNode BuildTreeWithBFS(IDictionary<string, long> _keywords)
+        TreeNode BuildTreeWithBFS(IDictionary<string, int> _keywords)
         {
             var root = new TreeNode(null, ' ');
             foreach (var p in _keywords) {

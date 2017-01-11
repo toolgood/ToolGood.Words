@@ -23,6 +23,11 @@ namespace ToolGood.Words.Test
             var py = WordsHelper.GetPinYinFast("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
 
+
+
+            py = WordsHelper.GetPinYin("快乐，乐清");
+            Assert.AreEqual("KuaiLe，YueQing", py);
+
             py = WordsHelper.GetPinYin("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
 
