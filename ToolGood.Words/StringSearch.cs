@@ -23,9 +23,7 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        foreach (var item in tn.Results) {
-                            return item;
-                        }
+                        return tn.Results[0];
                     }
                 }
                 ptr = tn;
@@ -97,8 +95,14 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                       var length= tn.Results.Max(q => q.Length);
-                        var start = i + 1 - length;
+                        var MaxLength = 0;
+                        for (int j = 0; j < tn.Results.Count; j++) {
+                            if (tn.Results[j].Length > MaxLength) {
+                                MaxLength = tn.Results[j].Length;
+                            }
+                        }
+
+                        var start = i + 1 - MaxLength;
                         for (int j = start; j <= i; j++) {
                             result[j] = replaceChar;
                         }

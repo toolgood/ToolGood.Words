@@ -159,7 +159,7 @@ namespace ToolGood.Words
         class TrieNode
         {
             public bool End { get; set; }
-            public Dictionary<string, int> Results { get; set; }
+            public List<Tuple<string, int>> Results { get; set; }
             private Dictionary<char, TrieNode> m_values;
             private uint minflag = uint.MaxValue;
             private uint maxflag = uint.MinValue;
@@ -167,7 +167,7 @@ namespace ToolGood.Words
             public TrieNode()
             {
                 m_values = new Dictionary<char, TrieNode>();
-                Results = new Dictionary<string, int>();
+                Results = new List<Tuple<string, int>>();
             }
 
             public bool TryGetValue(char c, out TrieNode node)
@@ -188,12 +188,14 @@ namespace ToolGood.Words
                     m_values.Add(c, node);
                     foreach (var item in t.Results) {
                         node.End = true;
-                        if (node.Results.ContainsKey(item.Key)==false) {
-                            node.Results.Add(item.Key, item.Value);
+                        var key = Tuple.Create(item.Key, item.Value);
+                        if (node.Results.Contains(key) == false) {
+                            node.Results.Add(key);
                         }
                     }
                 }
             }
+
 
             public TrieNode[] ToArray()
             {
@@ -395,9 +397,8 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        foreach (var item in tn.Results) {
-                            return new WordsSearchResult(item.Key, i + 1 - item.Key.Length, i, item.Value);
-                        }
+                        var item = tn.Results[0];
+                        return new WordsSearchResult(item.Item1, i + 1 - item.Item1.Length, i, item.Item2);
                     }
                 }
                 ptr = tn;
@@ -422,7 +423,7 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            list.Add(new WordsSearchResult(item.Key, i + 1 - item.Key.Length, i, item.Value));
+                            list.Add(new WordsSearchResult(item.Item1, i + 1 - item.Item1.Length, i, item.Item2));
                         }
                     }
                 }
@@ -447,8 +448,14 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        var length = tn.Results.Max(q => q.Key.Length);
-                        var start = i + 1 - length;
+                        var MaxLength = 0;
+                        for (int j = 0; j < tn.Results.Count; j++) {
+                            if (tn.Results[j].Item1.Length> MaxLength) {
+                                MaxLength = tn.Results[j].Item1.Length;
+                            }
+                        }
+
+                        var start = i + 1 - MaxLength;
                         for (int j = start; j <= i; j++) {
                             result[j] = replaceChar;
                         }

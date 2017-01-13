@@ -1,6 +1,6 @@
 ToolGood.Words
 ==================
-支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)搜索。
+支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)检测。
 
 文件夹说明：
 ```
@@ -94,7 +94,7 @@ WordsSearch（FindAll） : 425ms
 IllegalWordsQuickSearch（FindAll） : 1,068ms
 IllegalWordsSearch（FindAll） : 2,519ms
 ```
-注:C#自带正则很慢，`IsMatch`效率不到`StringSearch.ContainsAny`的千分之一。
+注:C#自带正则很慢，`StringSearch.ContainsAny`是`Regex.IsMatch`效率的1.5万倍。
 
 注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
 

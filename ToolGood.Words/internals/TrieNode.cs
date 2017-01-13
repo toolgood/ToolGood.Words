@@ -9,15 +9,16 @@ namespace ToolGood.Words.internals
     {
         //public byte Type { get; set; }
         public bool End { get; set; }
-        public HashSet<string> Results { get; set; }
+        public List<string> Results { get; set; }
         private Dictionary<char, TrieNode> m_values;
         private uint minflag = uint.MaxValue;
         private uint maxflag = uint.MinValue;
 
+
         public TrieNode()
         {
             m_values = new Dictionary<char, TrieNode>();
-            Results = new HashSet<string>();
+            Results = new List<string>();
         }
 
         public bool TryGetValue(char c, out TrieNode node)
@@ -38,10 +39,13 @@ namespace ToolGood.Words.internals
                 m_values.Add(c, node);
                 foreach (var item in t.Results) {
                     node.End = true;
-                    node.Results.Add(item);
+                    if (node.Results.Contains(item)==false) {
+                        node.Results.Add(item);
+                    }
                 }
             }
         }
+
 
         public TrieNode[] ToArray()
         {
