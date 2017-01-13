@@ -75,13 +75,15 @@ ToolGood.Words:             本项目源代码
 ##### 性能对比
 设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
 
-![Alt text](10W次性能对比.png)
+![10W次性能对比](10W次性能对比.png)
 
 注:C#自带正则很慢，`StringSearch.ContainsAny`是`Regex.IsMatch`效率的1.5万倍。
 
-注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
+`Regex.Matches`的运行方式跟`IQueryable`的类似。
 
-注: 在 Find All测试中,
+`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
+
+ 在 Find All测试中,
 
 `FastFilter`只能检测出7个:
     [0]: "主席"
@@ -125,4 +127,4 @@ ToolGood.Words:             本项目源代码
     [13]: {324|台}
     [14]: {364|黑社会}
 
-注：`IllegalWordsSearch`比`StringSearch`多一个`台`，原因：关键字繁体转简体
+`IllegalWordsSearch`比`StringSearch`多一个`台`，原因：关键字繁体转简体
