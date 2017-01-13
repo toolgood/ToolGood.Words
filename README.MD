@@ -74,26 +74,9 @@ ToolGood.Words:             本项目源代码
 
 ##### 性能对比
 设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
-```
--------------------- FindFirst OR ContainsAny --------------------
-TrieFilter : 147ms
-FastFilter : 102ms
-StringSearch（ContainsAny） : 31ms
-StringSearch（FindFirst） : 44ms
-WordsSearch（ContainsAny） : 30ms
-WordsSearch（FindFirst） : 50ms
-IllegalWordsQuickSearch（FindFirst） : 53ms
-IllegalWordsQuickSearch（ContainsAny） : 45ms
-IllegalWordsSearch（FindFirst） : 160ms
-IllegalWordsSearch（ContainsAny） : 154ms
--------------------- Find All --------------------
-TrieFilter（FindAll） : 1,340ms
-FastFilter（FindAll） : 302ms
-StringSearch（FindAll） : 377ms
-WordsSearch（FindAll） : 425ms
-IllegalWordsQuickSearch（FindAll） : 1,068ms
-IllegalWordsSearch（FindAll） : 2,519ms
-```
+
+![Alt text](10W次性能对比.png)
+
 注:C#自带正则很慢，`StringSearch.ContainsAny`是`Regex.IsMatch`效率的1.5万倍。
 
 注:`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
