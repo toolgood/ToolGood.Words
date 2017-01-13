@@ -79,7 +79,7 @@ ToolGood.Words:             本项目源代码
 
 注:C#自带正则很慢，`StringSearch.ContainsAny`是`Regex.IsMatch`效率的1.5万倍。
 
-`Regex.Matches`的运行方式跟`IQueryable`的类似。
+`Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 
 `TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
 
@@ -128,3 +128,18 @@ ToolGood.Words:             本项目源代码
     [14]: {364|黑社会}
 
 `IllegalWordsSearch`比`StringSearch`多一个`台`，原因：关键字繁体转简体
+
+插曲：在细查`Regex.Matches`神奇3ms，我发现`Regex.Matches`有一个小问题，
+
+`Regex.Matches`只能检测出11个:
+    [0]: "党"
+    [1]: "西藏"
+    [2]: "党"
+    [3]: "主席"
+    [4]: "赵洪祝"
+    [5]: "中国"
+    [6]: "铁道部"
+    [7]: "党"
+    [8]: "胡锦涛"
+    [9]: "倒台"
+    [10]: "黑社会"
