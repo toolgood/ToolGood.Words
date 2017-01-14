@@ -1,6 +1,6 @@
 ToolGood.Words
 ==================
-支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，字符串搜索，非法词(敏感词)检测。
+支持繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，非法词(敏感词)检测（字符串搜索）。
 
 文件夹说明：
 ```
@@ -12,7 +12,7 @@ ToolGood.Words:             本项目源代码
 ```
 
 
-## 繁体简体互换、全角半角互换、数字转成中文大写
+## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
 
 ``` csharp
     // 转成简体
@@ -25,11 +25,6 @@ ToolGood.Words:             本项目源代码
     WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
     // 数字转成中文大写
     WordsHelper.ToChineseRMB(12345678901.12);
-``` 
-
-## 拼音操作
-
-``` csharp
     // 获取全拼
     WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
     // 获取首字母
@@ -38,8 +33,8 @@ ToolGood.Words:             本项目源代码
     WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
 ``` 
 
-## 字符串搜索
-字符串搜索类：`StringSearch`、`WordsSearch`、`IllegalWordsSearch`、`IllegalWordsQuickSearch`;
+## 非法词(敏感词)检测（字符串搜索）
+非法词(敏感词)检测类：`StringSearch`、`WordsSearch`、`IllegalWordsSearch`、`IllegalWordsQuickSearch`;
 
 * `StringSearch`: 搜索`FindFirst`方法返回结果为`string`类型。
 * `WordsSearch`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
@@ -73,7 +68,7 @@ ToolGood.Words:             本项目源代码
 ``` 
 
 ##### 性能对比
-设备：DELL，系统：windows 10，CPU：i5-5200U，内存：12G，每种方法执行 10万次，结果如下：
+执行10万次性能对比，结果如下：
 
 ![10W次性能对比](10W次性能对比.png)
 
