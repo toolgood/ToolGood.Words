@@ -83,7 +83,7 @@ namespace ToolGood.Words.internals
 
             while (list.Count > 0) {
                 foreach (var item in list) {
-                    simplifyNode(item, tn, dict);
+                    dict[item] = new TrieNode();
                 }
                 List<TreeNode> newNodes = new List<TreeNode>();
                 foreach (var item in list) {
@@ -96,6 +96,8 @@ namespace ToolGood.Words.internals
             addNode(tn, tn, _root, dict);
             _first = _root.ToArray();
         }
+
+
         void addNode(TreeNode treeNode, TreeNode root, TrieNode tridNode, Dictionary<TreeNode, TrieNode> dict)
         {
             foreach (var item in treeNode.Transitions) {
@@ -104,39 +106,21 @@ namespace ToolGood.Words.internals
                 addNode(item, root, node, dict);
             }
             if (treeNode != root) {
-                var topNode = root.GetTransition(treeNode.Char);
-                if (topNode != null) {
-                    foreach (var item in topNode.Transitions) {
-                        var node = dict[item];
-                        tridNode.Add(item, node);
+                string str = "";
+                List<char> rootChar = new List<char>();
+                var node = treeNode;
+                while (node!=root) {
+                    str += node.Char;
+                    var topNode = root.GetTransition(str, str.Length-1);
+                    if (topNode != null) {
+                        foreach (var item in topNode.Transitions) {
+                            tridNode.Add(item, dict[item]);
+                        }
                     }
+                    node = node.Parent;
                 }
             }
         }
-        void simplifyNode(TreeNode treeNode, TreeNode root, Dictionary<TreeNode, TrieNode> dict)
-        {
-            List<TreeNode> list = new List<TreeNode>();
-            var tn = treeNode;
-            while (tn != root) {
-                list.Add(tn);
-                tn = tn.Failure;
-            }
-
-            TrieNode node = new TrieNode();
-
-            foreach (var item in list) {
-                if (dict.ContainsKey(item) == false) {
-                    if (item.Results.Count > 0) {
-                        dict[item] = new TrieNode();
-                    } else {
-                        dict[item] = node;
-                    }
-                }
-            }
-        }
-
-
-
         #endregion
 
     }

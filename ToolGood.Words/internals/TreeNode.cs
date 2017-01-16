@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-  public   class TreeNode
+    public class TreeNode
     {
         #region Constructor & Methods
 
@@ -34,6 +34,17 @@ namespace ToolGood.Words.internals
         {
             TreeNode tn;
             if (_transHash.TryGetValue(c, out tn)) { return tn; }
+            return null;
+        }
+        public TreeNode GetTransition(string text, int index)
+        {
+            if (index == -1) { return this; }
+
+            var c = text[index];
+            TreeNode tn;
+            if (_transHash.TryGetValue(c, out tn)) {
+              return  tn.GetTransition(text, index - 1);
+            }
             return null;
         }
 
