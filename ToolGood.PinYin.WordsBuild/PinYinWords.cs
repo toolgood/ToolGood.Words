@@ -33,54 +33,16 @@ namespace ToolGood.PinYin.WordsBuild
             return pyName.IndexOf(name);
         }
 
-        private static List<string> pyName = new List<string>
-     {
-            "", "A", "Ai", "An", "Ang", "Ao", "Ba", "Bai", "Ban", "Bang", "Bao", "Bei",
-             "Ben", "Beng", "Bi", "Bian", "Biao", "Bie", "Bin", "Bing", "Bo", "Bu",
-             "Ba", "Cai", "Can", "Cang", "Cao", "Ce", "Ceng", "Cha", "Chai", "Chan",
-             "Chang", "Chao", "Che", "Chen", "Cheng", "Chi", "Chong", "Chou", "Chu",
-             "Chuai", "Chuan", "Chuang", "Chui", "Chun", "Chuo", "Ci", "Cong", "Cou",
-             "Cu", "Cuan", "Cui", "Cun", "Cuo", "Da", "Dai", "Dan", "Dang", "Dao", "De",
-             "Deng", "Di", "Dian", "Diao", "Die", "Ding", "Diu", "Dong", "Dou", "Du",
-             "Duan", "Dui", "Dun", "Duo", "E", "En", "Er", "Fa", "Fan", "Fang", "Fei",
-             "Fen", "Feng", "Fo", "Fou", "Fu", "Ga", "Gai", "Gan", "Gang", "Gao", "Ge",
-             "Gei", "Gen", "Geng", "Gong", "Gou", "Gu", "Gua", "Guai", "Guan", "Guang",
-             "Gui", "Gun", "Guo", "Ha", "Hai", "Han", "Hang", "Hao", "He", "Hei", "Hen",
-             "Heng", "Hong", "Hou", "Hu", "Hua", "Huai", "Huan", "Huang", "Hui", "Hun",
-             "Huo", "Ji", "Jia", "Jian", "Jiang", "Jiao", "Jie", "Jin", "Jing", "Jiong",
-             "Jiu", "Ju", "Juan", "Jue", "Jun", "Ka", "Kai", "Kan", "Kang", "Kao", "Ke",
-             "Ken", "Keng", "Kong", "Kou", "Ku", "Kua", "Kuai", "Kuan", "Kuang", "Kui",
-             "Kun", "Kuo", "La", "Lai", "Lan", "Lang", "Lao", "Le", "Lei", "Leng", "Li",
-             "Lia", "Lian", "Liang", "Liao", "Lie", "Lin", "Ling", "Liu", "Long", "Lou",
-             "Lu", "Lv", "Luan", "Lue", "Lun", "Luo", "Ma", "Mai", "Man", "Mang", "Mao",
-             "Me", "Mei", "Men", "Meng", "Mi", "Mian", "Miao", "Mie", "Min", "Ming", "Miu",
-             "Mo", "Mou", "Mu", "Na", "Nai", "Nan", "Nang", "Nao", "Ne", "Nei", "Nen",
-             "Neng", "Ni", "Nian", "Niang", "Niao", "Nie", "Nin", "Ning", "Niu", "Nong",
-             "Nu", "Nv", "Nuan", "Nue", "Nuo", "O", "Ou", "Pa", "Pai", "Pan", "Pang",
-             "Pao", "Pei", "Pen", "Peng", "Pi", "Pian", "Piao", "Pie", "Pin", "Ping",
-             "Po", "Pu", "Qi", "Qia", "Qian", "Qiang", "Qiao", "Qie", "Qin", "Qing",
-             "Qiong", "Qiu", "Qu", "Quan", "Que", "Qun", "Ran", "Rang", "Rao", "Re",
-             "Ren", "Reng", "Ri", "Rong", "Rou", "Ru", "Ruan", "Rui", "Run", "Ruo",
-             "Sa", "Sai", "San", "Sang", "Sao", "Se", "Sen", "Seng", "Sha", "Shai",
-             "Shan", "Shang", "Shao", "She", "Shen", "Sheng", "Shi", "Shou", "Shu",
-             "Shua", "Shuai", "Shuan", "Shuang", "Shui", "Shun", "Shuo", "Si", "Song",
-             "Sou", "Su", "Suan", "Sui", "Sun", "Suo", "Ta", "Tai", "Tan", "Tang",
-             "Tao", "Te", "Teng", "Ti", "Tian", "Tiao", "Tie", "Ting", "Tong", "Tou",
-             "Tu", "Tuan", "Tui", "Tun", "Tuo", "Wa", "Wai", "Wan", "Wang", "Wei",
-             "Wen", "Weng", "Wo", "Wu", "Xi", "Xia", "Xian", "Xiang", "Xiao", "Xie",
-             "Xin", "Xing", "Xiong", "Xiu", "Xu", "Xuan", "Xue", "Xun", "Ya", "Yan",
-             "Yang", "Yao", "Ye", "Yi", "Yin", "Ying", "Yo", "Yong", "You", "Yu",
-             "Yuan", "Yue", "Yun", "Za", "Zai", "Zan", "Zang", "Zao", "Ze", "Zei",
-             "Zen", "Zeng", "Zha", "Zhai", "Zhan", "Zhang", "Zhao", "Zhe", "Zhen",
-             "Zheng", "Zhi", "Zhong", "Zhou", "Zhu", "Zhua", "Zhuai", "Zhuan",
-             "Zhuang", "Zhui", "Zhun", "Zhuo", "Zi", "Zong", "Zou", "Zu", "Zuan",
-             "Zui", "Zun", "Zuo","Pou","Dia","Cen","Dei","Ca","Nve","Lve","Shei","Zhei",
-             "Ei","Chua","Nou","Tei"
-       };
+        #region pyName
+        internal readonly static List<string> pyName = new List<string>
+        {
+          "","A","Ai","An","Ang","Ao","Ba","Ba","Bai","Ban","Bang","Bao","Bei","Ben","Beng","Bi","Bian","Biao","Bie","Bin","Bing","Bo","Bu","Bun","Ca","Cai","Cal","Can","Cang","Cao","Ce","Cen","Ceng","Ceon","Cha","Chai","Chan","Chang","Chao","Che","Chen","Cheng","Chi","Chong","Chou","Chu","Chua","Chuai","Chuan","Chuang","Chui","Chun","Chuo","Ci","Cong","Cou","Cu","Cuan","Cui","Cun","Cuo","Da","Dai","Dan","Dang","Dao","De","Dei","Den","Deng","Di","Dia","Dian","Diao","Die","Ding","Diu","Dong","Dou","Du","Duan","Dug","Dui","Dun","Duo","E","Ei","En","Eng","Eos","Er","Fa","Fan","Fang","Fei","Fen","Feng","Fenwa","Fo","Fou","Fu","Ga","Gai","Gan","Gang","Gao","Ge","Gei","Gen","Geng","Gi","Gong","Gou","Gu","Gua","Guai","Guan","Guang","Gui","Gun","Guo","Ha","Hai","Han","Hang","Hao","He","Hei","Hen","Heng","Hol","Hong","Hou","Hu","Hua","Huai","Huan","Huang","Hui","Hun","Huo","Ji","Jia","Jian","Jiang","Jiao","Jie","Jin","Jing","Jiong","Jiu","Ju","Juan","Jue","Jun","Ka","Kai","Kan","Kang","Kao","Kasei","Ke","Ken","Keng","Keop","Keos","Keum","Kong","Kou","Ku","Kua","Kuai","Kuan","Kuang","Kui","Kun","Kuo","La","Lai","Lan","Lang","Lao","Le","Lei","Leng","Li","Lia","Lian","Liang","Liao","Lie","Lin","Ling","Liu","Liwa","Long","Lou","Lu","Luan","Lue","Lun","Luo","Lv","Lve","Ma","Mai","Man","Mang","Mangmi","Mao","Maowa","Mas","Me","Mei","Men","Meng","Mi","Mian","Miao","Mie","Min","Ming","Miu","Mo","Mou","Mu","Myeong","Na","Nai","Nan","Nang","Nao","Ne","Nei","Nen","Neng","Ni","Nian","Niang","Niao","Nie","Nin","Ning","Niu","Nong","Nou","Nu","Nuan","Nue","Nun","Nuo","Nv","Nve","O","Oes","Ou","Pa","Pai","Pan","Pang","Pao","Pei","Pen","Peng","Phas","Phdeng","Phos","Pi","Pian","Piao","Pie","Pin","Ping","Po","Pou","Ppun","Pu","Qi","Qia","Qian","Qiang","Qianwa","Qiao","Qie","Qin","Qing","Qiong","Qiu","Qu","Quan","Que","Qun","Ramo","Ran","Rang","Rao","Re","Ren","Reng","Ri","Rong","Rou","Ru","Ruan","Rui","Run","Ruo","Sa","Saeng","Sai","San","Sang","Sao","Se","Sen","Seng","Sha","Shai","Shan","Shang","Shao","She","Shei","Shen","Sheng","Shi","Shiwa","Shou","Shu","Shua","Shuai","Shuan","Shuang","Shui","Shun","Shuo","Si","Song","Sou","Su","Suan","Sui","Sun","Suo","Ta","Tai","Tan","Tang","Tao","Te","Tei","Teng","Teul","Ti","Tian","Tiao","Tie","Ting","Tong","Tou","Tu","Tuan","Tui","Tun","Tunwa","Tuo","Wa","Wai","Wan","Wang","Wei","Wen","Weng","Wo","Wu","Xi","Xia","Xian","Xiang","Xiao","Xie","Xin","Xing","Xiong","Xiu","Xu","Xuan","Xue","Xun","Ya","Yai","Yan","Yang","Yao","Ye","Yi","Yin","Ying","Yo","Yong","You","Yu","Yuan","Yue","Yun","Za","Zai","Zan","Zang","Zao","Ze","Zei","Zen","Zeng","Zha","Zhai","Zhan","Zhang","Zhao","Zhe","Zhei","Zhen","Zheng","Zhi","Zhong","Zhou","Zhu","Zhua","Zhuai","Zhuan","Zhuang","Zhui","Zhun","Zhuo","Zi","Zong","Zou","Zu","Zuan","Zui","Zun","Zuo"
+            };
+        #endregion
         #endregion
 
 
-       
+
 
         public override int GetHashCode()
         {
