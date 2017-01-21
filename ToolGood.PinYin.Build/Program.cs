@@ -14,71 +14,38 @@ namespace ToolGood.PinYin.Build
 
         static void Main(string[] args)
         {
+            buildPinYinDict();
+            buildPinYinIndex();
+        }
+
+        #region 生成拼音索引
+        static void buildPinYinIndex()
+        {
             var index = 0x4e00;
-            var tt = "";
-            while (index <= 0x9fa5) {
-                tt += (char)index;
-                index++;
-            }
-            var st = ChineseConverter.Convert(tt, ChineseConversionDirection.SimplifiedToTraditional);
-            var cccc = (int)'丟';
-            var ccc2c = (int)'龜';
-
-
             List<HashSet<int>> t = new List<HashSet<int>>();
-            index = 0x4e00;
-            while (index <= 0x9fff) {
+            while (index <= 0x9fa5) {
                 var ch = (char)index;
 
                 HashSet<int> ls = new HashSet<int>();
-                try {
-                    var gpy = PinYinConverter.Get(ch.ToString());
-                    if (gpy != ch.ToString()) {
-                        var py2 = GetPyName(gpy);
-                        if (py2 > 0) {
-                            ls.Add(py2);
-                        }
-                    }
-                } catch (Exception) { }
+                var p1 = getPinYin(ch);
+                if (p1 >= 0) ls.Add(p1);
 
-                try {
-                    var chinese = new ChineseChar(ch);
-                    for (int i = 0; i < chinese.PinyinCount; i++) {
-                        var py = chinese.Pinyins[i].Replace("YAI", "YA");
-                        var py2 = GetPyName(py);
-                        if (py2 == -1) {
+                getPinYin2(ch, ls);
 
-                        }
-                        ls.Add(py2);
-                    }
-                } catch (Exception) {
-
-                }
-                try {
+                if (ls.Count == 0) {
                     char c;
                     Dict.TraditionalToSimplified(ch, out c);
-                    if (ch != c) {
-                        var chinese = new ChineseChar(c);
-                        for (int i = 0; i < chinese.PinyinCount; i++) {
-                            var py = chinese.Pinyins[i].Replace("YAI", "YA");
-                            var py2 = GetPyName(py);
-                            if (py2 == -1) {
-
-                            }
-                            ls.Add(py2);
-                        }
-                    }
-                } catch (Exception) { }
-
-
-                var py3 = GetPyName2(ch.ToString());
-                if (py3 > 0) {
-                    ls.Add(py3);
-                }
-                if (ch == '刓') {
-                    ls.Add(GetPyName("Liang"));
+                    getPinYin2(c, ls);
                 }
 
+                if (ls.Count == 0) {
+                    var py3 = GetPyName2(ch.ToString());
+                    if (py3 > 0) ls.Add(py3);
+                    if (ch == '刓') ls.Add(GetPyName("Liang"));
+                }
+                if (ls.Count == 0) {
+                    getPinYin3(ch, ls);
+                }
 
                 t.Add(ls);
                 index++;
@@ -101,7 +68,7 @@ namespace ToolGood.PinYin.Build
                     }
                 }
             }
-            index++;
+            //index++;
             node.Add((short)index);
             for (int i = node.Count - 1; i >= 0; i--) {
                 if (node[i] == -1) {
@@ -111,50 +78,89 @@ namespace ToolGood.PinYin.Build
             }
 
 
-            File.WriteAllText("1.txt", string.Join(",", node));
+            File.WriteAllText("pyIndex.txt", string.Join(",", node));
             sb.Remove(0, 1);
-            File.WriteAllText("2.txt", sb.ToString());
+            File.WriteAllText("pyData.txt", sb.ToString());
 
         }
-        //private 
-        private static Dictionary<string, string> _dict;
 
-        private static Dictionary<string, string> getDict()
+        static int getPinYin(char ch)
         {
-            if (_dict == null) {
-                var dict2 = "诘|Ji|揲|Ye|棓|Bei|足|Ju|栟|Ben|咯|Luo|迹|Gui|欻|Chua|耨|Nou|埏|Yan|囋|Can|噭|Chi|案|Wan|燝|Zhu|膻|Dan|汝|Zhuang|艹|Ao|磹|Tan|厖|Pang|观|Guang|窾|Kua|搂|Sou|继|Xu|房|Pang|黮|Shen|愬|Shuo|矜|Guan|盻|Pan|射|Ye|景|Ying|潠|Xun|蓧|Di|黈|Tou|从|Zong|洞|Tong|譳|Rou|鸊|Pi|桁|Hang|槱|Chao|被|Pi|擘|Bai|岂|Kai|铦|Kuo|瑱|Zhen|囝|Nan|嬛|Huan|乐|Lao|崚|Leng|蹻|Jue|浰|Li|摵|Se|梴|Yan|嶰|Jie|谌|Shen|撍|Qian|穞|Lu|黾|Meng|隩|Ao|刓|Liang|墄|Qi|擿|Zhe|能|Nan|居|Ji|及|Xi|揭|Qi|吾|Yu|扐|Cai|刓|Shu|啜|Shu|晻|Yan|兼|Xian|忒|Tei|痁|Dian|莫|Mu|宕|Tan|摘|Ti|灒|Cuan|什|Za|适|Di|逤|Suo|螫|Zhe|伈|Xin|扢|Jie|花|Hu|么|Mo|餧|Si|箐|Jing|禜|Ying|庳|Bei|硾|Chui|燋|Zhuo|棽|Shen|濊|Hun|泽|Shi|漱|Shou|摄|Nie|耆|Shi";
-                var sp = dict2.Split('|');
-                _dict = new Dictionary<string, string>();
-                for (int i = 0; i < sp.Length; i += 2) {
-                    _dict[sp[i]] = sp[i + 1];
+            try {
+                var gpy = PinYinConverter.Get(ch.ToString());
+                if (gpy != ch.ToString()) {
+                    var py2 = GetPyName(gpy);
+                    if (py2 > 0) {
+                        return py2;
+                    }
                 }
-            }
-            return _dict;
-        }
-
-        private static int GetPyName2(string key)
-        {
-            var dict = getDict();
-            string py;
-            if (dict.TryGetValue(key, out py)) {
-                return pyName.IndexOf(py);
-            }
+            } catch (Exception) { }
             return -1;
         }
+        static void getPinYin2(char ch, HashSet<int> ls)
+        {
+            try {
+                var chinese = new ChineseChar(ch);
+                for (int i = 0; i < chinese.PinyinCount; i++) {
+                    var py = chinese.Pinyins[i];//.Replace("YAI", "YA");
+                    var py2 = GetPyName(py);
+                    if (py2 == -1) {
+                        throw new Exception("");
+                    }
+                    ls.Add(py2);
+                }
+            } catch (Exception) { }
+        }
+        static void getPinYin3(char ch, HashSet<int> ls)
+        {
+            var texts = File.ReadAllLines("_pyyin.txt");
+            foreach (var text in texts) {
+                var sp = text.Trim().Split(':');
+                if (sp[0][0]==ch) {
+                    for (int i = 1; i < sp.Length; i++) {
+                        var py = GetPyName(sp[i]);
+                        ls.Add(py);
+                    }
+                    
+                }
+            }
+        }
+        #endregion
 
 
-        private static int GetPyName(string name)
+        #region 生成拼音字典
+        static void buildPinYinDict()
+        {
+            var texts = File.ReadAllLines("_pyyin.txt");
+            foreach (var text in texts) {
+                var sp = text.Trim().Split(':');
+                for (int i = 1; i < sp.Length; i++) {
+                    var py = GetPy(sp[i]);
+                    if (pyName.Contains(py) == false) {
+                        pyName.Add(py);
+                    }
+
+                }
+            }
+            //pyName.Remove("");
+            pyName = pyName.OrderBy(q => q).ToList();
+            var str = "\"" + string.Join("\",\"", pyName) + "\"";
+            File.WriteAllText("pyName.txt", str);
+        }
+
+        private static string GetPy(string name)
         {
             name = name.Replace("0", "").Replace("1", "").Replace("2", "").Replace("3", "").Replace("4", "")
                 .Replace("5", "").Replace("6", "").Replace("7", "").Replace("8", "").Replace("9", "");
+
+            name = name.ToUpper();
             if (name.Length > 1) {
                 name = name[0] + name.Substring(1).ToLower();
             }
-            return pyName.IndexOf(name);
+            return name;
         }
-
         private static List<string> pyName = new List<string>
-     {
+ {
             "", "A", "Ai", "An", "Ang", "Ao", "Ba", "Bai", "Ban", "Bang", "Bao", "Bei",
              "Ben", "Beng", "Bi", "Bian", "Biao", "Bie", "Bin", "Bing", "Bo", "Bu",
              "Ba", "Cai", "Can", "Cang", "Cao", "Ce", "Ceng", "Cha", "Chai", "Chan",
@@ -195,7 +201,51 @@ namespace ToolGood.PinYin.Build
              "Zheng", "Zhi", "Zhong", "Zhou", "Zhu", "Zhua", "Zhuai", "Zhuan",
              "Zhuang", "Zhui", "Zhun", "Zhuo", "Zi", "Zong", "Zou", "Zu", "Zuan",
              "Zui", "Zun", "Zuo","Pou","Dia","Cen","Dei","Ca","Nve","Lve","Shei","Zhei",
-             "Ei","Chua","Nou","Tei"
+             "Ei","Chua","Nou","Tei","Yai"
        };
+        #endregion
+
+
+
+        //private 
+        private static Dictionary<string, string> _dict;
+
+        private static Dictionary<string, string> getDict()
+        {
+            if (_dict == null) {
+                var dict2 = "诘|Ji|揲|Ye|棓|Bei|足|Ju|栟|Ben|咯|Luo|迹|Gui|欻|Chua|耨|Nou|埏|Yan|囋|Can|噭|Chi|案|Wan|燝|Zhu|膻|Dan|汝|Zhuang|艹|Ao|磹|Tan|厖|Pang|观|Guang|窾|Kua|搂|Sou|继|Xu|房|Pang|黮|Shen|愬|Shuo|矜|Guan|盻|Pan|射|Ye|景|Ying|潠|Xun|蓧|Di|黈|Tou|从|Zong|洞|Tong|譳|Rou|鸊|Pi|桁|Hang|槱|Chao|被|Pi|擘|Bai|岂|Kai|铦|Kuo|瑱|Zhen|囝|Nan|嬛|Huan|乐|Lao|崚|Leng|蹻|Jue|浰|Li|摵|Se|梴|Yan|嶰|Jie|谌|Shen|撍|Qian|穞|Lu|黾|Meng|隩|Ao|刓|Liang|墄|Qi|擿|Zhe|能|Nan|居|Ji|及|Xi|揭|Qi|吾|Yu|扐|Cai|刓|Shu|啜|Shu|晻|Yan|兼|Xian|忒|Tei|痁|Dian|莫|Mu|宕|Tan|摘|Ti|灒|Cuan|什|Za|适|Di|逤|Suo|螫|Zhe|伈|Xin|扢|Jie|花|Hu|么|Mo|餧|Si|箐|Jing|禜|Ying|庳|Bei|硾|Chui|燋|Zhuo|棽|Shen|濊|Hun|泽|Shi|漱|Shou|摄|Nie|耆|Shi";
+                var sp = dict2.Split('|');
+                _dict = new Dictionary<string, string>();
+                for (int i = 0; i < sp.Length; i += 2) {
+                    _dict[sp[i]] = sp[i + 1];
+                }
+            }
+            return _dict;
+        }
+
+        private static int GetPyName2(string key)
+        {
+            var dict = getDict();
+            string py;
+            if (dict.TryGetValue(key, out py)) {
+                return pyName.IndexOf(py);
+            }
+            return -1;
+        }
+
+
+        private static int GetPyName(string name)
+        {
+            name = name.Replace("0", "").Replace("1", "").Replace("2", "").Replace("3", "").Replace("4", "")
+                .Replace("5", "").Replace("6", "").Replace("7", "").Replace("8", "").Replace("9", "");
+            name = name.ToUpper();
+            if (name.Length > 1) {
+                name = name[0] + name.Substring(1).ToLower();
+            }
+            return pyName.IndexOf(name);
+        }
+
+
+
     }
 }
