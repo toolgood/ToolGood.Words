@@ -20,6 +20,11 @@ namespace ToolGood.Words.Test
             var b = WordsHelper.GetPinYin("摩擦棒");
             Assert.AreEqual("MoCaBang", b);
 
+            b = WordsHelper.GetPinYin("秘鲁");
+            Assert.AreEqual("BiLu", b);
+
+            
+
             var py = WordsHelper.GetPinYinFast("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
 
