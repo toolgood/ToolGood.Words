@@ -201,6 +201,7 @@ namespace ToolGood.Words
         /// <param name="ids">IDs</param>
         public void SetKeywords(List<string> keywords, List<int> ids)
         {
+            if (keywords.Count != ids.Count) throw new ArgumentException("keywords and ids inconsistent number.");
             var keySorts = SplitKeywords(keywords);
             buildKeywords(keySorts, keywords);
             _ids = ids.ToArray();
@@ -209,7 +210,7 @@ namespace ToolGood.Words
         /// 搜索关键字
         /// </summary>
         /// <param name="text">文本</param>
-        /// <param name="keywordSort">是否排序</param>
+        /// <param name="keywordSort">是否按拼音排序</param>
         /// <returns></returns>
         public List<string> SearchTexts(string text, bool keywordSort = false)
         {
@@ -242,7 +243,7 @@ namespace ToolGood.Words
         /// 搜索IDs
         /// </summary>
         /// <param name="text"文本></param>
-        /// <param name="keywordSort">是否排序</param>
+        /// <param name="keywordSort">是否按拼音排序</param>
         /// <returns></returns>
         public List<int> SearchIds(string text, bool keywordSort = false)
         {
@@ -275,7 +276,7 @@ namespace ToolGood.Words
         /// 搜索关键字和IDs
         /// </summary>
         /// <param name="text">文本</param>
-        /// <param name="keywordSort">是否排序</param>
+        /// <param name="keywordSort">是否按拼音排序</param>
         /// <returns></returns>
         public List<PinYinSearchResult> SearchTextWithIds(string text, bool keywordSort = false)
         {
@@ -305,6 +306,106 @@ namespace ToolGood.Words
             }
             return results;
         }
+
+
+        /// <summary>
+        /// 挑选关键字，关键字在指定长度内，最前显示
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="keywordSort">是否按拼音排序</param>
+        /// <param name="pickLength">挑选长度</param>
+        /// <returns></returns>
+        public List<string> PickTexts(string text, bool keywordSort = false, int pickLength = 2)
+        {
+            TextLine line;
+            trySplitSearchText(text, out line);
+            List<ChineseNode> nodes = matching(line);
+
+            List<string> results = new List<string>();
+            List<string> appends = new List<string>();
+            var count = text.Length + pickLength;
+            if (keywordSort) {
+                foreach (var item in nodes) {
+                    for (int i = item.RangeStart; i <= item.RangeEnd; i++) {
+                        var key = _keywords[i];
+                        if (key.Length <= count) {
+                            results.Add(key);
+                        } else {
+                            appends.Add(key);
+                        }
+                    }
+                }
+            } else {
+                List<int> indexs = new List<int>();
+                foreach (var item in nodes) {
+                    for (int i = item.RangeStart; i <= item.RangeEnd; i++) {
+                        indexs.Add(_indexs[i]);
+                    }
+                }
+                indexs = indexs.OrderBy(q => q).Distinct().ToList();
+                foreach (var index in indexs) {
+                    var key = _keywords[index];
+                    if (key.Length <= count) {
+                        results.Add(key);
+                    } else {
+                        appends.Add(key);
+                    }
+                }
+            }
+            results.AddRange(appends);
+            return results;
+        }
+
+        /// <summary>
+        /// 挑选关键字和IDs，关键字在指定长度内，最前显示
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="keywordSort">是否按拼音排序</param>
+        /// <param name="pickLength">挑选长度</param>
+        /// <returns></returns>
+        public List<PinYinSearchResult> PickTextWithIds(string text, bool keywordSort = false, int pickLength = 2)
+        {
+            TextLine line;
+            trySplitSearchText(text, out line);
+            List<ChineseNode> nodes = matching(line);
+
+            List<PinYinSearchResult> results = new List<PinYinSearchResult>();
+            List<PinYinSearchResult> appends = new List<PinYinSearchResult>();
+            var count = text.Length + pickLength;
+            if (keywordSort) {
+                foreach (var item in nodes) {
+                    for (int i = item.RangeStart; i <= item.RangeEnd; i++) {
+                        var index = _indexs[i];
+                        var key = _keywords[index];
+                        if (key.Length <= count) {
+                            results.Add(new PinYinSearchResult(key, _ids[index]));
+                        } else {
+                            appends.Add(new PinYinSearchResult(key, _ids[index]));
+                        }
+                    }
+                }
+            } else {
+                List<int> indexs = new List<int>();
+                foreach (var item in nodes) {
+                    for (int i = item.RangeStart; i <= item.RangeEnd; i++) {
+                        indexs.Add(_indexs[i]);
+                    }
+                }
+                indexs = indexs.OrderBy(q => q).Distinct().ToList();
+                foreach (var index in indexs) {
+                    var key = _keywords[index];
+                    if (key.Length <= count) {
+                        results.Add(new PinYinSearchResult(key, _ids[index]));
+                    } else {
+                        appends.Add(new PinYinSearchResult(key, _ids[index]));
+                    }
+                }
+            }
+            results.AddRange(appends);
+            return results;
+        }
+
+
         #endregion
 
         #region Search
@@ -410,14 +511,14 @@ namespace ToolGood.Words
 
             for (int i = 0; i < keySorts.Count; i++) {
                 var sp = keySorts[i].Split(wordsSpace);
-                var str = "";
+                //var str = "";
                 var range = _root;
-                for (int j = 0; j < sp.Length; j++) {
+                for (int j = 0; j < sp.Length-1; j++) {
                     var s = sp[j].Split(pinYinSpace);
                     range = range.AddNode(s[0][0], s[1], s[2][0], i);
-                    str += s[2];
+                    //str += s[2];
                 }
-                indexs.Add(keywords.IndexOf(str));
+                indexs.Add(int.Parse(sp[sp.Length - 1]));
             }
             _keywords = keywords.ToArray();
             _indexs = indexs.ToArray();
@@ -430,13 +531,14 @@ namespace ToolGood.Words
         private List<string> SplitKeywords(List<string> keywords)
         {
             List<string> results = new List<string>();
-            foreach (var keyword in keywords) {
-                splitKeywords(keyword.ToUpper(), results);
+            for (int i = 0; i < keywords.Count; i++) {
+                var keyword = keywords[i];
+                splitKeywords(keyword.ToUpper(), i, results);
             }
             return results.OrderBy(q => q).ToList();
         }
 
-        private void splitKeywords(string keyword, List<string> results)
+        private void splitKeywords(string keyword, int baseIndex, List<string> results)
         {
             List<List<string>> ks = new List<List<string>>();
             if (_type == PinYinSearchType.PinYin) {
@@ -476,20 +578,20 @@ namespace ToolGood.Words
             }
             foreach (var item in ks[0]) {
                 var py = item[0].ToString() + pinYinSpace + item + pinYinSpace + keyword[0];
-                splitKeywords(py, 1, ks, keyword, results);
+                splitKeywords(py, 1, ks, keyword, baseIndex, results);
             }
         }
-        private void splitKeywords(string py, int index, List<List<string>> ks, string keyword, List<string> results)
+        private void splitKeywords(string py, int index, List<List<string>> ks, string keyword, int baseIndex, List<string> results)
         {
             if (ks.Count == index) {
-                results.Add(py);
+                results.Add(py + wordsSpace + baseIndex.ToString());
                 return;
             }
 
             var k = ks[index];
             foreach (var item in k) {
                 py += wordsSpace + item[0].ToString() + pinYinSpace + item + pinYinSpace + keyword[index].ToString();
-                splitKeywords(py, index + 1, ks, keyword, results);
+                splitKeywords(py, index + 1, ks, keyword, baseIndex, results);
             }
         }
         #endregion

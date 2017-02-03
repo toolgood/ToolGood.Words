@@ -45,6 +45,11 @@ ToolGood.Words:             本项目源代码
     search.SearchTexts("baie");//白俄罗斯
     search.SearchTexts("bai俄");//白俄罗斯
 ```
+`PinYinSearch`的方法：`SetKeywords`、`SearchTexts`、`SearchIds`、`SearchTextWithIds`、`PickTexts`、`PickTextWithIds`。
+
+`PinYinSearchEx`是`PinYinSearch`的增强版，优化内存使用量，增加方法`SaveFile`、`LoadFile`。
+
+注：`PinYinSearchEx`测试28W关键字，总字数147W，内存使用量32M，输出文件38M。
 
 ## 非法词(敏感词)检测（字符串搜索）
 非法词(敏感词)检测类：`StringSearch`、`WordsSearch`、`IllegalWordsSearch`、`IllegalWordsQuickSearch`;
