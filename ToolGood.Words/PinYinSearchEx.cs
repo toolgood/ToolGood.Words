@@ -9,8 +9,8 @@ namespace ToolGood.Words
 {
     /// <summary>
     /// PinYinSearch增强版，占用内存更小，
-    /// 经测试28W个关键字，总字数147W，内存使用32M，输出文件38M。
-    /// 原PinYinSearch测试时，内存使用700M。
+    /// 经测试28W个关键字，总字数147W，内存使用36M，输出文件34.1M。
+    /// 原PinYinSearch测试时，内存使用700M以上。
     /// 
     /// 使用SaveFile、LoadFile可快速设置关键字。
     /// 
@@ -186,6 +186,7 @@ namespace ToolGood.Words
 
             }
         }
+
         #endregion
 
         #region 私有字段
@@ -347,19 +348,24 @@ namespace ToolGood.Words
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
-            List<string> texts = new List<string>();
+            List<string> results = new List<string>();
             List<string> appends = new List<string>();
-            var count = text.Length + pickLength;
+            List<string> appends2 = new List<string>();
+            var textCount = text.Length;
+            var count = textCount + pickLength;
             foreach (var index in indexs) {
                 var key = _keywords[index];
-                if (key.Length <= count) {
-                    texts.Add(key);
-                } else {
+                if (key.Length == textCount) {
+                    results.Add(key);
+                } else if (key.Length <= count) {
                     appends.Add(key);
+                } else {
+                    appends2.Add(key);
                 }
             }
-            texts.AddRange(appends);
-            return texts;
+            results.AddRange(appends);
+            results.AddRange(appends2);
+            return results;
         }
 
         /// <summary>
@@ -384,16 +390,21 @@ namespace ToolGood.Words
             }
             List<PinYinSearchResult> results = new List<PinYinSearchResult>();
             List<PinYinSearchResult> appends = new List<PinYinSearchResult>();
-            var count = text.Length + pickLength;
+            List<PinYinSearchResult> appends2 = new List<PinYinSearchResult>();
+            var textCount = text.Length;
+            var count = textCount + pickLength;
             foreach (var index in indexs) {
                 var key = _keywords[index];
-                if (key.Length <= count) {
+                if (key.Length == textCount) {
                     results.Add(new PinYinSearchResult(key, _ids[index]));
-                } else {
+                } else if (key.Length <= count) {
                     appends.Add(new PinYinSearchResult(key, _ids[index]));
+                } else {
+                    appends2.Add(new PinYinSearchResult(key, _ids[index]));
                 }
             }
             results.AddRange(appends);
+            results.AddRange(appends2);
             return results;
         }
 
@@ -707,7 +718,7 @@ namespace ToolGood.Words
                 for (int i = _pinYinStart[line.PinYin]; i < _pinYinStart[line.PinYin + 1]; i++) {
                     var chineseIndex = baseIndex + i;
                     var index = _wordCheck[chineseIndex];
-                    if (index == 0) return;
+                    if (index == 0) continue;
                     if (_word[index] == i) {
                         nextBaseList.Add(index);
                     }
@@ -724,11 +735,53 @@ namespace ToolGood.Words
 
 
         #region 搜索字划分、拼音分词
-        private static WordsSearch _pinyinSplit;
-        private WordsSearch getPinYinSplit()
+        class MiniSearchResult
+        {
+            public MiniSearchResult(string keyword, int start, int end)
+            {
+                Keyword = keyword;
+                End = end;
+                Start = start;
+            }
+            public int Start { get; private set; }
+            public int End { get; private set; }
+            public string Keyword { get; private set; }
+        }
+        class MiniSearch : internals.BaseSearch
+        {
+            public List<MiniSearchResult> FindAll(string text)
+            {
+                internals.TrieNode ptr = null;
+                List<MiniSearchResult> list = new List<MiniSearchResult>();
+
+                for (int i = 0; i < text.Length; i++) {
+                    internals.TrieNode tn;
+                    if (ptr == null) {
+                        tn = _first[text[i]];
+                    } else {
+                        if (ptr.TryGetValue(text[i], out tn) == false) {
+                            tn = _first[text[i]];
+                        }
+                    }
+                    if (tn != null) {
+                        if (tn.End) {
+                            foreach (var item in tn.Results) {
+                                list.Add(new MiniSearchResult(item, i + 1 - item.Length, i));
+                            }
+                        }
+                    }
+                    ptr = tn;
+                }
+                return list;
+            }
+
+        }
+
+        private static MiniSearch _pinyinSplit;
+        private MiniSearch getPinYinSplit()
         {
             if (_pinyinSplit == null) {
-                _pinyinSplit = new WordsSearch();
+                _pinyinSplit = new MiniSearch();
                 List<string> pys = new List<string>();
                 foreach (var item in PinYinDict.pyName) {
                     var t = item.ToUpper();
@@ -874,14 +927,13 @@ namespace ToolGood.Words
         {
             _fpyIndexBase = new int[_word.Length];
 
-            var fpyIndexBase = new List<int>();
             var fpy = new List<byte>() { 0 };
             var pyIndexBase = new List<int>() { 0 };
             var py = new List<ushort>() { 0 };
             var wordIndexBase = new List<int>() { 0 };
             var wordCheck = new List<int>() { 0 };
 
-            buildCheckArray(root, fpyIndexBase, fpy, pyIndexBase, py, wordIndexBase, wordCheck);
+            buildCheckArray(root, fpy, pyIndexBase, py, wordIndexBase, wordCheck);
 
             for (int i = 0; i < _wordToPinYin.Length; i++) {
                 fpy.Add(0);
@@ -898,11 +950,12 @@ namespace ToolGood.Words
             _wordCheck = wordCheck.ToArray();
         }
 
-        private void buildCheckArray(ChineseNode root, List<int> fpyIndexBase, List<byte> fpy, List<int> pyIndexBase,
-            List<ushort> py, List<int> wordIndexBase, List<int> wordCheck)
+        private void buildCheckArray(ChineseNode root, List<byte> fpy, List<int> pyIndexBase, List<ushort> py, List<int> wordIndexBase,
+            List<int> wordCheck)
         {
             if (root.IsEnd) return;
             #region 初始化pyIndexBase
+            #region 初始化 min max start_old start
             byte min = byte.MaxValue;
             byte max = byte.MinValue;
             foreach (var item in root.FirstPinYinNodes) {
@@ -911,10 +964,24 @@ namespace ToolGood.Words
             }
             var start_old = pyIndexBase.Count;
             var start = start_old - min;
+            #endregion
 
-            while (checkHas(fpyIndexBase, start, 37 - min + 1)) start++;
-            //while (fpyIndexBase.Contains(start)) start++;
-            fpyIndexBase.Add(start);
+            #region 检查start的位置，以免冲突
+            bool b = true;
+            while (b) {
+                b = false;
+                for (int i = 1; i < min; i++) {
+                    if (start + i < 0) continue;
+                    if (fpy.Count <= start + i) break;
+                    if (fpy[start + i] == (byte)i) {
+                        b = true;
+                        start++;
+                        break;
+                    }
+                }
+            }
+            #endregion
+
             for (int i = start_old; i <= start + max; i++) {
                 fpy.Add(0);
                 pyIndexBase.Add(0);
@@ -925,15 +992,20 @@ namespace ToolGood.Words
                 fpy[start + item.Key] = item.Key;
             }
 
-            foreach (var item in root.FirstPinYinNodes) {
-                buildCheckArray(item.Value, fpyIndexBase, fpy, pyIndexBase, py, wordIndexBase, wordCheck, start + item.Key);
+            var keys = root.FirstPinYinNodes.Keys.OrderByDescending(q => q).ToList();
+            foreach (var Key in keys) {
+                var Value = root.FirstPinYinNodes[Key];
+                buildCheckArray(Value, fpy, pyIndexBase, py, wordIndexBase, wordCheck, start + Key);
             }
+
+
         }
 
-        private void buildCheckArray(FirstPinYinNode root, List<int> fpyIndexBase, List<byte> fpy, List<int> pyIndexBase,
-            List<ushort> py, List<int> wordIndexBase, List<int> wordCheck, int baseIndex)
+        private void buildCheckArray(FirstPinYinNode root, List<byte> fpy, List<int> pyIndexBase, List<ushort> py, List<int> wordIndexBase,
+            List<int> wordCheck, int baseIndex)
         {
             #region 初始化wordIndexBase
+            #region 初始化 min max start_old start
             ushort min = ushort.MaxValue;
             ushort max = ushort.MinValue;
             foreach (var item in root.PinYinNodes) {
@@ -942,8 +1014,24 @@ namespace ToolGood.Words
             }
             var start_old = wordIndexBase.Count;
             var start = start_old - min;
-            while (checkHas(pyIndexBase, start, _pinYinToFirstPinYin.Length - min + 1)) start++;
-            //while (pyIndexBase.Contains(start)) start++;
+            #endregion
+
+            #region 检验start位置，避免冲突
+            bool b = true;
+            var left = _pinYinStart[_pinYinToFirstPinYin[min]];
+            while (b) {
+                b = false;
+                for (int i = left; i < min; i++) {
+                    if (start + i < 0) continue;
+                    if (py.Count <= start + i) break;
+                    if (py[start + i] == (ushort)i) {
+                        b = true;
+                        start++;
+                        break;
+                    }
+                }
+            }
+            #endregion
 
             for (int i = start_old; i <= start + max; i++) {
                 py.Add(0);
@@ -955,14 +1043,19 @@ namespace ToolGood.Words
                 py[start + item.Key] = item.Key;
             }
 
-            foreach (var item in root.PinYinNodes) {
-                buildCheckArray(item.Value, fpyIndexBase, fpy, pyIndexBase, py, wordIndexBase, wordCheck, start + item.Key);
+            var keys = root.PinYinNodes.Keys.OrderByDescending(q => q).ToList();
+            foreach (var Key in keys) {
+                var Value = root.PinYinNodes[Key];
+                buildCheckArray(Value, fpy, pyIndexBase, py, wordIndexBase, wordCheck, start + Key);
             }
+
         }
-        private void buildCheckArray(PinYinNode root, List<int> fpyIndexBase, List<byte> fpy, List<int> pyIndexBase,
-            List<ushort> py, List<int> wordIndexBase, List<int> wordCheck, int baseIndex)
+
+        private void buildCheckArray(PinYinNode root, List<byte> fpy, List<int> pyIndexBase, List<ushort> py, List<int> wordIndexBase,
+            List<int> wordCheck, int baseIndex)
         {
             #region 初始化wordCheck
+            #region 初始化 min max start_old start
             ushort min = ushort.MaxValue;
             ushort max = ushort.MinValue;
             foreach (var item in root.ChineseNodes) {
@@ -971,8 +1064,27 @@ namespace ToolGood.Words
             }
             var start_old = wordCheck.Count;
             var start = start_old - min;
-            while (checkHas(wordIndexBase, start, _wordToPinYin.Length - min + 1)) start++;
-            //while (wordIndexBase.Contains(start)) start++;
+            #endregion
+
+            #region 检验start位置，避免冲突
+            bool b = true;
+            var left = _pinYinStart[_wordToPinYin[min]];
+            while (b) {
+                b = false;
+                for (int i = left; i < min; i++) {
+                    if (start + i < 0) continue;
+                    if (wordCheck.Count <= start + i) break;
+                    var index = wordCheck[start + i];
+                    if (index == 0) continue;
+                    if (_word[index] == (ushort)i) {
+                        b = true;
+                        start++;
+                        break;
+                    }
+                }
+            }
+            #endregion
+
             for (int i = start_old; i <= start + max; i++) {
                 wordCheck.Add(0);
             }
@@ -982,24 +1094,15 @@ namespace ToolGood.Words
                 wordCheck[start + item.Key] = item.Value.Index;
             }
 
-            foreach (var item in root.ChineseNodes) {
-                buildCheckArray(item.Value, fpyIndexBase, fpy, pyIndexBase, py, wordIndexBase, wordCheck);
+            var keys = root.ChineseNodes.Keys.OrderByDescending(q => q).ToList();
+            foreach (var Key in keys) {
+                var Value = root.ChineseNodes[Key];
+                buildCheckArray(Value, fpy, pyIndexBase, py, wordIndexBase, wordCheck);
             }
 
         }
 
-        private bool checkHas(List<int> list, int start, int right)
-        {
-            var s = Math.Max(0, list.Count - right);
-            var e = Math.Min(list.Count, s + right);
 
-            for (int i = s; i < e; i++) {
-                if (list[i] == start) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         #endregion
 
