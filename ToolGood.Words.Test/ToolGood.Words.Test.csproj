@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IllegalWords\IllegalWordsTest.cs" />
     <Compile Include="PetaTest.cs" />
+    <Compile Include="PinYinSearch\PinYinSearchEx3Test.cs" />
     <Compile Include="PinYinSearch\PinYinSearchExTest.cs" />
     <Compile Include="PinYinSearch\PinYinSearchTest.cs" />
     <Compile Include="Program.cs" />

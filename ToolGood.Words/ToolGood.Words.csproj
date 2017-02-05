@@ -51,6 +51,7 @@
     <Compile Include="internals\TreeNode.cs" />
     <Compile Include="internals\TrieNode.cs" />
     <Compile Include="PinYinSearch.cs" />
+    <Compile Include="PinYinSearchEx3.cs" />
     <Compile Include="PinYinSearchEx.cs" />
     <Compile Include="StringSearch.cs" />
     <Compile Include="internals\Dict.cs" />

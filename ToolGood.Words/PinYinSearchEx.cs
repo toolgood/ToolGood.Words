@@ -268,6 +268,7 @@ namespace ToolGood.Words
                     indexs.Add(_indexs[i]);
                 }
             }
+            indexs = indexs.Distinct().ToList();
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
@@ -293,6 +294,7 @@ namespace ToolGood.Words
                     indexs.Add(_indexs[i]);
                 }
             }
+            indexs = indexs.Distinct().ToList();
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
@@ -318,6 +320,7 @@ namespace ToolGood.Words
                     indexs.Add(_indexs[i]);
                 }
             }
+            indexs = indexs.Distinct().ToList();
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
@@ -345,6 +348,7 @@ namespace ToolGood.Words
                     indexs.Add(_indexs[i]);
                 }
             }
+            indexs = indexs.Distinct().ToList();
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
@@ -385,6 +389,7 @@ namespace ToolGood.Words
                     indexs.Add(_indexs[i]);
                 }
             }
+            indexs = indexs.Distinct().ToList();
             if (keywordSort == false) {
                 indexs = indexs.OrderBy(q => q).ToList();
             }
@@ -650,7 +655,7 @@ namespace ToolGood.Words
                 List<int> results = new List<int>();
                 List<int> baseList = new List<int>() { 0 };
                 searchIndexs(rootLine, baseList, results);
-                return results;
+                return results.Distinct().ToList();
             }
             return new List<int>();
         }
