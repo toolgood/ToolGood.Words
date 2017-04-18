@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="IllegalWordsQuickSearch.cs" />
     <Compile Include="IllegalWordsSearch.cs" />
+    <Compile Include="IllegalWordsSearchEx.cs" />
     <Compile Include="internals\BaseSearch.cs" />
     <Compile Include="internals\TreeNode.cs" />
     <Compile Include="internals\TrieNode.cs" />

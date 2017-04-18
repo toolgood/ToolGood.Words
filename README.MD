@@ -60,6 +60,7 @@ ToolGood.Words:             本项目源代码
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，转化特殊数字**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，开始位置、结束位置。
 * `IllegalWordsQuickSearch`: `IllegalWordsSearch`简化版本。
+* `IllegalWordsSearchEx`支持默认**繁体转简体，全角转半角，忽略大小写，转化特殊数字，停顿词，重复词**
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
 
 
