@@ -11,6 +11,7 @@
     <AssemblyName>ToolGood.Words</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\ToolGood.Words.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -49,6 +51,7 @@
     <Compile Include="IllegalWordsSearch.cs" />
     <Compile Include="IllegalWordsSearchEx.cs" />
     <Compile Include="internals\BaseSearch.cs" />
+    <Compile Include="internals\NumberConventer.cs" />
     <Compile Include="internals\TreeNode.cs" />
     <Compile Include="internals\TrieNode.cs" />
     <Compile Include="PinYinSearch.cs" />

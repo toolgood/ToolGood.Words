@@ -25,6 +25,8 @@ ToolGood.Words:             本项目源代码
     WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
     // 数字转成中文大写
     WordsHelper.ToChineseRMB(12345678901.12);
+    // 中文转成数字
+    WordsHelper.ToNumber("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
     // 获取全拼
     WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
     // 获取首字母

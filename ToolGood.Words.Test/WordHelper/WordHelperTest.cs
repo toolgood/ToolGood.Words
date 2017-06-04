@@ -66,6 +66,13 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
         }
         [Test]
+        public void ToNumber()
+        {
+            var t = WordsHelper.ToNumber("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
+            Assert.AreEqual((decimal)12345678901.12, t);
+        }
+
+        [Test]
         public void ToSimplifiedChinese()
         {
             var tw = WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");

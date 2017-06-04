@@ -265,6 +265,18 @@ namespace ToolGood.Words
             return Regex.Replace(d, ".", m => "负元空零壹贰叁肆伍陆柒捌玖空空空空空空空分角拾佰仟萬億兆京垓秭穰"[m.Value[0] - '-'].ToString());
         }
 
+        /// <summary>
+        /// 中文转数字（支持中文大写）
+        ///
+        /// </summary>
+        /// <param name="chineseString"></param>
+        /// <returns></returns>
+        public static decimal ToNumber(string chineseString)
+        {
+            return NumberConventer.ChnToArab(chineseString);
+        }
+
+
         #endregion
     }
 }
