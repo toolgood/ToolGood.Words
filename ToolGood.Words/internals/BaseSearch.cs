@@ -10,118 +10,56 @@ namespace ToolGood.Words.internals
         protected TrieNode _root = new TrieNode();
         protected TrieNode[] _first = new TrieNode[char.MaxValue + 1];
 
-        #region SetKeywords
+
         public virtual void SetKeywords(ICollection<string> _keywords)
         {
-            var tn = BuildTreeWithBFS(_keywords);
-            SimplifyTree(tn);
+            var first = new TrieNode[char.MaxValue + 1];
+            var root = new TrieNode();
+            foreach (var p in _keywords) {
+                if (string.IsNullOrEmpty(p)) continue;
+
+                var nd = first[p[0]];
+                if (nd == null) {
+                    nd = root.Add(p[0]);
+                    first[p[0]] = nd;
+                }
+                for (int i = 1; i < p.Length; i++) {
+                    nd = nd.Add(p[i]);
+                }
+                nd.SetResults(p);
+            }
+            this._first = first;
+
+            Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
+            foreach (var item in root.m_values) {
+                TryLinks(item.Value, null, links);
+            }
+
+            foreach (var item in links) {
+                item.Key.Merge(item.Value);
+            }
+
+            _root = root;
         }
-        TreeNode BuildTreeWithBFS(ICollection<string> _keywords)
+
+        private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
         {
-            var root = new TreeNode(null, ' ');
-            foreach (string p in _keywords) {
-                string t = p;
+            foreach (var item in node.m_values) {
+                if (node2 == null) {
+                    var nd = _first[item.Key];
+                    if (nd == null) continue;
+                    links[item.Value] = nd;
+                    TryLinks(item.Value, nd, links);
+                } else {
 
-                // add pattern to tree
-                TreeNode nd = root;
-                foreach (char c in t) {
-                    TreeNode ndNew = null;
-                    foreach (TreeNode trans in nd.Transitions)
-                        if (trans.Char == c) { ndNew = trans; break; }
-
-                    if (ndNew == null) {
-                        ndNew = new TreeNode(nd, c);
-                        nd.AddTransition(ndNew);
+                    TrieNode tn;
+                    if (node2.TryGetValue(item.Key, out tn)) {
+                        links[item.Value] = tn;
+                        TryLinks(item.Value, tn, links);
                     }
-                    nd = ndNew;
-                }
-                nd.AddResult(t);
-            }
-
-            List<TreeNode> nodes = new List<TreeNode>();
-            // Find failure functions
-            //ArrayList nodes = new ArrayList();
-            // level 1 nodes - fail to root node
-            foreach (TreeNode nd in root.Transitions) {
-                nd.Failure = root;
-                foreach (TreeNode trans in nd.Transitions) nodes.Add(trans);
-            }
-            // other nodes - using BFS
-            while (nodes.Count != 0) {
-                List<TreeNode> newNodes = new List<TreeNode>();
-
-                //ArrayList newNodes = new ArrayList();
-                foreach (TreeNode nd in nodes) {
-                    TreeNode r = nd.Parent.Failure;
-                    char c = nd.Char;
-
-                    while (r != null && !r.ContainsTransition(c)) r = r.Failure;
-                    if (r == null)
-                        nd.Failure = root;
-                    else {
-                        nd.Failure = r.GetTransition(c);
-                        foreach (string result in nd.Failure.Results)
-                            nd.AddResult(result);
-                    }
-
-                    // add child nodes to BFS list 
-                    foreach (TreeNode child in nd.Transitions)
-                        newNodes.Add(child);
-                }
-                nodes = newNodes;
-            }
-            root.Failure = root;
-            return root;
-        }
-        void SimplifyTree(TreeNode tn)
-        {
-            _root = new TrieNode();
-            Dictionary<TreeNode, TrieNode> dict = new Dictionary<TreeNode, TrieNode>();
-
-            List<TreeNode> list = new List<TreeNode>();
-            foreach (var item in tn.Transitions) list.Add(item);
-
-            while (list.Count > 0) {
-                foreach (var item in list) {
-                    dict[item] = new TrieNode();
-                }
-                List<TreeNode> newNodes = new List<TreeNode>();
-                foreach (var item in list) {
-                    foreach (var node in item.Transitions) {
-                        newNodes.Add(node);
-                    }
-                }
-                list = newNodes;
-            }
-            addNode(tn, tn, _root, dict);
-            _first = _root.ToArray();
-        }
-
-
-        void addNode(TreeNode treeNode, TreeNode root, TrieNode tridNode, Dictionary<TreeNode, TrieNode> dict)
-        {
-            foreach (var item in treeNode.Transitions) {
-                var node = dict[item];
-                tridNode.Add(item, node);
-                addNode(item, root, node, dict);
-            }
-            if (treeNode != root) {
-                string str = "";
-                List<char> rootChar = new List<char>();
-                var node = treeNode;
-                while (node!=root) {
-                    str += node.Char;
-                    var topNode = root.GetTransition(str, str.Length-1);
-                    if (topNode != null) {
-                        foreach (var item in topNode.Transitions) {
-                            tridNode.Add(item, dict[item]);
-                        }
-                    }
-                    node = node.Parent;
                 }
             }
         }
-        #endregion
 
     }
 }

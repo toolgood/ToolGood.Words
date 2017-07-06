@@ -70,108 +70,11 @@ namespace ToolGood.Words
     public class WordsSearch
     {
         #region class
-        class TreeNode
-        {
-            #region Constructor & Methods
-
-            public TreeNode(TreeNode parent, char c)
-            {
-                _char = c; _parent = parent;
-                _results = new Dictionary<string, int>();
-
-                _transitionsAr = new List<TreeNode>();
-                _transHash = new Dictionary<char, TreeNode>();
-            }
-
-            public void AddResult(string result, int index)
-            {
-                if (_results.ContainsKey(result)) return;
-                _results.Add(result, index);
-            }
-
-            public void AddTransition(TreeNode node)
-            {
-                _transHash.Add(node.Char, node);
-                _transitionsAr.Add(node);
-            }
-
-            public TreeNode GetTransition(char c)
-            {
-                TreeNode tn;
-                if (_transHash.TryGetValue(c, out tn)) { return tn; }
-                return null;
-            }
-            public TreeNode GetTransition(string text, int index)
-            {
-                if (index == -1) { return this; }
-
-                var c = text[index];
-                TreeNode tn;
-                if (_transHash.TryGetValue(c, out tn)) {
-                    return tn.GetTransition(text, index - 1);
-                }
-                return null;
-            }
-
-            public bool ContainsTransition(char c)
-            {
-                return _transHash.ContainsKey(c);
-            }
-            #endregion
-
-            #region Properties
-            private char _char;
-            private TreeNode _parent;
-            private TreeNode _failure;
-            private Dictionary<string, int> _results;
-            private List<TreeNode> _transitionsAr;
-            private Dictionary<char, TreeNode> _transHash;
-
-            public char Char
-            {
-                get { return _char; }
-            }
-
-            public TreeNode Parent
-            {
-                get { return _parent; }
-            }
-
-
-            /// <summary>
-            /// Failure function - descendant node
-            /// </summary>
-            public TreeNode Failure
-            {
-                get { return _failure; }
-                set { _failure = value; }
-            }
-
-
-            /// <summary>
-            /// Transition function - list of descendant nodes
-            /// </summary>
-            public List<TreeNode> Transitions
-            {
-                get { return _transitionsAr; }
-            }
-
-
-            /// <summary>
-            /// Returns list of patterns ending by this letter
-            /// </summary>
-            public Dictionary<string, int> Results
-            {
-                get { return _results; }
-            }
-
-            #endregion
-        }
         class TrieNode
         {
             public bool End { get; set; }
             public List<Tuple<string, int>> Results { get; set; }
-            private Dictionary<char, TrieNode> m_values;
+            internal Dictionary<char, TrieNode> m_values;
             private uint minflag = uint.MaxValue;
             private uint maxflag = uint.MinValue;
 
@@ -190,32 +93,47 @@ namespace ToolGood.Words
                 return false;
             }
 
-            public void Add(TreeNode t, TrieNode node)
+            public TrieNode Add(char c)
             {
-                var c = t.Char;
-                if (m_values.ContainsKey(c) == false) {
-                    if (minflag > c) { minflag = c; }
-                    if (maxflag < c) { maxflag = c; }
-                    m_values.Add(c, node);
-                    foreach (var item in t.Results) {
-                        node.End = true;
-                        var key = Tuple.Create(item.Key, item.Value);
-                        if (node.Results.Contains(key) == false) {
-                            node.Results.Add(key);
-                        }
+                TrieNode node;
+                if (minflag > c) { minflag = c; }
+                if (maxflag < c) { maxflag = c; }
+                if (m_values.TryGetValue(c, out node)) {
+                    return node;
+                }
+                node = new TrieNode();
+                m_values[c] = node;
+                return node;
+            }
+
+            public void SetResults(string text, int index)
+            {
+                if (End == false) {
+                    End = true;
+                }
+                Results.Add(Tuple.Create(text, index));
+            }
+
+            public void Merge(TrieNode node)
+            {
+                if (node.End) {
+                    if (End == false) {
+                        End = true;
+                    }
+                    foreach (var item in node.Results) {
+                        Results.Add(item);
+                    }
+                }
+
+                foreach (var item in node.m_values) {
+                    if (m_values.ContainsKey(item.Key) == false) {
+                        if (minflag > item.Key) { minflag = item.Key; }
+                        if (maxflag < item.Key) { maxflag = item.Key; }
+                        m_values[item.Key] = item.Value;
                     }
                 }
             }
 
-
-            public TrieNode[] ToArray()
-            {
-                TrieNode[] first = new TrieNode[char.MaxValue + 1];
-                foreach (var item in m_values) {
-                    first[item.Key] = item.Value;
-                }
-                return first;
-            }
         }
         #endregion
 
@@ -245,126 +163,58 @@ namespace ToolGood.Words
             SetKeywords(dict);
 
         }
+
         public void SetKeywords(IDictionary<string, int> _keywords)
         {
-            var tn = BuildTreeWithBFS(_keywords);
-            SimplifyTree(tn);
+            var first = new TrieNode[char.MaxValue + 1];
+            var root = new TrieNode();
+            foreach (var key in _keywords) {
+                var p = key.Key;
+                if (string.IsNullOrEmpty(p)) continue;
+
+                var nd = first[p[0]];
+                if (nd == null) {
+                    nd = root.Add(p[0]);
+                    first[p[0]] = nd;
+                }
+                for (int i = 1; i < p.Length; i++) {
+                    nd = nd.Add(p[i]);
+                }
+                nd.SetResults(p, key.Value);
+            }
+            this._first = first;
+
+            Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
+            foreach (var item in root.m_values) {
+                TryLinks(item.Value, null, links);
+            }
+
+            foreach (var item in links) {
+                item.Key.Merge(item.Value);
+            }
+
+            _root = root;
         }
 
-        TreeNode BuildTreeWithBFS(IDictionary<string, int> _keywords)
+        private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
         {
-            var root = new TreeNode(null, ' ');
-            foreach (var p in _keywords) {
-                string t = p.Key;
+            foreach (var item in node.m_values) {
+                if (node2 == null) {
+                    var nd = _first[item.Key];
+                    if (nd == null) continue;
+                    links[item.Value] = nd;
+                    TryLinks(item.Value, nd, links);
+                } else {
 
-                // add pattern to tree
-                TreeNode nd = root;
-                foreach (char c in t) {
-                    TreeNode ndNew = null;
-                    foreach (TreeNode trans in nd.Transitions)
-                        if (trans.Char == c) { ndNew = trans; break; }
-
-                    if (ndNew == null) {
-                        ndNew = new TreeNode(nd, c);
-                        nd.AddTransition(ndNew);
+                    TrieNode tn;
+                    if (node2.TryGetValue(item.Key, out tn)) {
+                        links[item.Value] = tn;
+                        TryLinks(item.Value, tn, links);
                     }
-                    nd = ndNew;
                 }
-                nd.AddResult(p.Key, p.Value);
             }
-
-            List<TreeNode> nodes = new List<TreeNode>();
-            // Find failure functions
-            //ArrayList nodes = new ArrayList();
-            // level 1 nodes - fail to root node
-            foreach (TreeNode nd in root.Transitions) {
-                nd.Failure = root;
-                foreach (TreeNode trans in nd.Transitions) nodes.Add(trans);
-            }
-            // other nodes - using BFS
-            while (nodes.Count != 0) {
-                List<TreeNode> newNodes = new List<TreeNode>();
-
-                //ArrayList newNodes = new ArrayList();
-                foreach (TreeNode nd in nodes) {
-                    TreeNode r = nd.Parent.Failure;
-                    char c = nd.Char;
-
-                    while (r != null && !r.ContainsTransition(c)) r = r.Failure;
-                    if (r == null)
-                        nd.Failure = root;
-                    else {
-                        nd.Failure = r.GetTransition(c);
-                        foreach (var result in nd.Failure.Results)
-                            nd.AddResult(result.Key, result.Value);
-                    }
-
-                    // add child nodes to BFS list 
-                    foreach (TreeNode child in nd.Transitions)
-                        newNodes.Add(child);
-                }
-                nodes = newNodes;
-            }
-            root.Failure = root;
-            return root;
         }
-        void SimplifyTree(TreeNode tn)
-        {
-            _root = new TrieNode();
-            Dictionary<TreeNode, TrieNode> dict = new Dictionary<TreeNode, TrieNode>();
 
-            List<TreeNode> list = new List<TreeNode>();
-            foreach (var item in tn.Transitions) list.Add(item);
-
-            while (list.Count > 0) {
-                foreach (var item in list) {
-                    dict[item] = new TrieNode();
-                }
-                List<TreeNode> newNodes = new List<TreeNode>();
-                foreach (var item in list) {
-                    foreach (var node in item.Transitions) {
-                        newNodes.Add(node);
-                    }
-                }
-                list = newNodes;
-            }
-            addNode(tn, tn, _root, dict);
-            _first = _root.ToArray();
-        }
-        void addNode(TreeNode treeNode, TreeNode root, TrieNode tridNode, Dictionary<TreeNode, TrieNode> dict)
-        {
-            foreach (var item in treeNode.Transitions) {
-                var node = dict[item];
-                tridNode.Add(item, node);
-                addNode(item, root, node, dict);
-            }
-            if (treeNode != root) {
-                string str = "";
-                List<char> rootChar = new List<char>();
-                var node = treeNode;
-                while (node != root) {
-                    str += node.Char;
-                    var topNode = root.GetTransition(str, str.Length - 1);
-                    if (topNode != null) {
-                        foreach (var item in topNode.Transitions) {
-                            tridNode.Add(item, dict[item]);
-                        }
-                    }
-                    node = node.Parent;
-                }
-            }
-
-
-            //if (treeNode != root) {
-            //    var topNode = root.GetTransition(treeNode.Char);
-            //    if (topNode != null) {
-            //        foreach (var item in topNode.Transitions) {
-            //            var node = dict[item];
-            //            tridNode.Add(item, node);
-            //        }
-            //    }
-            //}
-        }
         #endregion
 
         public bool ContainsAny(string text)
@@ -456,7 +306,7 @@ namespace ToolGood.Words
                     if (tn.End) {
                         var MaxLength = 0;
                         for (int j = 0; j < tn.Results.Count; j++) {
-                            if (tn.Results[j].Item1.Length> MaxLength) {
+                            if (tn.Results[j].Item1.Length > MaxLength) {
                                 MaxLength = tn.Results[j].Item1.Length;
                             }
                         }

@@ -8,10 +8,10 @@ using System.Diagnostics;
 
 namespace ToolGood.Words.Test
 {
-    [TestFixture]
+    //[TestFixture]
     class PinYinSearchExTest
     {
-        [Test]
+        //[Test]
         public void SetKeywords()
         {
             GC.Collect();
@@ -29,45 +29,77 @@ namespace ToolGood.Words.Test
             PinYinSearchEx search = new PinYinSearchEx(PinYinSearchType.PinYin);
             search.LoadFile("keys1.dat");
 
+
+            var ts = search.SearchTexts("程xy");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("程xuy");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("程xuyuan");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("程xyuan");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("cxy");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("chengxy");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("cxuy");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("cheng序y");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("c序y");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("c序yuan");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+            ts = search.SearchTexts("cx员");
+            Assert.AreEqual(true, ts.Contains("程序员"));
+
+        }
+
+        [Test]
+        public void Search2()
+        {
+            GC.Collect();
+            PinYinSearchEx search = new PinYinSearchEx(PinYinSearchType.PinYin);
+            search.LoadFile("keys1.dat");
+
             Stopwatch watch = new Stopwatch();
             watch.Start();
             for (int i = 0; i < 1000; i++) {
                 var ts = search.SearchTexts("程xy");
-                Assert.AreEqual(true, ts.Contains("程序员"));
-
                 ts = search.SearchTexts("程xuy");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("程xuyuan");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("程xyuan");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("cxy");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("chengxy");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("cxuy");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("cheng序y");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("c序y");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("c序yuan");
-                Assert.AreEqual(true, ts.Contains("程序员"));
 
                 ts = search.SearchTexts("cx员");
-                Assert.AreEqual(true, ts.Contains("程序员"));
             }
             watch.Stop();
             Trace.Write(watch.ElapsedMilliseconds + "ms");
         }
+
 
         public int GetTextCount(List<string> ts)
         {
