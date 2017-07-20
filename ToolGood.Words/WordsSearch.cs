@@ -201,19 +201,26 @@ namespace ToolGood.Words
             foreach (var item in node.m_values) {
                 if (node2 == null) {
                     var nd = _first[item.Key];
-                    if (nd == null) continue;
-                    links[item.Value] = nd;
-                    TryLinks(item.Value, nd, links);
+                    if (nd != null) {
+                        links[item.Value] = nd;
+                        TryLinks(item.Value, nd, links);
+                    } else {
+                        TryLinks(item.Value, null, links);
+                    }
                 } else {
 
                     TrieNode tn;
                     if (node2.TryGetValue(item.Key, out tn)) {
                         links[item.Value] = tn;
                         TryLinks(item.Value, tn, links);
+                    } else {
+                        TryLinks(item.Value, null, links);
                     }
                 }
             }
         }
+
+
 
         #endregion
 

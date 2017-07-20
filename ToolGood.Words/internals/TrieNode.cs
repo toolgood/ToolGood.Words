@@ -38,11 +38,13 @@ namespace ToolGood.Words.internals
         {
             TrieNode node;
 
-            if (minflag > c) { minflag = c; }
-            if (maxflag < c) { maxflag = c; }
             if (m_values.TryGetValue(c, out node)) {
                 return node;
             }
+
+            if (minflag > c) { minflag = c; }
+            if (maxflag < c) { maxflag = c; }
+
             node = new TrieNode();
             m_values[c] = node;
             //m_values.Add(c, node);
@@ -51,7 +53,7 @@ namespace ToolGood.Words.internals
 
         public void SetResults(string text)
         {
-            if (End==false) {
+            if (End == false) {
                 End = true;
             }
             Results.Add(text);
@@ -69,13 +71,32 @@ namespace ToolGood.Words.internals
             }
 
             foreach (var item in node.m_values) {
-                if (m_values.ContainsKey(item.Key) == false) {
+                //if (minflag > (uint)item.Key) {
+                //    minflag = (uint)item.Key;
+                //    m_values[item.Key] = item.Value;
+                //} else if (maxflag < (uint)item.Key) {
+                //    maxflag = (uint)item.Key;
+                //    m_values[item.Key] = item.Value;
+                //} else if (m_values.ContainsKey(item.Key) == false)  {
+                //    m_values[item.Key] = item.Value;
+                //}
+
+                if ( m_values.ContainsKey(item.Key) == false) {
                     if (minflag > item.Key) { minflag = item.Key; }
                     if (maxflag < item.Key) { maxflag = item.Key; }
                     m_values[item.Key] = item.Value;
                     //m_values.Add(item.Key, item.Value);
                 }
             }
+        }
+
+        public TrieNode[] ToArray()
+        {
+            TrieNode[] first = new TrieNode[char.MaxValue + 1];
+            foreach (var item in m_values) {
+                first[item.Key] = item.Value;
+            }
+            return first;
         }
 
     }
