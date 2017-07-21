@@ -47,26 +47,21 @@ namespace ToolGood.Words.internals
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
         {
             foreach (var item in node.m_values) {
+                TrieNode tn = null;
                 if (node2 == null) {
-                    var nd = _first[item.Key];
-                    if (nd != null) {
-                        links[item.Value] = nd;
-                        TryLinks(item.Value, nd, links);
-                    } else {
-                        TryLinks(item.Value, null, links);
+                    tn = _first[item.Key];
+                    if (tn != null) {
+                        links[item.Value] = tn;
                     }
                 } else {
-
-                    TrieNode tn;
                     if (node2.TryGetValue(item.Key, out tn)) {
                         links[item.Value] = tn;
-                        TryLinks(item.Value, tn, links);
-                    } else {
-                        TryLinks(item.Value, null, links);
                     }
                 }
+                TryLinks(item.Value, tn, links);
             }
         }
+        
 
     }
 }

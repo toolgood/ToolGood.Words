@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/toolgood/ToolGood.Words/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/toolgood/ToolGood.Words</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>一款高性能非法词(敏感词)检测过滤组件，附带繁体简体互换，支持全角半角互换，汉字转拼音，模糊搜索等功能</description>
+    <copyright>Copyright toolgood.com  2016-2017</copyright>
+    <tags>word-filter illegalwordssearch stringsearch wordssearch simplifiedchinese traditionalchinese pinyin to-rmb</tags>
+  </metadata>
+</package>
