@@ -54,10 +54,10 @@ ToolGood.Words:             本项目源代码
 注：`PinYinSearchEx`测试28W关键字，总字数147W，内存使用量32M，输出文件38M。
 
 ## 非法词(敏感词)检测（字符串搜索）
-非法词(敏感词)检测类：`StringSearch`、`WordsSearch`、`IllegalWordsSearch`、`IllegalWordsQuickSearch`;
+非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`IllegalWordsQuickSearch`;
 
-* `StringSearch`: 搜索`FindFirst`方法返回结果为`string`类型。
-* `WordsSearch`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
+* `StringSearch`、`StringSearchEx`: 搜索`FindFirst`方法返回结果为`string`类型。
+* `WordsSearch`、`WordsSearchEx`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，转化特殊数字**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，开始位置、结束位置。
