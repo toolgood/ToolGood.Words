@@ -91,7 +91,7 @@ ToolGood.Words:             本项目源代码
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](10W次性能对比.png)
+![10W次性能对比](10W次性能对比(20170922).png)
 
 注:C#自带正则很慢，`StringSearch.ContainsAny`是`Regex.IsMatch`效率的1.5万倍。
 
