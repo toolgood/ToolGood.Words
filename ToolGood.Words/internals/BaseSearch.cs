@@ -38,7 +38,7 @@ namespace ToolGood.Words.internals
             }
 
             foreach (var item in links) {
-                item.Key.Merge(item.Value);
+                item.Key.Merge(item.Value,links);
             }
 
             _root = root;

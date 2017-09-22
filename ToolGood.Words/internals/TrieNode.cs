@@ -59,7 +59,7 @@ namespace ToolGood.Words.internals
             Results.Add(text);
         }
 
-        public void Merge(TrieNode node)
+        public void Merge(TrieNode node, Dictionary<TrieNode, TrieNode> links)
         {
             if (node.End) {
                 if (End == false) {
@@ -71,22 +71,17 @@ namespace ToolGood.Words.internals
             }
 
             foreach (var item in node.m_values) {
-                //if (minflag > (uint)item.Key) {
-                //    minflag = (uint)item.Key;
-                //    m_values[item.Key] = item.Value;
-                //} else if (maxflag < (uint)item.Key) {
-                //    maxflag = (uint)item.Key;
-                //    m_values[item.Key] = item.Value;
-                //} else if (m_values.ContainsKey(item.Key) == false)  {
-                //    m_values[item.Key] = item.Value;
-                //}
-
+    
                 if ( m_values.ContainsKey(item.Key) == false) {
                     if (minflag > item.Key) { minflag = item.Key; }
                     if (maxflag < item.Key) { maxflag = item.Key; }
                     m_values[item.Key] = item.Value;
                     //m_values.Add(item.Key, item.Value);
                 }
+            }
+            TrieNode node2;
+            if (links.TryGetValue(node, out node2)) {
+                Merge(node2, links);
             }
         }
 

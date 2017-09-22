@@ -59,8 +59,10 @@
     <Compile Include="internals\Dict.cs" />
     <Compile Include="internals\PinYinDict.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringSearchEx.cs" />
     <Compile Include="WordsSearch.cs" />
     <Compile Include="WordsHelper.cs" />
+    <Compile Include="WordsSearchEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ToolGood.Words.snk" />
