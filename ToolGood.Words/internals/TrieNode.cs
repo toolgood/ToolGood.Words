@@ -7,7 +7,6 @@ namespace ToolGood.Words.internals
 {
     public class TrieNode
     {
-        //public byte Type { get; set; }
         public bool End { get; set; }
         public List<string> Results { get; private set; }
         internal Dictionary<char, TrieNode> m_values;
@@ -47,7 +46,6 @@ namespace ToolGood.Words.internals
 
             node = new TrieNode();
             m_values[c] = node;
-            //m_values.Add(c, node);
             return node;
         }
 
@@ -56,7 +54,9 @@ namespace ToolGood.Words.internals
             if (End == false) {
                 End = true;
             }
-            Results.Add(text);
+            if (Results.Contains(text)==false) {
+                Results.Add(text);
+            }
         }
 
         public void Merge(TrieNode node, Dictionary<TrieNode, TrieNode> links)
@@ -66,7 +66,9 @@ namespace ToolGood.Words.internals
                     End = true;
                 }
                 foreach (var item in node.Results) {
-                    Results.Add(item);
+                    if (Results.Contains(item) == false) {
+                        Results.Add(item);
+                    }
                 }
             }
 
@@ -76,7 +78,6 @@ namespace ToolGood.Words.internals
                     if (minflag > item.Key) { minflag = item.Key; }
                     if (maxflag < item.Key) { maxflag = item.Key; }
                     m_values[item.Key] = item.Value;
-                    //m_values.Add(item.Key, item.Value);
                 }
             }
             TrieNode node2;

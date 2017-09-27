@@ -7,7 +7,7 @@ using System.Text;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 支持重复词、
+    /// 脏字搜索类，支持重复词、跳词
     /// </summary>
     public class IllegalWordsSearchEx
     {
@@ -180,12 +180,15 @@ namespace ToolGood.Words
             }
         }
         #endregion
+
+        #region 私有变量
         private TrieNode _root = new TrieNode();
         private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
-
         private const string _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
         private BitArray _skipBitArray;
+        #endregion
 
+        #region 构造函数
         public IllegalWordsSearchEx(string skipList = null)
         {
             _skipBitArray = new BitArray(char.MaxValue + 1);
@@ -200,6 +203,13 @@ namespace ToolGood.Words
             }
         }
 
+        #endregion
+
+        #region 设置跳词
+        /// <summary>
+        /// 设置跳词
+        /// </summary>
+        /// <param name="skipList"></param>
         public void SetSkipWords(string skipList)
         {
             _skipBitArray = new BitArray(char.MaxValue + 1);
@@ -208,14 +218,23 @@ namespace ToolGood.Words
                     _skipBitArray[_skipList[i]] = true;
                 }
             }
-        }
+        } 
+        #endregion
 
-        #region SetKeywords
+        #region 设置关键字
+        /// <summary>
+        /// 设置关键字
+        /// </summary>
+        /// <param name="keywords">关键字列表</param>
         public void SetKeywords(ICollection<string> keywords)
         {
             var tn = BuildTreeWithBFS(keywords);
             SimplifyTree(tn);
         }
+        /// <summary>
+        /// 设置关键字
+        /// </summary>
+        /// <param name="keywords">关键字列表</param>
         TreeNode BuildTreeWithBFS(ICollection<string> _keywords)
         {
             var root = new TreeNode(null, ' ');
@@ -326,6 +345,12 @@ namespace ToolGood.Words
         }
         #endregion
 
+        #region 查找 替换 查找第一个关键字 判断是否包含关键字
+        /// <summary>
+        /// 判断文本是否包含关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
         public virtual bool ContainsAny(string text)
         {
             TrieNode ptr = null;
@@ -348,7 +373,11 @@ namespace ToolGood.Words
             }
             return false;
         }
-
+        /// <summary>
+        /// 在文本中查找第一个关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
         public virtual IllegalWordsSearchResult FindFirst(string text)
         {
             TrieNode ptr = null;
@@ -379,7 +408,11 @@ namespace ToolGood.Words
             }
             return IllegalWordsSearchResult.Empty;
         }
-
+        /// <summary>
+        /// 在文本中查找所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
         public virtual List<IllegalWordsSearchResult> FindAll(string text)
         {
             List<IllegalWordsSearchResult> result = new List<IllegalWordsSearchResult>();
@@ -415,6 +448,12 @@ namespace ToolGood.Words
             return result;
         }
 
+        /// <summary>
+        /// 在文本中替换所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="replaceChar">替换符</param>
+        /// <returns></returns>
         public virtual string Replace(string text, char replaceChar = '*')
         {
             StringBuilder sb = new StringBuilder(text);
@@ -453,6 +492,11 @@ namespace ToolGood.Words
             return sb.ToString();
         }
 
+        #endregion
+
+
+        #region 私有方法
+
         private char ToSenseWord(char c)
         {
             if (c < 'A') { } else if (c <= 'Z') {
@@ -480,39 +524,6 @@ namespace ToolGood.Words
             return c;
         }
 
-        //private bool ToSenseWords(char c, out char w)
-        //{
-        //    if (c < 'A') { } else if (c <= 'Z') {
-        //        w = (char)(c | 0x20);
-        //        return true;
-        //    } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-        //        var index = Dict.nums1.IndexOf(c);
-        //        if (index > -1) {
-        //            w = Dict.nums2[index];
-        //            return true;
-        //        }
-        //    } else if (c == 12288) {
-        //        w = ' ';
-        //        return true;
-
-        //    } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-        //        var k = Dict.Simplified[c - 0x4e00];
-        //        if (k != c) {
-        //            w = k;
-        //            return true;
-
-        //        }
-        //    } else if (c < 65280) { } else if (c < 65375) {
-        //        var k = (c - 65248);
-        //        if ('A' <= k && k <= 'Z') {
-        //            k = k | 0x20;
-        //        }
-        //        w = (char)k;
-        //        return true;
-        //    }
-        //    w = c;
-        //    return false;
-        //}
-
+        #endregion
     }
 }

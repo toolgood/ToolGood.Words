@@ -7,18 +7,21 @@ using System.Text;
 
 namespace ToolGood.Words
 {
-    public class StringSearchEx
+    /// <summary>
+    /// 文本搜索（增强版，速度更快），带返回位置及索引号
+    /// </summary>
+    public class WordsSearchEx
     {
         #region Class
         class TrieNode
         {
+            public char Char;
             internal bool End;
-            internal List<int> Results { get; private set; }
+            internal List<int> Results;
             internal Dictionary<char, TrieNode> m_values;
             internal Dictionary<char, TrieNode> merge_values;
             private uint minflag = uint.MaxValue;
             private uint maxflag = uint.MinValue;
-            internal int Position;
             internal int Next;
             private int Count;
 
@@ -50,6 +53,7 @@ namespace ToolGood.Words
                 if (maxflag < c) { maxflag = c; }
 
                 node = new TrieNode();
+                node.Char = c;
                 m_values[c] = node;
                 Count++;
                 return node;
@@ -60,7 +64,9 @@ namespace ToolGood.Words
                 if (End == false) {
                     End = true;
                 }
-                Results.Add(text);
+                if (Results.Contains(text) == false) {
+                    Results.Add(text);
+                }
             }
 
             public void Merge(TrieNode node, Dictionary<TrieNode, TrieNode> links)
@@ -70,7 +76,9 @@ namespace ToolGood.Words
                         End = true;
                     }
                     foreach (var item in node.Results) {
-                        Results.Add(item);
+                        if (Results.Contains(item) == false) {
+                            Results.Add(item);
+                        }
                     }
                 }
 
@@ -90,19 +98,7 @@ namespace ToolGood.Words
                 }
             }
 
-            public int Rank()
-            {
-                List<int> seats = new List<int>();//占位
-                int maxCount = 1;
-                int start = 1;
-                bool[] has = new bool[GetMaxLength()];
-                has[0] = true;
-
-                Rank(ref maxCount, ref start, seats, has);
-                return maxCount;
-            }
-
-            private int GetMaxLength()
+            public int GetMaxLength()
             {
                 var count = m_values.Count + merge_values.Count;
                 count = count * 5;
@@ -112,74 +108,93 @@ namespace ToolGood.Words
                 return count;
             }
 
-            private void Rank(ref int maxCount, ref int start, List<int> seats, bool[] has)
+            public int Rank(TrieNode[] has)
+            {
+                bool[] seats = new bool[has.Length];
+                int maxCount = 1;
+                int start = 1;
+
+                has[0] = this;
+
+                Rank(ref maxCount, ref start, seats, has);
+                return maxCount;
+            }
+
+            private void Rank(ref int maxCount, ref int start, bool[] seats, TrieNode[] has)
             {
                 if (maxflag == 0) return;
                 var keys = m_values.Select(q => q.Key).ToList();
                 keys.AddRange(merge_values.Select(q => q.Key).ToList());
 
-                while (has[start]) { start++; }
+                while (has[start] != null) { start++; }
                 for (int i = start; i < has.Length; i++) {
-                    if (has[i] == false) {
+                    if (has[i] == null) {
+                        var next = i - (int)minflag;
+                        if (next < 0) continue;
+                        if (seats[next]) continue;
+
                         var isok = true;
                         foreach (var item in keys) {
-                            if (has[i - minflag + item]) { isok = false; break; }
+                            if (has[i - minflag + item] != null) { isok = false; break; }
                         }
                         if (isok) {
-                            var next = i - (int)minflag;
-                            if (next < 0) continue;
-                            if (seats.Contains(next)) continue;
                             SetSeats(next, ref maxCount, seats, has);
                             break;
                         }
                     }
                 }
-
-                var keys2 = m_values.OrderByDescending(q => q.Value.Count);
+                var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
                 foreach (var key in keys2) {
                     key.Value.Rank(ref maxCount, ref start, seats, has);
                 }
             }
 
-            private void SetSeats(int next, ref int maxCount, List<int> seats, bool[] has)
+            private void SetSeats(int next, ref int maxCount, bool[] seats, TrieNode[] has)
             {
                 Next = next;
-                seats.Add(next);
+                seats[next] = true;
 
                 foreach (var item in merge_values) {
                     var position = next + item.Key;
-                    has[position] = true;
-                    if (maxCount <= position) {
-                        maxCount = position;
-                    }
+                    has[position] = item.Value;
                 }
 
                 foreach (var item in m_values) {
-                    item.Value.Position = next + item.Key;
-                    has[item.Value.Position] = true;
-                    if (maxCount <= item.Value.Position) {
-                        maxCount = item.Value.Position;
-                    }
+                    var position = next + item.Key;
+                    has[position] = item.Value;
                 }
-
+                var position2 = next + (int)maxflag;
+                if (maxCount <= position2) {
+                    maxCount = position2;
+                }
             }
+
 
         }
         #endregion
+
+        #region 私有变量
         private string[] _keywords;
         private int[][] _guides;
         private int[] _key;
         private int[] _next;
         private int[] _check;
-        private int[] _dict;
+        private int[] _dict; 
+        #endregion
 
-        public List<string> FindAll(string text)
+        #region 查找 替换 查找第一个关键字 判断是否包含关键字
+        /// <summary>
+        /// 在文本中查找所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
+        public List<WordsSearchResult> FindAll(string text)
         {
-            List<string> root = new List<string>();
+            List<WordsSearchResult> root = new List<WordsSearchResult>();
             var p = 0;
 
-            foreach (char t1 in text) {
-                var t = (char)_dict[t1];
+            for (int i = 0; i < text.Length; i++) {
+                var t = (char)_dict[text[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
@@ -195,7 +210,9 @@ namespace ToolGood.Words
                     var index = _check[next];
                     if (index > 0) {
                         foreach (var item in _guides[index]) {
-                            root.Add(_keywords[item]);
+                            var key = _keywords[item];
+                            var r = new WordsSearchResult(key, i + 1 - key.Length, i, item);
+                            root.Add(r);
                         }
                     }
                     p = next;
@@ -204,11 +221,16 @@ namespace ToolGood.Words
             return root;
         }
 
-        public string FindFirst(string text)
+        /// <summary>
+        /// 在文本中查找第一个关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
+        public WordsSearchResult FindFirst(string text)
         {
             var p = 0;
-            foreach (char t1 in text) {
-                var t = (char)_dict[t1];
+            for (int i = 0; i < text.Length; i++) {
+                var t = (char)_dict[text[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
@@ -217,7 +239,8 @@ namespace ToolGood.Words
                 if (_key[next] == t) {
                     var index = _check[next];
                     if (index > 0) {
-                        return _keywords[_guides[index][0]];
+                        var item = _keywords[_guides[index][0]];
+                        return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
                     }
                     p = next;
                 } else {
@@ -226,7 +249,8 @@ namespace ToolGood.Words
                     if (_key[next] == t) {
                         var index = _check[next];
                         if (index > 0) {
-                            return _keywords[_guides[index][0]];
+                            var item = _keywords[_guides[index][0]];
+                            return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
                         }
                         p = next;
                     }
@@ -235,6 +259,11 @@ namespace ToolGood.Words
             return null;
         }
 
+        /// <summary>
+        /// 判断文本是否包含关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
         public bool ContainsAny(string text)
         {
             var p = 0;
@@ -260,6 +289,12 @@ namespace ToolGood.Words
             return false;
         }
 
+        /// <summary>
+        /// 在文本中替换所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="replaceChar">替换符</param>
+        /// <returns></returns>
         public string Replace(string text, char replaceChar = '*')
         {
             StringBuilder result = new StringBuilder(text);
@@ -293,8 +328,13 @@ namespace ToolGood.Words
             }
             return result.ToString();
         }
+        #endregion
 
-        #region Save
+        #region 保存到文件
+        /// <summary>
+        /// 保存到文件
+        /// </summary>
+        /// <param name="fileName"></param>
         public void Save(string fileName)
         {
             var fs = File.Open(fileName, FileMode.Create);
@@ -354,7 +394,11 @@ namespace ToolGood.Words
 
         #endregion
 
-        #region Load
+        #region 加载文件
+        /// <summary>
+        /// 加载文件
+        /// </summary>
+        /// <param name="filePath"></param>
         public void Load(string filePath)
         {
             var fs = File.OpenRead(filePath);
@@ -409,15 +453,19 @@ namespace ToolGood.Words
         }
         #endregion
 
-        #region SetKeywords
-        public void SetKeywords(List<string> keywords)
+        #region 设置关键字
+        /// <summary>
+        /// 设置关键字
+        /// </summary>
+        /// <param name="keywords">关键字列表</param>
+        public void SetKeywords(ICollection<string> keywords)
         {
             _keywords = keywords.ToArray();
             var length = CreateDict(keywords);
             var root = new TrieNode();
 
-            for (int i = 0; i < keywords.Count; i++) {
-                var p = keywords[i];
+            for (int i = 0; i < _keywords.Length; i++) {
+                var p = _keywords[i];
                 var nd = root;
                 for (int j = 0; j < p.Length; j++) {
                     nd = nd.Add((char)_dict[p[j]]);
@@ -439,42 +487,26 @@ namespace ToolGood.Words
 
         private void build(TrieNode root, int length)
         {
-            length = root.Rank() + length + 1;
+            TrieNode[] has = new TrieNode[root.GetMaxLength()];
+            length = root.Rank(has) + length + 1;
             _key = new int[length];
             _next = new int[length];
             _check = new int[length];
             List<int[]> guides = new List<int[]>();
             guides.Add(new int[] { 0 });
-
-            _next[0] = root.Next;
-            buildNode(root, guides);
+            for (int i = 0; i < length; i++) {
+                var item = has[i];
+                if (item == null) continue;
+                _key[i] = item.Char;
+                _next[i] = item.Next;
+                if (item.End) {
+                    _check[i] = guides.Count;
+                    guides.Add(item.Results.ToArray());
+                }
+            }
             _guides = guides.ToArray();
         }
 
-        private void buildNode(TrieNode node, List<int[]> guides)
-        {
-            foreach (var item in node.merge_values) {
-                _key[item.Value.Position] = item.Key;
-                _next[item.Value.Position] = item.Value.Next;
-                if (item.Value.End) {
-                    _check[item.Value.Position] = guides.Count;
-                    int[] result = item.Value.Results.ToArray();
-                    guides.Add(result);
-                }
-            }
-
-            foreach (var item in node.m_values) {
-                _key[item.Value.Position] = item.Key;
-                _next[item.Value.Position] = item.Value.Next;
-                if (item.Value.End) {
-                    _check[item.Value.Position] = guides.Count;
-                    int[] result = item.Value.Results.ToArray();
-                    guides.Add(result);
-                }
-                buildNode(item.Value, guides);
-            }
-
-        }
 
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links, TrieNode root)
         {
@@ -492,10 +524,9 @@ namespace ToolGood.Words
         }
         #endregion
 
-
         #region 生成映射字典
 
-        private int CreateDict(List<string> keywords)
+        private int CreateDict(ICollection<string> keywords)
         {
             Dictionary<char, int> dictionary = new Dictionary<char, int>();
 

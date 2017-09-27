@@ -10,16 +10,18 @@ namespace ToolGood.Words.internals
         protected TrieNode _root = new TrieNode();
         protected TrieNode[] _first = new TrieNode[char.MaxValue + 1];
 
-
+        /// <summary>
+        /// 设置关键字
+        /// </summary>
+        /// <param name="keywords">关键字列表</param>
         public virtual void SetKeywords(ICollection<string> _keywords)
         {
             var first = new TrieNode[char.MaxValue + 1];
             var root = new TrieNode();
-            
+
             foreach (var p in _keywords) {
                 if (string.IsNullOrEmpty(p)) continue;
 
-                //var nd = root;
                 var nd = _first[p[0]];
                 if (nd == null) {
                     nd = root.Add(p[0]);
@@ -38,7 +40,7 @@ namespace ToolGood.Words.internals
             }
 
             foreach (var item in links) {
-                item.Key.Merge(item.Value,links);
+                item.Key.Merge(item.Value, links);
             }
 
             _root = root;
@@ -53,15 +55,13 @@ namespace ToolGood.Words.internals
                     if (tn != null) {
                         links[item.Value] = tn;
                     }
-                } else {
-                    if (node2.TryGetValue(item.Key, out tn)) {
-                        links[item.Value] = tn;
-                    }
+                } else if (node2.TryGetValue(item.Key, out tn)) {
+                    links[item.Value] = tn;
                 }
                 TryLinks(item.Value, tn, links);
             }
         }
-        
+
 
     }
 }
