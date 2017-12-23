@@ -267,7 +267,6 @@ namespace ToolGood.Words
 
         /// <summary>
         /// 中文转数字（支持中文大写）
-        ///
         /// </summary>
         /// <param name="chineseString"></param>
         /// <returns></returns>
@@ -275,8 +274,35 @@ namespace ToolGood.Words
         {
             return NumberConventer.ChnToArab(chineseString);
         }
+        #endregion
 
+        #region 转成数字
+        /// <summary>
+        /// 【中文】、【符号】，转成【数字】字符串
+        /// </summary>
+        /// <param name="chineseString"></param>
+        /// <returns></returns>
+        public static string TransitionToNumberString(string chineseString)
+        {
+            var str = new StringBuilder();
+            Dictionary<char, char> dictionary = new Dictionary<char, char>();
+            for (int i = 0; i < Dict.nums1.Length; i++) {
+                dictionary[Dict.nums1[i]] = Dict.nums2[i];
+            }
+
+            for (int i = 0; i < chineseString.Length; i++) {
+                var c = chineseString[i];
+                char outc;
+                if (dictionary.TryGetValue(c,out outc)) {
+                    str.Append(outc);
+                } else {
+                    str.Append(c);
+                }
+            }
+            return str.ToString();
+        }
 
         #endregion
+
     }
 }
