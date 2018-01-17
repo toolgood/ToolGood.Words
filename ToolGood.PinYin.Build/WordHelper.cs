@@ -40,7 +40,7 @@ namespace ToolGood.PinYin.Build
         internal static bool TraditionalToSimplified(char t, out char s)
         {
             int start = 0;
-            int end = s2t1.Length - 1;
+            int end = t2s1.Length - 1;
             if (t < t2s1[start]) { s = t; return false; }
             if (t > t2s1[end]) { s = t; return false; }
             if (t == t2s1[start]) { s = t2s2[start]; return true; }
