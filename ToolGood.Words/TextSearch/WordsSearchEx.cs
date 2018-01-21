@@ -127,26 +127,46 @@ namespace ToolGood.Words
                 keys.AddRange(merge_values.Select(q => q.Key).ToList());
 
                 while (has[start] != null) { start++; }
-                for (int i = start; i < has.Length; i++) {
-                    if (has[i] == null) {
-                        var next = i - (int)minflag;
-                        if (next < 0) continue;
-                        if (seats[next]) continue;
-
-                        var isok = true;
-                        foreach (var item in keys) {
-                            if (has[i - minflag + item] != null) { isok = false; break; }
-                        }
-                        if (isok) {
-                            SetSeats(next, ref maxCount, seats, has);
-                            break;
-                        }
-                    }
+                int index = 0, next = -1;
+                while (next < 0) {
+                    next = BenchMatch(seats, keys, start + index, (int)minflag) - (int)minflag;
+                    index++;
                 }
+                SetSeats(next, ref maxCount, seats, has);
+
                 var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
                 foreach (var key in keys2) {
                     key.Value.Rank(ref maxCount, ref start, seats, has);
                 }
+            }
+
+            private int BenchMatch(bool[] bench, List<char> list, int start, int min)
+            {
+                var len = list.Last() - min + 1;
+                var removeList = new int[list.Count - 1];
+                for (int i = 1; i < list.Count; i++) {
+                    removeList[i - 1] = list[i] - min;
+                }
+                start = start + min;
+                bool[] bs = new bool[len * 2];
+                Buffer.BlockCopy(bench, start, bs, 0, bs.Length);
+
+                do {
+                    var index = len;
+                    for (int i = 0; i < len; i++) {
+                        if (bs[i]) {
+                            foreach (var rm in removeList) {
+                                if (bs[i + rm] == false)
+                                    bs[i + rm] = true;
+                            }
+                        } else if (bs[i + len] == false) {
+                            return (start + i) - min;
+                        }
+                    }
+                    start = start + len;
+                    Buffer.BlockCopy(bench, start, bs, 0, bs.Length);
+                } while (true);
+
             }
 
             private void SetSeats(int next, ref int maxCount, bool[] seats, TrieNode[] has)
