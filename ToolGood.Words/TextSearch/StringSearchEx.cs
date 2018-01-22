@@ -123,49 +123,31 @@ namespace ToolGood.Words
             private void Rank(ref int maxCount, ref int start, bool[] seats, TrieNode[] has)
             {
                 if (maxflag == 0) return;
-                var keys = m_values.Select(q => q.Key).ToList();
-                keys.AddRange(merge_values.Select(q => q.Key).ToList());
+                var keys = m_values.Select(q => (int)q.Key).ToList();
+                keys.AddRange(merge_values.Select(q => (int)q.Key).ToList());
 
                 while (has[start] != null) { start++; }
-                int index = 0, next = -1;
-                while (next < 0) {
-                    next = BenchMatch(seats, keys, start + index, (int)minflag) - (int)minflag;
-                    index++;
+                for (int i = start; i < has.Length; i++) {
+                    if (has[i] == null) {
+                        var next = i - (int)minflag;
+                        if (next < 0) continue;
+                        if (seats[next]) continue;
+
+                        var isok = true;
+                        foreach (var item in keys) {
+                            if (has[i - minflag + item] != null) { isok = false; break; }
+                        }
+                        if (isok) {
+                            SetSeats(next, ref maxCount, seats, has);
+                            break;
+                        }
+                    }
                 }
-                SetSeats(next, ref maxCount, seats, has);
 
                 var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
                 foreach (var key in keys2) {
                     key.Value.Rank(ref maxCount, ref start, seats, has);
                 }
-            }
-            private int BenchMatch(bool[] bench, List<char> list, int start, int min)
-            {
-                var len = list.Last() - min + 1;
-                var removeList = new int[list.Count - 1];
-                for (int i = 1; i < list.Count; i++) {
-                    removeList[i - 1] = list[i] - min;
-                }
-                start = start + min;
-                bool[] bs = new bool[len * 2];
-                Buffer.BlockCopy(bench, start, bs, 0, bs.Length);
-
-                do {
-                    var index = len;
-                    for (int i = 0; i < len; i++) {
-                        if (bs[i]) {
-                            foreach (var rm in removeList) {
-                                if (bs[i + rm] == false)
-                                    bs[i + rm] = true;
-                            }
-                        } else if (bs[i + len] == false) {
-                            return (start + i) - min;
-                        }
-                    }
-                    start = start + len;
-                    Buffer.BlockCopy(bench, start, bs, 0, bs.Length);
-                } while (true);
-
             }
 
 
@@ -348,12 +330,38 @@ namespace ToolGood.Words
         /// <summary>
         /// 保存到文件
         /// </summary>
-        /// <param name="fileName"></param>
-        public void Save(string fileName)
+        /// <param name="filePath"></param>
+        public void Save(string filePath)
         {
-            var fs = File.Open(fileName, FileMode.Create);
+            var fs = File.Open(filePath, FileMode.CreateNew);
             BinaryWriter bw = new BinaryWriter(fs);
+            Save(bw);
+#if NETSTANDARD1_3
+            bw.Dispose();
+            fs.Dispose();
+#else
+            bw.Close();
+            fs.Close();
+#endif
+        }
 
+        /// <summary>
+        /// 保存到Stream
+        /// </summary>
+        /// <param name="stream"></param>
+        public void Save(Stream stream)
+        {
+            BinaryWriter bw = new BinaryWriter(stream);
+            Save(bw);
+#if NETSTANDARD1_3
+            bw.Dispose();
+#else
+            bw.Close();
+#endif
+        }
+
+        protected internal virtual void Save(BinaryWriter bw)
+        {
             bw.Write(_keywords.Length);
             foreach (var item in _keywords) {
                 bw.Write(item);
@@ -386,23 +394,13 @@ namespace ToolGood.Words
             bs = IntArrToByteArr(_dict);
             bw.Write(bs.Length);
             bw.Write(bs);
-
-            bw.Close();
-            fs.Close();
         }
 
         private byte[] IntArrToByteArr(int[] intArr)
         {
             int intSize = sizeof(int) * intArr.Length;
             byte[] bytArr = new byte[intSize];
-            //申请一块非托管内存  
-            IntPtr ptr = Marshal.AllocHGlobal(intSize);
-            //复制int数组到该内存块  
-            Marshal.Copy(intArr, 0, ptr, intArr.Length);
-            //复制回byte数组  
-            Marshal.Copy(ptr, bytArr, 0, bytArr.Length);
-            //释放申请的非托管内存  
-            Marshal.FreeHGlobal(ptr);
+            Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
             return bytArr;
         }
 
@@ -417,7 +415,32 @@ namespace ToolGood.Words
         {
             var fs = File.OpenRead(filePath);
             BinaryReader br = new BinaryReader(fs);
+            Load(br);
+#if NETSTANDARD1_3
+            br.Dispose();
+            fs.Dispose();
+#else
+            br.Close();
+            fs.Close();
+#endif
+        }
+        /// <summary>
+        /// 加载Stream
+        /// </summary>
+        /// <param name="stream"></param>
+        public void Load(Stream stream)
+        {
+            BinaryReader br = new BinaryReader(stream);
+            Load(br);
+#if NETSTANDARD1_3
+            br.Dispose();
+#else
+            br.Close();
+#endif
+        }
 
+        protected internal virtual void Load(BinaryReader br)
+        {
             var length = br.ReadInt32();
             _keywords = new string[length];
             for (int i = 0; i < length; i++) {
@@ -450,19 +473,13 @@ namespace ToolGood.Words
 
             length = br.ReadInt32();
             _dict = ByteArrToIntArr(br.ReadBytes(length));
-
-            br.Close();
-            fs.Close();
         }
 
         private int[] ByteArrToIntArr(byte[] btArr)
         {
             int intSize = btArr.Length / sizeof(int);
             int[] intArr = new int[intSize];
-            IntPtr ptr = Marshal.AllocHGlobal(btArr.Length);
-            Marshal.Copy(btArr, 0, ptr, btArr.Length);
-            Marshal.Copy(ptr, intArr, 0, intArr.Length);
-            Marshal.FreeHGlobal(ptr);
+            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
             return intArr;
         }
         #endregion

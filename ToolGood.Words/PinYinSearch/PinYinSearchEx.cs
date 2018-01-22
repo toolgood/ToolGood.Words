@@ -78,8 +78,7 @@ namespace ToolGood.Words
 
             public bool IsEnd
             {
-                get
-                {
+                get {
                     return FirstPinYinNodes.Count == 0;
                 }
             }
@@ -177,8 +176,7 @@ namespace ToolGood.Words
 
             public static TextLine Error
             {
-                get
-                {
+                get {
                     var line = new TextLine();
                     line.IsError = true;
                     return line;
@@ -211,7 +209,7 @@ namespace ToolGood.Words
         private ushort[] _word;//节点文字
         private int[] _start;//节点对前的排序
         private int[] _end;//节点对前的排序
-        private BitArray _isEnd;//
+        private bool[] _isEnd;//
         private int[] _fpyIndexBase;//下一层首字母拼音的开始基数
 
         private byte[] _fpy;//首字母 为0 失败
@@ -425,7 +423,11 @@ namespace ToolGood.Words
             var dir = Path.GetDirectoryName(filePath);
             Directory.CreateDirectory(dir);
             if (File.Exists(filePath) == false) {
+#if NETSTANDARD1_3
+                File.Create(filePath).Dispose();
+#else
                 File.Create(filePath).Close();
+#endif
             }
             saveFile(filePath);
         }
@@ -476,8 +478,14 @@ namespace ToolGood.Words
             _wordIndexBase = readIntArray(br);
             _wordCheck = readIntArray(br);
 
+#if NETSTANDARD1_3
+            br.Dispose();
+            fs.Dispose();
+#else
             br.Close();
             fs.Close();
+#endif
+
         }
         private int[] readIntArray(BinaryReader br)
         {
@@ -527,11 +535,15 @@ namespace ToolGood.Words
             }
             return dict;
         }
-        private BitArray readBitArray(BinaryReader br)
+        private bool[] readBitArray(BinaryReader br)
         {
             var count = br.ReadInt32();
-            byte[] array = br.ReadBytes(count);
-            return new BitArray(array);
+            bool[] array = new bool[count];
+            for (int i = 0; i < count; i++) {
+                array[i] = br.ReadBoolean();
+            }
+            return array;
+         
         }
 
 
@@ -570,9 +582,14 @@ namespace ToolGood.Words
             write(bw, _wordIndexBase);
             write(bw, _wordCheck);
 
-
+#if NETSTANDARD1_3
+            bw.Dispose();
+            fs.Dispose();
+#else
             bw.Close();
             fs.Close();
+#endif
+
         }
         private void write(BinaryWriter bw, int[] w)
         {
@@ -632,18 +649,18 @@ namespace ToolGood.Words
                 bw.Write(item.Value);
             }
         }
-        private void write(BinaryWriter bw, BitArray array)
+        private void write(BinaryWriter bw, bool[] w)
         {
-            if (array == null || array.Length == 0) {
+            if (w == null || w.Length == 0) {
                 bw.Write(0);
                 return;
             }
-            byte[] a = new byte[(int)Math.Ceiling(array.Length / 8.0)];
-
-            array.CopyTo(a, 0);
-            bw.Write(a.Length);
-            bw.Write(a);
+            bw.Write(w.Length);
+            foreach (var item in w) {
+                bw.Write(item);
+            }
         }
+ 
         #endregion
 
         #region Search
@@ -910,7 +927,7 @@ namespace ToolGood.Words
             _word = word.ToArray();
             _start = start.ToArray();
             _end = end.ToArray();
-            _isEnd = new BitArray(isEnd.ToArray());//.ToArray();
+            _isEnd = isEnd.ToArray();//.ToArray();
         }
         private void buildNodeInfo(ChineseNode node, List<ushort> word, List<int> start, List<int> end, List<bool> isEnd, ref int index)
         {

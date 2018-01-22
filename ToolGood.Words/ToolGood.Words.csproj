@@ -1,83 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToolGood.Words</RootNamespace>
+    <Description>一款高性能敏感词(非法词/脏字)检测过滤组件，附带繁体简体互换，支持全角半角互换，汉字转拼音，模糊搜索等功能。</Description>
+    <Copyright>Copyright 2017-2018 ToolGood</Copyright>
+    <AssemblyTitle>ToolGood.Words</AssemblyTitle>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Authors>ToolGood</Authors>
+    <TargetFrameworks>net40;net45;netstandard1.3;netstandard2.0;</TargetFrameworks>
     <AssemblyName>ToolGood.Words</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\ToolGood.Words.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>Properties\ToolGood.Words.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>ToolGood.Words</PackageId>
+    <PackageTags>word-filter;illegalwordssearch;stringsearch;wordssearch;simplifiedchinese;traditionalchinese;pinyin;to-rmb</PackageTags>
+    <PackageProjectUrl>https://github.com/toolgood/ToolGood.Words</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/toolgood/ToolGood.Words/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/toolgood/ToolGood.Words</RepositoryUrl>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dotnet</PackageTargetFallback>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard2.0' ">$(PackageTargetFallback);dotnet</PackageTargetFallback>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <AutoUnifyAssemblyReferences Condition="'$(TargetFramework)' == 'net40'">false</AutoUnifyAssemblyReferences>
+    <RootNamespace>ToolGood.Words</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Enums\PinYinSearchType.cs" />
-    <Compile Include="TextSearch\IllegalWordsQuickSearch.cs" />
-    <Compile Include="TextSearch\IllegalWordsSearch.cs" />
-    <Compile Include="TextSearch\IllegalWordsSearchEx.cs" />
-    <Compile Include="internals\BaseSearch.cs" />
-    <Compile Include="internals\NumberConventer.cs" />
-    <Compile Include="internals\TrieNode.cs" />
-    <Compile Include="PinYinSearch\PinYinSearch.cs" />
-    <Compile Include="PinYinSearch\PinYinSearchEx.cs" />
-    <Compile Include="TextSearch\Result\IllegalWordsSearchResult.cs" />
-    <Compile Include="TextSearch\Result\PinYinSearchResult.cs" />
-    <Compile Include="TextSearch\Result\WordsSearchResult.cs" />
-    <Compile Include="TextSearch\StringSearch.cs" />
-    <Compile Include="internals\Dict.cs" />
-    <Compile Include="internals\PinYinDict.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextSearch\StringSearchEx.cs" />
-    <Compile Include="TextSearch\WordsSearch.cs" />
-    <Compile Include="WordsHelper.cs" />
-    <Compile Include="TextSearch\WordsSearchEx.cs" />
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\ToolGood.Words.snk" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  
 </Project>
