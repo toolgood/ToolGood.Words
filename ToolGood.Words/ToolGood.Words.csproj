@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>ToolGood.Words</PackageId>
-    <PackageTags>word-filter;illegalwordssearch;stringsearch;wordssearch;simplifiedchinese;traditionalchinese;pinyin;to-rmb</PackageTags>
+    <PackageTags>word-filter;stringsearch;wordssearch;pinyin;textfilter;wordfilter;text-filter;sensitive-word-filter;aho-corasick;string-matching;text-matching;text-search;trietree;filter;textsearch</PackageTags>
     <PackageProjectUrl>https://github.com/toolgood/ToolGood.Words</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/toolgood/ToolGood.Words/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
@@ -25,6 +25,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <FileVersion>2.0.1.0</FileVersion>
+    <Version>2.0.1.0</Version>
+    <PackageReleaseNotes>2.0.1版本，StringSearchEx、WordsSearchEx加载关键字速度加快。
+2.0.0版本以上支持DotNet-Core版本。
+请不要使用1.8.5版本。</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
