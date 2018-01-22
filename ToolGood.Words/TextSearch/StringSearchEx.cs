@@ -20,8 +20,8 @@ namespace ToolGood.Words
             internal List<int> Results;
             internal Dictionary<char, TrieNode> m_values;
             internal Dictionary<char, TrieNode> merge_values;
-            private uint minflag = uint.MaxValue;
-            private uint maxflag = uint.MinValue;
+            private int minflag = int.MaxValue;
+            private int maxflag = 0;
             internal int Next;
             private int Count;
 
@@ -34,7 +34,7 @@ namespace ToolGood.Words
 
             public bool TryGetValue(char c, out TrieNode node)
             {
-                if (minflag <= (uint)c && maxflag >= (uint)c) {
+                if (minflag <= (int)c && maxflag >= (int)c) {
                     return m_values.TryGetValue(c, out node);
                 }
                 node = null;
@@ -111,47 +111,51 @@ namespace ToolGood.Words
             public int Rank(TrieNode[] has)
             {
                 bool[] seats = new bool[has.Length];
-                int maxCount = 1;
                 int start = 1;
 
                 has[0] = this;
 
-                Rank(ref maxCount, ref start, seats, has);
+                Rank(ref start, seats, has);
+                int maxCount = has.Length - 1;
+                while (has[maxCount] == null) { maxCount--; }
                 return maxCount;
             }
 
-            private void Rank(ref int maxCount, ref int start, bool[] seats, TrieNode[] has)
+            private void Rank(ref int start, bool[] seats, TrieNode[] has)
             {
                 if (maxflag == 0) return;
                 var keys = m_values.Select(q => (int)q.Key).ToList();
                 keys.AddRange(merge_values.Select(q => (int)q.Key).ToList());
 
                 while (has[start] != null) { start++; }
-                for (int i = start; i < has.Length; i++) {
+                var s = start < (int)minflag ? (int)minflag : start;
+
+                for (int i = s; i < has.Length; i++) {
                     if (has[i] == null) {
                         var next = i - (int)minflag;
-                        if (next < 0) continue;
+                        //if (next < 0) continue;
                         if (seats[next]) continue;
 
                         var isok = true;
                         foreach (var item in keys) {
-                            if (has[i - minflag + item] != null) { isok = false; break; }
+                            if (has[next + item] != null) { isok = false; break; }
                         }
                         if (isok) {
-                            SetSeats(next, ref maxCount, seats, has);
+                            SetSeats(next, seats, has);
                             break;
                         }
                     }
                 }
+                start += keys.Count;
 
                 var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
                 foreach (var key in keys2) {
-                    key.Value.Rank(ref maxCount, ref start, seats, has);
+                    key.Value.Rank(ref start, seats, has);
                 }
             }
 
 
-            private void SetSeats(int next, ref int maxCount, bool[] seats, TrieNode[] has)
+            private void SetSeats(int next, bool[] seats, TrieNode[] has)
             {
                 Next = next;
                 seats[next] = true;
@@ -165,10 +169,7 @@ namespace ToolGood.Words
                     var position = next + item.Key;
                     has[position] = item.Value;
                 }
-                var position2 = next + (int)maxflag;
-                if (maxCount <= position2) {
-                    maxCount = position2;
-                }
+
             }
 
 
