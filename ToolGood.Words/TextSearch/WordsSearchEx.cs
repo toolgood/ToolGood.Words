@@ -562,20 +562,6 @@ namespace ToolGood.Words
             _guides = guides.ToArray();
         }
 
-        private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links, TrieNode root)
-        {
-            foreach (var item in node.m_values) {
-                TrieNode tn = null;
-                if (node2 == null) {
-                    if (root.TryGetValue(item.Key, out tn)) {
-                        links[item.Value] = tn;
-                    }
-                } else if (node2.TryGetValue(item.Key, out tn)) {
-                    links[item.Value] = tn;
-                }
-                TryLinks(item.Value, tn, links, root);
-            }
-        }
         #endregion
 
         #region 生成映射字典
