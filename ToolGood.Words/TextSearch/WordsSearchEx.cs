@@ -15,6 +15,8 @@ namespace ToolGood.Words
         #region Class
         class TrieNode
         {
+            public TrieNode Parent;
+            public TrieNode Failure;
             public char Char;
             internal bool End;
             internal List<int> Results;
@@ -53,6 +55,7 @@ namespace ToolGood.Words
                 if (maxflag < c) { maxflag = c; }
 
                 node = new TrieNode();
+                node.Parent = this;
                 node.Char = c;
                 m_values[c] = node;
                 Count++;
@@ -69,43 +72,22 @@ namespace ToolGood.Words
                 }
             }
 
-            public void Merge(TrieNode node, Dictionary<TrieNode, TrieNode> links)
+            public void Merge(TrieNode node)
             {
-                if (node.End) {
-                    if (End == false) {
-                        End = true;
-                    }
-                    foreach (var item in node.Results) {
-                        if (Results.Contains(item) == false) {
-                            Results.Add(item);
+                var nd = node;
+                while (nd.Char != 0) {
+                    foreach (var item in node.m_values) {
+                        if (m_values.ContainsKey(item.Key) == false) {
+                            if (merge_values.ContainsKey(item.Key) == false) {
+                                if (minflag > item.Key) { minflag = item.Key; }
+                                if (maxflag < item.Key) { maxflag = item.Key; }
+                                merge_values[item.Key] = item.Value;
+                                Count++;
+                            }
                         }
                     }
+                    nd = nd.Failure;
                 }
-
-                foreach (var item in node.m_values) {
-                    if (m_values.ContainsKey(item.Key) == false) {
-                        if (minflag > item.Key) { minflag = item.Key; }
-                        if (maxflag < item.Key) { maxflag = item.Key; }
-                        if (merge_values.ContainsKey(item.Key) == false) {
-                            merge_values[item.Key] = item.Value;
-                            Count++;
-                        }
-                    }
-                }
-                TrieNode node2;
-                if (links.TryGetValue(node, out node2)) {
-                    Merge(node2, links);
-                }
-            }
-
-            public int GetMaxLength()
-            {
-                var count = m_values.Count + merge_values.Count;
-                count = count * 5;
-                foreach (var item in m_values) {
-                    count += item.Value.GetMaxLength();
-                }
-                return count;
             }
 
             public int Rank(TrieNode[] has)
@@ -146,7 +128,7 @@ namespace ToolGood.Words
                         }
                     }
                 }
-                start += keys.Count;
+                start += keys.Count / 2;
 
                 var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
                 foreach (var key in keys2) {
@@ -175,6 +157,7 @@ namespace ToolGood.Words
 
         }
         #endregion
+
 
         #region 私有变量
         private string[] _keywords;
@@ -511,21 +494,55 @@ namespace ToolGood.Words
                 nd.SetResults(i);
             }
 
-            Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
-            foreach (var item in root.m_values) {
-                TryLinks(item.Value, null, links, root);
+            List<TrieNode> nodes = new List<TrieNode>();
+            // Find failure functions
+            //ArrayList nodes = new ArrayList();
+            // level 1 nodes - fail to root node
+            foreach (TrieNode nd in root.m_values.Values) {
+                nd.Failure = root;
+                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
             }
-            foreach (var item in links) {
-                item.Key.Merge(item.Value, links);
-            }
+            // other nodes - using BFS
+            while (nodes.Count != 0) {
+                List<TrieNode> newNodes = new List<TrieNode>();
 
+                //ArrayList newNodes = new ArrayList();
+                foreach (TrieNode nd in nodes) {
+                    TrieNode r = nd.Parent.Failure;
+                    char c = nd.Char;
+
+                    while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                    if (r == null)
+                        nd.Failure = root;
+                    else {
+                        nd.Failure = r.m_values[c];
+                        foreach (var result in nd.Failure.Results)
+                            nd.SetResults(result);
+                    }
+
+                    // add child nodes to BFS list 
+                    foreach (TrieNode child in nd.m_values.Values)
+                        newNodes.Add(child);
+                }
+                nodes = newNodes;
+            }
+            root.Failure = root;
+            foreach (var item in root.m_values.Values) {
+                TryLinks(item);
+            }
             build(root, length);
-            //_root = root;
+        }
+        private void TryLinks(TrieNode node)
+        {
+            node.Merge(node.Failure);
+            foreach (var item in node.m_values.Values) {
+                TryLinks(item);
+            }
         }
 
         private void build(TrieNode root, int length)
         {
-            TrieNode[] has = new TrieNode[root.GetMaxLength()];
+            TrieNode[] has = new TrieNode[0x00FFFFFF];
             length = root.Rank(has) + length + 1;
             _key = new int[length];
             _next = new int[length];
@@ -544,7 +561,6 @@ namespace ToolGood.Words
             }
             _guides = guides.ToArray();
         }
-
 
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links, TrieNode root)
         {

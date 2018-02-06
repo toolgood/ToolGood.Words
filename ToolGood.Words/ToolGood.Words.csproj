@@ -24,8 +24,8 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <FileVersion>2.0.1.0</FileVersion>
-    <Version>2.0.1.0</Version>
+    <FileVersion>2.0.2.0</FileVersion>
+    <Version>2.0.2.0</Version>
     <PackageReleaseNotes>2.0.1版本，StringSearchEx、WordsSearchEx加载关键字速度加快。
 2.0.0版本以上支持DotNet-Core版本。
 请不要使用1.8.5版本。</PackageReleaseNotes>
