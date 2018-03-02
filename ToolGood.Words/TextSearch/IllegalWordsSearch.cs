@@ -1,309 +1,416 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using ToolGood.Words.internals;
-
 
 namespace ToolGood.Words
 {
-    /// <summary>
-    /// 脏字搜索类
-    /// </summary>
-    public class IllegalWordsSearch: BaseSearch
+    public class IllegalWordsSearch
     {
-        #region class
-        class NodeInfo
+        #region Class
+        class TrieNode
         {
-            public int Index;
-            public bool End;
-            public NodeInfo Parent;
-            public TrieNode Node;
-            public char Type;
+            public TrieNode Parent;
+            public TrieNode Failure;
+            public char Char;
+            public bool IsEnglishOrNumber;
+            internal bool End;
+            internal List<int> Results;
+            internal Dictionary<char, TrieNode> m_values;
+            internal Dictionary<char, TrieNode> merge_values;
+            private int minflag = int.MaxValue;
+            private int maxflag = 0;
+            internal int Next;
+            private int Count;
+
+            public TrieNode()
+            {
+                m_values = new Dictionary<char, TrieNode>();
+                merge_values = new Dictionary<char, TrieNode>();
+                Results = new List<int>();
+            }
+
             public bool TryGetValue(char c, out TrieNode node)
             {
-                return Node.TryGetValue(c, out node);
-            }
-            public bool CanJump(char c, int index, int jump)
-            {
-                if (Index >= index - jump) {
-                    int t;
-                    if (c < 127) {
-                        t = Type + bitType[c];
-                    } else if (c >= 0x4e00 && c <= 0x9fa5) {
-                        t = Type + 'z';
-                    } else {
-                        return true;
-                    }
-                    if (t == 98 || t == 194 || t == 244) {
-                        return false;
-                    }
-                    return true;
+                if (minflag <= (int)c && maxflag >= (int)c) {
+                    return m_values.TryGetValue(c, out node);
                 }
+                node = null;
                 return false;
             }
-            public NodeInfo(int index, char c, TrieNode node, NodeInfo parent = null)
-            {
-                Index = index;
-                Node = node;
-                End = node.End;
-                Parent = parent;
 
-                if (c < 127) {
-                    Type = bitType[c];
-                } else if (c >= 0x4e00 && c <= 0x9fa5) {
-                    Type = 'z';
-                } else {
-                    Type = '0';
+            public TrieNode Add(char c)
+            {
+                TrieNode node;
+
+                if (m_values.TryGetValue(c, out node)) {
+                    return node;
                 }
 
-            }
-        }
-        class SearchHelper : IDisposable
-        {
-            NodeInfo mainNode;
-            List<NodeInfo> nodes = new List<NodeInfo>();
-            private TrieNode[] _first;
-            private int _jumpLength;
+                if (minflag > c) { minflag = c; }
+                if (maxflag < c) { maxflag = c; }
 
-            public SearchHelper(ref TrieNode[] first, int jumpLength)
-            {
-                _first = first;
-                _jumpLength = jumpLength;
+                node = new TrieNode();
+                node.Parent = this;
+                node.Char = c;
+                m_values[c] = node;
+                Count++;
+                return node;
             }
 
-            public void Dispose()
+            public void SetResults(int text)
             {
-                mainNode = null;
-                nodes.Clear();
+                if (End == false) {
+                    End = true;
+                }
+                if (Results.Contains(text) == false) {
+                    Results.Add(text);
+                }
             }
 
-            public bool FindChar(char c, int index)
+            public void Merge(TrieNode node)
             {
-                bool hasEnd = false;
-                List<NodeInfo> new_node = new List<NodeInfo>();
-                #region mainNode
-                if (mainNode == null) {
-                    TrieNode tn = _first[c];
-                    if (tn != null) {
-                        mainNode = new NodeInfo(index, c, tn);
-                        if (mainNode.End) {
-                            hasEnd = true;
-                        }
-                    }
-                } else {
-                    if (mainNode.CanJump(c, index, _jumpLength)) {
-                        new_node.Add(mainNode);
-                    }
-                    TrieNode tn;
-                    if (mainNode.TryGetValue(c, out tn)) {
-                        mainNode = new NodeInfo(index, c, tn, mainNode);
-                        if (mainNode.End) {
-                            hasEnd = true;
-                        }
-                    } else {
-                        tn = _first[c];
-                        if (tn != null) {
-                            mainNode = new NodeInfo(index, c, tn);
-                            if (mainNode.End) {
-                                hasEnd = true;
+                var nd = node;
+                while (nd.Char != 0) {
+                    foreach (var item in node.m_values) {
+                        if (m_values.ContainsKey(item.Key) == false) {
+                            if (merge_values.ContainsKey(item.Key) == false) {
+                                if (minflag > item.Key) { minflag = item.Key; }
+                                if (maxflag < item.Key) { maxflag = item.Key; }
+                                merge_values[item.Key] = item.Value;
+                                Count++;
                             }
-                        } else {
-
-                            mainNode = null;
                         }
                     }
+                    nd = nd.Failure;
                 }
-                #endregion
-
-                foreach (var n in nodes) {
-                    if (n.CanJump(c, index, _jumpLength)) {
-                        new_node.Add(n);
-                    }
-                    TrieNode tn;
-                    if (n.TryGetValue(c, out tn)) {
-                        var n2 = new NodeInfo(index, c, tn, n);
-                        new_node.Add(n2);
-
-                        if (n2.End) {
-                            hasEnd = true;
-                        }
-                    }
-                }
-                nodes = new_node;
-                return hasEnd;
             }
 
-            public List<Tuple<int, int, string>> GetKeywords()
+            public int Rank(TrieNode[] has)
             {
-                List<Tuple<int, int, string>> list = new List<Tuple<int, int, string>>();
+                bool[] seats = new bool[has.Length];
+                int start = 1;
 
-                if (mainNode != null) {
-                    if (mainNode.End) {
-                        foreach (var keywords in mainNode.Node.Results) {
-                            var p = mainNode;
-                            for (int i = 0; i < keywords.Length - 1; i++) {
-                                p = p.Parent;
-                            }
-                            list.Add(Tuple.Create(p.Index, mainNode.Index, keywords));
-                        }
-                    }
-                }
+                has[0] = this;
 
-                foreach (var node in nodes) {
-                    foreach (var keywords in node.Node.Results) {
-                        var p = node;
-                        for (int i = 0; i < keywords.Length - 1; i++) {
-                            p = p.Parent;
-                        }
-                        list.Add(Tuple.Create(p.Index, node.Index, keywords));
-                    }
-                }
-                return list;
+                Rank(ref start, seats, has);
+                int maxCount = has.Length - 1;
+                while (has[maxCount] == null) { maxCount--; }
+                return maxCount;
             }
+
+            private void Rank(ref int start, bool[] seats, TrieNode[] has)
+            {
+                if (maxflag == 0) return;
+                var keys = m_values.Select(q => (int)q.Key).ToList();
+                keys.AddRange(merge_values.Select(q => (int)q.Key).ToList());
+
+                while (has[start] != null) { start++; }
+                var s = start < (int)minflag ? (int)minflag : start;
+
+                for (int i = s; i < has.Length; i++) {
+                    if (has[i] == null) {
+                        var next = i - (int)minflag;
+                        //if (next < 0) continue;
+                        if (seats[next]) continue;
+
+                        var isok = true;
+                        foreach (var item in keys) {
+                            if (has[next + item] != null) { isok = false; break; }
+                        }
+                        if (isok) {
+                            SetSeats(next, seats, has);
+                            break;
+                        }
+                    }
+                }
+                start += keys.Count / 2;
+
+                var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
+                foreach (var key in keys2) {
+                    key.Value.Rank(ref start, seats, has);
+                }
+            }
+
+
+            private void SetSeats(int next, bool[] seats, TrieNode[] has)
+            {
+                Next = next;
+                seats[next] = true;
+
+                foreach (var item in merge_values) {
+                    var position = next + item.Key;
+                    has[position] = item.Value;
+                }
+
+                foreach (var item in m_values) {
+                    var position = next + item.Key;
+                    has[position] = item.Value;
+                }
+
+            }
+
+
         }
         #endregion
 
-        #region Local fields
-        protected const string bitType = "00000000000000000000000000000000000000000000000011111111110000000aaaaaaaaaaaaaaaaaaaaaaaaaa000000aaaaaaaaaaaaaaaaaaaaaaaaaa00000";
-        protected int _jumpLength;
+        #region 私有变量
+        private string[] _keywords;
+        private int[][] _guides;
+        private int[] _key;
+        private int[] _next;
+        private int[] _check;
+        private int[] _dict;
+
+        /// <summary>
+        /// 使用跳词过滤器
+        /// </summary> 
+        public bool UseSkipWordFilter = false; //使用跳词过滤器
+        private const string _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
+        private bool[] _skipBitArray;
+        /// <summary>
+        /// 使用重复词过滤器
+        /// </summary>
+        public bool UseDuplicateWordFilter = false;
+        /// <summary>
+        /// 使用黑名单过滤器
+        /// </summary>
+        public bool UseBlacklistFilter = false;
+        private int[] _blacklist;
+        /// <summary>
+        /// 使用半角转化器
+        /// </summary>
+        public bool UseDBCcaseConverter = true;
+        /// <summary>
+        /// 使用简体中文转化器
+        /// </summary>
+        public bool UseSimplifiedChineseConverter = true;
+
         #endregion
 
-        public IllegalWordsSearch(int jumpLength = 1)
+        public IllegalWordsSearch()
         {
-            _jumpLength = jumpLength;
+            _skipBitArray = new bool[char.MaxValue + 1];
+            for (int i = 0; i < _skipList.Length; i++) {
+                _skipBitArray[_skipList[i]] = true;
+            }
+            _blacklist = new int[0];
         }
-
 
         #region 查找 替换 查找第一个关键字 判断是否包含关键字
+
         /// <summary>
-        /// 判断文本是否包含关键字
+        /// 在文本中查找所有的关键字
         /// </summary>
         /// <param name="text">文本</param>
+        /// <param name="blacklist">黑名单</param>
         /// <returns></returns>
-        public virtual bool ContainsAny(string text)
+        public List<IllegalWordsSearchResult> FindAll(string text, BlacklistType blacklist = BlacklistType.All)
         {
-            StringBuilder sb = new StringBuilder(text);
-            TrieNode ptr = null;
+            return FindAll(text, (int)blacklist);
+        }
+        /// <summary>
+        /// 在文本中查找所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="flag">黑名单</param>
+        /// <returns></returns>
+        public List<IllegalWordsSearchResult> FindAll(string text, int flag)
+        {
+            List<IllegalWordsSearchResult> results = new List<IllegalWordsSearchResult>();
+            int[] pIndex = new int[text.Length];
+            var p = 0;
+            int findIndex = 0;
+            char pChar = (char)0;
+            bool pCharEN = false;
+
             for (int i = 0; i < text.Length; i++) {
-                char c;
-                if (ToSenseWords(text[i], out c)) {
-                    sb[i] = c;
-                }
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[c];
-                } else {
-                    if (ptr.TryGetValue(c, out tn) == false) {
-                        tn = _first[c];
-                    }
-                }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var find in tn.Results) {
-                            var r = GetIllegalResult(find, c, i + 1 - find.Length, i, text, sb);
-                            if (r != null) return true;
+                pIndex[i] = p;
+                var c = text[i];
+                var cEN = IsEnglishOrNumber(c);
+                if (findIndex != 0 && (!pCharEN || !cEN)) {//查找数据 返回
+                    if (TestBlacklist(findIndex, flag)) {
+                        foreach (var item in _guides[findIndex]) {
+                            var r = GetIllegalResult(_keywords[item], i - 1, text, p, pIndex);
+                            results.Add(r);
                         }
                     }
                 }
-                ptr = tn;
+                if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
+                var t = (char)_dict[ToSenseWord(c)];
+                if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+
+
+                var next = _next[p] + t;
+                if (_key[next] == t) {
+                    p = next;
+                    findIndex = _check[next];
+                } else if (UseDuplicateWordFilter && c == pChar) {
+                    continue;
+                } else if (pCharEN == false) {
+                    next = _next[0] + t;
+                    if (_key[next] == t) {
+                        p = next;
+                        findIndex = _check[next];
+                    } else {
+                        p = 0;
+                        findIndex = 0;
+                    }
+                } else {
+                    p = 0;
+                    findIndex = 0;
+                }
+                pChar = c;
+                pCharEN = cEN;
             }
-
-            SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
-
-            for (int i = 0; i < text.Length; i++) {
-                char c = sb[i];
-
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
-                        var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
-                        if (r != null) return true;
+            if (findIndex != 0) {
+                if (TestBlacklist(findIndex, flag)) {
+                    foreach (var item in _guides[findIndex]) {
+                        var r = GetIllegalResult(_keywords[item], text.Length - 1, text, p, pIndex);
+                        results.Add(r);
                     }
                 }
             }
-            return false;
+            return results;
         }
 
         /// <summary>
         /// 在文本中查找第一个关键字
         /// </summary>
         /// <param name="text">文本</param>
+        /// <param name="blacklist">黑名单</param>
         /// <returns></returns>
-        public virtual IllegalWordsSearchResult FindFirst(string text)
+        public IllegalWordsSearchResult FindFirst(string text, BlacklistType blacklist= BlacklistType.All)
         {
-            StringBuilder sb = new StringBuilder(text);
-            TrieNode ptr = null;
+            return FindFirst(text, (int)blacklist);
+        }
+        /// <summary>
+        /// 在文本中查找第一个关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="flag">黑名单</param>
+        /// <returns></returns>
+        public IllegalWordsSearchResult FindFirst(string text, int flag)
+        {
+            int[] pIndex = new int[text.Length];
+            var p = 0;
+            int findIndex = 0;
+            char pChar = (char)0;
+            bool pCharEN = false;
+
             for (int i = 0; i < text.Length; i++) {
-                char c;
-                if (ToSenseWords(text[i], out c)) {
-                    sb[i] = c;
+                pIndex[i] = p;
+                var c = text[i];
+                var cEN = IsEnglishOrNumber(c);
+                if (findIndex != 0 && (!pCharEN || !cEN)) {//查找数据 返回
+                    if (TestBlacklist(findIndex, flag)) {
+                        return GetIllegalResult(_keywords[_guides[findIndex][0]], i - 1, text, p, pIndex);
+                    }
                 }
-                TrieNode tn;
-                if (ptr == null) {
-                    tn = _first[c];
+                if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
+                var t = (char)_dict[ToSenseWord(c)];
+                if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+
+
+                var next = _next[p] + t;
+                if (_key[next] == t) {
+                    p = next;
+                    findIndex = _check[next];
+                } else if (UseDuplicateWordFilter && c == pChar) {
+                    continue;
+                } else if (pCharEN == false) {
+                    next = _next[0] + t;
+                    if (_key[next] == t) {
+                        p = next;
+                        findIndex = _check[next];
+                    } else {
+                        p = 0;
+                        findIndex = 0;
+                    }
                 } else {
-                    if (ptr.TryGetValue(c, out tn) == false) {
-                        tn = _first[c];
-                    }
+                    p = 0;
+                    findIndex = 0;
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var find in tn.Results) {
-                            var r = GetIllegalResult(find, c, i + 1 - find.Length, i, text, sb);
-                            if (r != null) return r;
-                        }
-                    }
-                }
-                ptr = tn;
+                pChar = c;
+                pCharEN = cEN;
             }
-
-            SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
-
-            for (int i = 0; i < text.Length; i++) {
-                char c;
-                if (ToSenseWords(text[i], out c)) {
-                    sb[i] = c;
-                }
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
-                        var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
-                        if (r != null) return r;
-                    }
+            if (findIndex != 0) {
+                if (TestBlacklist(findIndex, flag)) {
+                    return GetIllegalResult(_keywords[_guides[p][0]], text.Length - 1, text, p, pIndex);
                 }
             }
-            return IllegalWordsSearchResult.Empty;
+            return null;
         }
 
         /// <summary>
-        /// 在文本中查找所有的关键字
+        /// 判断文本是否包含关键字
         /// </summary>
         /// <param name="text">文本</param>
+        /// <param name="blacklist">黑名单</param>
         /// <returns></returns>
-        public virtual List<IllegalWordsSearchResult> FindAll(string text)
+        public bool ContainsAny(string text, BlacklistType blacklist = BlacklistType.All)
         {
-            StringBuilder sb = new StringBuilder(text);
-            SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
-            List<IllegalWordsSearchResult> result = new List<IllegalWordsSearchResult>();
+            return ContainsAny(text, (int)blacklist);
+        }
+        /// <summary>
+        /// 判断文本是否包含关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="flag">黑名单</param>
+        /// <returns></returns>
+        public bool ContainsAny(string text, int flag)
+        {
+            var p = 0;
+            int findIndex = 0;
+            char pChar = (char)0;
+            bool pCharEN = false;
 
             for (int i = 0; i < text.Length; i++) {
-                char c;
-                if (ToSenseWords(text[i], out c)) {
-                    sb[i] = c;
-                }
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
-                        var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
-                        if (r != null) {
-                            if (result.Any(q => q.Start == r.Start && q.End == r.End) == false) {
-                                result.Add(r);
-                            }
-                        }
+                var c = text[i];
+                var cEN = IsEnglishOrNumber(c);
+                if (findIndex != 0 && (!pCharEN || !cEN)) {//查找数据 返回
+                    if (TestBlacklist(findIndex, flag)) {
+                        return true;
                     }
                 }
-            }
+                if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
+                var t = (char)_dict[ToSenseWord(c)];
+                if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
 
-            return result;
+
+                var next = _next[p] + t;
+                if (_key[next] == t) {
+                    p = next;
+                    findIndex = _check[next];
+                } else if (UseDuplicateWordFilter && c == pChar) {
+                    continue;
+                } else if (pCharEN == false) {
+                    next = _next[0] + t;
+                    if (_key[next] == t) {
+                        p = next;
+                        findIndex = _check[next];
+                    } else {
+                        p = 0;
+                        findIndex = 0;
+                    }
+                } else {
+                    p = 0;
+                    findIndex = 0;
+                }
+                pChar = c;
+                pCharEN = cEN;
+            }
+            if (findIndex != 0) {
+                if (TestBlacklist(findIndex, flag)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -311,16 +418,76 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">文本</param>
         /// <param name="replaceChar">替换符</param>
+        /// <param name="blacklist">黑名单</param>
         /// <returns></returns>
-        public virtual string Replace(string text, char replaceChar = '*')
+        public string Replace(string text, char replaceChar = '*', BlacklistType blacklist = BlacklistType.All)
         {
-            var all = FindAll(text);
+            return Replace(text, replaceChar, (int)blacklist);
+        }
+
+        /// <summary>
+        /// 在文本中替换所有的关键字
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="replaceChar">替换符</param>
+        /// <param name="flag">黑名单</param>
+        /// <returns></returns>
+        public string Replace(string text, char replaceChar, int flag)
+        {
             StringBuilder result = new StringBuilder(text);
-            all = all.OrderBy(q => q.Start).ThenBy(q => q.End).ToList();
-            for (int i = all.Count - 1; i >= 0; i--) {
-                var r = all[i];
-                for (int j = r.Start; j <= r.End; j++) {
-                    if (result[j] != replaceChar) {
+
+            int[] pIndex = new int[text.Length];
+            int p = 0;
+            int findIndex = 0;
+            char pChar = (char)0;
+            bool pCharEN = false;
+
+            for (int i = 0; i < text.Length; i++) {
+                pIndex[i] = p;
+                var c = text[i];
+                var cEN = IsEnglishOrNumber(c);
+                if (findIndex != 0 && (!pCharEN || !cEN)) {//查找数据 返回
+                    if (TestBlacklist(findIndex, flag)) {
+                        var keyword = _keywords[_guides[findIndex][0]];
+                        var start = FindStart(keyword, i - 1, p, pIndex);
+                        for (int j = start; j < i; j++) {
+                            result[j] = replaceChar;
+                        }
+                    }
+                }
+                if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
+                var t = (char)_dict[ToSenseWord(c)];
+                if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+
+
+                var next = _next[p] + t;
+                if (_key[next] == t) {
+                    p = next;
+                    findIndex = _check[next];
+                } else if (UseDuplicateWordFilter && c == pChar) {
+                    continue;
+                } else if (pCharEN == false) {
+                    next = _next[0] + t;
+                    if (_key[next] == t) {
+                        p = next;
+                        findIndex = _check[next];
+                    } else {
+                        p = 0;
+                        findIndex = 0;
+                    }
+                } else {
+                    p = 0;
+                    findIndex = 0;
+                }
+                pChar = c;
+                pCharEN = cEN;
+            }
+            if (findIndex != 0) {
+                if (TestBlacklist(findIndex, flag)) {
+                    var keyword = _keywords[_guides[findIndex][0]];
+                    var start = FindStart(keyword, text.Length - 1, p, pIndex);
+                    for (int j = start; j < text.Length; j++) {
                         result[j] = replaceChar;
                     }
                 }
@@ -328,6 +495,307 @@ namespace ToolGood.Words
             return result.ToString();
         }
 
+        private int FindStart(string keyword, int end, int p, int[] pIndex)
+        {
+            var n = keyword.Length;
+            var start = end;
+            int pp = p;
+            while (n > 0) {
+                var pi = pIndex[start--];
+                if (pi != pp) { n--; pp = pi; }
+                if (start == -1) break;
+            }
+            start++;
+            return start;
+        }
+
+        private IllegalWordsSearchResult GetIllegalResult(string keyword, int end, string srcText, int p, int[] pIndex)
+        {
+            var start = FindStart(keyword, end, p, pIndex);
+            return new IllegalWordsSearchResult(keyword, start, end, srcText);
+        }
+
+        private bool TestBlacklist(int index, int flag)
+        {
+            if (UseBlacklistFilter) {
+                var b = _blacklist[index];
+                return (b | flag) == b;
+            }
+            return true;
+        }
+
+        private char ToSenseWord(char c)
+        {
+            if (c >= 'A' && c <= 'Z') return (char)(c | 0x20);
+            if (UseDBCcaseConverter) {
+                if (c == 12288) return ' ';
+                if (c >= 65280 && c < 65375) {
+                    var k = (c - 65248);
+                    if ('A' <= k && k <= 'Z') {
+                        k = k | 0x20;
+                    }
+                    return (char)k;
+                }
+            }
+            if (UseSimplifiedChineseConverter) {
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    return Dict.Simplified[c - 0x4e00];
+                }
+            }
+            return c;
+        }
+
+        private string ToSenseWord(string text)
+        {
+            StringBuilder stringBuilder = new StringBuilder(text.Length);
+            for (int i = 0; i < text.Length; i++) {
+                stringBuilder.Append(ToSenseWord(text[i]));
+                //stringBuilder[i] = ToSenseWord(text[i]);
+            }
+            return stringBuilder.ToString();
+        }
+        #endregion
+
+        #region 保存到文件
+        /// <summary>
+        /// 保存到文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void Save(string filePath)
+        {
+            var fs = File.Open(filePath, FileMode.Create);
+            BinaryWriter bw = new BinaryWriter(fs);
+            Save(bw);
+#if NETSTANDARD1_3
+            bw.Dispose();
+            fs.Dispose();
+#else
+            bw.Close();
+            fs.Close();
+#endif
+        }
+
+        /// <summary>
+        /// 保存到Stream
+        /// </summary>
+        /// <param name="stream"></param>
+        public void Save(Stream stream)
+        {
+            BinaryWriter bw = new BinaryWriter(stream);
+            Save(bw);
+#if NETSTANDARD1_3
+            bw.Dispose();
+#else
+            bw.Close();
+#endif
+        }
+
+        protected internal virtual void Save(BinaryWriter bw)
+        {
+            bw.Write(_keywords.Length);
+            foreach (var item in _keywords) {
+                bw.Write(item);
+            }
+
+            List<int> guideslist = new List<int>();
+            guideslist.Add(_guides.Length);
+            foreach (var guide in _guides) {
+                guideslist.Add(guide.Length);
+                foreach (var item in guide) {
+                    guideslist.Add(item);
+                }
+            }
+            var bs = IntArrToByteArr(guideslist.ToArray());
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bs = IntArrToByteArr(_key);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bs = IntArrToByteArr(_next);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bs = IntArrToByteArr(_check);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bs = IntArrToByteArr(_dict);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bw.Write(UseSkipWordFilter);
+            bs = BoolArrToByteArr(_skipBitArray);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bw.Write(UseDuplicateWordFilter);
+            bw.Write(UseBlacklistFilter);
+            bs = IntArrToByteArr(_blacklist);
+            bw.Write(bs.Length);
+            bw.Write(bs);
+
+            bw.Write(UseDBCcaseConverter);
+            bw.Write(UseSimplifiedChineseConverter);
+        }
+
+        private byte[] IntArrToByteArr(int[] intArr)
+        {
+            int intSize = sizeof(int) * intArr.Length;
+            byte[] bytArr = new byte[intSize];
+            Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
+            return bytArr;
+        }
+        private byte[] BoolArrToByteArr(bool[] intArr)
+        {
+            int intSize = sizeof(bool) * intArr.Length;
+            byte[] bytArr = new byte[intSize];
+            Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
+            return bytArr;
+        }
+
+        #endregion
+
+        #region 加载文件
+        /// <summary>
+        /// 加载文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void Load(string filePath)
+        {
+            var fs = File.OpenRead(filePath);
+            BinaryReader br = new BinaryReader(fs);
+            Load(br);
+#if NETSTANDARD1_3
+            br.Dispose();
+            fs.Dispose();
+#else
+            br.Close();
+            fs.Close();
+#endif
+        }
+        /// <summary>
+        /// 加载Stream
+        /// </summary>
+        /// <param name="stream"></param>
+        public void Load(Stream stream)
+        {
+            BinaryReader br = new BinaryReader(stream);
+            Load(br);
+#if NETSTANDARD1_3
+            br.Dispose();
+#else
+            br.Close();
+#endif
+        }
+
+        protected internal virtual void Load(BinaryReader br)
+        {
+            var length = br.ReadInt32();
+            _keywords = new string[length];
+            for (int i = 0; i < length; i++) {
+                _keywords[i] = br.ReadString();
+            }
+
+            length = br.ReadInt32();
+            var bs = br.ReadBytes(length);
+            using (MemoryStream ms = new MemoryStream(bs)) {
+                BinaryReader b = new BinaryReader(ms);
+                var length2 = b.ReadInt32();
+                _guides = new int[length2][];
+                for (int i = 0; i < length2; i++) {
+                    var length3 = b.ReadInt32();
+                    _guides[i] = new int[length3];
+                    for (int j = 0; j < length3; j++) {
+                        _guides[i][j] = b.ReadInt32();
+                    }
+                }
+            }
+
+            length = br.ReadInt32();
+            _key = ByteArrToIntArr(br.ReadBytes(length));
+
+            length = br.ReadInt32();
+            _next = ByteArrToIntArr(br.ReadBytes(length));
+
+            length = br.ReadInt32();
+            _check = ByteArrToIntArr(br.ReadBytes(length));
+
+            length = br.ReadInt32();
+            _dict = ByteArrToIntArr(br.ReadBytes(length));
+
+
+
+            UseSkipWordFilter = br.ReadBoolean();
+            length = br.ReadInt32();
+            _skipBitArray = ByteArrToBoolArr(br.ReadBytes(length));
+
+            UseDuplicateWordFilter = br.ReadBoolean();
+            UseBlacklistFilter = br.ReadBoolean();
+            length = br.ReadInt32();
+            _blacklist = ByteArrToIntArr(br.ReadBytes(length));
+
+            UseDBCcaseConverter = br.ReadBoolean();
+            UseSimplifiedChineseConverter = br.ReadBoolean();
+        }
+
+        private int[] ByteArrToIntArr(byte[] btArr)
+        {
+            int intSize = btArr.Length / sizeof(int);
+            int[] intArr = new int[intSize];
+            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
+            return intArr;
+        }
+
+        private bool[] ByteArrToBoolArr(byte[] btArr)
+        {
+            int intSize = btArr.Length / sizeof(bool);
+            bool[] intArr = new bool[intSize];
+            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
+            return intArr;
+        }
+
+        #endregion
+
+        #region 设置跳词
+        /// <summary>
+        /// 设置跳词
+        /// </summary>
+        /// <param name="skipList"></param>
+        public void SetSkipWords(string skipList)
+        {
+            _skipBitArray = new bool[char.MaxValue + 1];
+            if (skipList == null) {
+                for (int i = 0; i < _skipList.Length; i++) {
+                    _skipBitArray[_skipList[i]] = true;
+                }
+            }
+        }
+        #endregion
+
+        #region 设置黑名单
+        /// <summary>
+        /// 设置黑名单
+        /// </summary>
+        /// <param name="blacklist"></param>
+        public void SetBlacklist(BlacklistType[] blacklist)
+        {
+            var list = new int[blacklist.Length];
+            for (int i = 0; i < blacklist.Length; i++) {
+                list[i] = (int) blacklist[i];
+            }
+            _blacklist = list;
+        }
+
+        /// <summary>
+        /// 设置黑名单
+        /// </summary>
+        /// <param name="blacklist"></param>
+        public void SetBlacklist(int[] blacklist)
+        {
+            _blacklist = blacklist;
+        }
         #endregion
 
         #region 设置关键字
@@ -335,114 +803,151 @@ namespace ToolGood.Words
         /// 设置关键字
         /// </summary>
         /// <param name="keywords">关键字列表</param>
-        public override void SetKeywords(ICollection<string> keywords)
+        public void SetKeywords(ICollection<string> keywords)
         {
             HashSet<string> kws = new HashSet<string>();
             foreach (var item in keywords) {
-                kws.Add(WordsHelper.ToSenseIllegalWords(item));
+                kws.Add(ToSenseWord(item));
             }
-            base.SetKeywords(kws);
-        } 
-        #endregion
+            setKeywords(kws);
+        }
 
-
-        #region private
-        protected bool isInEnglishOrInNumber(string keyword, char ch, int end, string searchText)
+        private void setKeywords(ICollection<string> keywords)
         {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
-                    var c = searchText[end + 1];
-                    if (c < 127) {
-                        int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 194) {
-                            return true;
-                        }
-                    }
+            _keywords = keywords.ToArray();
+            var length = CreateDict(keywords);
+            var root = new TrieNode();
+            root.Parent = root;
+
+            for (int i = 0; i < _keywords.Length; i++) {
+                var p = _keywords[i];
+                var nd = root;
+                for (int j = 0; j < p.Length; j++) {
+                    nd = nd.Add((char)_dict[p[j]]);
+                    nd.IsEnglishOrNumber = IsEnglishOrNumber(p[j]);
                 }
+                nd.SetResults(i);
             }
-            var start = end + 1 - keyword.Length;
-            if (start > 0) {
-                var c = searchText[start - 1];
-                if (c < 127) {
-                    var k = keyword[0];
-                    if (k < 127) {
-                        int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 194) {
-                            return true;
+
+            List<TrieNode> nodes = new List<TrieNode>();
+            // Find failure functions
+            // level 1 nodes - fail to root node
+            foreach (TrieNode nd in root.m_values.Values) {
+                nd.Failure = root;
+                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
+            }
+            // other nodes - using BFS
+            while (nodes.Count != 0) {
+                List<TrieNode> newNodes = new List<TrieNode>();
+
+                //ArrayList newNodes = new ArrayList();
+                foreach (TrieNode nd in nodes) {
+                    TrieNode r = nd.Parent.Failure;
+                    char c = nd.Char;
+
+                    while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                    if (r == null)
+                        nd.Failure = root;
+                    else {
+                        //防止 bc匹配abc;
+                        if (root == r.Parent && nd.Parent.IsEnglishOrNumber && nd.IsEnglishOrNumber) {
+                            nd.Failure = root;
+                        } else {
+                            nd.Failure = r.m_values[c];
+                            foreach (var result in nd.Failure.Results)
+                                nd.SetResults(result);
                         }
                     }
+
+                    // add child nodes to BFS list 
+                    foreach (TrieNode child in nd.m_values.Values)
+                        newNodes.Add(child);
+                }
+                nodes = newNodes;
+            }
+            root.Failure = root;
+            foreach (var item in root.m_values.Values) {
+                TryLinks(item);
+            }
+            BuildArray(root, length);
+        }
+
+        private bool IsEnglishOrNumber(char c)
+        {
+            if (c < 128) {
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                    return true;
                 }
             }
             return false;
         }
 
-        private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, StringBuilder searchText)
+        private void TryLinks(TrieNode node)
         {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
-                    char c;
-                    ToSenseWords(searchText[end + 1], out c);
-                    if (c < 127) {
-                        int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 194) {
-                            return null;
-                        }
-
-                    }
-                }
+            node.Merge(node.Failure);
+            foreach (var item in node.m_values.Values) {
+                TryLinks(item);
             }
-            if (start > 0) {
-                var c = searchText[start - 1];
-                if (c < 127) {
-                    var k = keyword[0];
-                    if (k < 127) {
-                        int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 194) {
-                            return null;
-                        }
-                    }
-                }
-            }
-            return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
 
-        private bool ToSenseWords(char c, out char w)
+        private void BuildArray(TrieNode root, int length)
         {
-            if (c < 'A') { } else if (c <= 'Z') {
-                w = (char)(c | 0x20);
-                return true;
-            } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-                var index = Dict.nums1.IndexOf(c);
-                if (index > -1) {
-                    w = Dict.nums2[index];
-                    return true;
+            TrieNode[] has = new TrieNode[0x00FFFFFF];
+            length = root.Rank(has) + length + 1;
+            _key = new int[length];
+            _next = new int[length];
+            _check = new int[length];
+            List<int[]> guides = new List<int[]>();
+            guides.Add(new int[] { 0 });
+            for (int i = 0; i < length; i++) {
+                var item = has[i];
+                if (item == null) continue;
+                _key[i] = item.Char;
+                _next[i] = item.Next;
+                if (item.End) {
+                    _check[i] = guides.Count;
+                    guides.Add(item.Results.ToArray());
                 }
-            } else if (c == 12288) {
-                w = ' ';
-                return true;
-
-            } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-                var k = Dict.Simplified[c - 0x4e00];
-                if (k != c) {
-                    w = k;
-                    return true;
-
-                }
-            } else if (c < 65280) { } else if (c < 65375) {
-                var k = (c - 65248);
-                if ('A' <= k && k <= 'Z') {
-                    k = k | 0x20;
-                }
-                w = (char)k;
-                return true;
             }
-            w = c;
-            return false;
+            _guides = guides.ToArray();
         }
 
         #endregion
 
+        #region 生成映射字典
 
+        private int CreateDict(ICollection<string> keywords)
+        {
+            Dictionary<char, int> dictionary = new Dictionary<char, int>();
 
+            foreach (var keyword in keywords) {
+                for (int i = 0; i < keyword.Length; i++) {
+                    var item = keyword[i];
+                    if (dictionary.ContainsKey(item)) {
+                        if (i > 0)
+                            dictionary[item] += 2;
+                    } else {
+                        dictionary[item] = i > 0 ? 2 : 1;
+                    }
+                }
+            }
+            var list = dictionary.OrderByDescending(q => q.Value).Select(q => q.Key).ToList();
+            var list2 = new List<char>();
+            var sh = false;
+            foreach (var item in list) {
+                if (sh) {
+                    list2.Add(item);
+                } else {
+                    list2.Insert(0, item);
+                }
+                sh = !sh;
+            }
+            _dict = new int[char.MaxValue + 1];
+            for (int i = 0; i < list2.Count; i++) {
+                _dict[list2[i]] = i + 1;
+            }
+            return dictionary.Count;
+        }
+        #endregion
     }
 }

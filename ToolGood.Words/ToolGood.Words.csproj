@@ -24,11 +24,9 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <FileVersion>2.0.2.0</FileVersion>
-    <Version>2.0.2.0</Version>
-    <PackageReleaseNotes>2.0.1版本，StringSearchEx、WordsSearchEx加载关键字速度加快。
-2.0.0版本以上支持DotNet-Core版本。
-请不要使用1.8.5版本。</PackageReleaseNotes>
+    <FileVersion>2.1.0.0</FileVersion>
+    <Version>2.1.0.0</Version>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
@@ -47,6 +45,10 @@
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+    <DocumentationFile>bin\Release\net40\ToolGood.Words.xml</DocumentationFile>
   </PropertyGroup>
 
   

@@ -316,7 +316,7 @@ namespace ToolGood.Words
         /// <param name="filePath"></param>
         public void Save(string filePath)
         {
-            var fs = File.Open(filePath, FileMode.CreateNew);
+            var fs = File.Open(filePath, FileMode.Create);
             BinaryWriter bw = new BinaryWriter(fs);
             Save(bw);
 #if NETSTANDARD1_3

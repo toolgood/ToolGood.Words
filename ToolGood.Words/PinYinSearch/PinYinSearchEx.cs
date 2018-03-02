@@ -279,7 +279,7 @@ namespace ToolGood.Words
         /// <summary>
         /// 搜索IDs
         /// </summary>
-        /// <param name="text"文本></param>
+        /// <param name="text">文本</param>
         /// <param name="keywordSort">是否按拼音排序</param>
         /// <returns></returns>
         public List<int> SearchIds(string text, bool keywordSort = false)

@@ -13,7 +13,7 @@ namespace ToolGood.Words.internals
         /// <summary>
         /// 设置关键字
         /// </summary>
-        /// <param name="keywords">关键字列表</param>
+        /// <param name="_keywords">关键字列表</param>
         public virtual void SetKeywords(ICollection<string> _keywords)
         {
             var first = new TrieNode[char.MaxValue + 1];
