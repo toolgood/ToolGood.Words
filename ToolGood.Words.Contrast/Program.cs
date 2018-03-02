@@ -31,40 +31,40 @@ namespace ToolGood.Words.Contrast
             //var tt = illegalWordsSearch.FindAll(text);
 
             //word2.Load("test.ini");
-            Console.Write("-------------------- SetKeywords Test --------------------\r\n");
+            //Console.Write("-------------------- SetKeywords Test --------------------\r\n");
 
-            Run(1, "StringSearch.SetKeywords  ", () => {
-                List<string> list = new List<string>();
-                using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
-                    string key = sw.ReadLine();
-                    while (key != null) {
-                        if (key != string.Empty) {
-                            list.Add(key);
-                        }
-                        key = sw.ReadLine();
-                    }
-                }
-                StringSearch s = new StringSearch();
-                s.SetKeywords(list);
-            });
-            Run(1, "StringSearchEx.SetKeywords  ", () => {
-                List<string> list = new List<string>();
-                using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
-                    string key = sw.ReadLine();
-                    while (key != null) {
-                        if (key != string.Empty) {
-                            list.Add(key);
-                        }
-                        key = sw.ReadLine();
-                    }
-                }
-                StringSearchEx s = new StringSearchEx();
-                s.SetKeywords(list);
-            });
-            Run(1, "StringSearchEx.Load  ", () => {
-                StringSearchEx s = new StringSearchEx();
-                s.Load("test.ini");
-            });
+            //Run(1, "StringSearch.SetKeywords  ", () => {
+            //    List<string> list = new List<string>();
+            //    using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
+            //        string key = sw.ReadLine();
+            //        while (key != null) {
+            //            if (key != string.Empty) {
+            //                list.Add(key);
+            //            }
+            //            key = sw.ReadLine();
+            //        }
+            //    }
+            //    StringSearch s = new StringSearch();
+            //    s.SetKeywords(list);
+            //});
+            //Run(1, "StringSearchEx.SetKeywords  ", () => {
+            //    List<string> list = new List<string>();
+            //    using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
+            //        string key = sw.ReadLine();
+            //        while (key != null) {
+            //            if (key != string.Empty) {
+            //                list.Add(key);
+            //            }
+            //            key = sw.ReadLine();
+            //        }
+            //    }
+            //    StringSearchEx s = new StringSearchEx();
+            //    s.SetKeywords(list);
+            //});
+            //Run(1, "StringSearchEx.Load  ", () => {
+            //    StringSearchEx s = new StringSearchEx();
+            //    s.Load("test.ini");
+            //});
 
 
 

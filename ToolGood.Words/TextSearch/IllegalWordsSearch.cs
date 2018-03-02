@@ -180,11 +180,11 @@ namespace ToolGood.Words
         public bool UseBlacklistFilter = false;
         private int[] _blacklist;
         /// <summary>
-        /// 使用半角转化器
+        /// 使用半角转化器，默认为true
         /// </summary>
         public bool UseDBCcaseConverter = true;
         /// <summary>
-        /// 使用简体中文转化器
+        /// 使用简体中文转化器，默认为true
         /// </summary>
         public bool UseSimplifiedChineseConverter = true;
 
@@ -239,9 +239,10 @@ namespace ToolGood.Words
                     }
                 }
                 if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
-                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
-                var t = (char)_dict[ToSenseWord(c)];
+                var t = _dict[ToSenseWord(c)];
                 if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
+
 
 
                 var next = _next[p] + t;
@@ -283,7 +284,7 @@ namespace ToolGood.Words
         /// <param name="text">文本</param>
         /// <param name="blacklist">黑名单</param>
         /// <returns></returns>
-        public IllegalWordsSearchResult FindFirst(string text, BlacklistType blacklist= BlacklistType.All)
+        public IllegalWordsSearchResult FindFirst(string text, BlacklistType blacklist = BlacklistType.All)
         {
             return FindFirst(text, (int)blacklist);
         }
@@ -311,9 +312,9 @@ namespace ToolGood.Words
                     }
                 }
                 if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
-                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
-                var t = (char)_dict[ToSenseWord(c)];
+                var t = _dict[ToSenseWord(c)];
                 if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
 
 
                 var next = _next[p] + t;
@@ -378,9 +379,9 @@ namespace ToolGood.Words
                     }
                 }
                 if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
-                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
-                var t = (char)_dict[ToSenseWord(c)];
+                var t = _dict[ToSenseWord(c)];
                 if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
 
 
                 var next = _next[p] + t;
@@ -456,9 +457,9 @@ namespace ToolGood.Words
                     }
                 }
                 if (p == 0 && pCharEN && cEN) { findIndex = 0; pChar = c; continue; }//避免 bc 匹配到 abc
-                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
-                var t = (char)_dict[ToSenseWord(c)];
+                var t = _dict[ToSenseWord(c)];
                 if (t == 0) { p = 0; findIndex = 0; pChar = c; pCharEN = cEN; continue; }//不在字表中，跳过
+                if (UseSkipWordFilter && _skipBitArray[c]) { findIndex = 0; pChar = c; pCharEN = cEN; continue; }//使用跳词
 
 
                 var next = _next[p] + t;
@@ -760,7 +761,7 @@ namespace ToolGood.Words
 
         #region 设置跳词
         /// <summary>
-        /// 设置跳词
+        /// 设置跳词，搜索匹配前，请设置UseSkipWordFilter=true
         /// </summary>
         /// <param name="skipList"></param>
         public void SetSkipWords(string skipList)
@@ -776,31 +777,45 @@ namespace ToolGood.Words
 
         #region 设置黑名单
         /// <summary>
-        /// 设置黑名单
+        /// 设置黑名单，搜索匹配前，请设置UseBlacklistFilter=true
         /// </summary>
         /// <param name="blacklist"></param>
         public void SetBlacklist(BlacklistType[] blacklist)
         {
+            if (_keywords == null) {
+                throw new NullReferenceException("请先使用SetKeywords方法设置关键字！");
+            }
+            if (blacklist.Length != _keywords.Length) {
+                throw new ArgumentException("请关键字与黑名单列表的长度要一样长！");
+            }
+
             var list = new int[blacklist.Length];
             for (int i = 0; i < blacklist.Length; i++) {
-                list[i] = (int) blacklist[i];
+                list[i] = (int)blacklist[i];
             }
             _blacklist = list;
         }
 
         /// <summary>
-        /// 设置黑名单
+        /// 设置黑名单，搜索匹配前，请设置UseBlacklistFilter=true
         /// </summary>
         /// <param name="blacklist"></param>
         public void SetBlacklist(int[] blacklist)
         {
+            if (_keywords == null) {
+                throw new NullReferenceException("请先使用SetKeywords方法设置关键字！");
+            }
+            if (blacklist.Length != _keywords.Length) {
+                throw new ArgumentException("请关键字与黑名单列表的长度要一样长！");
+            }
+
             _blacklist = blacklist;
         }
         #endregion
 
         #region 设置关键字
         /// <summary>
-        /// 设置关键字
+        /// 设置关键字，设置前请核对UseDBCcaseConverter、UseSimplifiedChineseConverter的值，两值可对关键字有影响
         /// </summary>
         /// <param name="keywords">关键字列表</param>
         public void SetKeywords(ICollection<string> keywords)
