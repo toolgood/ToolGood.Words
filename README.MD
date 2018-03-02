@@ -10,7 +10,7 @@ ToolGood.Words.Contrast:    字符串搜索对比
 ToolGood.Words.Test:        单元测试
 ToolGood.Words:             本项目源代码
 ```
-#### 版本升能说明：
+#### 版本升级说明：
 已支持 .net standard，删除`IllegalWordsQuickSearch`、`IllegalWordsSearchEx`类，新增错字转化类`TypoConverter`。
 
 
