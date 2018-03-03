@@ -11,7 +11,7 @@ ToolGood.Words.Test:        单元测试
 ToolGood.Words:             本项目源代码
 ```
 #### 版本升级说明：
-已支持 .net standard，删除`IllegalWordsQuickSearch`、`IllegalWordsSearchEx`类，新增错字转化类`TypoConverter`。
+已支持 .net standard，删除`IllegalWordsQuickSearch`、`IllegalWordsSearchEx`类。
 
 
 ## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
