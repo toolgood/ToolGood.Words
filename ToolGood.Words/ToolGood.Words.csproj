@@ -25,7 +25,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <FileVersion>2.2.1.0</FileVersion>
-    <Version>2.2.1.0</Version>
+    <Version>2.2.2.0</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
