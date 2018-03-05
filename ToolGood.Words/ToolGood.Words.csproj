@@ -24,8 +24,8 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <FileVersion>2.2.0.0</FileVersion>
-    <Version>2.2.0.0</Version>
+    <FileVersion>2.2.1.0</FileVersion>
+    <Version>2.2.1.0</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

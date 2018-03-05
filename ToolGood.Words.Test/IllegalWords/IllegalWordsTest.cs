@@ -109,5 +109,36 @@ namespace ToolGood.Words.Test
 
 
         }
+
+        [Test]
+        public void NumberTypoSearchTest()
+        {
+            string s = "123456|778899|11";
+            string test = "123456789";
+
+            NumberTypoSearch search = new NumberTypoSearch();
+            search.SetKeywords(s.Split('|'));
+
+            var all = search.FindAll("依依");
+            Assert.AreEqual("11", all[0].Keyword);
+            Assert.AreEqual("依依", all[0].SrcString);
+            Assert.AreEqual(1, all.Count);
+
+        }
+
+        [Test]
+        public void StringTypoSearchTest()
+        {
+            string s = "http://fanyi.baidu.com/|778899|11";
+
+            StringTypoSearch search = new StringTypoSearch();
+            search.SetKeywords(s.Split('|'));
+
+            var all = search.FindAll(" http://fanyi删.bai除du.com/");
+            Assert.AreEqual("http://fanyi.baidu.com/", all[0].Keyword);
+            Assert.AreEqual(1, all.Count);
+
+
+        }
     }
 }
