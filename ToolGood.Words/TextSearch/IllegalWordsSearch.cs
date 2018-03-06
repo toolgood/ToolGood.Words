@@ -459,6 +459,13 @@ namespace ToolGood.Words
         /// <param name="blacklist"></param>
         public void SetBlacklist(BlacklistType[] blacklist)
         {
+            if (_keywords == null) {
+                throw new NullReferenceException("请先使用SetKeywords方法设置关键字！");
+            }
+            if (blacklist.Length != _keywords.Length) {
+                throw new ArgumentException("请关键字与黑名单列表的长度要一样长！");
+            }
+
             var list = new int[blacklist.Length];
             for (int i = 0; i < blacklist.Length; i++) {
                 list[i] = (int)blacklist[i];
@@ -472,6 +479,13 @@ namespace ToolGood.Words
         /// <param name="blacklist"></param>
         public void SetBlacklist(int[] blacklist)
         {
+            if (_keywords == null) {
+                throw new NullReferenceException("请先使用SetKeywords方法设置关键字！");
+            }
+            if (blacklist.Length != _keywords.Length) {
+                throw new ArgumentException("请关键字与黑名单列表的长度要一样长！");
+            }
+
             _blacklist = blacklist;
         }
         #endregion
