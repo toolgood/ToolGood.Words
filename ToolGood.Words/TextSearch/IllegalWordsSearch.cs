@@ -350,7 +350,7 @@ namespace ToolGood.Words
         {
             if (UseBlacklistFilter) {
                 var b = _blacklist[index];
-                if ((b | flag) == b) { return null; }
+                if ((b | flag) != b) { return null; }
             }
             var keyword = _keywords[index];
             var start = FindStart(keyword, end, srcText, p, pIndex);

@@ -15,6 +15,7 @@ namespace ToolGood.Words.Test
         public void IllegalWordsSearchTest()
         {
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood|assert|zgasser";
+            int[] bl = new int[] {7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7};
             string test = "我是中国人";
 
 
@@ -107,6 +108,12 @@ namespace ToolGood.Words.Test
             var ss = iwords.Replace(test, '*');
             Assert.AreEqual("我是【****", ss);
 
+            test = "我是中国人"; //使用黑名单
+            iwords.SetBlacklist(bl);
+            iwords.UseBlacklistFilter = true;
+            all = iwords.FindAll(test,1);
+            Assert.AreEqual("中国", all[0].SrcString);
+            Assert.AreEqual(1, all.Count);
 
         }
 
