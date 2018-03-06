@@ -14,6 +14,16 @@ namespace ToolGood.Words
             End = end;
             Start = start;
             SrcString = srcText.Substring(Start, end - Start + 1);
+            BlacklistType = BlacklistType.None;
+        }
+        internal IllegalWordsSearchResult(string keyword, int start, int end, string srcText, BlacklistType type)
+        {
+            Keyword = keyword;
+            Success = true;
+            End = end;
+            Start = start;
+            SrcString = srcText.Substring(Start, end - Start + 1);
+            BlacklistType = type;
         }
 
         private IllegalWordsSearchResult()
@@ -44,6 +54,11 @@ namespace ToolGood.Words
         /// 关键字
         /// </summary>
         public string Keyword { get; private set; }
+
+        /// <summary>
+        /// 黑名单类型
+        /// </summary>
+        public BlacklistType BlacklistType { get; private set; }
 
         public static IllegalWordsSearchResult Empty { get { return new IllegalWordsSearchResult(); } }
 

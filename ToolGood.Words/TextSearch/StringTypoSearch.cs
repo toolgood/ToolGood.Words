@@ -77,7 +77,7 @@ namespace ToolGood.Words
             toWord = new char[char.MaxValue + 1];
 
             buildWordConverter(GetTypos());
-         }
+        }
 
         protected virtual string GetTypos()
         {
@@ -129,11 +129,9 @@ namespace ToolGood.Words
                 if (p != 0) {
                     pIndex[i] = p;
                     if (findIndex != 0 && c == 0) {
-                        if (TestBlacklist(findIndex, flag)) {
-                            foreach (var item in _guides[findIndex]) {
-                                var r = GetIllegalResult(_keywords[item], i - 1, text, p, pIndex);
-                                if (r != null) { results.Add(r); }
-                            }
+                        foreach (var item in _guides[findIndex]) {
+                            var r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
+                            if (r != null) { results.Add(r); }
                         }
                     }
                 }
@@ -156,11 +154,9 @@ namespace ToolGood.Words
 
             }
             if (findIndex != 0) {
-                if (TestBlacklist(findIndex, flag)) {
-                    foreach (var item in _guides[findIndex]) {
-                        var r = GetIllegalResult(_keywords[item], text.Length - 1, text, p, pIndex);
-                        if (r != null) { results.Add(r); }
-                    }
+                foreach (var item in _guides[findIndex]) {
+                    var r = GetIllegalResult(item, text.Length - 1, text, p, pIndex, flag);
+                    if (r != null) { results.Add(r); }
                 }
             }
             return results;
@@ -194,11 +190,9 @@ namespace ToolGood.Words
                 if (p != 0) {
                     pIndex[i] = p;
                     if (findIndex != 0 && c == 0) {
-                        if (TestBlacklist(findIndex, flag)) {
-                            foreach (var item in _guides[findIndex]) {
-                                var r = GetIllegalResult(_keywords[item], i - 1, text, p, pIndex);
-                                if (r != null) return r;
-                            }
+                        foreach (var item in _guides[findIndex]) {
+                            var r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
+                            if (r != null) return r;
                         }
                     }
                 }
@@ -221,14 +215,11 @@ namespace ToolGood.Words
 
             }
             if (findIndex != 0) {
-                if (TestBlacklist(findIndex, flag)) {
-                    foreach (var item in _guides[findIndex]) {
-                        var r = GetIllegalResult(_keywords[item], text.Length - 1, text, p, pIndex);
-                        if (r != null) return r;
-                    }
+                foreach (var item in _guides[findIndex]) {
+                    var r = GetIllegalResult(item, text.Length - 1, text, p, pIndex, flag);
+                    if (r != null) return r;
                 }
             }
-
 
             return null;
         }
@@ -263,9 +254,9 @@ namespace ToolGood.Words
                 if (p != 0) {
                     pIndex[i] = p;
                     if (findIndex != 0 && c == 0) {
-                        if (TestBlacklist(findIndex, flag)) {
-                            var s = FindStart(_keywords[_guides[findIndex][0]], i - 1, text, p, pIndex);
-                            if (s != -1) { return true; }
+                        foreach (var item in _guides[findIndex]) {
+                            var r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
+                            if (r != null) return true;
                         }
                     }
                 }
@@ -288,9 +279,9 @@ namespace ToolGood.Words
 
             }
             if (findIndex != 0) {
-                if (TestBlacklist(findIndex, flag)) {
-                    var s = FindStart(_keywords[_guides[findIndex][0]], text.Length - 1, text, p, pIndex);
-                    if (s != -1) { return true; }
+                foreach (var item in _guides[findIndex]) {
+                    var r = GetIllegalResult(item, text.Length - 1, text, p, pIndex, flag);
+                    if (r != null) return true;
                 }
             }
             return false;
@@ -330,11 +321,11 @@ namespace ToolGood.Words
                 if (p != 0) {
                     pIndex[i] = p;
                     if (findIndex != 0 && c == 0) {
-                        if (TestBlacklist(findIndex, flag)) {
-                            var keyword = _keywords[_guides[findIndex][0]];
-                            var start = FindStart(keyword, i - 1, text, p, pIndex);
-                            if (start != -1) {
-                                for (int j = start; j < i; j++) { result[j] = replaceChar; }
+                        foreach (var item in _guides[findIndex]) {
+                            var r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
+                            if (r != null) {
+                                for (int j = r.Start; j < i; j++) { result[j] = replaceChar; }
+                                break;
                             }
                         }
                     }
@@ -357,13 +348,11 @@ namespace ToolGood.Words
                 }
             }
             if (findIndex != 0) {
-                if (TestBlacklist(findIndex, flag)) {
-                    var keyword = _keywords[_guides[findIndex][0]];
-                    var start = FindStart(keyword, text.Length - 1, text, p, pIndex);
-                    if (start != -1) {
-                        for (int j = start; j < text.Length; j++) {
-                            result[j] = replaceChar;
-                        }
+                foreach (var item in _guides[findIndex]) {
+                    var r = GetIllegalResult(item, text.Length - 1, text, p, pIndex, flag);
+                    if (r != null) {
+                        for (int j = r.Start; j < text.Length; j++) { result[j] = replaceChar; }
+                        break;
                     }
                 }
             }
@@ -371,7 +360,7 @@ namespace ToolGood.Words
         }
 
 
-        protected bool IsEnglishOrNumber(char c)
+        private bool IsEnglishOrNumber(char c)
         {
             if (c < 128) {
                 if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
@@ -383,6 +372,11 @@ namespace ToolGood.Words
 
         private int FindStart(string keyword, int end, string srcText, int p, int[] pIndex)
         {
+            if (end + 1 < srcText.Length) {
+                var en1 = IsEnglishOrNumber(srcText[end + 1]);
+                var en2 = IsEnglishOrNumber(srcText[end]);
+                if (en1 && en2) { return -1; }
+            }
             var n = keyword.Length;
             var start = end;
             int pp = p;
@@ -391,30 +385,29 @@ namespace ToolGood.Words
                 if (pi != pp) { n--; pp = pi; }
                 if (start == -1) return 0;
             }
-            if (IsEnglishOrNumber(srcText[start])) {
+            var sn1 = IsEnglishOrNumber(srcText[start++]);
+            var sn2 = IsEnglishOrNumber(srcText[start]);
+            if (sn1 && sn2) {
                 return -1;
             }
-            start++;
             return start;
         }
 
-        private IllegalWordsSearchResult GetIllegalResult(string keyword, int end, string srcText, int p, int[] pIndex)
-        {
-            var start = FindStart(keyword, end, srcText, p, pIndex);
-            if (start == -1) {
-                return null;
-            }
-            return new IllegalWordsSearchResult(keyword, start, end, srcText);
-        }
-
-        private bool TestBlacklist(int index, int flag)
+        private IllegalWordsSearchResult GetIllegalResult(int index, int end, string srcText, int p, int[] pIndex, int flag)
         {
             if (UseBlacklistFilter) {
                 var b = _blacklist[index];
-                return (b | flag) == b;
+                if ((b | flag) == b) { return null; }
             }
-            return true;
+            var keyword = _keywords[index];
+            var start = FindStart(keyword, end, srcText, p, pIndex);
+            if (start == -1) { return null; }
+            if (UseBlacklistFilter) {
+                return new IllegalWordsSearchResult(keyword, start, end, srcText, (BlacklistType)_blacklist[index]);
+            }
+            return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
+ 
         #endregion
 
 
