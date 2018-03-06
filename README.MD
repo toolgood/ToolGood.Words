@@ -62,7 +62,7 @@ ToolGood.Words:             本项目源代码
 * `WordsSearch`、`WordsSearchEx`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
-搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，开始位置、结束位置。
+搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
 * `IllegalWordsSearch`、`StringSearchEx`、`WordsSearchEx` 使用`Save`、`Load`方法，可以加快初始化。
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
 * `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
@@ -92,7 +92,7 @@ ToolGood.Words:             本项目源代码
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](10W次性能对比(20180302).png)
+![10W次性能对比](10W次性能对比(20180306).png)
 
 注:C#自带正则很慢，`StringSearchEx.ContainsAny`是`Regex.IsMatch`效率的2万倍多。
 
