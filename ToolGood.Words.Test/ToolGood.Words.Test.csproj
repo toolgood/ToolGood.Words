@@ -53,6 +53,12 @@
     <Compile Include="WordsSearch\WordsSearchTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_Illegal\IllegalKeywords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_Illegal\IllegalUrls.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="_texts\147种水果的名字.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

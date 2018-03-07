@@ -15,24 +15,24 @@ namespace ToolGood.Words.internals
             public TrieNode Failure;
             public char Char;
             internal bool End;
-            internal List<int> Results;
+            internal List<Int32> Results;
             internal Dictionary<char, TrieNode> m_values;
             internal Dictionary<char, TrieNode> merge_values;
-            private int minflag = int.MaxValue;
-            private int maxflag = 0;
-            internal int Next;
-            private int Count;
+            private Int32 minflag = Int32.MaxValue;
+            private Int32 maxflag = 0;
+            internal Int32 Next;
+            private Int32 Count;
 
             public TrieNode()
             {
                 m_values = new Dictionary<char, TrieNode>();
                 merge_values = new Dictionary<char, TrieNode>();
-                Results = new List<int>();
+                Results = new List<Int32>();
             }
 
             public bool TryGetValue(char c, out TrieNode node)
             {
-                if (minflag <= (int)c && maxflag >= (int)c) {
+                if (minflag <= (Int32)c && maxflag >= (Int32)c) {
                     return m_values.TryGetValue(c, out node);
                 }
                 node = null;
@@ -58,7 +58,7 @@ namespace ToolGood.Words.internals
                 return node;
             }
 
-            public void SetResults(int text)
+            public void SetResults(Int32 text)
             {
                 if (End == false) {
                     End = true;
@@ -86,31 +86,31 @@ namespace ToolGood.Words.internals
                 }
             }
 
-            public int Rank(TrieNode[] has)
+            public Int32 Rank(TrieNode[] has)
             {
                 bool[] seats = new bool[has.Length];
-                int start = 1;
+                Int32 start = 1;
 
                 has[0] = this;
 
                 Rank(ref start, seats, has);
-                int maxCount = has.Length - 1;
+                Int32 maxCount = has.Length - 1;
                 while (has[maxCount] == null) { maxCount--; }
                 return maxCount;
             }
 
-            private void Rank(ref int start, bool[] seats, TrieNode[] has)
+            private void Rank(ref Int32 start, bool[] seats, TrieNode[] has)
             {
                 if (maxflag == 0) return;
-                var keys = m_values.Select(q => (int)q.Key).ToList();
-                keys.AddRange(merge_values.Select(q => (int)q.Key).ToList());
+                var keys = m_values.Select(q => (Int32)q.Key).ToList();
+                keys.AddRange(merge_values.Select(q => (Int32)q.Key).ToList());
 
                 while (has[start] != null) { start++; }
-                var s = start < (int)minflag ? (int)minflag : start;
+                var s = start < (Int32)minflag ? (Int32)minflag : start;
 
-                for (int i = s; i < has.Length; i++) {
+                for (Int32 i = s; i < has.Length; i++) {
                     if (has[i] == null) {
-                        var next = i - (int)minflag;
+                        var next = i - (Int32)minflag;
                         //if (next < 0) continue;
                         if (seats[next]) continue;
 
@@ -133,7 +133,7 @@ namespace ToolGood.Words.internals
             }
 
 
-            private void SetSeats(int next, bool[] seats, TrieNode[] has)
+            private void SetSeats(Int32 next, bool[] seats, TrieNode[] has)
             {
                 Next = next;
                 seats[next] = true;
@@ -156,11 +156,11 @@ namespace ToolGood.Words.internals
 
         #region 私有变量
         protected string[] _keywords;
-        protected int[][] _guides;
-        protected int[] _key;
-        protected int[] _next;
-        protected int[] _check;
-        protected int[] _dict;
+        protected Int32[][] _guides;
+        protected Int32[] _key;
+        protected Int32[] _next;
+        protected Int32[] _check;
+        protected Int32[] _dict;
         #endregion
 
 
@@ -237,30 +237,30 @@ namespace ToolGood.Words.internals
 
         protected byte[] CharArrToByteArr(char[] intArr)
         {
-            int intSize = sizeof(char) * intArr.Length;
+            Int32 intSize = sizeof(char) * intArr.Length;
             byte[] bytArr = new byte[intSize];
             Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
             return bytArr;
         }
 
-        protected byte[] IntArrToByteArr(int[] intArr)
+        protected byte[] IntArrToByteArr(Int32[] intArr)
         {
-            int intSize = sizeof(int) * intArr.Length;
+            Int32 intSize = sizeof(Int32) * intArr.Length;
             byte[] bytArr = new byte[intSize];
             Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
             return bytArr;
         }
         protected byte[] BoolArrToByteArr(bool[] intArr)
         {
-            int intSize = sizeof(bool) * intArr.Length;
+            Int32 intSize = sizeof(bool) * intArr.Length;
             byte[] bytArr = new byte[intSize];
             Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
             return bytArr;
         }
 
-        #endregion
+#endregion
 
-        #region 加载文件
+#region 加载文件
         /// <summary>
         /// 加载文件
         /// </summary>
@@ -317,44 +317,48 @@ namespace ToolGood.Words.internals
             }
 
             length = br.ReadInt32();
-            _key = ByteArrToIntArr(br.ReadBytes(length));
+            bs = br.ReadBytes(length);
+            _key = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
-            _next = ByteArrToIntArr(br.ReadBytes(length));
+            bs = br.ReadBytes(length);
+            _next = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
-            _check = ByteArrToIntArr(br.ReadBytes(length));
+            bs = br.ReadBytes(length);
+            _check = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
-            _dict = ByteArrToIntArr(br.ReadBytes(length));
+            bs = br.ReadBytes(length);
+            _dict = ByteArrToIntArr(bs);
         }
 
         protected char[] ByteArrToCharArr(byte[] btArr)
         {
-            int intSize = btArr.Length / sizeof(char);
+            Int32 intSize = btArr.Length / sizeof(char);
             char[] intArr = new char[intSize];
-            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
+            Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }
 
-        protected int[] ByteArrToIntArr(byte[] btArr)
+        protected Int32[] ByteArrToIntArr(byte[] btArr)
         {
-            int intSize = btArr.Length / sizeof(int);
-            int[] intArr = new int[intSize];
-            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
+            Int32 intSize = btArr.Length / sizeof(Int32);
+            Int32[] intArr = new Int32[intSize];
+            Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }
 
         protected bool[] ByteArrToBoolArr(byte[] btArr)
         {
-            int intSize = btArr.Length / sizeof(bool);
+            Int32 intSize = btArr.Length / sizeof(bool);
             bool[] intArr = new bool[intSize];
-            Buffer.BlockCopy(btArr, 0, intArr, 0, intSize);
+            Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }
-        #endregion
+#endregion
 
-        #region 设置关键字
+#region 设置关键字
         /// <summary>
         /// 设置关键字
         /// </summary>
@@ -365,10 +369,10 @@ namespace ToolGood.Words.internals
             var length = CreateDict(keywords);
             var root = new TrieNode();
 
-            for (int i = 0; i < _keywords.Length; i++) {
+            for (Int32 i = 0; i < _keywords.Length; i++) {
                 var p = _keywords[i];
                 var nd = root;
-                for (int j = 0; j < p.Length; j++) {
+                for (Int32 j = 0; j < p.Length; j++) {
                     nd = nd.Add((char)_dict[p[j]]);
                 }
                 nd.SetResults(i);
@@ -420,16 +424,16 @@ namespace ToolGood.Words.internals
             }
         }
 
-        private void build(TrieNode root, int length)
+        private void build(TrieNode root, Int32 length)
         {
             TrieNode[] has = new TrieNode[0x00FFFFFF];
             length = root.Rank(has) + length + 1;
-            _key = new int[length];
-            _next = new int[length];
-            _check = new int[length];
-            List<int[]> guides = new List<int[]>();
-            guides.Add(new int[] { 0 });
-            for (int i = 0; i < length; i++) {
+            _key = new Int32[length];
+            _next = new Int32[length];
+            _check = new Int32[length];
+            List<Int32[]> guides = new List<Int32[]>();
+            guides.Add(new Int32[] { 0 });
+            for (Int32 i = 0; i < length; i++) {
                 var item = has[i];
                 if (item == null) continue;
                 _key[i] = item.Char;
@@ -442,16 +446,16 @@ namespace ToolGood.Words.internals
             _guides = guides.ToArray();
         }
 
-        #endregion
+#endregion
 
-        #region 生成映射字典
+#region 生成映射字典
 
-        private int CreateDict(ICollection<string> keywords)
+        private Int32 CreateDict(ICollection<string> keywords)
         {
-            Dictionary<char, int> dictionary = new Dictionary<char, int>();
+            Dictionary<char, Int32> dictionary = new Dictionary<char, Int32>();
 
             foreach (var keyword in keywords) {
-                for (int i = 0; i < keyword.Length; i++) {
+                for (Int32 i = 0; i < keyword.Length; i++) {
                     var item = keyword[i];
                     if (dictionary.ContainsKey(item)) {
                         if (i > 0)
@@ -472,12 +476,12 @@ namespace ToolGood.Words.internals
                 }
                 sh = !sh;
             }
-            _dict = new int[char.MaxValue + 1];
-            for (int i = 0; i < list2.Count; i++) {
+            _dict = new Int32[char.MaxValue + 1];
+            for (Int32 i = 0; i < list2.Count; i++) {
                 _dict[list2[i]] = i + 1;
             }
             return dictionary.Count;
         }
-        #endregion
+#endregion
     }
 }
