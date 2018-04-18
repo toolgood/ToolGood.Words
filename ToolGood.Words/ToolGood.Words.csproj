@@ -19,7 +19,6 @@
         <RepositoryUrl>git://github.com/toolgood/ToolGood.Words</RepositoryUrl>
         <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dotnet</PackageTargetFallback>
         <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard2.0' ">$(PackageTargetFallback);dotnet</PackageTargetFallback>
-        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
         <AutoUnifyAssemblyReferences Condition="'$(TargetFramework)' == 'net40'">false</AutoUnifyAssemblyReferences>
         <RootNamespace>ToolGood.Words</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
