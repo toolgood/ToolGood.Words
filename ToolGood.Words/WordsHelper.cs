@@ -10,7 +10,7 @@ namespace ToolGood.Words
     {
         #region 拼音 操作
         /// <summary>
-        /// 获取首字母
+        /// 获取首字母，中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -20,7 +20,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取拼音全拼  不支持多音
+        /// 获取拼音全拼, 不支持多音,中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取拼音全拼 支持多音
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取所有拼音
+        /// 获取所有拼音,中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
@@ -118,7 +118,7 @@ namespace ToolGood.Words
 
         #region 判断输入是否为中文
         /// <summary>
-        /// 判断输入是否为中文  
+        /// 判断输入是否为中文  ,中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
@@ -131,7 +131,7 @@ namespace ToolGood.Words
             }
         }
         /// <summary>
-        /// 判断输入是否全为中文  
+        /// 判断输入是否全为中文,中文字符集为[0x4E00,0x9FA5]
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
