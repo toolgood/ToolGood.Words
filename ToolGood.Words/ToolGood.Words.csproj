@@ -23,9 +23,10 @@
         <RootNamespace>ToolGood.Words</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <FileVersion>2.3.3.0</FileVersion>
-        <Version>2.3.3.0</Version>
+        <FileVersion>2.3.3.1</FileVersion>
+        <Version>2.3.3.1</Version>
         <PackageReleaseNotes></PackageReleaseNotes>
+        <AssemblyVersion>2.3.3.1</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">

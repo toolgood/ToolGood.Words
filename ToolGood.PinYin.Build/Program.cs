@@ -21,9 +21,14 @@ namespace ToolGood.PinYin.Build
         #region 生成拼音索引
         static void buildPinYinIndex()
         {
-            var index = 0x4e00;
+            buildPinYinIndex(0x4e00, 0x9fcb, "pyIndex.txt", "pyData.txt");
+            buildPinYinIndex(0x3400, 0x4DB5, "pyIndex2.txt", "pyData2.txt");
+        }
+        static void buildPinYinIndex(int start,int end,string outIndexFile,string outDataFile)
+        {
+            var index = start;
             List<HashSet<int>> t = new List<HashSet<int>>();
-            while (index <= 0x9fa5) {
+            while (index <= end) {
                 var ch = (char)index;
 
                 HashSet<int> ls = new HashSet<int>();
@@ -76,12 +81,9 @@ namespace ToolGood.PinYin.Build
                 }
 
             }
-
-
-            File.WriteAllText("pyIndex.txt", string.Join(",", node));
+            File.WriteAllText(outIndexFile, string.Join(",", node));
             sb.Remove(0, 1);
-            File.WriteAllText("pyData.txt", sb.ToString());
-
+            File.WriteAllText(outDataFile, sb.ToString());
         }
 
         static int getPinYin(char ch)
@@ -214,6 +216,7 @@ namespace ToolGood.PinYin.Build
         {
             if (_dict == null) {
                 var dict2 = "诘|Ji|揲|Ye|棓|Bei|足|Ju|栟|Ben|咯|Luo|迹|Gui|欻|Chua|耨|Nou|埏|Yan|囋|Can|噭|Chi|案|Wan|燝|Zhu|膻|Dan|汝|Zhuang|艹|Ao|磹|Tan|厖|Pang|观|Guang|窾|Kua|搂|Sou|继|Xu|房|Pang|黮|Shen|愬|Shuo|矜|Guan|盻|Pan|射|Ye|景|Ying|潠|Xun|蓧|Di|黈|Tou|从|Zong|洞|Tong|譳|Rou|鸊|Pi|桁|Hang|槱|Chao|被|Pi|擘|Bai|岂|Kai|铦|Kuo|瑱|Zhen|囝|Nan|嬛|Huan|乐|Lao|崚|Leng|蹻|Jue|浰|Li|摵|Se|梴|Yan|嶰|Jie|谌|Shen|撍|Qian|穞|Lu|黾|Meng|隩|Ao|刓|Liang|墄|Qi|擿|Zhe|能|Nan|居|Ji|及|Xi|揭|Qi|吾|Yu|扐|Cai|刓|Shu|啜|Shu|晻|Yan|兼|Xian|忒|Tei|痁|Dian|莫|Mu|宕|Tan|摘|Ti|灒|Cuan|什|Za|适|Di|逤|Suo|螫|Zhe|伈|Xin|扢|Jie|花|Hu|么|Mo|餧|Si|箐|Jing|禜|Ying|庳|Bei|硾|Chui|燋|Zhuo|棽|Shen|濊|Hun|泽|Shi|漱|Shou|摄|Nie|耆|Shi";
+                dict2 += "|㘄|Leng|䉄|Leng|䬋|Leng|䮚|Leng|䚏|Leng|䚏|Li|䚏|Lin|㭁|Reng|䖆|Niang";
                 var sp = dict2.Split('|');
                 _dict = new Dictionary<string, string>();
                 for (int i = 0; i < sp.Length; i += 2) {
