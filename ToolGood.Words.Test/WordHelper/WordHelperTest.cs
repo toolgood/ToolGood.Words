@@ -13,6 +13,9 @@ namespace ToolGood.Words.Test
         [Test]
         public void GetPinYin()
         {
+            var t = WordsHelper.GetAllPinYin('芃');
+            Assert.AreEqual("Peng", t[0]);
+
             var a = WordsHelper.GetPinYinFast("阿");
             Assert.AreEqual("A", a);
 
@@ -23,7 +26,7 @@ namespace ToolGood.Words.Test
             b = WordsHelper.GetPinYin("秘鲁");
             Assert.AreEqual("BiLu", b);
 
-            
+
 
             var py = WordsHelper.GetPinYinFast("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
