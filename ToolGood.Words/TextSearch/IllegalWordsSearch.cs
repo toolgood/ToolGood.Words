@@ -36,6 +36,10 @@ namespace ToolGood.Words
         /// </summary>
         public bool UseSimplifiedChineseConverter = true;
 
+        /// <summary>
+        /// 使用忽略大小写
+        /// </summary>
+        public bool UseIgnoreCase = true;
         #endregion
 
         public IllegalWordsSearch()
@@ -363,13 +367,17 @@ namespace ToolGood.Words
  
         private char ToSenseWord(char c)
         {
-            if (c >= 'A' && c <= 'Z') return (char)(c | 0x20);
+            if (UseIgnoreCase) {
+                if (c >= 'A' && c <= 'Z') return (char)(c | 0x20);
+            }
             if (UseDBCcaseConverter) {
                 if (c == 12288) return ' ';
                 if (c >= 65280 && c < 65375) {
                     var k = (c - 65248);
-                    if ('A' <= k && k <= 'Z') {
-                        k = k | 0x20;
+                    if (UseIgnoreCase) {
+                        if ('A' <= k && k <= 'Z') {
+                            k = k | 0x20;
+                        }
                     }
                     return (char)k;
                 }
@@ -412,6 +420,7 @@ namespace ToolGood.Words
 
             bw.Write(UseDBCcaseConverter);
             bw.Write(UseSimplifiedChineseConverter);
+            bw.Write(UseIgnoreCase);
         }
 
         #endregion
@@ -433,6 +442,9 @@ namespace ToolGood.Words
 
             UseDBCcaseConverter = br.ReadBoolean();
             UseSimplifiedChineseConverter = br.ReadBoolean();
+            try {
+                UseIgnoreCase = br.ReadBoolean();
+            } catch (Exception) { }
         }
         #endregion
 

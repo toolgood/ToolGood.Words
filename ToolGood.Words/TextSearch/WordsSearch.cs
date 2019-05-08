@@ -79,7 +79,7 @@ namespace ToolGood.Words
         #endregion
 
         #region 私有变量
-        private TrieNode _root = new TrieNode();
+        //private TrieNode _root = new TrieNode();
         private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
         #endregion
 
@@ -147,7 +147,7 @@ namespace ToolGood.Words
                 item.Key.Merge(item.Value);
             }
 
-            _root = root;
+            //_root = root;
         }
 
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)

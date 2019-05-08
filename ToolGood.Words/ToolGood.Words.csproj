@@ -14,7 +14,7 @@
         <PackageId>ToolGood.Words</PackageId>
         <PackageTags>word-filter;stringsearch;wordssearch;pinyin;textfilter;wordfilter;text-filter;sensitive-word-filter;aho-corasick;string-matching;text-matching;text-search;trietree;filter;textsearch</PackageTags>
         <PackageProjectUrl>https://github.com/toolgood/ToolGood.Words</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/toolgood/ToolGood.Words/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageLicenseUrl></PackageLicenseUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>git://github.com/toolgood/ToolGood.Words</RepositoryUrl>
         <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dotnet</PackageTargetFallback>
@@ -23,10 +23,11 @@
         <RootNamespace>ToolGood.Words</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <FileVersion>2.3.3.2</FileVersion>
-        <Version>2.3.3.2</Version>
+        <FileVersion>2.3.3.3</FileVersion>
+        <Version>2.3.3.3</Version>
         <PackageReleaseNotes></PackageReleaseNotes>
-        <AssemblyVersion>2.3.3.2</AssemblyVersion>
+        <AssemblyVersion>2.3.3.3</AssemblyVersion>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
@@ -37,6 +38,13 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">

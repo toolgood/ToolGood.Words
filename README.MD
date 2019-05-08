@@ -66,6 +66,7 @@ ToolGood.Words:             本项目源代码
 * `IllegalWordsSearch`、`StringSearchEx`、`WordsSearchEx` 使用`Save`、`Load`方法，可以加快初始化。
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
 * `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
+* `IllegalWordsSearch`字段`UseIgnoreCase`：设置是忽略否大小写,必须在`SetKeywords`方法之前，注：使用`Load`方法则该字段无效。
 
 ``` csharp
     string s = "中国|国人|zg人";

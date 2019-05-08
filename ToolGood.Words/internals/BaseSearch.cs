@@ -7,7 +7,7 @@ namespace ToolGood.Words.internals
 {
     public abstract class BaseSearch
     {
-        protected TrieNode _root = new TrieNode();
+        //protected TrieNode _root = new TrieNode();
         protected TrieNode[] _first = new TrieNode[char.MaxValue + 1];
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ToolGood.Words.internals
                 item.Key.Merge(item.Value, links);
             }
 
-            _root = root;
+            //_root = root;
         }
 
         private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)

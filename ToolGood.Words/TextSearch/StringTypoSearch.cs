@@ -32,6 +32,11 @@ namespace ToolGood.Words
 
         private int _maxJump = 5;//设置一个最大大跳跃点
         private char[] toWord;
+
+        /// <summary>
+        /// 使用忽略大小写
+        /// </summary>
+        public bool UseIgnoreCase = true;
         #endregion
 
         #region 构造函数
@@ -407,7 +412,7 @@ namespace ToolGood.Words
             }
             return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
- 
+
         #endregion
 
 
@@ -431,6 +436,8 @@ namespace ToolGood.Words
             bs = CharArrToByteArr(toWord);
             bw.Write(bs.Length);
             bw.Write(bs);
+
+            bw.Write(UseIgnoreCase);
         }
 
         #endregion
@@ -452,7 +459,9 @@ namespace ToolGood.Words
             _maxJump = br.ReadInt32();
             length = br.ReadInt32();
             toWord = ByteArrToCharArr(br.ReadBytes(length));
-
+            try {
+                UseIgnoreCase = br.ReadBoolean();
+            } catch (Exception) { }
         }
         #endregion
 
@@ -523,12 +532,16 @@ namespace ToolGood.Words
 
         private char ToSenseWord(char c)
         {
-            if (c >= 'A' && c <= 'Z') return (char)(c | 0x20);
+            if (UseIgnoreCase) {
+                if (c >= 'A' && c <= 'Z') return (char)(c | 0x20);
+            }
             if (c == 12288) return ' ';
             if (c >= 65280 && c < 65375) {
                 var k = (c - 65248);
-                if ('A' <= k && k <= 'Z') {
-                    k = k | 0x20;
+                if (UseIgnoreCase) {
+                    if ('A' <= k && k <= 'Z') {
+                        k = k | 0x20;
+                    }
                 }
                 return (char)k;
             }
