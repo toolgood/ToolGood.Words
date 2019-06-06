@@ -357,6 +357,10 @@ namespace ToolGood.Words
                 if ((b | flag) != b) { return null; }
             }
             var keyword = _keywords[index];
+            if (keyword.Length==1) {
+                if (ToSenseWord(srcText[end]) != ToSenseWord(keyword[0])) { return null; }
+                return new IllegalWordsSearchResult(keyword, end, end, srcText);
+            }
             var start = FindStart(keyword, end, srcText, p, pIndex);
             if (start == -1) { return null; }
             if (ToSenseWord(srcText[start]) != ToSenseWord(keyword[0])) { return null; }

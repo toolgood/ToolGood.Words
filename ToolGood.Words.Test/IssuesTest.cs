@@ -41,16 +41,19 @@ namespace ToolGood.Words.Test
             iws.UseDBCcaseConverter = true;
             var iwsFirst = iws.FindFirst(text);
             var iwsAll = iws.FindAll(text);
+            Assert.AreEqual(9, iwsAll.Count);
 
             ss.SetKeywords(keywords);
-            var ssFirst = iws.FindFirst(text);
-            var ssAll = iws.FindAll(text);
+            var ssFirst = ss.FindFirst(text);
+            var ssAll = ss.FindAll(text);
+            Assert.AreEqual(9, ssAll.Count);
 
             sse.SetKeywords(keywords);
-            var sseFirst = iws.FindFirst(text);
-            var sseAll = iws.FindAll(text);
+            var sseFirst = sse.FindFirst(text);
+            var sseAll = sse.FindAll(text);
+            Assert.AreEqual(9, sseAll.Count);
 
-         }
+        }
 
     }
 }
