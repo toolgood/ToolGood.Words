@@ -23,10 +23,10 @@
         <RootNamespace>ToolGood.Words</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <FileVersion>2.3.3.3</FileVersion>
-        <Version>2.3.3.3</Version>
+        <FileVersion>2.3.3.4</FileVersion>
+        <Version>2.3.3.4</Version>
         <PackageReleaseNotes></PackageReleaseNotes>
-        <AssemblyVersion>2.3.3.3</AssemblyVersion>
+        <AssemblyVersion>2.3.3.4</AssemblyVersion>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 

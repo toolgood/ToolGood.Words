@@ -143,7 +143,6 @@ namespace ToolGood.Words.Contrast
             Run("Regex.Match", () => { re2.Match(text); });
             Run("Regex.Matches", () => { re2.Matches(text); });
 
-
             Console.ReadKey();
 
         }
@@ -198,7 +197,7 @@ namespace ToolGood.Words.Contrast
             var str = string.Join("|", list);
             str = Regex.Replace(str, @"([\\\.\+\*\-\(\)\[\]\{\}!])", @"\$1");
 
-            re = new Regex(str);
+            re = new Regex(str, RegexOptions.IgnoreCase);
 
 
             var str2 = tf1.ToString();

@@ -16,7 +16,7 @@ namespace ToolGood.Words.Test
         public void IllegalWordsSearchTest()
         {
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood|assert|zgasser|共产党";
-            int[] bl = new int[] {7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
+            int[] bl = new int[] { 7, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 };
             string test = "我是中国人";
 
 
@@ -126,7 +126,7 @@ namespace ToolGood.Words.Test
         [Test]
         public void IllegalWordsSearchTest2()
         {
-           var t= IllegalWordsVerify.ContainsAny("共产党");
+            var t = IllegalWordsVerify.ContainsAny("共产党");
             Assert.AreEqual(true, t);
         }
 
@@ -158,9 +158,8 @@ namespace ToolGood.Words.Test
             var all = search.FindAll(" http://fanyi删.bai除du.com/");
             Assert.AreEqual("http://fanyi.baidu.com/", all[0].Keyword);
             Assert.AreEqual(1, all.Count);
-
-
         }
+
     }
 
     public static class IllegalWordsVerify
