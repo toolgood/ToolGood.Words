@@ -113,6 +113,7 @@ namespace ToolGood.Words.Contrast
             Run("StringSearchEx（FindFirst）", () => { stringSearchEx.FindFirst(text); });
             Run("StringSearchEx2（FindFirst）", () => { stringSearchEx2.FindFirst(text); });
             Run("WordsSearch（FindFirst）", () => { wordsSearch.FindFirst(text); });
+            Run("WordsSearchEx（FindFirst）", () => { wordsSearchEx.FindFirst(text); });
             Run("WordsSearchEx2（FindFirst）", () => { wordsSearchEx2.FindFirst(text); });
 
             Run("IllegalWordsSearch（FindFirst）", () => { illegalWordsSearch.FindFirst(text); });
