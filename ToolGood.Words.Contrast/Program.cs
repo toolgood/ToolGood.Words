@@ -16,8 +16,10 @@ namespace ToolGood.Words.Contrast
         static FastFilter ff = new FastFilter();
         static StringSearch stringSearch = new StringSearch();
         static StringSearchEx stringSearchEx = new StringSearchEx();
+        static StringSearchEx2 stringSearchEx2 = new StringSearchEx2();
         static WordsSearch wordsSearch = new WordsSearch();
         static WordsSearchEx wordsSearchEx = new WordsSearchEx();
+        static WordsSearchEx2 wordsSearchEx2 = new WordsSearchEx2();
         static IllegalWordsSearch illegalWordsSearch = new IllegalWordsSearch();
         static Regex re;
         static Regex re2;
@@ -104,13 +106,14 @@ namespace ToolGood.Words.Contrast
             Run("TrieFilter", () => { tf1.HasBadWord(text); });
             Run("FastFilter", () => { ff.HasBadWord(text); });
             Run("StringSearch（ContainsAny）", () => { stringSearch.ContainsAny(text); });
+            Run("StringSearchEx（ContainsAny）--- WordsSearch（ContainsAny）代码相同", () => { stringSearchEx.ContainsAny(text); });
+            Run("StringSearchEx2（ContainsAny）--- WordsSearchEx2（ContainsAny）代码相同", () => { stringSearchEx2.ContainsAny(text); });
+
             Run("StringSearch（FindFirst）", () => { stringSearch.FindFirst(text); });
-            Run("StringSearchEx（ContainsAny）", () => { stringSearchEx.ContainsAny(text); });
             Run("StringSearchEx（FindFirst）", () => { stringSearchEx.FindFirst(text); });
-            Run("WordsSearch（ContainsAny）", () => { wordsSearch.ContainsAny(text); });
+            Run("StringSearchEx2（FindFirst）", () => { stringSearchEx2.FindFirst(text); });
             Run("WordsSearch（FindFirst）", () => { wordsSearch.FindFirst(text); });
-            Run("WordsSearchEx（ContainsAny）", () => { wordsSearchEx.ContainsAny(text); });
-            Run("WordsSearchEx（FindFirst）", () => { wordsSearchEx.FindFirst(text); });
+            Run("WordsSearchEx2（FindFirst）", () => { wordsSearchEx2.FindFirst(text); });
 
             Run("IllegalWordsSearch（FindFirst）", () => { illegalWordsSearch.FindFirst(text); });
             Run("IllegalWordsSearch（ContainsAny）", () => { illegalWordsSearch.ContainsAny(text); });
@@ -120,17 +123,22 @@ namespace ToolGood.Words.Contrast
             Run("FastFilter（FindAll）", () => { ff.FindAll(text); });
             Run("StringSearch（FindAll）", () => { stringSearch.FindAll(text); });
             Run("StringSearchEx（FindAll）", () => { stringSearchEx.FindAll(text); });
+            Run("StringSearchEx2（FindAll）", () => { stringSearchEx2.FindAll(text); });
             Run("WordsSearch（FindAll）", () => { wordsSearch.FindAll(text); });
             Run("WordsSearchEx（FindAll）", () => { wordsSearchEx.FindAll(text); });
+            Run("WordsSearchEx2（FindAll）", () => { wordsSearchEx2.FindAll(text); });
+
             Run("IllegalWordsSearch（FindAll）", () => { illegalWordsSearch.FindAll(text); });
             Console.Write("-------------------- Replace --------------------\r\n");
             Run("TrieFilter（Replace）", () => { tf1.Replace(text); });
             Run("FastFilter（Replace）", () => { ff.Replace(text); });
             Run("StringSearch（Replace）", () => { stringSearch.Replace(text); });
-            Run("StringSearchEx（Replace）", () => { stringSearchEx.Replace(text); });
+            Run("StringSearchEx（Replace）--- WordsSearchEx（Replace）代码相同", () => { stringSearchEx.Replace(text); });
+            Run("StringSearchEx2（Replace）--- WordsSearchEx2（Replace）代码相同", () => { stringSearchEx2.Replace(text); });
 
             Run("WordsSearch（Replace）", () => { wordsSearch.Replace(text); });
-            Run("WordsSearchEx（Replace）", () => { wordsSearchEx.Replace(text); });
+            //Run("WordsSearchEx（Replace）", () => { wordsSearchEx.Replace(text); });
+            //Run("WordsSearchEx2（Replace）", () => { wordsSearchEx2.Replace(text); });
             Run("IllegalWordsSearch（Replace）", () => { illegalWordsSearch.Replace(text); });
 
             Console.Write("-------------------- Regex --------------------\r\n");
@@ -189,8 +197,10 @@ namespace ToolGood.Words.Contrast
             //search.Keywords = list.ToArray();
             stringSearch.SetKeywords(list);
             stringSearchEx.SetKeywords(list);
+            stringSearchEx2.SetKeywords(list);
             wordsSearch.SetKeywords(list);
             wordsSearchEx.SetKeywords(list);
+            wordsSearchEx2.SetKeywords(list);
             illegalWordsSearch.SetKeywords(list);
             //iword3 = new IllegalWordsSearch2(list);
             list = list.OrderBy(q => q).ToList();

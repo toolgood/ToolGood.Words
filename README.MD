@@ -93,9 +93,11 @@ ToolGood.Words:             本项目源代码
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](10W次性能对比(20180306).png)
+![10W次性能对比](10W次性能对比(20191013).png)
 
 注:C#自带正则很慢，`StringSearchEx.ContainsAny`是`Regex.IsMatch`效率的2万倍多。
+
+`StringSearchEx2`使用指针，性能比`StringSearchEx`高一点。
 
 `Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 
