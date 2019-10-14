@@ -60,7 +60,8 @@ namespace ToolGood.Words
         public WordsSearchResult FindFirst(string text)
         {
             var p = 0;
-            for (int i = 0; i < text.Length; i++) {
+            var length = text.Length;
+            for (int i = 0; i < length; i++) {
                 var t = (char)_dict[text[i]];
                 if (t == 0) {
                     p = 0;

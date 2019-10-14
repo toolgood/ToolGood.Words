@@ -65,14 +65,17 @@ namespace ToolGood.Words
         /// <returns></returns>
         public unsafe WordsSearchResult FindFirst(string text)
         {
+            var length = text.Length;
+
             fixed (int* _pnext = &_next[0])
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
-            fixed (int* _pdict = &_dict[0]) {
+            fixed (int* _pdict = &_dict[0])
+            fixed (char* _ptext = text) {
 
                 var p = 0;
-                for (int i = 0; i < text.Length; i++) {
-                    var t = *(_pdict + (int)text[i]);
+                for (int i = 0; i < length; i++) {
+                    var t = *(_pdict + (int)*(_ptext + i));
                     if (t == 0) {
                         p = 0;
                         continue;
@@ -116,14 +119,16 @@ namespace ToolGood.Words
         /// <returns></returns>
         public unsafe bool ContainsAny(string text)
         {
+            var length = text.Length;
+
             fixed (int* _pnext = &_next[0])
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
-            fixed (int* _pdict = &_dict[0]) {
-
+            fixed (int* _pdict = &_dict[0])
+            fixed (char* _ptext = text) {
                 var p = 0;
-                foreach (char t1 in text) {
-                    var t = *(_pdict + (int)t1);
+                for (int i = 0; i < length; i++) {
+                    var t = *(_pdict + (int)*(_ptext + i));
                     if (t == 0) {
                         p = 0;
                         continue;
@@ -141,7 +146,6 @@ namespace ToolGood.Words
                         }
                     }
                 }
-
             }
             return false;
         }
@@ -155,16 +159,17 @@ namespace ToolGood.Words
         public unsafe string Replace(string text, char replaceChar = '*')
         {
             StringBuilder result = new StringBuilder(text);
+            var length = text.Length;
 
             fixed (int* _pnext = &_next[0])
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
-            fixed (int* _pdict = &_dict[0]) {
+            fixed (int* _pdict = &_dict[0])
+            fixed (char* _ptext = text) {
 
                 var p = 0;
-
-                for (int i = 0; i < text.Length; i++) {
-                    var t = *(_pdict + (int)text[i]);
+                for (int i = 0; i < length; i++) {
+                    var t = *(_pdict + (int)*(_ptext + i));
                     if (t == 0) {
                         p = 0;
                         continue;
