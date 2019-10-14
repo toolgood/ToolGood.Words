@@ -22,14 +22,18 @@ namespace ToolGood.Words
         public unsafe List<WordsSearchResult> FindAll(string text)
         {
             List<WordsSearchResult> root = new List<WordsSearchResult>();
+            var length = text.Length;
+
             fixed (int* _pnext = &_next[0])
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
-            fixed (int* _pdict = &_dict[0]) {
+            fixed (int* _pdict = &_dict[0])
+            fixed (char* _ptext = text) {
+
                 var p = 0;
 
-                for (int i = 0; i < text.Length; i++) {
-                    var t = *(_pdict + (int)text[i]);
+                for (int i = 0; i < length; i++) {
+                    var t = *(_pdict + (int)*(_ptext + i));
                     if (t == 0) {
                         p = 0;
                         continue;
