@@ -56,17 +56,18 @@ ToolGood.Words:             本项目源代码
 注：`PinYinSearchEx`测试28W关键字，总字数147W，内存使用量32M，输出文件38M。
 
 ## 非法词(敏感词)检测（字符串搜索）
-非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`;
+非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
 
-* `StringSearch`、`StringSearchEx`: 搜索`FindFirst`方法返回结果为`string`类型。
-* `WordsSearch`、`WordsSearchEx`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
+* `StringSearch`、`StringSearchEx`、`StringSearchEx2`: 搜索`FindFirst`方法返回结果为`string`类型。
+* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
-* `IllegalWordsSearch`、`StringSearchEx`、`WordsSearchEx` 使用`Save`、`Load`方法，可以加快初始化。
+* `IllegalWordsSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearchEx`、`WordsSearchEx2` 使用`Save`、`Load`方法，可以加快初始化。
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
 * `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
 * `IllegalWordsSearch`字段`UseIgnoreCase`：设置是忽略否大小写,必须在`SetKeywords`方法之前，注：使用`Load`方法则该字段无效。
+* `StringSearchEx2`、`WordsSearchEx2`为指针版优化片，实测时发现性能浮动比较大。
 
 ``` csharp
     string s = "中国|国人|zg人";
@@ -93,11 +94,9 @@ ToolGood.Words:             本项目源代码
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](10W次性能对比(20191013).png)
+![10W次性能对比](10W次性能对比(20191014).png)
 
-注:C#自带正则很慢，`StringSearchEx.ContainsAny`是`Regex.IsMatch`效率的2万倍多。
-
-`StringSearchEx2`使用指针，性能比`StringSearchEx`高一点。
+注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
 
 `Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 

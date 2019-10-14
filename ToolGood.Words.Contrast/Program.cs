@@ -102,12 +102,13 @@ namespace ToolGood.Words.Contrast
 
 
 
-            Console.Write("-------------------- FindFirst OR ContainsAny --------------------\r\n");
+            Console.Write("-------------------- FindFirst OR ContainsAny 100000次 --------------------\r\n");
             Run("TrieFilter", () => { tf1.HasBadWord(text); });
             Run("FastFilter", () => { ff.HasBadWord(text); });
             Run("StringSearch（ContainsAny）", () => { stringSearch.ContainsAny(text); });
             Run("StringSearchEx（ContainsAny）--- WordsSearch（ContainsAny）代码相同", () => { stringSearchEx.ContainsAny(text); });
             Run("StringSearchEx2（ContainsAny）--- WordsSearchEx2（ContainsAny）代码相同", () => { stringSearchEx2.ContainsAny(text); });
+            Run("IllegalWordsSearch（ContainsAny）", () => { illegalWordsSearch.ContainsAny(text); });
 
             Run("StringSearch（FindFirst）", () => { stringSearch.FindFirst(text); });
             Run("StringSearchEx（FindFirst）", () => { stringSearchEx.FindFirst(text); });
@@ -115,11 +116,9 @@ namespace ToolGood.Words.Contrast
             Run("WordsSearch（FindFirst）", () => { wordsSearch.FindFirst(text); });
             Run("WordsSearchEx（FindFirst）", () => { wordsSearchEx.FindFirst(text); });
             Run("WordsSearchEx2（FindFirst）", () => { wordsSearchEx2.FindFirst(text); });
-
             Run("IllegalWordsSearch（FindFirst）", () => { illegalWordsSearch.FindFirst(text); });
-            Run("IllegalWordsSearch（ContainsAny）", () => { illegalWordsSearch.ContainsAny(text); });
 
-            Console.Write("-------------------- Find All --------------------\r\n");
+            Console.Write("-------------------- Find All 100000次 --------------------\r\n");
             Run("TrieFilter（FindAll）", () => { tf1.FindAll(text); });
             Run("FastFilter（FindAll）", () => { ff.FindAll(text); });
             Run("StringSearch（FindAll）", () => { stringSearch.FindAll(text); });
@@ -130,7 +129,7 @@ namespace ToolGood.Words.Contrast
             Run("WordsSearchEx2（FindAll）", () => { wordsSearchEx2.FindAll(text); });
 
             Run("IllegalWordsSearch（FindAll）", () => { illegalWordsSearch.FindAll(text); });
-            Console.Write("-------------------- Replace --------------------\r\n");
+            Console.Write("-------------------- Replace  100000次 --------------------\r\n");
             Run("TrieFilter（Replace）", () => { tf1.Replace(text); });
             Run("FastFilter（Replace）", () => { ff.Replace(text); });
             Run("StringSearch（Replace）", () => { stringSearch.Replace(text); });
@@ -142,15 +141,15 @@ namespace ToolGood.Words.Contrast
             //Run("WordsSearchEx2（Replace）", () => { wordsSearchEx2.Replace(text); });
             Run("IllegalWordsSearch（Replace）", () => { illegalWordsSearch.Replace(text); });
 
-            Console.Write("-------------------- Regex --------------------\r\n");
-            Run("Regex.IsMatch", () => { re.IsMatch(text); });
-            Run("Regex.Match", () => { re.Match(text); });
-            Run("Regex.Matches", () => { re.Matches(text); });
+            Console.Write("-------------------- Regex  100次 --------------------\r\n");
+            Run(100,"Regex.IsMatch", () => { re.IsMatch(text); });
+            Run(100, "Regex.Match", () => { re.Match(text); });
+            Run(100, "Regex.Matches", () => { re.Matches(text); });
 
-            Console.Write("-------------------- Regex used Trie tree --------------------\r\n");
-            Run("Regex.IsMatch", () => { re2.IsMatch(text); });
-            Run("Regex.Match", () => { re2.Match(text); });
-            Run("Regex.Matches", () => { re2.Matches(text); });
+            Console.Write("-------------------- Regex used Trie tree  100次 --------------------\r\n");
+            Run(100, "Regex.IsMatch", () => { re2.IsMatch(text); });
+            Run(100, "Regex.Match", () => { re2.Match(text); });
+            Run(100, "Regex.Matches", () => { re2.Matches(text); });
 
             Console.ReadKey();
 
