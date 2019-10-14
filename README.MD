@@ -67,7 +67,7 @@ ToolGood.Words:             本项目源代码
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
 * `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
 * `IllegalWordsSearch`字段`UseIgnoreCase`：设置是忽略否大小写,必须在`SetKeywords`方法之前，注：使用`Load`方法则该字段无效。
-* `StringSearchEx2`、`WordsSearchEx2`为指针版优化片，实测时发现性能浮动比较大。
+* `StringSearchEx2`、`WordsSearchEx2`为指针版优化版，实测时发现性能浮动比较大。
 
 ``` csharp
     string s = "中国|国人|zg人";
