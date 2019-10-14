@@ -13,6 +13,31 @@ namespace ToolGood.Words
     /// </summary>
     public class WordsSearchEx2 : BaseSearchEx
     {
+        protected Int32[] _guides2;
+        protected Int32[] _guidesLength;
+
+        protected internal override void Load(BinaryReader br)
+        {
+            base.Load(br);
+            _guides2 = new int[_guides.Length];
+            _guidesLength = new int[_guides.Length];
+            for (int i = 0; i < _guides2.Length; i++) {
+                _guides2[i] = _guides[i][0];
+                _guidesLength[i] = _keywords[_guides2[i]].Length;
+            }
+        }
+        public override void SetKeywords(ICollection<string> keywords)
+        {
+            base.SetKeywords(keywords);
+            _guides2 = new int[_guides.Length];
+            _guidesLength = new int[_guides.Length];
+            for (int i = 0; i < _guides2.Length; i++) {
+                _guides2[i] = _guides[i][0];
+                _guidesLength[i] = _keywords[_guides2[i]].Length;
+            }
+        }
+
+
         #region 查找 替换 查找第一个关键字 判断是否包含关键字
         /// <summary>
         /// 在文本中查找所有的关键字
@@ -75,6 +100,7 @@ namespace ToolGood.Words
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
             fixed (int* _pdict = &_dict[0])
+            //fixed (int* _pguides2 = &_guides2[0])
             fixed (char* _ptext = text) {
 
                 var p = 0;
@@ -91,8 +117,11 @@ namespace ToolGood.Words
                         //var index = _check[next];
                         var index = *(_pcheck + next);
                         if (index > 0) {
-                            var item = _keywords[_guides[index][0]];
-                            return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
+                            var item = _keywords[_guides2[index]];
+                            return new WordsSearchResult(item, i + 1 - item.Length, i, _guides2[index]);
+                            //var keyIndex = *(_pguides2+index);
+                            //var item = _keywords[*(_pguides2 + index)];
+                            //return new WordsSearchResult(item, i + 1 - item.Length, i, *(_pguides2 + index));
                         }
                         p = next;
                     } else {
@@ -104,8 +133,11 @@ namespace ToolGood.Words
                             var index = *(_pcheck + next);
                             //var index = _check[next];
                             if (index > 0) {
-                                var item = _keywords[_guides[index][0]];
-                                return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
+                                var item = _keywords[_guides2[index]];
+                                return new WordsSearchResult(item, i + 1 - item.Length, i, _guides2[index]);
+                                //var keyIndex = *(_pguides2 + index);
+                                //var item = _keywords[*(_pguides2 + index)];
+                                //return new WordsSearchResult(item, i + 1 - item.Length, i, *(_pguides2 + index));
                             }
                             p = next;
                         }
@@ -169,6 +201,7 @@ namespace ToolGood.Words
             fixed (int* _pcheck = &_check[0])
             fixed (int* _pkey = &_key[0])
             fixed (int* _pdict = &_dict[0])
+            fixed (int* _pguidesLength = &_guidesLength[0])
             fixed (char* _ptext = text) {
 
                 var p = 0;
@@ -188,7 +221,7 @@ namespace ToolGood.Words
                     if (find) {
                         var index = *(_pcheck + next);
                         if (index > 0) {
-                            var maxLength = _keywords[_guides[index][0]].Length;
+                            var maxLength = *(_pguidesLength + index);
                             var start = i + 1 - maxLength;
                             for (int j = start; j <= i; j++) {
                                 result[j] = replaceChar;
