@@ -8,7 +8,7 @@ import java.util.Map;
 public class TrieNode{
     public boolean End=false;
     public List<String> Results;
-    final Map<Character, TrieNode> m_values;
+    public Map<Character, TrieNode> m_values;
     private int minflag = Integer.MAX_VALUE;
     private int maxflag = Integer.MIN_VALUE;
 

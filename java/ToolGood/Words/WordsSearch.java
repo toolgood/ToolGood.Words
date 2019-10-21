@@ -7,20 +7,29 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
-import ToolGood.Words.internals.TrieNode;
+import ToolGood.Words.internals.TrieNode2;
 
-public class StringSearch {
-    protected TrieNode[] _first = new TrieNode[Character.MAX_VALUE + 1];
+public class WordsSearch{
+    protected TrieNode2[] _first = new TrieNode2[Character.MAX_VALUE + 1];
 
-
-    public void SetKeywords(List<String> _keywords)
+    public void SetKeywords(List<String> keywords)
     {
-        TrieNode[] first =  new TrieNode[Character.MAX_VALUE + 1];
-        TrieNode root = new TrieNode();
+        Map<String, Integer> dict = new Hashtable<String, Integer>();
+        for (int i = 0; i < keywords.size(); i++) {
+            String item=keywords.get(i);
+            dict.put(item, i);
+        }
+        SetKeywords(dict);
+    }
 
-        _keywords.forEach(p->{
+    public void SetKeywords(Map<String,Integer> _keywords)
+    {
+        TrieNode2[] first =  new TrieNode2[Character.MAX_VALUE + 1];
+        TrieNode2 root = new TrieNode2();
+
+        _keywords.forEach((p,index)->{
             if(StringUtils.isEmpty(p)==false){ 
-                TrieNode nd = _first[ p.charAt(0)];
+                TrieNode2 nd = _first[ p.charAt(0)];
                 if (nd == null) {
                     nd = root.Add(p.charAt(0));
                     first[p.charAt(0)] = nd;
@@ -28,13 +37,13 @@ public class StringSearch {
                 for (int i = 1; i < p.length(); i++) {
                     nd = nd.Add(p.charAt(i));
                 }
-                nd.SetResults(p);
+                nd.SetResults(p,index);
             }
         });
  
         this._first = first;// root.ToArray();
 
-        Map<TrieNode, TrieNode> links = new Hashtable<TrieNode, TrieNode>();
+        Map<TrieNode2, TrieNode2> links = new Hashtable<TrieNode2, TrieNode2>();
         root.m_values.forEach((k,v)->{
             TryLinks(v, null, links);
         });
@@ -43,10 +52,10 @@ public class StringSearch {
         });
     }
 
-    private void TryLinks(TrieNode node, TrieNode node2, Map<TrieNode, TrieNode> links)
+    private void TryLinks(TrieNode2 node, TrieNode2 node2, Map<TrieNode2, TrieNode2> links)
     {
         node.m_values.forEach((Key,Value)->{
-            TrieNode tn = null;
+            TrieNode2 tn = null;
             if (node2 == null) {
                 tn = _first[Key];
                 if (tn != null) {
@@ -60,12 +69,13 @@ public class StringSearch {
     }
 
 
-    public String FindFirst(String text)
+
+    public WordsSearchResult FindFirst(String text)
     {
-        TrieNode ptr = null;
+        TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
             Character t=text.charAt(i);
-            TrieNode tn=null;
+            TrieNode2 tn=null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
@@ -75,7 +85,10 @@ public class StringSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    return tn.Results.get(0);
+                    for( String  key : tn.Results.keySet()){
+                        Integer value= tn.Results.get(key);
+                        return new WordsSearchResult(key, i + 1 - key.length(), i, value);
+                    }
                 }
             }
             ptr = tn;
@@ -83,14 +96,14 @@ public class StringSearch {
         return null;
     }
 
-    public List<String> FindAll(String text)
+    public List<WordsSearchResult> FindAll(String text)
     {
-        TrieNode ptr = null;
-        List<String> list = new ArrayList<String>();
+        TrieNode2 ptr = null;
+        List<WordsSearchResult> list = new ArrayList<WordsSearchResult>();
 
         for (int i = 0; i < text.length(); i++) {
             Character t=text.charAt(i);
-            TrieNode tn=null;
+            TrieNode2 tn=null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
@@ -100,9 +113,11 @@ public class StringSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    tn.Results.forEach(item->{
+                    for( String  key : tn.Results.keySet()){
+                        Integer value= tn.Results.get(key);
+                        WordsSearchResult item= new WordsSearchResult(key, i + 1 - key.length(), i, value);
                         list.add(item);
-                    });
+                    }
                 }
             }
             ptr = tn;
@@ -110,12 +125,16 @@ public class StringSearch {
         return list;
     }
 
+
+
+
+
     public boolean ContainsAny(String text)
     {
-        TrieNode ptr = null;
+        TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
             Character t=text.charAt(i);
-            TrieNode tn=null;
+            TrieNode2 tn=null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
@@ -141,10 +160,10 @@ public class StringSearch {
     {
         StringBuilder result = new StringBuilder(text);
 
-        TrieNode ptr = null;
+        TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
             Character t=text.charAt(i);
-            TrieNode tn=null;
+            TrieNode2 tn=null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
@@ -154,7 +173,12 @@ public class StringSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    int maxLength = tn.Results.get(0).length();
+                    Integer maxLength=0;
+                    for(String key : tn.Results.keySet()){
+                         if(key.length()>maxLength){
+                            maxLength = key.length();
+                        }
+                    }
                     int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
@@ -165,6 +189,5 @@ public class StringSearch {
         }
         return result.toString();
     }
-
 
 }
