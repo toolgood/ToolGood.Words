@@ -132,7 +132,7 @@ public abstract class BaseSearchEx{
         }
 
         List<TrieNodeEx> nodes = new ArrayList<TrieNodeEx>();
-        for (Character key : root.m_values.keySet()) {
+        for (int key : root.m_values.keySet()) {
             TrieNodeEx nd=root.m_values.get(key);
             nd.Failure = root;
             for (TrieNodeEx trans : nd.m_values.values()) {

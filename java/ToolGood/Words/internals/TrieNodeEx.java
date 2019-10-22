@@ -11,8 +11,8 @@ public class TrieNodeEx{
     public Integer Char=0;
     public boolean End;
     public List<Integer> Results;
-    public Map<Character, TrieNodeEx> m_values;
-    public Map<Character, TrieNodeEx> merge_values;
+    public Map<Integer, TrieNodeEx> m_values;
+    public Map<Integer, TrieNodeEx> merge_values;
     private Integer minflag = Integer.MAX_VALUE;
     private Integer maxflag = 0;
     public Integer Next=0;
@@ -21,16 +21,16 @@ public class TrieNodeEx{
 
     public TrieNodeEx()
     {
-        m_values = new Hashtable<Character, TrieNodeEx>();
-        merge_values = new Hashtable<Character, TrieNodeEx>();
+        m_values = new Hashtable<Integer, TrieNodeEx>();
+        merge_values = new Hashtable<Integer, TrieNodeEx>();
         Results = new ArrayList<Integer>();
     }
 
     public boolean TryGetValue(Character c,   TrieNodeEx node)
     {
         if (minflag <=  c && maxflag >=  c) {
-            if( m_values.containsKey(c)){
-                node=m_values.get(c);
+            if( m_values.containsKey((int)c)){
+                node=m_values.get((int)c);
                 return true;
             }
             return false;           }
@@ -40,8 +40,8 @@ public class TrieNodeEx{
 
     public TrieNodeEx Add(Character c)
     {
-        if( m_values.containsKey(c)){
-            return m_values.get(c);
+        if( m_values.containsKey((int)c)){
+            return m_values.get((int)c);
         }
         if (minflag > c) { minflag = (int)c; }
         if (maxflag < c) { maxflag = (int)c; }
@@ -49,7 +49,7 @@ public class TrieNodeEx{
         TrieNodeEx node = new TrieNodeEx();
         node.Parent = this;
         node.Char = (int)c;
-        m_values.put(c, node);
+        m_values.put((int)c, node);
         Count++;
         return node;
     }
@@ -66,9 +66,6 @@ public class TrieNodeEx{
 
     public void Merge(TrieNodeEx node)
     {
-        if(node==null){
-            return;
-        }
         TrieNodeEx nd = node;
         while ((int)nd.Char !=  0) {
             node.m_values.forEach((key,value)->{
@@ -132,7 +129,7 @@ public class TrieNodeEx{
         //var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
 
 
-        for (Character key : m_values.keySet()) {
+        for (int key : m_values.keySet()) {
             TrieNodeEx value=m_values.get(key);
             value.Rank(start, seats, has);
         }
