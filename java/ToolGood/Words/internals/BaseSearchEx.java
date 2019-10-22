@@ -118,7 +118,7 @@ public abstract class BaseSearchEx{
 
     public void SetKeywords(List<String> keywords)
     {
-        String[]  _keywords = keywords.toArray(new String[0]);
+        _keywords = keywords.toArray(new String[0]);
         int length = CreateDict(keywords);
         TrieNodeEx root = new TrieNodeEx();
 
@@ -143,8 +143,8 @@ public abstract class BaseSearchEx{
             List<TrieNodeEx> newNodes = new ArrayList<TrieNodeEx>();
             for (TrieNodeEx nd : nodes) {
                 TrieNodeEx r = nd.Parent.Failure;
-                Character c = nd.Char;
-                while (r != null && !r.m_values.containsKey(c)){r = r.Failure;} 
+                int c =  (int)nd.Char;
+                while (r != null && !r.m_values.containsKey( c)){r = r.Failure;} 
                 if (r == null){
                     nd.Failure = root;
                 }else {
@@ -152,6 +152,10 @@ public abstract class BaseSearchEx{
                     for (Integer result : nd.Failure.Results) {
                         nd.SetResults(result);
                     }
+                }
+                
+                for (TrieNodeEx child : nd.m_values.values()) {
+                     newNodes.add(child);
                 }
             }
             nodes = newNodes;
@@ -191,7 +195,14 @@ public abstract class BaseSearchEx{
                 guides.add(result);
             }
         }
-        _guides = (int[][])guides.toArray();
+        _guides=new int[guides.size()][];
+        for (int i = 0; i < guides.size(); i++) {
+            Integer[] array= guides.get(i);
+            _guides[i]=new int[array.length];
+            for (int j = 0; j < array.length; j++) {
+                _guides[i][j]=array[j];
+            }
+        }
     }
 
     

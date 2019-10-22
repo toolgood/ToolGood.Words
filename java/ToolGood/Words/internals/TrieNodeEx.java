@@ -8,15 +8,15 @@ import java.util.Map;
 public class TrieNodeEx{
     public TrieNodeEx Parent;
     public TrieNodeEx Failure;
-    public Character Char;
+    public Integer Char=0;
     public boolean End;
     public List<Integer> Results;
     public Map<Character, TrieNodeEx> m_values;
     public Map<Character, TrieNodeEx> merge_values;
     private Integer minflag = Integer.MAX_VALUE;
     private Integer maxflag = 0;
-    public Integer Next;
-    private Integer Count;
+    public Integer Next=0;
+    private Integer Count=0;
 
 
     public TrieNodeEx()
@@ -48,7 +48,7 @@ public class TrieNodeEx{
 
         TrieNodeEx node = new TrieNodeEx();
         node.Parent = this;
-        node.Char = c;
+        node.Char = (int)c;
         m_values.put(c, node);
         Count++;
         return node;
@@ -66,6 +66,9 @@ public class TrieNodeEx{
 
     public void Merge(TrieNodeEx node)
     {
+        if(node==null){
+            return;
+        }
         TrieNodeEx nd = node;
         while ((int)nd.Char !=  0) {
             node.m_values.forEach((key,value)->{

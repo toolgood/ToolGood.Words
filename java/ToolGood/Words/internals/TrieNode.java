@@ -30,6 +30,11 @@ public class TrieNode{
         node = null;
         return false;
     }
+    public TrieNode GetValue(Character c ){
+        return m_values.get(c);
+    }
+
+
     public List<TrieNode> Transitions()
     {
         List<TrieNode> list =new ArrayList<TrieNode>();

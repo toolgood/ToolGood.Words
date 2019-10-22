@@ -29,6 +29,9 @@ public class TrieNode2{
         node = null;
         return false;
     }
+    public TrieNode2 GetValue(Character c ){
+        return m_values.get(c);
+    }
 
     public TrieNode2 Add(char c)
     {

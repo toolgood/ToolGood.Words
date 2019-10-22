@@ -71,6 +71,8 @@ public class StringSearch {
             } else {
                 if (ptr.TryGetValue(t, tn) == false) {
                     tn = _first[t];
+                }else {
+                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
                 }
             }
             if (tn != null) {
@@ -96,6 +98,8 @@ public class StringSearch {
             } else {
                 if (ptr.TryGetValue(t, tn) == false) {
                     tn = _first[t];
+                }else {
+                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
                 }
             }
             if (tn != null) {
@@ -121,6 +125,8 @@ public class StringSearch {
             } else {
                 if (ptr.TryGetValue(t, tn) == false) {
                     tn = _first[t];
+                } else {
+                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
                 }
             }
             if (tn != null) {
@@ -150,6 +156,8 @@ public class StringSearch {
             } else {
                 if (ptr.TryGetValue(t,   tn) == false) {
                     tn = _first[t];
+                }else {
+                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
                 }
             }
             if (tn != null) {
