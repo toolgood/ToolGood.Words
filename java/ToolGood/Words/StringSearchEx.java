@@ -41,7 +41,7 @@ public class StringSearchEx extends BaseSearchEx{
 
     public String FindFirst(String text)
     {
-        Integer p = 0;
+        int p = 0;
         for (int i = 0; i < text.length(); i++) {
             int t =  _dict[text.charAt(i)];
             if (t == 0) {
@@ -73,7 +73,7 @@ public class StringSearchEx extends BaseSearchEx{
 
     public boolean ContainsAny(String text)
     {
-        Integer p = 0;
+        int p = 0;
         for (int i = 0; i < text.length(); i++) {
             int t =  _dict[text.charAt(i)];
             if (t == 0) {
@@ -104,7 +104,7 @@ public class StringSearchEx extends BaseSearchEx{
     {
         StringBuilder result = new StringBuilder(text);
 
-        Integer p = 0;
+        int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
             int t =  _dict[text.charAt(i)];

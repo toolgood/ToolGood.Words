@@ -10,7 +10,7 @@ public class WordsSearchEx extends BaseSearchEx{
     public List<WordsSearchResult> FindAll(String text)
     {
         List<WordsSearchResult> root = new ArrayList<WordsSearchResult>();
-        Integer p = 0;
+        int p = 0;
         int length = text.length();
         for (int i = 0; i < length; i++) {
             int t =  _dict[text.charAt(i)];
@@ -43,7 +43,7 @@ public class WordsSearchEx extends BaseSearchEx{
  
     public WordsSearchResult FindFirst(String text)
     {
-        Integer p = 0;
+        int p = 0;
         int length = text.length();
         for (int i = 0; i < length; i++) {
             int t =  _dict[text.charAt(i)];
@@ -77,7 +77,7 @@ public class WordsSearchEx extends BaseSearchEx{
 
     public boolean ContainsAny(String text)
     {
-        Integer p = 0;
+        int p = 0;
         for (int i = 0; i < text.length(); i++) {
             int t =  _dict[text.charAt(i)];
             if (t == 0) {
@@ -108,7 +108,7 @@ public class WordsSearchEx extends BaseSearchEx{
     {
         StringBuilder result = new StringBuilder(text);
 
-        Integer p = 0;
+        int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
             int t =  _dict[text.charAt(i)];
