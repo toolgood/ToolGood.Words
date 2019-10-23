@@ -1,21 +1,22 @@
 package ToolGood_Words
 
-type StringSearch struct {
-	_first []*TrieNode
+type WordsSearch struct {
+	_first []*TrieNode2
 }
-func NewStringSearch() *StringSearch  {
-	return &StringSearch{
-		_first : make([]*TrieNode,0),
+
+func NewWordsSearch() *WordsSearch  {
+	return &WordsSearch{
+		_first : make([]*TrieNode2,0),
 	}
 }
 
-func (this *StringSearch)SetKeywords(keywords []string){
-	first := make([]*TrieNode,0x10000)
-	root := NewTrieNode()
-	for	_,p := range keywords {
+func (this *WordsSearch)SetKeywords(keywords []string){
+	first := make([]*TrieNode2,0x10000)
+	root := NewTrieNode2()
+	for	i,p := range keywords {
 		length:=len(p)
 		if length>0 {
-			var nd *TrieNode
+			var nd *TrieNode2
 			for	i,ch := range p{
 				if i==0 {
 					nd = first[ch]
@@ -27,11 +28,11 @@ func (this *StringSearch)SetKeywords(keywords []string){
 					nd = nd.Add(ch);
 				}
 			}
-			nd.SetResults(p);
+			nd.SetResults(p,i);
 		}
 	}
 	this._first=first
-	links:= make(map[*TrieNode]*TrieNode)
+	links:= make(map[*TrieNode2]*TrieNode2)
 	for _,val := range root.m_values {
 		this.tryLinks(val, nil, links);
 	}
@@ -40,16 +41,17 @@ func (this *StringSearch)SetKeywords(keywords []string){
  	}
 }
 
-func (this *StringSearch) tryLinks(node *TrieNode,node2 *TrieNode,links map[*TrieNode]*TrieNode){
+
+func (this *WordsSearch) tryLinks(node *TrieNode2,node2 *TrieNode2,links map[*TrieNode2]*TrieNode2){
 	for key,value:=range node.m_values {
-		var tn *TrieNode
+		var tn *TrieNode2
 		if node2 == nil {
 			tn = this._first[key]
 			if tn != nil {
 				links[value]=tn
 			}
 		} else {
-			b,tn:=  node2.TryGetValue(key)
+			b,tn:= node2.TryGetValue(key)
 			if b==true{
 				links[value]=tn
 			}
@@ -58,10 +60,12 @@ func (this *StringSearch) tryLinks(node *TrieNode,node2 *TrieNode,links map[*Tri
 	}
 }
 
-func (this *StringSearch) FindFirst(text string) string{
-	var ptr *TrieNode
+
+func (this *WordsSearch) FindFirst(text string) *WordsSearchResult{
+	var ptr *TrieNode2
+	var i int
 	for _,t := range text {
-		var tn *TrieNode
+		var tn *TrieNode2
 		if ptr==nil{
 			tn = this._first[t];
 		}else{
@@ -73,20 +77,26 @@ func (this *StringSearch) FindFirst(text string) string{
 		}
 		if tn!=nil {
 			if tn.End==true {
-				return tn.Results[0]
+				for k,v:= range tn.Results{
+					maxLength:=len([]rune(k))
+					return NewWordsSearchResult(k, i + 1 - maxLength, i, v);
+				}
 			}
 		}
-		ptr = tn;
+		ptr = tn
+		i++
 	}
-	return ""
+	return nil
 }
 
 
-func (this *StringSearch) FindAll(text string) []string{
-	list := make([]string,0) 
-	var ptr *TrieNode
+
+func (this *WordsSearch) FindAll(text string) []*WordsSearchResult{
+	list := make([]*WordsSearchResult,0) 
+	var ptr *TrieNode2
+	var i int
 	for _,t := range text {
-		var tn *TrieNode
+		var tn *TrieNode2
 		if ptr==nil{
 			tn = this._first[t];
 		}else{
@@ -98,20 +108,24 @@ func (this *StringSearch) FindAll(text string) []string{
 		}
 		if tn!=nil {
 			if tn.End==true {
-				for	_,item:=range tn.Results {
-					list=append(list,item)
+				for k,v:= range tn.Results{
+					maxLength:=len([]rune(k))
+					r:= NewWordsSearchResult(k, i + 1 - maxLength, i, v);
+					list=append(list,r)
 				}
 			}
 		}
 		ptr = tn;
+		i++
 	}
 	return list
 }
 
-func (this *StringSearch) ContainsAny(text string) bool{
-	var ptr *TrieNode
+
+func (this *WordsSearch) ContainsAny(text string) bool{
+	var ptr *TrieNode2
 	for _,t := range text {
-		var tn *TrieNode
+		var tn *TrieNode2
 		if ptr==nil{
 			tn = this._first[t];
 		}else{
@@ -131,12 +145,13 @@ func (this *StringSearch) ContainsAny(text string) bool{
 	return false
 }
 
-func (this *StringSearch) Replace(text string,replaceChar int32) string{
+
+func (this *WordsSearch) Replace(text string,replaceChar int32) string{
 	result:= []rune(text)
-	var ptr *TrieNode
+	var ptr *TrieNode2
 	var i int
 	for _,t := range text {
-		var tn *TrieNode
+		var tn *TrieNode2
 		if ptr==nil{
 			tn = this._first[t];
 		}else{
@@ -148,11 +163,14 @@ func (this *StringSearch) Replace(text string,replaceChar int32) string{
 		}
 		if tn!=nil {
 			if tn.End==true {
-				maxLength:=len([]rune(tn.Results[0]))
-				start:= i + 1 - maxLength
-				for j := start; j <= i; j++{
-					result[j]=replaceChar
-				} 
+				for k,_:= range tn.Results{
+					maxLength:=len([]rune(k))
+					start:= i + 1 - maxLength
+					for j := start; j <= i; j++{
+						result[j]=replaceChar
+					} 
+					break
+				}
 			}
 		}
 		ptr = tn;
@@ -160,4 +178,3 @@ func (this *StringSearch) Replace(text string,replaceChar int32) string{
 	}
 	return string (result) 
 }
- 
