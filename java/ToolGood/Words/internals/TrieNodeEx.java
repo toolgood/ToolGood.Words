@@ -26,15 +26,11 @@ public class TrieNodeEx{
         Results = new ArrayList<Integer>();
     }
 
-    public boolean TryGetValue(Character c,   TrieNodeEx node)
+    public boolean HasKey(Character c)
     {
         if (minflag <=  c && maxflag >=  c) {
-            if( m_values.containsKey((int)c)){
-                node=m_values.get((int)c);
-                return true;
-            }
-            return false;           }
-        node = null;
+            return m_values.containsKey((int)c);
+        }
         return false;
     }
 

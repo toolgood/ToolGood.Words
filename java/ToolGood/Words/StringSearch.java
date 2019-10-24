@@ -52,7 +52,8 @@ public class StringSearch {
                 if (tn != null) {
                     links.put(Value, tn);
                 }
-            } else if (node2.TryGetValue(Key, tn)) {
+            } else if (node2.HasKey(Key)) {
+                tn = node2.GetValue(Key);
                 links.put(Value, tn);
             }
             TryLinks(Value, tn, links);
@@ -69,10 +70,10 @@ public class StringSearch {
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                if (ptr.TryGetValue(t, tn) == false) {
+                if (ptr.HasKey(t) == false) {
                     tn = _first[t];
                 }else {
-                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
+                    tn=ptr.GetValue(t); 
                 }
             }
             if (tn != null) {
@@ -96,10 +97,10 @@ public class StringSearch {
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                if (ptr.TryGetValue(t, tn) == false) {
+                if (ptr.HasKey(t) == false) {
                     tn = _first[t];
                 }else {
-                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
+                    tn=ptr.GetValue(t); 
                 }
             }
             if (tn != null) {
@@ -123,10 +124,10 @@ public class StringSearch {
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                if (ptr.TryGetValue(t, tn) == false) {
+                if (ptr.HasKey(t) == false) {
                     tn = _first[t];
                 } else {
-                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
+                    tn=ptr.GetValue(t); 
                 }
             }
             if (tn != null) {
@@ -154,10 +155,10 @@ public class StringSearch {
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                if (ptr.TryGetValue(t,   tn) == false) {
+                if (ptr.HasKey(t) == false) {
                     tn = _first[t];
                 }else {
-                    tn=ptr.GetValue(t);//TODO: 不太清楚 java out参数 怎么做？ 
+                    tn=ptr.GetValue(t);  
                 }
             }
             if (tn != null) {

@@ -17,16 +17,11 @@ public class TrieNode2{
         Results = new Hashtable<String, Integer>();
     }
 
-    public boolean TryGetValue(Character c, TrieNode2 node)
+    public boolean HasKey(Character c)
     {
         if (minflag <= c && maxflag >= c) {
-            if( m_values.containsKey(c)){
-                node=m_values.get(c);
-                return true;
-            }
-            return false;        
+            return m_values.containsKey(c);
         }
-        node = null;
         return false;
     }
     public TrieNode2 GetValue(Character c ){

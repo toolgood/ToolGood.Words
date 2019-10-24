@@ -1,6 +1,9 @@
 package main
 
 import "fmt"
+import "io/ioutil"
+import "strings"
+import "time"
 import . "./ToolGood/Words"
  
   
@@ -9,7 +12,8 @@ func main()  {
 	test_WordsSearch();
 	test_StringSearchEx();
 	test_WordsSearchEx();
-	text_Save_Load()
+	test_Save_Load()
+	test_time()
 }
 func test_StringSearch(){
 	fmt.Println("test_StringSearch");
@@ -147,7 +151,7 @@ func test_WordsSearchEx(){
 		fmt.Println("Replace is Error.");
 	}
 }
-func text_Save_Load(){
+func test_Save_Load(){
 	fmt.Println("text_Save_Load");
 
 	test := "我是中国人"
@@ -186,4 +190,29 @@ func text_Save_Load(){
 	if(str != "我是***"  ){
 		fmt.Println("Replace is Error.");
 	}
+}
+func test_time(){
+	bs,_:= ioutil.ReadFile("BadWord.txt")
+	s:=string(bs)
+	s=strings.Replace(s, "\r\n", "\n", -1 )
+	s=strings.Replace(s, "\r", "\n", -1 )
+	sp := strings.Split(s, "\r")
+	list:=make([]string, 0)
+	for _,item :=range sp {
+		list=append(list,item)
+	}
+	bs2,_:= ioutil.ReadFile("Talk.txt")
+	words:=string(bs2)
+
+	search:= NewStringSearchEx()
+	search.SetKeywords(list)
+
+ 	dt:= time.Now()
+	for i := 0; i < 100000; i++ {
+		search.FindAll(words);
+	}
+	dt2:= time.Now()
+
+	fmt.Println(dt2.Sub(dt))
+
 }

@@ -18,16 +18,11 @@ public class TrieNode{
         Results = new ArrayList<String>();
     }
 
-    public boolean TryGetValue(Character c, TrieNode node)
+    public boolean HasKey(Character c )
     {
-        if (minflag <= (int)c && maxflag >= (int)c) {
-            if( m_values.containsKey(c)){
-                node=m_values.get(c);
-                return true;
-            }
-            return false;
+     if (minflag <= c && maxflag >= c) {
+            return m_values.containsKey(c);
         }
-        node = null;
         return false;
     }
     public TrieNode GetValue(Character c ){
