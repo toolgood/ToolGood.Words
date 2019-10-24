@@ -1,18 +1,151 @@
 package internals
 
 import "sort"
+import (
+	"os"
+	"bytes"
+    "encoding/binary"
+)
 
 type BaseSearchEx struct{
-	_keywords []string
-	_guides [][]int
-	_key []int
-	_next []int
-	_check []int
-	_dict []int
+	I_keywords []string
+	I_guides [][]int
+	I_key []int
+	I_next []int
+	I_check []int
+	I_dict []int
 }
 
+func (this *BaseSearchEx)checkFileIsExist(filename string) bool {
+    var exist = true
+    if _, err := os.Stat(filename); os.IsNotExist(err) {
+        exist = false
+    }
+    return exist
+}
+func (this *BaseSearchEx)Save(filename string){
+	f, _ := os.OpenFile(filename, os.O_WRONLY | os.O_CREATE , 0666)
+
+	f.Write(this.intToBytes(len(this.I_keywords)))
+	for _,key:=range this.I_keywords {
+		f.Write(this.intToBytes(len(key)))
+		f.Write([]byte (key))
+	}
+
+	f.Write(this.intToBytes(len(this.I_guides)))
+	for _,key:=range this.I_guides {
+		f.Write(this.intToBytes(len(key)))
+		for _,item:=range key{
+			f.Write(this.intToBytes(item))
+		}
+	}
+
+	f.Write(this.intToBytes(len(this.I_key)))
+	for _,item:= range this.I_key{
+		f.Write(this.intToBytes(item))
+	}
+
+	f.Write(this.intToBytes(len(this.I_next)))
+	for _,item:= range this.I_next{
+		f.Write(this.intToBytes(item))
+	}
+
+	f.Write(this.intToBytes(len(this.I_check)))
+	for _,item:= range this.I_check{
+		f.Write(this.intToBytes(item))
+	}
+ 
+	f.Write(this.intToBytes(len(this.I_dict)))
+	for _,item:= range this.I_dict{
+		f.Write(this.intToBytes(item))
+	}
+
+	f.Close()
+}
+
+func (this *BaseSearchEx)Load(filename string){
+	f, _ := os.OpenFile(filename, os.O_RDONLY | os.O_CREATE , 0666)
+	intBs := make([] byte,4)
+
+	f.Read(intBs)
+	length:= this.bytesToInt(intBs);
+	this.I_keywords= make([]string,length) 
+	for i:=0;i<length;i++ {
+		f.Read(intBs)
+		l := this.bytesToInt(intBs);
+		temp:=make([]byte,l)
+		f.Read(temp)
+		this.I_keywords[i]=string (temp)
+	}
+
+	f.Read(intBs)
+	length = this.bytesToInt(intBs);
+	this.I_guides=make([][]int,0)
+	for i:=0;i<length;i++ {
+		f.Read(intBs)
+		l := this.bytesToInt(intBs);
+		ls:=make([]int,l)
+		for j := 0; j < l; j++ {
+			f.Read(intBs)
+			ls[j]=this.bytesToInt(intBs);
+		}
+		this.I_guides[i]=ls
+	}
+
+	f.Read(intBs)
+	length = this.bytesToInt(intBs);
+	this.I_key=make([]int,length)
+	for i := 0; i < length; i++ {
+		f.Read(intBs)
+		this.I_key[i]=this.bytesToInt(intBs);
+	}
+
+	f.Read(intBs)
+	length = this.bytesToInt(intBs);
+	this.I_next=make([]int,length)
+	for i := 0; i < length; i++ {
+		f.Read(intBs)
+		this.I_next[i]=this.bytesToInt(intBs);
+	}
+
+	
+	f.Read(intBs)
+	length = this.bytesToInt(intBs);
+	this.I_check=make([]int,length)
+	for i := 0; i < length; i++ {
+		f.Read(intBs)
+		this.I_check[i]=this.bytesToInt(intBs);
+	}
+
+	f.Read(intBs)
+	length = this.bytesToInt(intBs);
+	this.I_dict=make([]int,length)
+	for i := 0; i < length; i++ {
+		f.Read(intBs)
+		this.I_dict[i]=this.bytesToInt(intBs);
+	}
+
+	f.Close()
+}
+
+
+
+func (this *BaseSearchEx)intToBytes(i int) []byte{
+	s1 := make([]byte, 0)
+    buf := bytes.NewBuffer(s1)
+	binary.Write(buf, binary.BigEndian, i) //binary.LittleEndian
+	return buf.Bytes()
+}
+func (this *BaseSearchEx)bytesToInt(bs []byte) int{
+    buf := bytes.NewBuffer(bs)
+    var i2 int
+    binary.Read(buf, binary.BigEndian, &i2)
+    return i2
+}
+
+
 func (this *BaseSearchEx) SetKeywords(keywords []string)  {
-	this._keywords=keywords
+	this.I_keywords=keywords
 	length := this.CreateDict(keywords);
 	root := NewTrieNodeEx() 
 
@@ -20,7 +153,7 @@ func (this *BaseSearchEx) SetKeywords(keywords []string)  {
 		nd:=root
 		p:= []rune(keyword)
 		for _,c := range p{
-			nd = nd.Add(c);
+			nd = nd.Add(int32  (this.I_dict[c]));
 		}
 		nd.SetResults(i);
 	}
@@ -35,12 +168,12 @@ func (this *BaseSearchEx) SetKeywords(keywords []string)  {
 		newNodes:=make([]*TrieNodeEx,0)
 		for _,nd :=range nodes {
 			r := nd.Parent.Failure;
-			c :=  nd.Char;
+			c := nd.Char;
 			for {
-				if	r == nil {
+				if r == nil {
 					break
 				}
-				if _,s :=r.M_values[c]; !s{
+				if _,s :=r.M_values[c]; s{
 					break
 				}
 				r = r.Failure;
@@ -76,10 +209,11 @@ func (this *BaseSearchEx) tryLinks(node *TrieNodeEx){
 
 func (this *BaseSearchEx)build(root *TrieNodeEx,length int){
 	has:= make([]*TrieNodeEx,0x00FFFFFF)
+
 	length = root.Rank(has) + length + 1;
-	this._key=make([]int,length)
-	this._next=make([]int,length)
-	this._check=make([]int,length)
+	this.I_key=make([]int,length)
+	this.I_next=make([]int,length)
+	this.I_check=make([]int,length)
 	var guides [][]int
 	first:=make([]int,1)
 	first[0]=0
@@ -90,14 +224,14 @@ func (this *BaseSearchEx)build(root *TrieNodeEx,length int){
 		if item==nil{
 			continue
 		}
-		this._key[i] = int (item.Char) ;
-		this._next[i] = item.Next;
+		this.I_key[i] = int (item.Char) ;
+		this.I_next[i] = item.Next;
 		if  item.End==true  {
-			this._check[i] = len(guides) 
+			this.I_check[i] = len(guides) 
 			guides=append(guides,item.Results)
 		}
 	}
-	this._guides=guides
+	this.I_guides=guides
 }
  
 
@@ -135,13 +269,13 @@ func (this *BaseSearchEx)CreateDict(keywords []string) int {
 	}
 
 	list2:=make([]int32,0)
-	for i:=0;i<len(list);i=i+2 {
+	for i:=0;i<len(list);i++ {
 		list2 = append(list2,list[ index1[i]])
 	}
 
-	this._dict = make([]int,0x10000)   
+	this.I_dict = make([]int,0x10000)   
 	for i,v:=range list2{
-		this._dict[v] = i + 1;
+		this.I_dict[v] = i + 1;
 	}
 	return len(dictionary)  
 }

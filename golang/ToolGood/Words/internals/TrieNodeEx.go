@@ -1,17 +1,17 @@
 package internals
 
 type TrieNodeEx struct {
-	Parent *TrieNodeEx
-	Failure *TrieNodeEx
-	Char int32
-	End bool  
-	Results []int
-	M_values map[int32]*TrieNodeEx
-	Merge_values map[int32]*TrieNodeEx
+	Parent *TrieNodeEx  
+	Failure *TrieNodeEx  
+	Char int32  
+	End bool   
+	Results []int 
+	M_values map[int32]*TrieNodeEx  
+	Merge_values map[int32]*TrieNodeEx  
 	minflag int32 
 	maxflag int32
-	Next int
-	Count int
+	Next int  
+	Count int 
 }
 
 func NewTrieNodeEx() *TrieNodeEx  {
@@ -19,6 +19,10 @@ func NewTrieNodeEx() *TrieNodeEx  {
 		M_values: make(map[int32]*TrieNodeEx, 0),
 		Merge_values: make(map[int32]*TrieNodeEx, 0),
 		Results: make([]int, 0),
+		minflag: 0xffff,
+		maxflag:0,
+		Next:0,
+		Count:0,
 	}
 }
 
@@ -36,10 +40,10 @@ func (this *TrieNodeEx) Add(c int32) *TrieNodeEx{
 	if val, s := this.M_values[c]; s {
 		return val
 	}
-	if this.minflag<c {
+	if this.minflag>c {
 		this.minflag = c
 	}
-	if this.maxflag>c {
+	if this.maxflag<c {
 		this.maxflag = c
 	}
 	node := NewTrieNodeEx()
@@ -65,9 +69,6 @@ func (this *TrieNodeEx) SetResults(text int) {
 func (this *TrieNodeEx)Merge(node *TrieNodeEx) {
 	nd:=node
 	for	nd.Char != 0 {
-		// if	nd.Char == 0{
-		// 	return
-		// }
 		for key,value := range node.M_values{
 			if _,s := this.M_values[key]; s{
 				continue;
@@ -75,10 +76,10 @@ func (this *TrieNodeEx)Merge(node *TrieNodeEx) {
 			if _,s := this.Merge_values[key]; s{
 				continue;
 			} 
-			if this.minflag<key {
+			if this.minflag>key {
 				this.minflag = key
 			}
-			if this.maxflag>key {
+			if this.maxflag<key {
 				this.maxflag = key
 			}
 			this.Merge_values[key]=value
@@ -100,9 +101,9 @@ func (this *TrieNodeEx)Rank(has []*TrieNodeEx) int {
 	return maxCount;
 }
  
-func (this *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx){
+func (this *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx) int{
 	if (this.maxflag == 0) {
-		return
+		return start
 	}
 	keys := make([]int32,0)
 	for k,_:=range this.M_values {
@@ -111,13 +112,15 @@ func (this *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx){
 	for k,_:=range this.Merge_values {
 		keys=append(keys,k)
 	}	
+
 	for	has[start] != nil{
 		start++
 	}
 	s := start
 	if start < int (this.minflag){
-		start= int (this.minflag)
+		s= int (this.minflag)
 	}
+
 	for i := s; i < len(has); i++{
 		if has[i]==nil {
 			next := i - int (this.minflag);
@@ -141,8 +144,9 @@ func (this *TrieNodeEx)Rank2(start int,seats []bool,has []*TrieNodeEx){
 	start += len(keys) / 2;
 	
 	for _,value:= range this.M_values{
-		value.Rank2(start, seats, has);
+		start=value.Rank2(start, seats, has);
 	}
+	return start
 }
 
 func (this *TrieNodeEx)SetSeats(next int,seats []bool,has []*TrieNodeEx){
