@@ -64,11 +64,12 @@ func (this *BaseSearchEx)Save(filename string){
 }
 
 func (this *BaseSearchEx)Load(filename string){
-	f, _ := os.OpenFile(filename, os.O_RDONLY | os.O_CREATE , 0666)
+	f, _ := os.OpenFile(filename, os.O_RDONLY , 0666)
 	intBs := make([] byte,4)
 
 	f.Read(intBs)
 	length:= this.bytesToInt(intBs);
+
 	this.I_keywords= make([]string,length) 
 	for i:=0;i<length;i++ {
 		f.Read(intBs)
@@ -80,7 +81,7 @@ func (this *BaseSearchEx)Load(filename string){
 
 	f.Read(intBs)
 	length = this.bytesToInt(intBs);
-	this.I_guides=make([][]int,0)
+	this.I_guides=make([][]int,length)
 	for i:=0;i<length;i++ {
 		f.Read(intBs)
 		l := this.bytesToInt(intBs);
@@ -131,16 +132,16 @@ func (this *BaseSearchEx)Load(filename string){
 
 
 func (this *BaseSearchEx)intToBytes(i int) []byte{
-	s1 := make([]byte, 0)
-    buf := bytes.NewBuffer(s1)
-	binary.Write(buf, binary.BigEndian, i) //binary.LittleEndian
-	return buf.Bytes()
+    x := int32(i)
+    bytesBuffer := bytes.NewBuffer([]byte{})
+	binary.Write(bytesBuffer, binary.BigEndian, x)
+    return bytesBuffer.Bytes()
 }
 func (this *BaseSearchEx)bytesToInt(bs []byte) int{
-    buf := bytes.NewBuffer(bs)
-    var i2 int
-    binary.Read(buf, binary.BigEndian, &i2)
-    return i2
+	bytesBuffer := bytes.NewBuffer(bs)
+    var x int32
+    binary.Read(bytesBuffer, binary.BigEndian, &x)
+	return int(x)
 }
 
 
