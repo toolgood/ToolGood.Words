@@ -1,9 +1,9 @@
-package ToolGood_Words
+package internals
  
 type TrieNode struct {
 	End bool  
 	Results []string
-	m_values map[int32]*TrieNode
+	M_values map[int32]*TrieNode
 	minflag int32 
 	maxflag int32
 }
@@ -11,7 +11,7 @@ type TrieNode struct {
 func NewTrieNode() *TrieNode{
 	return &TrieNode{
 		End : false,
-		m_values :  make(map[int32]*TrieNode) ,
+		M_values :  make(map[int32]*TrieNode) ,
 		Results :   make([]string,0),
 		minflag : 0,
 		maxflag : 0xffff,
@@ -20,7 +20,7 @@ func NewTrieNode() *TrieNode{
 
 func (this *TrieNode) TryGetValue(c int32) (bool,*TrieNode){
 	if this.minflag<=c && this.maxflag>=c {
-		if val, s := this.m_values[c]; s {
+		if val, s := this.M_values[c]; s {
 			return true,val
 		}
 	}
@@ -28,7 +28,7 @@ func (this *TrieNode) TryGetValue(c int32) (bool,*TrieNode){
 }
 
 func (this *TrieNode) Add(c int32) *TrieNode{
-	if val, s := this.m_values[c]; s {
+	if val, s := this.M_values[c]; s {
 		return val
 	}
 	if this.minflag<c {
@@ -38,7 +38,7 @@ func (this *TrieNode) Add(c int32) *TrieNode{
 		this.maxflag = c
 	}
 	node := NewTrieNode()
-	this.m_values[c]=node
+	this.M_values[c]=node
 	return node 
 }
 
@@ -57,7 +57,7 @@ func (this *TrieNode) SetResults(text string) {
 func (this *TrieNode) ToArray() *[]TrieNode{
 	var first []TrieNode
 	first =  make([]TrieNode,0xffff);
-	for k,val:=range this.m_values{
+	for k,val:=range this.M_values{
 		first[k] = *val
 	}
 	return &first
@@ -76,8 +76,8 @@ func (this *TrieNode) Merge(node *TrieNode,links map[*TrieNode]*TrieNode){
 			}
 		}
 	}
-	for key,val:=range node.m_values{
-		if _, s2 := this.m_values[key]; s2 {
+	for key,val:=range node.M_values{
+		if _, s2 := this.M_values[key]; s2 {
  		}else{
 			if this.minflag<key {
 				this.minflag = key
@@ -85,7 +85,7 @@ func (this *TrieNode) Merge(node *TrieNode,links map[*TrieNode]*TrieNode){
 			if this.maxflag>key {
 				this.maxflag = key
 			}
-			this.m_values[key]=val
+			this.M_values[key]=val
 		}
 	}
 	if node2, s := links[node]; s {

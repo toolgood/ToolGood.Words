@@ -1,4 +1,4 @@
-package ToolGood_Words
+package Words
 
 type WordsSearchResult struct {
 	Success bool

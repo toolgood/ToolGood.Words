@@ -1,4 +1,7 @@
-package ToolGood_Words
+package Words
+
+import . "./internals"
+
 
 type StringSearch struct {
 	_first []*TrieNode
@@ -32,7 +35,7 @@ func (this *StringSearch)SetKeywords(keywords []string){
 	}
 	this._first=first
 	links:= make(map[*TrieNode]*TrieNode)
-	for _,val := range root.m_values {
+	for _,val := range root.M_values {
 		this.tryLinks(val, nil, links);
 	}
 	for key,val := range links {
@@ -41,7 +44,7 @@ func (this *StringSearch)SetKeywords(keywords []string){
 }
 
 func (this *StringSearch) tryLinks(node *TrieNode,node2 *TrieNode,links map[*TrieNode]*TrieNode){
-	for key,value:=range node.m_values {
+	for key,value:=range node.M_values {
 		var tn *TrieNode
 		if node2 == nil {
 			tn = this._first[key]
