@@ -12,6 +12,10 @@ import ToolGood.Words.internals.TrieNode2;
 public class WordsSearch{
     protected TrieNode2[] _first = new TrieNode2[Character.MAX_VALUE + 1];
 
+    /**
+     * 设置关键字
+     * @param keywords
+     */
     public void SetKeywords(List<String> keywords)
     {
         Map<String, Integer> dict = new Hashtable<String, Integer>();
@@ -21,7 +25,10 @@ public class WordsSearch{
         }
         SetKeywords(dict);
     }
-
+    /**
+     * 设置关键字
+     * @param _keywords
+     */
     public void SetKeywords(Map<String,Integer> _keywords)
     {
         TrieNode2[] first =  new TrieNode2[Character.MAX_VALUE + 1];
@@ -70,7 +77,11 @@ public class WordsSearch{
     }
 
 
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @return
+     */
     public WordsSearchResult FindFirst(String text)
     {
         TrieNode2 ptr = null;
@@ -98,7 +109,11 @@ public class WordsSearch{
         }
         return null;
     }
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @return
+     */
     public List<WordsSearchResult> FindAll(String text)
     {
         TrieNode2 ptr = null;
@@ -131,9 +146,11 @@ public class WordsSearch{
     }
 
 
-
-
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text)
     {
         TrieNode2 ptr = null;
@@ -158,11 +175,20 @@ public class WordsSearch{
         }
         return false;
     }
-
+    /**
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * @param text 文本
+     * @return
+     */
     public String Replace(String text){
         return Replace(text,'*');
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text,Character replaceChar)
     {
         StringBuilder result = new StringBuilder(text);

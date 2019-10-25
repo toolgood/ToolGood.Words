@@ -10,17 +10,25 @@ import java.util.Set;
 
 import ToolGood.Words.internals.BaseSearchEx;
 import ToolGood.Words.internals.Dict;
-
+/**
+ * 
+ */
 public class IllegalWordsSearch extends BaseSearchEx
 {
+    /** 使用跳词过滤器     */
     public boolean UseSkipWordFilter = false;  
     private String _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
     private boolean[] _skipBitArray;
+    /** 使用重复词过滤器     */
     public boolean UseDuplicateWordFilter = false;
+    /** 使用黑名单过滤器     */
     public boolean UseBlacklistFilter = false;
     private int[] _blacklist;
+    /** 使用半角转化器     */
     public boolean UseDBCcaseConverter = true;
+    /**使用简体中文转化器 */
     public boolean UseSimplifiedChineseConverter = true;
+    /**使用忽略大小写 */
     public boolean UseIgnoreCase = true;
 
     public IllegalWordsSearch()
@@ -32,10 +40,20 @@ public class IllegalWordsSearch extends BaseSearchEx
         _blacklist = new int[0];
     }
 
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @return
+     */
     public List<IllegalWordsSearchResult> FindAll(String text){
         return FindAll(text,'*');
     }
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @param flag 黑名单
+     * @return
+     */
     public List<IllegalWordsSearchResult> FindAll(String text, int flag)
     {
         List<IllegalWordsSearchResult> results = new ArrayList<IllegalWordsSearchResult>();
@@ -84,11 +102,20 @@ public class IllegalWordsSearch extends BaseSearchEx
         }
         return results;
     }
-    
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @return
+     */
     public IllegalWordsSearchResult FindFirst(String text){
         return FindFirst(text,Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @param flag 黑名单
+     * @return
+     */
     public IllegalWordsSearchResult FindFirst(String text, int flag)
     {
        int[] pIndex = new int[text.length()];
@@ -135,13 +162,22 @@ public class IllegalWordsSearch extends BaseSearchEx
             }
        }
        return null;
-   }
-
+    }
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text)
     {
         return ContainsAny(text,Integer.MAX_VALUE);
     }
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @param flag 黑名单
+     * @return
+     */
     public boolean ContainsAny(String text, int flag)
     {
         int[] pIndex = new int[text.length()];
@@ -191,17 +227,32 @@ public class IllegalWordsSearch extends BaseSearchEx
         return false;
     }
 
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @return
+     */
     public String Replace(String text)
     {
         return Replace(text, '*', Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text, char replaceChar)
     {
         return Replace(text, replaceChar, Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @param flag 黑名单
+     * @return
+     */
     public String Replace(String text, char replaceChar, int flag)
     {
         StringBuilder result = new StringBuilder(text);
@@ -350,6 +401,10 @@ public class IllegalWordsSearch extends BaseSearchEx
         UseIgnoreCase=br.read()>0?true:false;
     }
 
+    /**
+     * 设置跳词
+     * @param skipList
+     */
     public void SetSkipWords(String skipList)
     {
         
@@ -361,7 +416,11 @@ public class IllegalWordsSearch extends BaseSearchEx
         }
     }
 
- 
+    /**
+     * 设置黑名单
+     * @param blacklist
+     * @throws IllegalArgumentException
+     */
     public void SetBlacklist(int[] blacklist) throws IllegalArgumentException
     {
         if (_keywords == null) {
@@ -372,7 +431,10 @@ public class IllegalWordsSearch extends BaseSearchEx
         }
         _blacklist = blacklist;
     }
- 
+    /**
+     * 设置关键字
+     * @param keywords
+     */
     public void SetKeywords(List<String> keywords)
     {
         Set<String> kws = new HashSet<String>(keywords);

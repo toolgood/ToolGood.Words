@@ -6,30 +6,20 @@ public class WordsSearchResult{
     public WordsSearchResult(String keyword, int start, int end, int index)
     {
         Keyword = keyword;
-        Success = true;
         End = end;
         Start = start;
         Index = index;
     }
-
-    private WordsSearchResult()
-    {
-        Success = false;
-        Start = 0;
-        End = 0;
-        Index = -1;
-        Keyword = null;
-    }
-    public Boolean Success;
+    /**开始位置 */
     public int Start;
-    public int End;
+    /**结束位置 */
+    public int End ;
+    /**关键字 */
     public String Keyword;
+    /**索引 */
     public int Index;
 
-
-    public static WordsSearchResult getEmpty() {
-        return new WordsSearchResult(); 
-    }
+ 
 
         
    

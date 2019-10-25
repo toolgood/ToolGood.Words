@@ -11,17 +11,20 @@ import java.util.Set;
 import ToolGood.Words.internals.BaseSearchEx;
 
 public class StringTypoSearch extends BaseSearchEx{
+    /**使用跳词过滤器 */
     public boolean UseSkipWordFilter = false; //使用跳词过滤器
     protected String _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
     protected boolean[] _skipBitArray;
+    /**使用黑名单 */
     public boolean UseBlacklistFilter = false;
     protected int[] _blacklist;
     private int _maxJump = 5;//设置一个最大大跳跃点
     private char[] toWord;
+    /**使用忽略大小写 */
     public boolean UseIgnoreCase = true;
 
 
-    private   String baseTypo =
+    private String baseTypo =
     "0 0\r1 1\r2 2\r3 3\r4 4\r5 5\r6 6\r7 7\r8 8\r9 9\r" +
     "０ 0\r１ 1\r２ 2\r３ 3\r４ 4\r５ 5\r６ 6\r７ 7\r８ 8\r９ 9\r" +
     "A a\rB b\rC c\rD d\rE e\rF f\rG g\rH h\rI i\rJ j\rK k\rL l\rM m\rN n\rO o\rP p\rQ q\rR r\rS s\rT t\rU u\rV v\rW w\rX x\rY y\rZ z\r" +
@@ -78,11 +81,20 @@ public class StringTypoSearch extends BaseSearchEx{
         }
     }
 
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @return
+     */
     public List<IllegalWordsSearchResult> FindAll(String text){
         return FindAll(text,'*');
     }
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @param flag 黑名单
+     * @return
+     */
     public List<IllegalWordsSearchResult> FindAll(String text, int flag)
     {
         List<IllegalWordsSearchResult> results = new ArrayList<IllegalWordsSearchResult>();
@@ -128,11 +140,20 @@ public class StringTypoSearch extends BaseSearchEx{
         }
         return results;
     }
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @return
+     */
     public IllegalWordsSearchResult FindFirst(String text){
         return FindFirst(text,Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @param flag 黑名单
+     * @return
+     */
     public IllegalWordsSearchResult FindFirst(String text, int flag)
     {
         int[] pIndex = new int[text.length()];
@@ -177,12 +198,21 @@ public class StringTypoSearch extends BaseSearchEx{
         }
         return null;
     }
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text)
     {
         return ContainsAny(text,Integer.MAX_VALUE);
     }
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @param flag黑名单
+     * @return
+     */
     public boolean ContainsAny(String text, int flag)
     {
         int[] pIndex = new int[text.length()];
@@ -227,17 +257,32 @@ public class StringTypoSearch extends BaseSearchEx{
         return false;
     }
 
-
+    /***
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * @param text 文本
+     * @return
+     */
     public String Replace(String text)
     {
         return Replace(text, '*', Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text, char replaceChar)
     {
         return Replace(text, replaceChar, Integer.MAX_VALUE);
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @param flag 黑名单
+     * @return
+     */
     public String Replace(String text, char replaceChar, int flag)
     {
         StringBuilder result = new StringBuilder(text);

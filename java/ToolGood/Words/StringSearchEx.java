@@ -7,7 +7,11 @@ import ToolGood.Words.internals.BaseSearchEx;
 
 public class StringSearchEx extends BaseSearchEx{
 
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @return
+     */
     public List<String> FindAll(String text)
     {
         List<String> root = new ArrayList<String>();
@@ -38,7 +42,11 @@ public class StringSearchEx extends BaseSearchEx{
         }
         return root;
     }
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @return
+     */
     public String FindFirst(String text)
     {
         int p = 0;
@@ -70,7 +78,10 @@ public class StringSearchEx extends BaseSearchEx{
         return null;
     }
 
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     */
     public boolean ContainsAny(String text)
     {
         int p = 0;
@@ -95,11 +106,20 @@ public class StringSearchEx extends BaseSearchEx{
         }
         return false;
     }
-
+    /**
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * @param text 文本
+     * @return
+     */
     public String Replace(String text){
         return Replace(text,'*');
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text, Character replaceChar)
     {
         StringBuilder result = new StringBuilder(text);

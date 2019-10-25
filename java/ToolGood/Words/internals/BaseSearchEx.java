@@ -22,6 +22,11 @@ public abstract class BaseSearchEx{
     protected int[] _check;
     protected int[] _dict;
 
+    /**
+     * 保存
+     * @param filePath 文件地址
+     * @throws IOException
+     */
     public void Save(String filePath) throws IOException
     {
         File fi = new File(filePath);
@@ -60,6 +65,12 @@ public abstract class BaseSearchEx{
         for (int item : _dict) { bw.write(item); }
     }
  
+    /**
+     * 加载
+     * @param filePath
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public void Load(String filePath) throws FileNotFoundException,IOException
     {
         File fi = new File(filePath);
@@ -115,7 +126,10 @@ public abstract class BaseSearchEx{
  
 
 
-
+    /**
+     * 设置关键字
+     * @param keywords
+     */
     public void SetKeywords(List<String> keywords)
     {
         _keywords = keywords.toArray(new String[0]);

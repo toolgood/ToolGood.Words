@@ -12,7 +12,10 @@ import ToolGood.Words.internals.TrieNode;
 public class StringSearch {
     protected TrieNode[] _first = new TrieNode[Character.MAX_VALUE + 1];
 
-
+    /**
+     * 设置关键字
+     * @param keywords
+     */
     public void SetKeywords(List<String> _keywords)
     {
         TrieNode[] first =  new TrieNode[Character.MAX_VALUE + 1];
@@ -60,7 +63,11 @@ public class StringSearch {
         });
     }
 
-
+    /**
+     * 在文本中查找第一个关键字
+     * @param text 文本
+     * @return
+     */
     public String FindFirst(String text)
     {
         TrieNode ptr = null;
@@ -85,7 +92,11 @@ public class StringSearch {
         }
         return null;
     }
-
+    /**
+     * 在文本中查找所有的关键字
+     * @param text 文本
+     * @return
+     */
     public List<String> FindAll(String text)
     {
         TrieNode ptr = null;
@@ -114,7 +125,11 @@ public class StringSearch {
         }
         return list;
     }
-
+    /**
+     * 判断文本是否包含关键字
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text)
     {
         TrieNode ptr = null;
@@ -139,11 +154,20 @@ public class StringSearch {
         }
         return false;
     }
-
+    /**
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * @param text 文本
+     * @return
+     */
     public String Replace(String text){
         return Replace(text,'*');
     }
-
+    /**
+     * 在文本中替换所有的关键字
+     * @param text 文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text,Character replaceChar)
     {
         StringBuilder result = new StringBuilder(text);
