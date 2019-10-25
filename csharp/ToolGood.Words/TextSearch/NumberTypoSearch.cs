@@ -10,7 +10,7 @@ namespace ToolGood.Words
     /// <summary>
     /// 数字错字搜索
     /// 目前未针对❿这些符号进行转化,
-    /// 建议：先对❿等符号强制转化成数字，然后使用本类
+    /// 建议：先使用静态方法ReplaceNumberSymbol ，然后使用本类
     /// </summary>
     public class NumberTypoSearch : StringTypoSearch
     {

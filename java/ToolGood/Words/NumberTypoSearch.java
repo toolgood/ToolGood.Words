@@ -3,10 +3,20 @@ package ToolGood.Words;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * 数字错字搜索 
+ * 目前未针对❿这些符号进行转化, 
+ * 建议：先使用静态方法ReplaceNumberSymbol ，然后使用本类
+ */
 public class NumberTypoSearch extends StringTypoSearch{
 
     private static Map<Integer, String> toWordDict;
 
+    /**
+     * 对❿等符号强制转化成数字
+     * @param src
+     * @return
+     */
     public static String ReplaceNumberSymbol(String src)
     {
         if (toWordDict == null) {

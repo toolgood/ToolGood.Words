@@ -10,6 +10,10 @@ import java.util.Set;
 
 import ToolGood.Words.internals.BaseSearchEx;
 
+/***
+ * 错字搜索--英文数字搜索,不包含中文转数字
+ * 主要检测网址，推广账号
+ */
 public class StringTypoSearch extends BaseSearchEx{
     /**使用跳词过滤器 */
     public boolean UseSkipWordFilter = false; //使用跳词过滤器
