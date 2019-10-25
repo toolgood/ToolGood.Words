@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 import org.springframework.util.StopWatch;
 
+import ToolGood.Words.IllegalWordsSearch;
+import ToolGood.Words.IllegalWordsSearchResult;
 import ToolGood.Words.StringSearch;
 import ToolGood.Words.StringSearchEx;
 import ToolGood.Words.WordsSearch;
@@ -24,6 +26,7 @@ public class DemoApplication {
 
 		test_StringSearchEx();
 		test_WordsSearchEx();
+		test_IllegalWordsSearch();
 
 		try {
 			test_save_load();
@@ -191,6 +194,46 @@ public class DemoApplication {
 				System.out.println("Replace is Error.");
 			}
 	}
+
+	private static void test_IllegalWordsSearch(){
+		String test = "我是中国人";
+			List<String> list=new ArrayList<String>();
+			list.add("中国");		 
+			list.add("国人");
+			list.add("zg人");
+			System.out.println("IllegalWordsSearch run Test.");
+
+            IllegalWordsSearch iwords = new IllegalWordsSearch();
+            iwords.SetKeywords(list);
+
+			boolean b = iwords.ContainsAny(test);
+			if(b==false){
+				System.out.println("ContainsAny is Error.");
+			}
+
+			IllegalWordsSearchResult f = iwords.FindFirst(test);
+			if(f.Keyword.equals( "中国")==false){
+				System.out.println("FindFirst is Error.");
+			}
+
+			List<IllegalWordsSearchResult> all = iwords.FindAll(test);
+			if(all.get(0).Keyword.equals("中国")==false){
+				System.out.println("FindAll is Error.");
+			}
+			if(all.get(1).Keyword.equals("国人")==false){
+				System.out.println("FindAll is Error.");
+			}
+			if(all.size()!=2){
+				System.out.println("FindAll is Error.");
+			}
+    
+
+			String str = iwords.Replace(test, '*');
+			if(str.equals("我是***")==false ){
+				System.out.println("Replace is Error.");
+			}
+	}
+
 
 	private static void test_save_load() throws IOException {
 		String test = "我是中国人";
