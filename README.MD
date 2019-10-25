@@ -2,6 +2,9 @@ ToolGood.Words
 ==================
 一款高性能非法词(敏感词)检测组件，附带繁体简体互换，支持全角半角互换，获取拼音首字母，获取拼音字母，拼音模糊搜索等功能。
 
+`C#`语言，使用`StringSearchEx2.Replace`过滤，在48k敏感词库上的过滤速度超过3亿字符每秒。（cpu i7 8750h） 
+
+
 csharp 文件夹说明：
 ```
 ToolGood.PinYin.Build:      生成词的拼音
@@ -98,6 +101,9 @@ ToolGood.Words:             本项目源代码
 ![10W次性能对比](10W次性能对比(20191014).png)
 
 注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
+
+
+
 
 `Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 
