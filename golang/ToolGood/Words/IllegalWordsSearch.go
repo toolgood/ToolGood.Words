@@ -434,13 +434,13 @@ func (this *IllegalWordsSearch)SetBlacklist(blacklist []int) error {
 	return nil
 }
 
-// func (this *IllegalWordsSearch)SetKeywords(keywords []string)   {
-// 	list:=make([]string,0)
-// 	for _,val:=range keywords{
-// 		list=append(list,this.toSenseWord2(val))
-// 	}
-// 	this.BaseSearchEx.SetKeywords(list)
-// }
+func (this *IllegalWordsSearch)SetKeywords(keywords []string)   {
+	list:=make([]string,0)
+	for _,val:=range keywords{
+		list=append(list,this.toSenseWord2(val))
+	}
+	this.BaseSearchEx.SetKeywords(list)
+}
 
 func (this *IllegalWordsSearch)Save2(f *os.File){
 	this.BaseSearchEx.Save2(f)
