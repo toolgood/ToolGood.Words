@@ -25,7 +25,10 @@ func (this *BaseSearchEx)checkFileIsExist(filename string) bool {
 }
 func (this *BaseSearchEx)Save(filename string){
 	f, _ := os.OpenFile(filename, os.O_WRONLY | os.O_CREATE , 0666)
-
+	this.Save2(f)
+	f.Close()
+}
+func (this *BaseSearchEx)Save2(f *os.File){
 	f.Write(this.intToBytes(len(this.I_keywords)))
 	for _,key:=range this.I_keywords {
 		f.Write(this.intToBytes(len(key)))
@@ -59,12 +62,14 @@ func (this *BaseSearchEx)Save(filename string){
 	for _,item:= range this.I_dict{
 		f.Write(this.intToBytes(item))
 	}
-
-	f.Close()
 }
 
 func (this *BaseSearchEx)Load(filename string){
 	f, _ := os.OpenFile(filename, os.O_RDONLY , 0666)
+	this.Load2(f)
+	f.Close()
+}
+func (this *BaseSearchEx)Load2(f *os.File){
 	intBs := make([] byte,4)
 
 	f.Read(intBs)
@@ -125,10 +130,7 @@ func (this *BaseSearchEx)Load(filename string){
 		f.Read(intBs)
 		this.I_dict[i]=this.bytesToInt(intBs);
 	}
-
-	f.Close()
 }
-
 
 
 func (this *BaseSearchEx)intToBytes(i int) []byte{

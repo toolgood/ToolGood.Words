@@ -12,7 +12,9 @@ func main()  {
 	test_WordsSearch();
 	test_StringSearchEx();
 	test_WordsSearchEx();
+	test_IllegalWordsSearch();
 	test_Save_Load()
+	test_Save_Load2()
 	test_time()
 }
 func test_StringSearch(){
@@ -89,7 +91,7 @@ func test_StringSearchEx(){
 	test := "我是中国人"
 	list := []string{"中国","国人","zg人"}
 
-	search:= NewStringSearch()
+	search:= NewStringSearchEx()
 	search.SetKeywords(list)
 
 	b := search.ContainsAny(test);
@@ -123,8 +125,9 @@ func test_WordsSearchEx(){
 	test := "我是中国人"
 	list := []string{"中国","国人","zg人"}
 
-	search:= NewWordsSearch()
+	search:= NewWordsSearchEx()
 	search.SetKeywords(list)
+
 
 	b := search.ContainsAny(test);
 	if b==false {
@@ -151,6 +154,41 @@ func test_WordsSearchEx(){
 		fmt.Println("Replace is Error.");
 	}
 }
+func test_IllegalWordsSearch(){
+	fmt.Println("test_IllegalWordsSearch");
+
+	test := "我是中国人"
+	list := []string{"中国","国人","zg人"}
+
+	search:= NewIllegalWordsSearch()
+	search.SetKeywords(list)
+	
+	b := search.ContainsAny(test);
+	if b==false {
+		fmt.Println("ContainsAny is Error.");
+	}
+
+	f := search.FindFirst(test);
+	if(f.Keyword!="中国"){
+		fmt.Println("FindFirst is Error.");
+	}
+
+	all := search.FindAll(test);
+	if(all[0].Keyword!="中国"){
+		fmt.Println("FindAll is Error.");
+	}
+	if(all[1].Keyword !="国人"){
+		fmt.Println("FindAll is Error.");
+	}
+	if(len(all) !=2){
+		fmt.Println("FindAll is Error.");
+	}
+	str := search.Replace(test, '*');
+	if(str != "我是***"  ){
+		fmt.Println("Replace is Error.");
+	}
+}
+
 func test_Save_Load(){
 	fmt.Println("text_Save_Load");
 
@@ -191,6 +229,48 @@ func test_Save_Load(){
 		fmt.Println("Replace is Error.");
 	}
 }
+
+func test_Save_Load2(){
+	fmt.Println("test_Save_Load2");
+
+	test := "我是中国人"
+	list := []string{"中国","国人","zg人"}
+
+	search2:= NewIllegalWordsSearch()
+	search2.SetKeywords(list)
+	search2.Save("2.dat")
+ 
+
+	search:= NewIllegalWordsSearch()
+	search.Load("2.dat")
+	
+	b := search.ContainsAny(test);
+	if b==false {
+		fmt.Println("ContainsAny is Error.");
+	}
+
+	f := search.FindFirst(test);
+	if(f.Keyword!="中国"){
+		fmt.Println("FindFirst is Error.");
+	}
+
+	all := search.FindAll(test);
+	if(all[0].Keyword!="中国"){
+		fmt.Println("FindAll is Error.");
+	}
+	if(all[1].Keyword !="国人"){
+		fmt.Println("FindAll is Error.");
+	}
+	if(len(all) !=2){
+		fmt.Println("FindAll is Error.");
+	}
+	str := search.Replace(test, '*');
+	if(str != "我是***"  ){
+		fmt.Println("Replace is Error.");
+	}
+}
+
+
 func test_time(){
 	bs,_:= ioutil.ReadFile("BadWord.txt")
 	s:=string(bs)

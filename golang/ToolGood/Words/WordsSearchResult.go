@@ -1,7 +1,6 @@
 package Words
 
 type WordsSearchResult struct {
-	Success bool
 	Start int
 	End int
 	Keyword string
@@ -10,7 +9,6 @@ type WordsSearchResult struct {
 
 func NewWordsSearchResult(keyword string,start int,end int,index int) *WordsSearchResult  {
 	return &WordsSearchResult{
-		Success:true,
 		Start:start,
 		End:end,
 		Keyword:keyword,
