@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
@@ -757,48 +758,8 @@ namespace ToolGood.Words
 
 
         #region 搜索字划分、拼音分词
-        class MiniSearchResult
-        {
-            public MiniSearchResult(string keyword, int start, int end)
-            {
-                Keyword = keyword;
-                End = end;
-                Start = start;
-            }
-            public int Start { get; private set; }
-            public int End { get; private set; }
-            public string Keyword { get; private set; }
-        }
-        class MiniSearch : internals.BaseSearch
-        {
-            public List<MiniSearchResult> FindAll(string text)
-            {
-                internals.TrieNode ptr = null;
-                List<MiniSearchResult> list = new List<MiniSearchResult>();
-
-                for (int i = 0; i < text.Length; i++) {
-                    internals.TrieNode tn;
-                    if (ptr == null) {
-                        tn = _first[text[i]];
-                    } else {
-                        if (ptr.TryGetValue(text[i], out tn) == false) {
-                            tn = _first[text[i]];
-                        }
-                    }
-                    if (tn != null) {
-                        if (tn.End) {
-                            foreach (var item in tn.Results) {
-                                list.Add(new MiniSearchResult(item, i + 1 - item.Length, i));
-                            }
-                        }
-                    }
-                    ptr = tn;
-                }
-                return list;
-            }
-
-        }
-
+ 
+ 
         private static MiniSearch _pinyinSplit;
         private MiniSearch getPinYinSplit()
         {

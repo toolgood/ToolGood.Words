@@ -9,7 +9,7 @@ namespace ToolGood.Words.internals
     {
         public bool End { get; set; }
         public List<string> Results { get; private set; }
-        internal Dictionary<char, TrieNode> m_values;
+        public Dictionary<char, TrieNode> m_values;
         private uint minflag = uint.MaxValue;
         private uint maxflag = uint.MinValue;
 
