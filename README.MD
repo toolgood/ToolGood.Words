@@ -15,6 +15,7 @@ ToolGood.Words:             本项目源代码
 ToolGood.Words.PinYinSearch:拼音搜索项目源代码
 ```
 java版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`及部分`WordsHelper`
+
 golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`
 
 
