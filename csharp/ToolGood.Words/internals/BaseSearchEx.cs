@@ -9,149 +9,6 @@ namespace ToolGood.Words.internals
     public abstract class BaseSearchEx
     {
         #region Class
-        class TrieNode
-        {
-            public TrieNode Parent;
-            public TrieNode Failure;
-            public char Char;
-            internal bool End;
-            internal List<Int32> Results;
-            internal Dictionary<char, TrieNode> m_values;
-            internal Dictionary<char, TrieNode> merge_values;
-            private Int32 minflag = Int32.MaxValue;
-            private Int32 maxflag = 0;
-            internal Int32 Next;
-            private Int32 Count;
-
-            public TrieNode()
-            {
-                m_values = new Dictionary<char, TrieNode>();
-                merge_values = new Dictionary<char, TrieNode>();
-                Results = new List<Int32>();
-            }
-
-            public bool TryGetValue(char c, out TrieNode node)
-            {
-                if (minflag <= (Int32)c && maxflag >= (Int32)c) {
-                    return m_values.TryGetValue(c, out node);
-                }
-                node = null;
-                return false;
-            }
-
-            public TrieNode Add(char c)
-            {
-                TrieNode node;
-
-                if (m_values.TryGetValue(c, out node)) {
-                    return node;
-                }
-
-                if (minflag > c) { minflag = c; }
-                if (maxflag < c) { maxflag = c; }
-
-                node = new TrieNode();
-                node.Parent = this;
-                node.Char = c;
-                m_values[c] = node;
-                Count++;
-                return node;
-            }
-
-            public void SetResults(Int32 text)
-            {
-                if (End == false) {
-                    End = true;
-                }
-                if (Results.Contains(text) == false) {
-                    Results.Add(text);
-                }
-            }
-
-            public void Merge(TrieNode node)
-            {
-                var nd = node;
-                while (nd.Char != 0) {
-                    foreach (var item in node.m_values) {
-                        if (m_values.ContainsKey(item.Key) == false) {
-                            if (merge_values.ContainsKey(item.Key) == false) {
-                                if (minflag > item.Key) { minflag = item.Key; }
-                                if (maxflag < item.Key) { maxflag = item.Key; }
-                                merge_values[item.Key] = item.Value;
-                                Count++;
-                            }
-                        }
-                    }
-                    nd = nd.Failure;
-                }
-            }
-
-            public Int32 Rank(TrieNode[] has)
-            {
-                bool[] seats = new bool[has.Length];
-                Int32 start = 1;
-
-                has[0] = this;
-
-                Rank(ref start, seats, has);
-                Int32 maxCount = has.Length - 1;
-                while (has[maxCount] == null) { maxCount--; }
-                return maxCount;
-            }
-
-            private void Rank(ref Int32 start, bool[] seats, TrieNode[] has)
-            {
-                if (maxflag == 0) return;
-                var keys = m_values.Select(q => (Int32)q.Key).ToList();
-                keys.AddRange(merge_values.Select(q => (Int32)q.Key).ToList());
-
-                while (has[start] != null) { start++; }
-                var s = start < (Int32)minflag ? (Int32)minflag : start;
-
-                for (Int32 i = s; i < has.Length; i++) {
-                    if (has[i] == null) {
-                        var next = i - (Int32)minflag;
-                        //if (next < 0) continue;
-                        if (seats[next]) continue;
-
-                        var isok = true;
-                        foreach (var item in keys) {
-                            if (has[next + item] != null) { isok = false; break; }
-                        }
-                        if (isok) {
-                            SetSeats(next, seats, has);
-                            break;
-                        }
-                    }
-                }
-                start += keys.Count / 2;
-
-                var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
-                foreach (var key in keys2) {
-                    key.Value.Rank(ref start, seats, has);
-                }
-            }
-
-
-            private void SetSeats(Int32 next, bool[] seats, TrieNode[] has)
-            {
-                Next = next;
-                seats[next] = true;
-
-                foreach (var item in merge_values) {
-                    var position = next + item.Key;
-                    has[position] = item.Value;
-                }
-
-                foreach (var item in m_values) {
-                    var position = next + item.Key;
-                    has[position] = item.Value;
-                }
-
-            }
-
-
-        }
         #endregion
 
         #region 私有变量
@@ -367,7 +224,7 @@ namespace ToolGood.Words.internals
         {
             _keywords = keywords.ToArray();
             var length = CreateDict(keywords);
-            var root = new TrieNode();
+            var root = new TrieNodeEx();
 
             for (Int32 i = 0; i < _keywords.Length; i++) {
                 var p = _keywords[i];
@@ -378,21 +235,21 @@ namespace ToolGood.Words.internals
                 nd.SetResults(i);
             }
 
-            List<TrieNode> nodes = new List<TrieNode>();
+            List<TrieNodeEx> nodes = new List<TrieNodeEx>();
             // Find failure functions
             //ArrayList nodes = new ArrayList();
             // level 1 nodes - fail to root node
-            foreach (TrieNode nd in root.m_values.Values) {
+            foreach (TrieNodeEx nd in root.m_values.Values) {
                 nd.Failure = root;
-                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
+                foreach (TrieNodeEx trans in nd.m_values.Values) nodes.Add(trans);
             }
             // other nodes - using BFS
             while (nodes.Count != 0) {
-                List<TrieNode> newNodes = new List<TrieNode>();
+                List<TrieNodeEx> newNodes = new List<TrieNodeEx>();
 
                 //ArrayList newNodes = new ArrayList();
-                foreach (TrieNode nd in nodes) {
-                    TrieNode r = nd.Parent.Failure;
+                foreach (TrieNodeEx nd in nodes) {
+                    TrieNodeEx r = nd.Parent.Failure;
                     char c = nd.Char;
 
                     while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
@@ -405,7 +262,7 @@ namespace ToolGood.Words.internals
                     }
 
                     // add child nodes to BFS list 
-                    foreach (TrieNode child in nd.m_values.Values)
+                    foreach (TrieNodeEx child in nd.m_values.Values)
                         newNodes.Add(child);
                 }
                 nodes = newNodes;
@@ -416,7 +273,7 @@ namespace ToolGood.Words.internals
             }
             build(root, length);
         }
-        private void TryLinks(TrieNode node)
+        private void TryLinks(TrieNodeEx node)
         {
             node.Merge(node.Failure);
             foreach (var item in node.m_values.Values) {
@@ -424,9 +281,9 @@ namespace ToolGood.Words.internals
             }
         }
 
-        private void build(TrieNode root, Int32 length)
+        private void build(TrieNodeEx root, Int32 length)
         {
-            TrieNode[] has = new TrieNode[0x00FFFFFF];
+            TrieNodeEx[] has = new TrieNodeEx[0x00FFFFFF];
             length = root.Rank(has) + length + 1;
             _key = new Int32[length];
             _next = new Int32[length];

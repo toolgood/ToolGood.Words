@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
@@ -10,77 +11,9 @@ namespace ToolGood.Words
     /// </summary>
     public class WordsSearch
     {
-        #region class
-        class TrieNode
-        {
-            public bool End { get; set; }
-            public List<Tuple<string, int>> Results { get; set; }
-            internal Dictionary<char, TrieNode> m_values;
-            private uint minflag = uint.MaxValue;
-            private uint maxflag = uint.MinValue;
-
-            public TrieNode()
-            {
-                m_values = new Dictionary<char, TrieNode>();
-                Results = new List<Tuple<string, int>>();
-            }
-
-            public bool TryGetValue(char c, out TrieNode node)
-            {
-                if (minflag <= (uint)c && maxflag >= (uint)c) {
-                    return m_values.TryGetValue(c, out node);
-                }
-                node = null;
-                return false;
-            }
-
-            public TrieNode Add(char c)
-            {
-                TrieNode node;
-                if (minflag > c) { minflag = c; }
-                if (maxflag < c) { maxflag = c; }
-                if (m_values.TryGetValue(c, out node)) {
-                    return node;
-                }
-                node = new TrieNode();
-                m_values[c] = node;
-                return node;
-            }
-
-            public void SetResults(string text, int index)
-            {
-                if (End == false) {
-                    End = true;
-                }
-                Results.Add(Tuple.Create(text, index));
-            }
-
-            public void Merge(TrieNode node)
-            {
-                if (node.End) {
-                    if (End == false) {
-                        End = true;
-                    }
-                    foreach (var item in node.Results) {
-                        Results.Add(item);
-                    }
-                }
-
-                foreach (var item in node.m_values) {
-                    if (m_values.ContainsKey(item.Key) == false) {
-                        if (minflag > item.Key) { minflag = item.Key; }
-                        if (maxflag < item.Key) { maxflag = item.Key; }
-                        m_values[item.Key] = item.Value;
-                    }
-                }
-            }
-
-        }
-        #endregion
-
         #region 私有变量
         //private TrieNode _root = new TrieNode();
-        private TrieNode[] _first = new TrieNode[char.MaxValue + 1];
+        private TrieNode2[] _first = new TrieNode2[char.MaxValue + 1];
         #endregion
 
         #region 设置关键字
@@ -120,8 +53,8 @@ namespace ToolGood.Words
         /// <param name="keywords">关键字列表</param>
         public void SetKeywords(IDictionary<string, int> keywords)
         {
-            var first = new TrieNode[char.MaxValue + 1];
-            var root = new TrieNode();
+            var first = new TrieNode2[char.MaxValue + 1];
+            var root = new TrieNode2();
             foreach (var key in keywords) {
                 var p = key.Key;
                 if (string.IsNullOrEmpty(p)) continue;
@@ -138,7 +71,7 @@ namespace ToolGood.Words
             }
             this._first = first;
 
-            Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
+            Dictionary<TrieNode2, TrieNode2> links = new Dictionary<TrieNode2, TrieNode2>();
             foreach (var item in root.m_values) {
                 TryLinks(item.Value, null, links);
             }
@@ -150,10 +83,10 @@ namespace ToolGood.Words
             //_root = root;
         }
 
-        private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
+        private void TryLinks(TrieNode2 node, TrieNode2 node2, Dictionary<TrieNode2, TrieNode2> links)
         {
             foreach (var item in node.m_values) {
-                TrieNode tn = null;
+                TrieNode2 tn = null;
                 if (node2 == null) {
                     tn = _first[item.Key];
                     if (tn != null) {
@@ -178,9 +111,9 @@ namespace ToolGood.Words
         /// <returns></returns>
         public bool ContainsAny(string text)
         {
-            TrieNode ptr = null;
+            TrieNode2 ptr = null;
             foreach (char t in text) {
-                TrieNode tn;
+                TrieNode2 tn;
                 if (ptr == null) {
                     tn = _first[t];
                 } else {
@@ -204,9 +137,9 @@ namespace ToolGood.Words
         /// <returns></returns>
         public WordsSearchResult FindFirst(string text)
         {
-            TrieNode ptr = null;
+            TrieNode2 ptr = null;
             for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
+                TrieNode2 tn;
                 if (ptr == null) {
                     tn = _first[text[i]];
                 } else {
@@ -231,11 +164,11 @@ namespace ToolGood.Words
         /// <returns></returns>
         public List<WordsSearchResult> FindAll(string text)
         {
-            TrieNode ptr = null;
+            TrieNode2 ptr = null;
             List<WordsSearchResult> list = new List<WordsSearchResult>();
 
             for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
+                TrieNode2 tn;
                 if (ptr == null) {
                     tn = _first[text[i]];
                 } else {
@@ -265,9 +198,9 @@ namespace ToolGood.Words
         {
             StringBuilder result = new StringBuilder(text);
 
-            TrieNode ptr = null;
+            TrieNode2 ptr = null;
             for (int i = 0; i < text.Length; i++) {
-                TrieNode tn;
+                TrieNode2 tn;
                 if (ptr == null) {
                     tn = _first[text[i]];
                 } else {
