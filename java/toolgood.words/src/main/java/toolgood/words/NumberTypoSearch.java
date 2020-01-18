@@ -1,4 +1,4 @@
-package ToolGood.Words;
+package toolgood.words;
 
 import java.util.Hashtable;
 import java.util.Map;

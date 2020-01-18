@@ -1,8 +1,9 @@
-package ToolGood.Words;
+package toolgood.words;
+
+import toolgood.words.internals.Dict;
 
 import java.util.regex.Pattern;
 
-import ToolGood.Words.internals.Dict;
 
 public class WordsHelper{
 

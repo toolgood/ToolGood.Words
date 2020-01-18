@@ -1,4 +1,4 @@
-package com.example.demo;
+package toolgood.words;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,13 +10,13 @@ import java.util.stream.Stream;
 
 import org.springframework.util.StopWatch;
 
-import ToolGood.Words.IllegalWordsSearch;
-import ToolGood.Words.IllegalWordsSearchResult;
-import ToolGood.Words.StringSearch;
-import ToolGood.Words.StringSearchEx;
-import ToolGood.Words.WordsSearch;
-import ToolGood.Words.WordsSearchEx;
-import ToolGood.Words.WordsSearchResult;
+import toolgood.words.IllegalWordsSearch;
+import toolgood.words.IllegalWordsSearchResult;
+import toolgood.words.StringSearch;
+import toolgood.words.StringSearchEx;
+import toolgood.words.WordsSearch;
+import toolgood.words.WordsSearchEx;
+import toolgood.words.WordsSearchResult;
 
 public class DemoApplication {
 

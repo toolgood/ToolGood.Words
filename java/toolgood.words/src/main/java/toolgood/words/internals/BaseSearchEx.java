@@ -1,4 +1,4 @@
-package ToolGood.Words.internals;
+package toolgood.words.internals;
 
 import static java.util.stream.Collectors.toMap;
 
