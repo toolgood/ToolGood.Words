@@ -1,4 +1,4 @@
-package ToolGood.Words;
+package toolgood.words;
 
 
 public class IllegalWordsSearchResult

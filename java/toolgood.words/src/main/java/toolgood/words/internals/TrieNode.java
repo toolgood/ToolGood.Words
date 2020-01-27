@@ -1,4 +1,4 @@
-package ToolGood.Words.internals;
+package toolgood.words.internals;
 
 import java.util.ArrayList;
 import java.util.HashMap;

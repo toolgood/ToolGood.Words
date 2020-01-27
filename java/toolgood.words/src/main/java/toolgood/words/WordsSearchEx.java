@@ -1,23 +1,23 @@
-package ToolGood.Words;
+package toolgood.words;
+
+import toolgood.words.internals.BaseSearchEx;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ToolGood.Words.internals.BaseSearchEx;
 
-public class StringSearchEx extends BaseSearchEx{
-
+public class WordsSearchEx extends BaseSearchEx {
     /**
      * 在文本中查找所有的关键字
      * @param text 文本
      * @return
      */
-    public List<String> FindAll(String text)
+    public List<WordsSearchResult> FindAll(String text)
     {
-        List<String> root = new ArrayList<String>();
+        List<WordsSearchResult> root = new ArrayList<WordsSearchResult>();
         int p = 0;
-
-        for (int i = 0; i < text.length(); i++) {
+        int length = text.length();
+        for (int i = 0; i < length; i++) {
             int t =  _dict[text.charAt(i)];
             if (t == 0) {
                 p = 0;
@@ -34,7 +34,9 @@ public class StringSearchEx extends BaseSearchEx{
                 int index = _check[next];
                 if (index > 0) {
                     for (int item : _guides[index]) {
-                        root.add(_keywords[item]);
+                        String key = _keywords[item];
+                        WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, item);
+                        root.add(r);
                     }
                 }
                 p = next;
@@ -42,15 +44,17 @@ public class StringSearchEx extends BaseSearchEx{
         }
         return root;
     }
-    /**
+
+     /**
      * 在文本中查找第一个关键字
      * @param text 文本
      * @return
      */
-    public String FindFirst(String text)
+    public WordsSearchResult FindFirst(String text)
     {
         int p = 0;
-        for (int i = 0; i < text.length(); i++) {
+        int length = text.length();
+        for (int i = 0; i < length; i++) {
             int t =  _dict[text.charAt(i)];
             if (t == 0) {
                 p = 0;
@@ -60,7 +64,8 @@ public class StringSearchEx extends BaseSearchEx{
             if (_key[next] == t) {
                 int index = _check[next];
                 if (index > 0) {
-                    return _keywords[_guides[index][0]];
+                    String item = _keywords[_guides[index][0]];
+                    return new WordsSearchResult(item, i + 1 - item.length(), i, _guides[index][0]);
                 }
                 p = next;
             } else {
@@ -69,7 +74,8 @@ public class StringSearchEx extends BaseSearchEx{
                 if (_key[next] == t) {
                     int index = _check[next];
                     if (index > 0) {
-                        return _keywords[_guides[index][0]];
+                        String item = _keywords[_guides[index][0]];
+                        return new WordsSearchResult(item, i + 1 - item.length(),i, _guides[index][0]);
                     }
                     p = next;
                 }
@@ -81,6 +87,7 @@ public class StringSearchEx extends BaseSearchEx{
     /**
      * 判断文本是否包含关键字
      * @param text 文本
+     * @return
      */
     public boolean ContainsAny(String text)
     {
@@ -153,4 +160,5 @@ public class StringSearchEx extends BaseSearchEx{
         }
         return result.toString();
     }
+
 }
