@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>4.3.8.RELEASE</version>
+      <version>4.3.19.RELEASE</version>
     </dependency>
   </dependencies>
 
