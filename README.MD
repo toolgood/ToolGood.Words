@@ -157,3 +157,5 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
 
 
 
+#### 猜想
+   非法词(敏感词)检测方法可用于电脑病毒检测及基因检测。
