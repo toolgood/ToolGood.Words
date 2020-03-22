@@ -1,6 +1,8 @@
 package toolgood.words;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StopWatch;
 
 import toolgood.words.IllegalWordsSearch;
@@ -29,9 +32,10 @@ public class DemoApplication {
 		test_IllegalWordsSearch();
 
 		try {
-			test_save_load();
+//			test_save_load();
+            test_IllegalWordsSearch_loadWordsFormBinaryFile();
 		} catch (Exception e) {
-			//TODO: handle exception
+			e.printStackTrace();
 		}
 		test_times();
 	}
@@ -317,5 +321,52 @@ public class DemoApplication {
 			e.printStackTrace();
 		}
 		return contentBuilder.toString();
+	}
+
+	private static void test_IllegalWordsSearch_loadWordsFormBinaryFile() throws IOException {
+
+
+		long l1 = System.currentTimeMillis();
+
+		IllegalWordsSearch search = new IllegalWordsSearch();
+		long l2 = System.currentTimeMillis();
+		System.out.println("IllegalWordsSearch init time:" + (l2 - l1));
+
+		search.Load(new ClassPathResource("IllegalWordsSearch.dat").getFile().getAbsolutePath());
+		long l3 = System.currentTimeMillis();
+		System.out.println("load Load time:" + (l3 - l2));
+
+		String test = "卖毒品哈哈哈哈毛澤東porn哈哈哈哈胡锦涛pornasds哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛胡锦涛撒旦撒旦ｐｏｒｎporn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn" +
+				"哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈胡錦濤porn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn" +
+				"哈哈哈哈胡锦涛porn哈哈哈哈胡锦涛porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn" +
+				"哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn" +
+				"哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn" +
+				"哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn" +
+				"哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn哈哈哈哈或porn";
+
+		boolean b = search.ContainsAny(test);
+		if (!b) {
+			System.out.println("ContainsAny is Error.");
+		}
+		long l4 = System.currentTimeMillis();
+		System.out.println("ContainsAny time:" + (l4 - l3));
+
+		String str = search.Replace(test, '*');
+		long l5 = System.currentTimeMillis();
+		System.out.println("Replace Result:" + str);
+		System.out.println("Replace time:" + (l5 - l4));
+	}
+
+	private static void test_IllegalWordsSearch_saveToBinaryFile() throws IOException {
+		List<String> list = new ArrayList<>();
+		try (BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(new ClassPathResource("sensi_words.txt").getInputStream()))) {
+			for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+				list.add(line);
+			}
+		}
+		IllegalWordsSearch search = new IllegalWordsSearch();
+		search.SetKeywords(list);
+		search.Save("IllegalWordsSearch.dat");
 	}
 }
