@@ -66,7 +66,7 @@ namespace ToolGood.Words.Test
         public void ToChineseRMB()
         {
             var t = WordsHelper.ToChineseRMB(12345678901.12);
-            Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
+            Assert.AreEqual("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分", t);
         }
         [Test]
         public void ToNumber()
@@ -86,7 +86,13 @@ namespace ToolGood.Words.Test
         public void ToTraditionalChinese()
         {
             var tw = WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
-            Assert.AreEqual("壹佰貳拾叁億肆仟伍佰陸拾柒萬捌仟玖佰零壹元壹角貳分", tw);
+            Assert.AreEqual("壹佰貳拾叄億肆仟伍佰陸拾柒萬捌仟玖佰零壹元壹角貳分", tw);
+
+            var tw2 = WordsHelper.ToTraditionalChinese("原代码",2);
+            Assert.AreEqual("原始碼", tw2);
+
+            var tw3 = WordsHelper.ToTraditionalChinese("反反复复", 2);
+            Assert.AreEqual("反反覆覆", tw3);
         }
 
 

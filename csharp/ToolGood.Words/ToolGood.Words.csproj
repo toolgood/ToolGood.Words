@@ -19,7 +19,7 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.4.0.0</Version>
+    <Version>2.5.0.0</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -33,6 +33,20 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="dict\s2t.dat.z" />
+    <None Remove="dict\t2hk.dat.z" />
+    <None Remove="dict\t2s.dat.z" />
+    <None Remove="dict\t2tw.dat.z" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="dict\s2t.dat.z" />
+    <EmbeddedResource Include="dict\t2hk.dat.z" />
+    <EmbeddedResource Include="dict\t2s.dat.z" />
+    <EmbeddedResource Include="dict\t2tw.dat.z" />
   </ItemGroup>
 
   <ItemGroup>

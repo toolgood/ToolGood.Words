@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ToolGood.Words;
 
@@ -29,11 +30,17 @@ namespace ToolGood.Transformation.Build
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            s2t();
-            s2thk();
-            s2ttw();
 
+            s2t();
+            t2hk();
+            t2tw();
             t2s();
+
+            Compression("s2t.dat");
+            Compression("t2hk.dat");
+            Compression("t2tw.dat");
+            Compression("t2s.dat");
+
         }
 
         /// <summary>
@@ -88,7 +95,7 @@ namespace ToolGood.Transformation.Build
                 list.Add($"{item[0]}\t{item[1]}");
             }
             var str = string.Join("\n", list);
-            File.WriteAllText("t2s.dat", str);
+            File.WriteAllText("t2s.dat", str, Encoding.UTF8);
         }
 
         /// <summary>
@@ -143,9 +150,9 @@ namespace ToolGood.Transformation.Build
                 list.Add($"{item[0]}\t{item[1]}");
             }
             var str = string.Join("\n", list);
-            File.WriteAllText("s2t.dat", str);
+            File.WriteAllText("s2t.dat", str, Encoding.UTF8);
         }
-        private static void s2thk()
+        private static void t2hk()
         {
             var stc = ReadTexts(STCharacters);
             var stp = ReadTexts(STPhrases);
@@ -188,6 +195,30 @@ namespace ToolGood.Transformation.Build
                     stp22.Add(item);
                 }
             }
+
+            stp22 = stp22.OrderBy(q => q[0].Length).ToList();
+            for (int i = stp22.Count - 1; i >= 0; i--) {
+                var item = stp22[i];
+                if (item[0].Length != item[1].Length) { continue; }
+
+                for (int j = stp22.Count - 1; j > i; j--) {
+                    var item2 = stp22[j];
+                    if (item2[0].Contains(item[0])) {
+                        var t = ToTo(item2[0], dict);
+                        t = ToTo(t, dict2);
+                        StringBuilder stringBuilder = new StringBuilder(t);
+                        var index = item2[0].IndexOf(item[0]);
+                        for (int k = 0; k < item[0].Length; k++) {
+                            stringBuilder[index + k] = item[1][k];
+                        }
+                        if (stringBuilder.ToString() == item2[1]) {
+                            stp22.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            stp22 = stp22.OrderBy(q => q[0]).ToList();
+
             List<string> list = new List<string>();
             foreach (var item in dict2) {
                 list.Add($"{item.Key}\t{item.Value}");
@@ -196,9 +227,9 @@ namespace ToolGood.Transformation.Build
                 list.Add($"{item[0]}\t{item[1]}");
             }
             var str = string.Join("\n", list);
-            File.WriteAllText("s2hk.dat", str);
+            File.WriteAllText("t2hk.dat", str, Encoding.UTF8);
         }
-        private static void s2ttw()
+        private static void t2tw()
         {
             var stc = ReadTexts(STCharacters);
             var stp = ReadTexts(STPhrases);
@@ -244,6 +275,29 @@ namespace ToolGood.Transformation.Build
                 }
             }
 
+            stp22 = stp22.OrderBy(q => q[0].Length).ToList();
+            for (int i = stp22.Count - 1; i >= 0; i--) {
+                var item = stp22[i];
+                if (item[0].Length != item[1].Length) { continue; }
+
+                for (int j = stp22.Count - 1; j > i; j--) {
+                    var item2 = stp22[j];
+                    if (item2[0].Contains(item[0])) {
+                        var t = ToTo(item2[0], dict);
+                        t = ToTo(t, dict2);
+                        StringBuilder stringBuilder = new StringBuilder(t);
+                        var index = item2[0].IndexOf(item[0]);
+                        for (int k = 0; k < item[0].Length; k++) {
+                            stringBuilder[index + k] = item[1][k];
+                        }
+                        if (stringBuilder.ToString() == item2[1]) {
+                            stp22.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            stp22 = stp22.OrderBy(q => q[0]).ToList();
+
 
             List<string> list = new List<string>();
             foreach (var item in dict2) {
@@ -253,11 +307,8 @@ namespace ToolGood.Transformation.Build
                 list.Add($"{item[0]}\t{item[1]}");
             }
             var str = string.Join("\n", list);
-            File.WriteAllText("s2tw.dat", str);
+            File.WriteAllText("t2tw.dat", str, Encoding.UTF8);
         }
-
-
-
 
         private static string ToTo(string srcText, Dictionary<string, string> dict)
         {
@@ -271,6 +322,14 @@ namespace ToolGood.Transformation.Build
                 }
             }
             return str;
+        }
+
+        private static void Compression(string file)
+        {
+            var bytes = File.ReadAllBytes(file);
+            var bs = CompressionUtil.GzipCompress(bytes);
+            Directory.CreateDirectory("dict");
+            File.WriteAllBytes("dict\\" + file + ".z", bs);
         }
 
         private static List<List<string>> ReadTexts(string file)

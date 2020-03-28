@@ -14,6 +14,7 @@ namespace ToolGood.Words
         #region 私有变量
         //private TrieNode _root = new TrieNode();
         private TrieNode2[] _first = new TrieNode2[char.MaxValue + 1];
+        internal string[] _keywords;
         #endregion
 
         #region 设置关键字
@@ -86,7 +87,7 @@ namespace ToolGood.Words
         private void TryLinks(TrieNode2 node, TrieNode2 node2, Dictionary<TrieNode2, TrieNode2> links)
         {
             foreach (var item in node.m_values) {
-                TrieNode2 tn = null;
+                TrieNode2 tn;
                 if (node2 == null) {
                     tn = _first[item.Key];
                     if (tn != null) {
