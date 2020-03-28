@@ -45,19 +45,51 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dict\HKVariants.txt" />
-    <Content Include="dict\HKVariantsPhrases.txt" />
-    <Content Include="dict\HKVariantsRevPhrases.txt" />
-    <Content Include="dict\JPVariants.txt" />
-    <Content Include="dict\STCharacters.txt" />
-    <Content Include="dict\STPhrases.txt" />
-    <Content Include="dict\TSCharacters.txt" />
-    <Content Include="dict\TSPhrases.txt" />
-    <Content Include="dict\TWPhrasesIT.txt" />
-    <Content Include="dict\TWPhrasesName.txt" />
-    <Content Include="dict\TWPhrasesOther.txt" />
-    <Content Include="dict\TWVariants.txt" />
-    <Content Include="dict\TWVariantsRevPhrases.txt" />
+    <Content Include="dict\HKVariants.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\HKVariantsPhrases.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\HKVariantsRevPhrases.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\JPVariants.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\STCharacters.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\STPhrases.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TSCharacters.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TSPhrases.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TWPhrasesIT.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TWPhrasesName.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TWPhrasesOther.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TWVariants.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dict\TWVariantsRevPhrases.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj">
+      <Project>{4a5ba2b0-8c34-4891-89bc-f1536ae424d1}</Project>
+      <Name>ToolGood.Words</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
