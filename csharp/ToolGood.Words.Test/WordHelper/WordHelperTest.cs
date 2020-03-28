@@ -88,11 +88,18 @@ namespace ToolGood.Words.Test
             var tw = WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
             Assert.AreEqual("壹佰貳拾叄億肆仟伍佰陸拾柒萬捌仟玖佰零壹元壹角貳分", tw);
 
-            var tw2 = WordsHelper.ToTraditionalChinese("原代码",2);
-            Assert.AreEqual("原始碼", tw2);
+            var tw2 = WordsHelper.ToTraditionalChinese("原代码11",2);
+            Assert.AreEqual("原始碼11", tw2);
 
             var tw3 = WordsHelper.ToTraditionalChinese("反反复复", 2);
             Assert.AreEqual("反反覆覆", tw3);
+
+            var tw4 = WordsHelper.ToTraditionalChinese("这人考虑事情总是反反复复的", 2);
+            Assert.AreEqual("這人考慮事情總是反反覆覆的", tw4);
+
+
+
+
         }
 
 

@@ -7,12 +7,13 @@ ToolGood.Words
 
 csharp 文件夹说明：
 ```
-ToolGood.PinYin.Build:      生成词的拼音
-ToolGood.PinYin.WordsBuild: 生成多音词的拼音
-ToolGood.Words.Contrast:    字符串搜索对比
-ToolGood.Words.Test:        单元测试
-ToolGood.Words:             本项目源代码
-ToolGood.Words.PinYinSearch:拼音搜索项目源代码
+ToolGood.PinYin.Build:          生成词的拼音
+ToolGood.PinYin.WordsBuild:     生成多音词的拼音
+ToolGood.Transformation.Build： 生成简体繁体转换文档，更新时文档放在同一目录下，词库参考 https://github.com/BYVoid/OpenCC
+ToolGood.Words.Contrast:        字符串搜索对比
+ToolGood.Words.Test:            单元测试
+ToolGood.Words:                 本项目源代码
+ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
 ```
 java版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`及部分`WordsHelper`
 
@@ -26,8 +27,12 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
 ``` csharp
     // 转成简体
     WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
+    WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分",1);// 港澳繁体 转 简体
+    WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分",2);// 台湾正体 转 简体
     // 转成繁体
     WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
+    WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分",1);// 简体 转 港澳繁体
+    WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分",2);// 简体 转 台湾正体
     // 转成全角
     WordsHelper.ToSBC("abcABC123");
     // 转成半角
@@ -43,6 +48,7 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
     // 获取全部拼音
     WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
 ``` 
+`WordsHelper.ClearTranslate()` 清理缓存
  
 ## 非法词(敏感词)检测（字符串搜索）
 非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
