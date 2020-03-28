@@ -250,13 +250,12 @@ namespace ToolGood.Words
         public static string ToSimplifiedChinese(string text, int srcType = 0)
         {
             if (srcType > 2 || srcType < 0) { throw new Exception("srcType 不支持该类型"); }
-
-            var s2t = GetWordsSearch(false, 0);
-            text = TransformationReplace(text, s2t);
             if (srcType > 0) {
                 var t2 = GetWordsSearch(false, srcType);
                 text = TransformationReplace(text, t2);
             }
+            var s2t = GetWordsSearch(false, 0);
+            text = TransformationReplace(text, s2t);
             return text;
         }
 
