@@ -97,8 +97,9 @@ namespace ToolGood.Words.Test
             var tw4 = WordsHelper.ToTraditionalChinese("这人考虑事情总是反反复复的", 2);
             Assert.AreEqual("這人考慮事情總是反反覆覆的", tw4);
 
+            var tw5 = WordsHelper.ToTraditionalChinese("计算发现", 2);
 
-
+            
 
         }
 

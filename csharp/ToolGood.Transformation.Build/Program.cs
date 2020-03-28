@@ -23,6 +23,9 @@ namespace ToolGood.Transformation.Build
         const string TWVariants = "dict\\TWVariants.txt";
         const string TWVariantsRevPhrases = "dict\\TWVariantsRevPhrases.txt";
 
+        // 
+        const string STPhrases_Ext = "dict\\STPhrases_Ext.txt";
+
 
         /// <summary>
         /// dict 来源于  https://github.com/BYVoid/OpenCC
@@ -55,36 +58,7 @@ namespace ToolGood.Transformation.Build
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
                 dict[st[0]] = st[1];
             }
-            //排除 一些重复的 繁体转简体 ，
-            List<List<string>> rsp2 = new List<List<string>>();
-            foreach (var item in tsp) {
-                var tStr = ToTo(item[0], dict);
-                if (tStr != item[1]) {
-                    rsp2.Add(item);
-                }
-            }
-            //清除重复的 词组
-            rsp2 = rsp2.OrderBy(q => q[0].Length).ToList();
-            for (int i = rsp2.Count - 1; i >= 0; i--) {
-                var item = rsp2[i];
-                if (item[0].Length != item[1].Length) { continue; }
-
-                for (int j = rsp2.Count - 1; j > i; j--) {
-                    var item2 = rsp2[j];
-                    if (item2[0].Contains(item[0])) {
-                        var t = ToTo(item2[0], dict);
-                        StringBuilder stringBuilder = new StringBuilder(t);
-                        var index = item2[0].IndexOf(item[0]);
-                        for (int k = 0; k < item[0].Length; k++) {
-                            stringBuilder[index + k] = item[1][k];
-                        }
-                        if (stringBuilder.ToString() == item2[1]) {
-                            rsp2.RemoveAt(j);
-                        }
-                    }
-                }
-            }
-            rsp2 = rsp2.OrderBy(q => q[0]).ToList();
+            List<List<string>> rsp2 = SimplifyWords(tsp, dict, null);
 
 
             List<string> list = new List<string>();
@@ -105,42 +79,14 @@ namespace ToolGood.Transformation.Build
         {
             var stc = ReadTexts(STCharacters);
             var stp = ReadTexts(STPhrases);
+            stp.AddRange(ReadTexts(STPhrases_Ext));
             Dictionary<string, string> dict = new Dictionary<string, string>();
             foreach (var st in stc) {
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
                 dict[st[0]] = st[1];
             }
-            //排除 一些重复的 简体转繁体 ，
-            List<List<string>> stp2 = new List<List<string>>();
-            foreach (var item in stp) {
-                var tStr = ToTo(item[0], dict);
-                if (tStr != item[1]) {
-                    stp2.Add(item);
-                }
-            }
-            //清除重复的 词组
-            stp2 = stp2.OrderBy(q => q[0].Length).ToList();
-            for (int i = stp2.Count - 1; i >= 0; i--) {
-                var item = stp2[i];
-                if (item[0].Length != item[1].Length) { continue; }
 
-                for (int j = stp2.Count - 1; j > i; j--) {
-                    var item2 = stp2[j];
-                    if (item2[0].Contains(item[0])) {
-                        var t = ToTo(item2[0], dict);
-                        StringBuilder stringBuilder = new StringBuilder(t);
-                        var index = item2[0].IndexOf(item[0]);
-                        for (int k = 0; k < item[0].Length; k++) {
-                            stringBuilder[index + k] = item[1][k];
-                        }
-                        if (stringBuilder.ToString() == item2[1]) {
-                            stp2.RemoveAt(j);
-                        }
-                    }
-                }
-            }
-            stp2 = stp2.OrderBy(q => q[0]).ToList();
-
+            List<List<string>> stp2 = SimplifyWords(stp, dict, null);
 
             List<string> list = new List<string>();
             foreach (var item in dict) {
@@ -156,19 +102,14 @@ namespace ToolGood.Transformation.Build
         {
             var stc = ReadTexts(STCharacters);
             var stp = ReadTexts(STPhrases);
+            stp.AddRange(ReadTexts(STPhrases_Ext));
+
             Dictionary<string, string> dict = new Dictionary<string, string>();
             foreach (var st in stc) {
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
                 dict[st[0]] = st[1];
             }
-            //排除 一些重复的 简体转繁体 ，
-            List<List<string>> stp2 = new List<List<string>>();
-            foreach (var item in stp) {
-                var tStr = ToTo(item[0], dict);
-                if (tStr != item[1]) {
-                    stp2.Add(item);
-                }
-            }
+ 
             //----------- 
             var hkv = ReadTexts(HKVariants);
             var hkvp = ReadTexts(HKVariantsPhrases);
@@ -184,40 +125,8 @@ namespace ToolGood.Transformation.Build
                 dict2[st[0]] = st[1];
             }
 
-            //排除 一些重复的 简体转繁体 ，
-            List<List<string>> stp22 = new List<List<string>>();
-            foreach (var item in hkv) {
-                if (item[0].Length == 1) { continue; } //防止一变多
+            List<List<string>> stp22 = SimplifyWords(hkv, dict, dict2);
 
-                var tStr1 = ToTo(item[0], dict);
-                var tStr = ToTo(tStr1, dict2);
-                if (tStr != item[1]) {
-                    stp22.Add(item);
-                }
-            }
-
-            stp22 = stp22.OrderBy(q => q[0].Length).ToList();
-            for (int i = stp22.Count - 1; i >= 0; i--) {
-                var item = stp22[i];
-                if (item[0].Length != item[1].Length) { continue; }
-
-                for (int j = stp22.Count - 1; j > i; j--) {
-                    var item2 = stp22[j];
-                    if (item2[0].Contains(item[0])) {
-                        var t = ToTo(item2[0], dict);
-                        t = ToTo(t, dict2);
-                        StringBuilder stringBuilder = new StringBuilder(t);
-                        var index = item2[0].IndexOf(item[0]);
-                        for (int k = 0; k < item[0].Length; k++) {
-                            stringBuilder[index + k] = item[1][k];
-                        }
-                        if (stringBuilder.ToString() == item2[1]) {
-                            stp22.RemoveAt(j);
-                        }
-                    }
-                }
-            }
-            stp22 = stp22.OrderBy(q => q[0]).ToList();
 
             List<string> list = new List<string>();
             foreach (var item in dict2) {
@@ -233,19 +142,14 @@ namespace ToolGood.Transformation.Build
         {
             var stc = ReadTexts(STCharacters);
             var stp = ReadTexts(STPhrases);
+            stp.AddRange(ReadTexts(STPhrases_Ext));
+
             Dictionary<string, string> dict = new Dictionary<string, string>();
             foreach (var st in stc) {
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
                 dict[st[0]] = st[1];
             }
-            //排除 一些重复的 简体转繁体 ，
-            List<List<string>> stp2 = new List<List<string>>();
-            foreach (var item in stp) {
-                var tStr = ToTo(item[0], dict);
-                if (tStr != item[1]) {
-                    stp2.Add(item);
-                }
-            }
+
             //----------- 
             var twv = ReadTexts(TWVariants);
             var twpit = ReadTexts(TWPhrasesIT);
@@ -263,41 +167,8 @@ namespace ToolGood.Transformation.Build
                 if (st[1].Length > 1) { continue; }
                 dict2[st[0]] = st[1];
             }
-            //排除 一些重复的 简体转繁体 ，
-            List<List<string>> stp22 = new List<List<string>>();
-            foreach (var item in twv) {
-                if (item[0].Length == 1) { continue; } //防止一变多
 
-                var tStr1 = ToTo(item[0], dict);
-                var tStr = ToTo(tStr1, dict2);
-                if (tStr != item[1]) {
-                    stp22.Add(item);
-                }
-            }
-
-            stp22 = stp22.OrderBy(q => q[0].Length).ToList();
-            for (int i = stp22.Count - 1; i >= 0; i--) {
-                var item = stp22[i];
-                if (item[0].Length != item[1].Length) { continue; }
-
-                for (int j = stp22.Count - 1; j > i; j--) {
-                    var item2 = stp22[j];
-                    if (item2[0].Contains(item[0])) {
-                        var t = ToTo(item2[0], dict);
-                        t = ToTo(t, dict2);
-                        StringBuilder stringBuilder = new StringBuilder(t);
-                        var index = item2[0].IndexOf(item[0]);
-                        for (int k = 0; k < item[0].Length; k++) {
-                            stringBuilder[index + k] = item[1][k];
-                        }
-                        if (stringBuilder.ToString() == item2[1]) {
-                            stp22.RemoveAt(j);
-                        }
-                    }
-                }
-            }
-            stp22 = stp22.OrderBy(q => q[0]).ToList();
-
+            List<List<string>> stp22 = SimplifyWords(twv, dict, dict2);
 
             List<string> list = new List<string>();
             foreach (var item in dict2) {
@@ -309,6 +180,149 @@ namespace ToolGood.Transformation.Build
             var str = string.Join("\n", list);
             File.WriteAllText("t2tw.dat", str, Encoding.UTF8);
         }
+
+
+        /// <summary>
+        /// 精细 转换
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dict"></param>
+        /// <param name="dict2"></param>
+        /// <returns></returns>
+        private static List<List<string>> SimplifyWords(List<List<string>> src, Dictionary<string, string> dict, Dictionary<string, string> dict2)
+        {
+            List<List<string>> tarList = new List<List<string>>();
+            List<List<string>> tempClearList = new List<List<string>>();
+
+            // 保存
+            foreach (var item in src) {
+                if (item[0].Length == 1) { continue; } //防止一变多
+
+                var tStr = ToTo(item[0], dict);
+                if (dict2 != null) { tStr = ToTo(tStr, dict2); }
+                if (tStr != item[1]) {
+                    tarList.Add(item);
+                } else {
+                    tempClearList.Add(item);
+                }
+            }
+
+            //清除重复的 词组
+            tarList = SimplifyWords2(tarList, dict, dict2);
+
+            // 由于算法是从前向后替换，只要保证前面的词组能够正确识别出来就可以了。
+            List<string> firstChars = new List<string>();
+            foreach (var item in tarList) {
+                for (int i = 1; i < item[0].Length; i++) {
+                    firstChars.Add(item[0].Substring(0, item[0].Length - i));
+                }
+            }
+            firstChars = firstChars.Distinct().ToList();
+
+            List<List<string>> lastTempList = new List<List<string>>();
+            foreach (var item in tempClearList) {
+                for (int i = 0; i < item[0].Length - 1; i++) {
+                    var t = item[0].Substring(item[0].Length - 1 - i, 1 + i);
+                    if (firstChars.Contains(t)) {
+                        lastTempList.Add(item);
+                        break;
+                    }
+                }
+            }
+            // 再来一次 清除重复的 词组
+            lastTempList = SimplifyWords3(lastTempList, dict, dict2);
+            tarList.AddRange(lastTempList);
+
+            tarList = tarList.OrderBy(q => q[0]).ToList();
+            return tarList;
+        }
+
+        private static List<List<string>> SimplifyWords2(List<List<string>> tarList, Dictionary<string, string> dict, Dictionary<string, string> dict2)
+        {
+            tarList = tarList.OrderBy(q => q[0].Length).ToList();
+            for (int i = tarList.Count - 1; i >= 0; i--) {
+                var item = tarList[i];
+
+                for (int j = tarList.Count - 1; j > i; j--) {
+                    var item2 = tarList[j];
+                    if (item2[0].Contains(item[0])) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        var index = item2[0].IndexOf(item[0]);
+                        if (index > 0) {
+                            var t = item2[0].Substring(0, index);
+                            t = ToTo(t, dict);
+                            if (dict2 != null) {
+                                t = ToTo(t, dict2);
+                            }
+                            stringBuilder.Append(t);
+                        }
+                        stringBuilder.Append(item[1]);
+                        if (index + item[0].Length + 1 <= item2[0].Length) {
+                            var t = item2[0].Substring(index + item[0].Length);
+                            t = ToTo(t, dict);
+                            if (dict2 != null) {
+                                t = ToTo(t, dict2);
+                            }
+                            stringBuilder.Append(t);
+                        }
+                        if (stringBuilder.ToString() == item2[1]) {
+                            tarList.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            return tarList;
+        }
+
+        private static List<List<string>> SimplifyWords3(List<List<string>> tarList, Dictionary<string, string> dict, Dictionary<string, string> dict2)
+        {
+            tarList = tarList.OrderBy(q => q[0].Length).ToList();
+            for (int i = tarList.Count - 1; i >= 0; i--) {
+                var item = tarList[i];
+
+                for (int j = tarList.Count - 1; j > i; j--) {
+                    var item2 = tarList[j];
+                    if (item2[0].EndsWith(item[0])) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        var index = item2[0].LastIndexOf(item[0]);
+                        if (index > 0) {
+                            var t = item2[0].Substring(0, index);
+                            t = ToTo(t, dict);
+                            if (dict2 != null) {
+                                t = ToTo(t, dict2);
+                            }
+                            stringBuilder.Append(t);
+                        }
+                        stringBuilder.Append(item[1]);
+                        if (index + item[0].Length + 1 <= item2[0].Length) {
+                            var t = item2[0].Substring(index + item[0].Length);
+                            t = ToTo(t, dict);
+                            if (dict2 != null) {
+                                t = ToTo(t, dict2);
+                            }
+                            stringBuilder.Append(t);
+                        }
+                        if (stringBuilder.ToString() == item2[1]) {
+                            tarList.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            return tarList;
+        }
+
+
+        //private static int GetLength(string text)
+        //{
+        //    var stringInfo = new System.Globalization.StringInfo(text);
+        //    return stringInfo.LengthInTextElements;
+        //}
+
+        //public static String Substring(String text, int start, int end)
+        //{
+        //    var stringInfo = new System.Globalization.StringInfo(text);
+        //    return stringInfo.SubstringByTextElements(start, end);
+        //}
 
         private static string ToTo(string srcText, Dictionary<string, string> dict)
         {
