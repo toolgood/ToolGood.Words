@@ -35,18 +35,20 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="dict\s2t.dat.z" />
-    <None Remove="dict\t2hk.dat.z" />
-    <None Remove="dict\t2s.dat.z" />
-    <None Remove="dict\t2tw.dat.z" />
-  </ItemGroup>
+ 
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1'">
     <EmbeddedResource Include="dict\s2t.dat.z" />
     <EmbeddedResource Include="dict\t2hk.dat.z" />
     <EmbeddedResource Include="dict\t2s.dat.z" />
     <EmbeddedResource Include="dict\t2tw.dat.z" />
+  </ItemGroup>
+
+  <ItemGroup  Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <EmbeddedResource Include="dict\s2t.dat.br" />
+    <EmbeddedResource Include="dict\t2hk.dat.br" />
+    <EmbeddedResource Include="dict\t2s.dat.br" />
+    <EmbeddedResource Include="dict\t2tw.dat.br" />
   </ItemGroup>
 
   <ItemGroup>

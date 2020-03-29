@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
@@ -12,9 +13,9 @@ namespace ToolGood.Words
             get {
                 if (_Simplified == null) {
                     Dictionary<string, string> dict = new Dictionary<string, string>();
-                    var dict1 = WordsHelper.GetTransformationDict("t2hk.dat");
-                    var dict2 = WordsHelper.GetTransformationDict("t2tw.dat");
-                    var dict3 = WordsHelper.GetTransformationDict("t2s.dat");
+                    var dict1 = Translate.GetTransformationDict("t2hk.dat");
+                    var dict2 = Translate.GetTransformationDict("t2tw.dat");
+                    var dict3 = Translate.GetTransformationDict("t2s.dat");
                     foreach (var item in dict1) {
                         if (item.Key.Length > 1 || item.Value.Length > 1) { continue; }
                         dict[item.Value] = item.Key;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ToolGood.Words;
+using ToolGood.Bedrock;
 
 namespace ToolGood.Transformation.Build
 {
@@ -109,7 +109,7 @@ namespace ToolGood.Transformation.Build
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
                 dict[st[0]] = st[1];
             }
- 
+
             //----------- 
             var hkv = ReadTexts(HKVariants);
             var hkvp = ReadTexts(HKVariantsPhrases);
@@ -213,7 +213,7 @@ namespace ToolGood.Transformation.Build
             // 由于算法是从前向后替换，只要保证前面的词组能够正确识别出来就可以了。
             List<string> firstChars = new List<string>();
             foreach (var item in tarList) {
-                for (int i = 1; i < item[0].Length; i++) {
+                for (int i = 0; i < item[0].Length; i++) {
                     firstChars.Add(item[0].Substring(0, item[0].Length - i));
                 }
             }
@@ -231,8 +231,22 @@ namespace ToolGood.Transformation.Build
             }
             // 再来一次 清除重复的 词组
             lastTempList = SimplifyWords3(lastTempList, dict, dict2);
-            tarList.AddRange(lastTempList);
 
+            // 
+            var fullList = tarList.Select(q => q[0]).ToList();
+            List<List<string>> containsTempList = new List<List<string>>();
+
+            foreach (var item in tempClearList) {
+                if (fullList.Contains(item[0])) {
+                    containsTempList.Add(item);
+                }
+            }
+            containsTempList = SimplifyWords2(containsTempList, dict, dict2);
+
+            tarList.AddRange(lastTempList);
+            tarList.AddRange(containsTempList);
+
+            tarList = tarList.Distinct().ToList();
             tarList = tarList.OrderBy(q => q[0]).ToList();
             return tarList;
         }
@@ -344,6 +358,9 @@ namespace ToolGood.Transformation.Build
             var bs = CompressionUtil.GzipCompress(bytes);
             Directory.CreateDirectory("dict");
             File.WriteAllBytes("dict\\" + file + ".z", bs);
+
+            var bs2 = CompressionUtil.BrCompress(bytes);
+            File.WriteAllBytes("dict\\" + file + ".br", bs2);
         }
 
         private static List<List<string>> ReadTexts(string file)
