@@ -213,22 +213,25 @@ namespace ToolGood.Transformation.Build
             // 由于算法是从前向后替换，只要保证前面的词组能够正确识别出来就可以了。
             List<string> firstChars = new List<string>();
             foreach (var item in tarList) {
-                for (int i = 0; i < item[0].Length; i++) {
+                for (int i = 0; i < item[0].Length - 1; i++) {
                     firstChars.Add(item[0].Substring(0, item[0].Length - i));
                 }
             }
-            firstChars = firstChars.Distinct().ToList();
+            firstChars = firstChars.Distinct().OrderBy(q => q.Length).ToList();
+            Words.WordsSearch wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(firstChars);
+
 
             List<List<string>> lastTempList = new List<List<string>>();
             foreach (var item in tempClearList) {
-                for (int i = 0; i < item[0].Length - 1; i++) {
-                    var t = item[0].Substring(item[0].Length - 1 - i, 1 + i);
-                    if (firstChars.Contains(t)) {
-                        lastTempList.Add(item);
-                        break;
-                    }
+                var end = item[0].Length - 1;
+                var all = wordsSearch.FindAll(item[0]);
+                var f = all.Where(q => q.End == end).FirstOrDefault();
+                if (f != null) {
+                    lastTempList.Add(item);
                 }
             }
+ 
             // 再来一次 清除重复的 词组
             lastTempList = SimplifyWords3(lastTempList, dict, dict2);
 
@@ -357,26 +360,39 @@ namespace ToolGood.Transformation.Build
             List<string> firstChars = new List<string>();
             foreach (var item in tarList) {
                 for (int i = 0; i < item[0].Length - 1; i++) {
-                    firstChars.Add(item[0].Substring(0, item[0].Length - i));
+                    var t = item[0].Substring(0, item[0].Length - i);
+                    firstChars.Add(t);
                 }
             }
-            firstChars = firstChars.Distinct().ToList();
+            firstChars = firstChars.Distinct().OrderBy(q => q.Length).ToList();
+            var srcWords = tarList.Select(q => q[0]).ToList();
+
+            Words.WordsSearch wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(firstChars);
+            Words.WordsSearch wordsSearch2 = new Words.WordsSearch();
+            wordsSearch2.SetKeywords(srcWords);
 
             List<string> containsTempList = new List<string>();
             var words = GetWords();
+
             foreach (var item in words) {
-                if (firstChars.Contains(item) && item.Length > 1) {
-                    containsTempList.Add(item);
+                var end = item.Length - 1;
+                var all = wordsSearch.FindAll(item);
+                var f = all.Where(q => q.End == end).FirstOrDefault();
+                if (f != null) {
+                    if (wordsSearch2.ContainsAny(item) == false) {
+                        containsTempList.Add(item);
+                    }
                 }
             }
 
-            foreach (var item in tarList) { firstChars.Add(item[0]); }
             foreach (var item in tempClearList) {
-                for (int i = 0; i < item[0].Length - 1; i++) {
-                    var t = item[0].Substring(item[0].Length - 1 - i, 1 + i);
-                    if (firstChars.Contains(t)) {
+                var end = item[0].Length - 1;
+                var all = wordsSearch.FindAll(item[0]);
+                var f = all.Where(q => q.End == end).FirstOrDefault();
+                if (f != null) {
+                    if (wordsSearch2.ContainsAny(item[0]) == false) {
                         containsTempList.Add(item[0]);
-                        break;
                     }
                 }
             }
@@ -384,16 +400,20 @@ namespace ToolGood.Transformation.Build
             containsTempList = containsTempList.Distinct().ToList();
             containsTempList = containsTempList.OrderBy(q => q.Length).ToList();
             // 清理 搜狗词库
-            var srcWords = tarList.Select(q => q[0]).ToList();
-            for (int i = containsTempList.Count - 1; i >= 0; i--) {
-                var t = containsTempList[i];
-                if (srcWords.Contains(t)) { //去除重复的
-                    containsTempList.RemoveAt(i);
-                    continue;
-                }
+
+            for (int i = 2; i < 8; i++) {
+                var keywords = containsTempList.Where(q => q.Length <= i).ToList();
+                wordsSearch = new Words.WordsSearch();
+                wordsSearch.SetKeywords(keywords);
+
                 for (int j = containsTempList.Count - 1; j >= i + 1; j--) {
-                    var t2 = containsTempList[j];
-                    if (t2.EndsWith(t)) {
+                    var item = containsTempList[j];
+                    if (item.Length <= i) { break; }
+
+                    var end = item.Length - 1;
+                    var all = wordsSearch.FindAll(item);
+                    var f = all.Where(q => q.End == end).FirstOrDefault();
+                    if (f != null) {
                         containsTempList.RemoveAt(j);
                     }
                 }

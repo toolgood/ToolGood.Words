@@ -59,6 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="..\ToolGood.PinYin.WordsBuild\Scel\147种水果的名字.scel" Link="Scel\147种水果的名字.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
