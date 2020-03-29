@@ -12,7 +12,7 @@ namespace ToolGood.PinYin.Build
         static void Main(string[] args)
         {
             Dictionary<string, HashSet<string>> dict = new Dictionary<string, HashSet<string>>();
-            var files = Directory.GetFiles("dict","*.txt");
+            var files = Directory.GetFiles("dict", "*.txt");
             foreach (var file in files) {
                 var text = File.ReadAllText(file);
                 var line = text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -20,7 +20,7 @@ namespace ToolGood.PinYin.Build
                     if (string.IsNullOrWhiteSpace(l)) {
                         continue;
                     }
-                    var sp = l.Split("\t,:| ".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var sp = l.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 1; i < sp.Length; i++) {
                         pyName.Add(sp[i]);
                     }
@@ -34,7 +34,27 @@ namespace ToolGood.PinYin.Build
                     }
                 }
             }
+            Dictionary<string, int> valuePairs = new Dictionary<string, int>();
+            foreach (var item in pyName) {
+                int count = 0;
+                if (valuePairs.TryGetValue(item,out count)) {
+
+                }
+                valuePairs[item] = count + 1;
+            }
+            var t = valuePairs.Where(q => q.Value < 2).Select(q => q.Key).OrderBy(q=>q).ToList();
+
+
             pyName = pyName.Distinct().OrderBy(q => q).ToList();
+
+
+
+            var ts = pyName.Where(q => q.Length > 5).ToList();
+            var ts1 = pyName.Where(q => q.Length == 5).ToList();
+            var ts2 = pyName.Where(q => q.Length == 4).ToList();
+            var ts3 = pyName.Where(q => q.Length == 3).ToList();
+            var ts4 = pyName.Where(q => q.Length == 2).ToList();
+            var ts5 = pyName.Where(q => q.Length == 1).ToList();
             var str = "\"" + string.Join("\",\"", pyName) + "\"";
             File.WriteAllText("pyName.txt", str);
 
