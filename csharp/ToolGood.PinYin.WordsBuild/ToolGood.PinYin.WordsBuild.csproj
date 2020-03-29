@@ -1,265 +1,204 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9C6B8FE2-E465-42FB-90FD-02D00B240778}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToolGood.PinYin.WordsBuild</RootNamespace>
-    <AssemblyName>ToolGood.PinYin.WordsBuild</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="PinYinWords.cs" />
-    <Compile Include="ScelImport\BaseImport.cs" />
-    <Compile Include="ScelImport\Entities\BuildType.cs" />
-    <Compile Include="ScelImport\Entities\Code.cs" />
-    <Compile Include="ScelImport\Entities\CodeType.cs" />
-    <Compile Include="ScelImport\Entities\WordLibrary.cs" />
-    <Compile Include="ScelImport\Entities\WordLibraryList.cs" />
-    <Compile Include="ScelImport\Helpers\BinFileHelper.cs" />
-    <Compile Include="ScelImport\Helpers\CollectionHelper.cs" />
-    <Compile Include="ScelImport\Helpers\DictionaryHelper.cs" />
-    <Compile Include="ScelImport\Interface.cs" />
-    <Compile Include="ScelImport\SougouPinyinScel.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj">
-      <Project>{4a5ba2b0-8c34-4891-89bc-f1536ae424d1}</Project>
-      <Name>ToolGood.Words</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="Scel\147种水果的名字.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\147种水果的名字.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\765个世界主要城市.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\765个世界主要城市.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\世界所有国家及其首都.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\世界所有国家及其首都.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\中医中药大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\中医中药大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\书法词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\书法词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\二人转词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\二人转词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\亲戚称呼.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\亲戚称呼.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\保险词汇【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\保险词汇【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\全国省市区县地名.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\全国省市区县地名.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\农业词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\农业词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\冰雪名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\冰雪名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\冶金词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\冶金词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\动物词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\动物词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\化学化工词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\化学化工词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\化学品名.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\化学品名.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\医学词汇大全.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\医学词汇大全.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\医疗器械大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\医疗器械大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\园林花草名称词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\园林花草名称词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\国家和地区词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\国家和地区词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\地名词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\地名词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\地理名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\地理名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\地理地质词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\地理地质词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\地表水文词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\地表水文词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\基础数学用词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\基础数学用词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\天文学天体类词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\天文学天体类词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\天文词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\天文词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\家居装修词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\家居装修词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\建筑词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\建筑词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\恒星、银河系词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\恒星、银河系词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\搜狗标准词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\搜狗标准词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\数学词库EXTEND版.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\数学词库EXTEND版.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\数学词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\数学词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\时空类词汇总库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\时空类词汇总库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\最新车型大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\最新车型大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\最详细的全国地名大全.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\最详细的全国地名大全.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\机械词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\机械词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\植物名词大全.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\植物名词大全.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\植物学名词术语.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\植物学名词术语.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\植物词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\植物词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\气象与降水名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\气象与降水名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\气象词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\气象词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\水利词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\水利词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\法律词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\法律词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\测绘词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\测绘词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\物流词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\物流词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\物理词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\物理词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\生物词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\生物词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\电力词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\电力词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\电子商务专用词库【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\电子商务专用词库【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\电子词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\电子词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\真菌类名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\真菌类名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\经济生活词汇.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\经济生活词汇.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\美容词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\美容词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\联合国成员国名单.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\联合国成员国名单.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\艺术专用词汇.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\艺术专用词汇.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\花卉名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\花卉名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\花木名称大全.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\花木名称大全.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\虫蛇类名词.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\虫蛇类名词.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\计算机词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\计算机词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\财经金融词汇大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\财经金融词汇大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\颜色名称.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\颜色名称.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\风云雨雪雾雷虹词库.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\风云雨雪雾雷虹词库.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scel\饮食大全【官方推荐】.scel">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Scel\饮食大全【官方推荐】.scel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

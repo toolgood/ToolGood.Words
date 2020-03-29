@@ -52,10 +52,6 @@ namespace ToolGood.PinYin.WordsBuild
             File.WriteAllText("pyIndex.txt", pyIndex);
             File.WriteAllText("py.txt", py);
 
-
-
-
-
         }
         static List<PinYinWords> SimplifyPinYinWords(HashSet<PinYinWords> pyws)
         {
@@ -103,8 +99,8 @@ namespace ToolGood.PinYin.WordsBuild
             for (int i = 2; i < 5; i++) {
                 SimplifyPinYin(list, pyws, i);
             }
-
         }
+
         static void SimplifyPinYin(List<Tuple<string, string>> list, HashSet<PinYinWords> pyws, int length)
         {
             foreach (var item in list) {
