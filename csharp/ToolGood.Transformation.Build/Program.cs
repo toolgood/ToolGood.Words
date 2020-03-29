@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Studyzy.IMEWLConverter.IME;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +34,6 @@ namespace ToolGood.Transformation.Build
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-
             s2t();
             t2hk();
             t2tw();
@@ -86,7 +86,7 @@ namespace ToolGood.Transformation.Build
                 dict[st[0]] = st[1];
             }
 
-            List<List<string>> stp2 = SimplifyWords(stp, dict, null);
+            List<List<string>> stp2 = SimplifyWords4(stp, dict, null);
 
             List<string> list = new List<string>();
             foreach (var item in dict) {
@@ -325,6 +325,101 @@ namespace ToolGood.Transformation.Build
             return tarList;
         }
 
+        /// <summary>
+        /// 仅用于简体
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dict"></param>
+        /// <param name="dict2"></param>
+        /// <returns></returns>
+        private static List<List<string>> SimplifyWords4(List<List<string>> src, Dictionary<string, string> dict, Dictionary<string, string> dict2)
+        {
+            List<List<string>> tarList = new List<List<string>>();
+            List<List<string>> tempClearList = new List<List<string>>();
+
+            // 保存
+            foreach (var item in src) {
+                if (item[0].Length == 1) { continue; } //防止一变多
+
+                var tStr = ToTo(item[0], dict);
+                if (dict2 != null) { tStr = ToTo(tStr, dict2); }
+                if (tStr != item[1]) {
+                    tarList.Add(item);
+                } else {
+                    tempClearList.Add(item);
+                }
+            }
+
+            //清除重复的 词组
+            tarList = SimplifyWords2(tarList, dict, dict2);
+
+            // 由于算法是从前向后替换，只要保证前面的词组能够正确识别出来就可以了。
+            List<string> firstChars = new List<string>();
+            foreach (var item in tarList) {
+                for (int i = 0; i < item[0].Length - 1; i++) {
+                    firstChars.Add(item[0].Substring(0, item[0].Length - i));
+                }
+            }
+            firstChars = firstChars.Distinct().ToList();
+
+            List<string> containsTempList = new List<string>();
+            var words = GetWords();
+            foreach (var item in words) {
+                if (firstChars.Contains(item) && item.Length > 1) {
+                    containsTempList.Add(item);
+                }
+            }
+
+            foreach (var item in tarList) { firstChars.Add(item[0]); }
+            foreach (var item in tempClearList) {
+                for (int i = 0; i < item[0].Length - 1; i++) {
+                    var t = item[0].Substring(item[0].Length - 1 - i, 1 + i);
+                    if (firstChars.Contains(t)) {
+                        containsTempList.Add(item[0]);
+                        break;
+                    }
+                }
+            }
+
+            containsTempList = containsTempList.Distinct().ToList();
+            containsTempList = containsTempList.OrderBy(q => q.Length).ToList();
+            // 清理 搜狗词库
+            var srcWords = tarList.Select(q => q[0]).ToList();
+            for (int i = containsTempList.Count - 1; i >= 0; i--) {
+                var t = containsTempList[i];
+                if (srcWords.Contains(t)) { //去除重复的
+                    containsTempList.RemoveAt(i);
+                    continue;
+                }
+                for (int j = containsTempList.Count - 1; j >= i + 1; j--) {
+                    var t2 = containsTempList[j];
+                    if (t2.EndsWith(t)) {
+                        containsTempList.RemoveAt(j);
+                    }
+                }
+            }
+
+            containsTempList = containsTempList.Distinct().ToList();
+
+            foreach (var item in containsTempList) {
+                string s = "";
+                foreach (var c in item) {
+                    if (dict.TryGetValue(c.ToString(), out string v)) {
+                        s += v;
+                    } else {
+                        s += c;
+                    }
+                }
+                tarList.Add(new List<string>() { item, s });
+            }
+
+            tarList = tarList.Distinct().ToList();
+            tarList = tarList.OrderBy(q => q[0]).ToList();
+            return tarList;
+        }
+
+
+
 
         //private static int GetLength(string text)
         //{
@@ -379,6 +474,31 @@ namespace ToolGood.Transformation.Build
             }
             return list;
         }
+
+
+        static List<string> GetWords()
+        {
+            var files = Directory.GetFiles("Scel");
+            HashSet<string> list = new HashSet<string>();
+
+            foreach (var file in files) {
+                GetWords(file, list);
+            }
+            return list.ToList();
+        }
+
+        static List<string> GetWords(string file, HashSet<string> list)
+        {
+            SougouPinyinScel scel = new SougouPinyinScel();
+            var t = scel.Import(file);
+
+            foreach (var item in t) {
+                list.Add(item.Word.Trim());
+            }
+            return list.ToList();
+        }
+
+
 
 
 
