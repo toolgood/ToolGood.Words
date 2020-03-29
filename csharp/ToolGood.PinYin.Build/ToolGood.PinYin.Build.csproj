@@ -6,20 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ChineseConverter">
-      <HintPath>..\lib\ChineseConverter.dll</HintPath>
-    </Reference>
-    <Reference Include="ChnCharInfo">
-      <HintPath>..\lib\ChnCharInfo.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="_pyyin.txt">
+    <None Update="dict\_py.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
