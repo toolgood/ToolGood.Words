@@ -42,14 +42,18 @@
     <EmbeddedResource Include="dict\t2hk.dat.z" />
     <EmbeddedResource Include="dict\t2s.dat.z" />
     <EmbeddedResource Include="dict\t2tw.dat.z" />
+    <EmbeddedResource Include="dict\pyIndex.txt.z" />
   </ItemGroup>
 
-  <ItemGroup  Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <EmbeddedResource Include="dict\s2t.dat.br" />
     <EmbeddedResource Include="dict\t2hk.dat.br" />
     <EmbeddedResource Include="dict\t2s.dat.br" />
     <EmbeddedResource Include="dict\t2tw.dat.br" />
+    <EmbeddedResource Include="dict\pyIndex.txt.br" />
   </ItemGroup>
+
+ 
 
   <ItemGroup>
     <None Include="..\..\LICENSE">
