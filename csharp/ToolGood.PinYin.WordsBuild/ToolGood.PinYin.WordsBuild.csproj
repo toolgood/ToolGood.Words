@@ -201,4 +201,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="dict\" />
+  </ItemGroup>
+
 </Project>
