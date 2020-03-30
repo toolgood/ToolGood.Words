@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.Build", "ToolGood.PinYin.Build\ToolGood.PinYin.Build.csproj", "{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.PinYin.WordsBuild", "ToolGood.PinYin.WordsBuild\ToolGood.PinYin.WordsBuild.csproj", "{9C6B8FE2-E465-42FB-90FD-02D00B240778}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.Words", "ToolGood.Words\ToolGood.Words.csproj", "{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Contrast", "ToolGood.Words.Contrast\ToolGood.Words.Contrast.csproj", "{ED41B333-03FB-41C3-A25C-18763D626D77}"
@@ -19,7 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pinyinBuild", "pinyinBuild"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{08D4758B-23A0-4EF7-AA2B-195244D5B50A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Transformation.Build", "ToolGood.Transformation.Build\ToolGood.Transformation.Build.csproj", "{30F08AE2-38A0-43AC-9784-48B54091FAD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.Transformation.Build", "ToolGood.Transformation.Build\ToolGood.Transformation.Build.csproj", "{30F08AE2-38A0-43AC-9784-48B54091FAD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.PinYin.Build", "ToolGood.PinYin.Build\ToolGood.PinYin.Build.csproj", "{2F601855-A9BA-4828-A804-34DF81FE55CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.PinYin.Pretreatment", "ToolGood.PinYin.Pretreatment\ToolGood.PinYin.Pretreatment.csproj", "{68C3BBE4-BA05-42C0-A495-3E1A183274C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C6B8FE2-E465-42FB-90FD-02D00B240778}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,16 +47,24 @@ Global
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F601855-A9BA-4828-A804-34DF81FE55CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F601855-A9BA-4828-A804-34DF81FE55CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F601855-A9BA-4828-A804-34DF81FE55CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F601855-A9BA-4828-A804-34DF81FE55CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1B1A8CEF-44F8-4AA3-BC82-BA7DC45E494E} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
-		{9C6B8FE2-E465-42FB-90FD-02D00B240778} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
 		{ED41B333-03FB-41C3-A25C-18763D626D77} = {08D4758B-23A0-4EF7-AA2B-195244D5B50A}
 		{37920783-B278-422F-8632-E00D6ED7F8C0} = {08D4758B-23A0-4EF7-AA2B-195244D5B50A}
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
+		{2F601855-A9BA-4828-A804-34DF81FE55CF} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
+		{68C3BBE4-BA05-42C0-A495-3E1A183274C6} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE963BE7-BF91-4803-8179-58AFAE0A2C91}
