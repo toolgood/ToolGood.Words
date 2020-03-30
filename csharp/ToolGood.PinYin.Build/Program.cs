@@ -85,7 +85,57 @@ namespace ToolGood.PinYin.Build
             File.WriteAllBytes("dict\\" + file + ".br", bs2);
         }
 
+        static int GetToneIndex(string text)
+        {
+            var tone = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü"
+                    .Replace("a", " ").Replace("o", " ").Replace("i", " ")
+                    .Replace("u", " ").Replace("v", " ")
+                    .Split('|');
+            foreach (var c in text)
+            {
+                foreach (var to in tone)
+                {
+                    var index = to.IndexOf(c);
+                    if (index > 0)
+                    {
+                        return index;
+                    }
+                }
+            }
+            return 5;
+        }
 
+        static Dictionary<char, char> ToneDict;
+        static string RemoveTone(string text)
+        {
+            if (ToneDict == null)
+            {
+                var tones = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü".Split('|');
+                var dict = new Dictionary<char, char>();
+                foreach (var tone in tones)
+                {
+                    for (int i = 1; i < tone.Length; i++)
+                    {
+                        dict[tone[i]] = tone[0];
+                    }
+                }
+                ToneDict = dict;
+            }
+            var dic = ToneDict;
+            var str = "";
+            foreach (var t in text)
+            {
+                if (dic.TryGetValue(t, out char c))
+                {
+                    str += c;
+                }
+                else
+                {
+                    str += t;
+                }
+            }
+            return str;
+        }
 
     }
 }
