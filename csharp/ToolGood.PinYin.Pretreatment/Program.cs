@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToolGood.Words;
 
 namespace ToolGood.PinYin.Pretreatment
 {
@@ -18,6 +19,40 @@ namespace ToolGood.PinYin.Pretreatment
                 scel_1.Clear();
             }
             // 第二步 精简词库  
+            {
+                var txt = File.ReadAllText("scel_1.txt");
+                var lines = txt.Split('\n');
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                foreach (var item in lines) {
+                    var sp = item.Split(' ');
+                    dict[sp[0]] = sp[1];
+                }
+                List<string> keys = dict.Select(q => q.Key).ToList();
+
+                WordsSearch wordsSearch;
+                for (int i = 3; i < 8; i++) {
+                    var keywords = keys.Where(q => q.Length <= i).ToList();
+                    wordsSearch = new WordsSearch();
+                    wordsSearch.SetKeywords(keywords);
+
+                    for (int j = keys.Count - 1; j >= 0; j--) {
+                        var key = keys[j];
+                        if (key.Length <= i) { continue; }
+
+                        var all = wordsSearch.FindAll(key);
+                        if (all.Count>0) {
+                            //进行拼音测试，相同则删除
+
+
+                     
+                        }
+                    }
+                }
+
+                //File.WriteAllText("scel_2.txt", string.Join("\n", scel_1));
+
+
+            }
 
             // 第三步 获取词的所有拼音
 
@@ -36,7 +71,7 @@ namespace ToolGood.PinYin.Pretreatment
                 List<string> mores = new List<string>();
                 foreach (var line in lines) {
                     var sp = line.Split(',');
-                    if (GetLength(sp[0])==1) {
+                    if (GetLength(sp[0]) == 1) {
                         ones.Add(line);
                     } else {
                         mores.Add(line);
@@ -47,9 +82,16 @@ namespace ToolGood.PinYin.Pretreatment
                 ones.Clear();
                 mores.Clear();
             }
-            // 第六步 合并 单字拼音
+            // 第六步 简单 合并 单字拼音， 防止常用拼音被覆盖
             if (File.Exists("pinyin_3_one.txt") == false) {
-
+                var txt = File.ReadAllText("pinyin_2_one.txt");
+                var lines = txt.Split('\n').ToList();
+                for (int i = lines.Count - 1; i >= 1; i--) {
+                    if (lines[i].StartsWith(lines[i - 1])) {
+                        lines.RemoveAt(i);
+                    }
+                }
+                File.WriteAllText("pinyin_3_one.txt", string.Join("\n", lines));
             }
             // 第七步 检查 拼音数 与 词组长度不一样的
             if (File.Exists("pinyin_4_ok.txt") == false) {
@@ -59,7 +101,7 @@ namespace ToolGood.PinYin.Pretreatment
                 List<string> errors = new List<string>();
                 foreach (var line in lines) {
                     var sp = line.Split(',');
-                    if (GetLength(sp[0]) == sp.Length-1) {
+                    if (GetLength(sp[0]) == sp.Length - 1) {
                         oks.Add(line);
                     } else {
                         errors.Add(line);
@@ -86,7 +128,7 @@ namespace ToolGood.PinYin.Pretreatment
             foreach (var file in files) {
                 GetWords(file, list);
             }
-            return list.OrderBy(q=>q).ToList();
+            return list.OrderBy(q => q).ToList();
         }
 
         static void GetWords(string file, HashSet<string> list)

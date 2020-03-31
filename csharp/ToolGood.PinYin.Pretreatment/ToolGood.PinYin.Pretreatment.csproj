@@ -19,6 +19,11 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <None Update="..\lib\PinYinData\dict-ci.txt" Link="dict\dict-ci.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
