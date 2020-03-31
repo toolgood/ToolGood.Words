@@ -54,6 +54,9 @@
     <None Update="..\lib\PinYinData\words_5.txt" Link="dict\words_5.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="..\lib\PinYinData\_pinyin.txt" Link="dict\_pinyin.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="..\lib\Scel\147种水果的名字.scel" Link="Scel\147种水果的名字.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
