@@ -394,6 +394,35 @@ namespace ToolGood.PinYin.Pretreatment
 
         }
 
+        static void GetBuildPinYin(string c, List<string> ls)
+        {
+            var url = "https://www.baidu.com/baidu?wd={0}&ie=utf-8";
+            var ch = HttpUtility.UrlEncode(c).ToUpper();
+            var u = string.Format(url, ch);
+
+            WebClientEx web = new WebClientEx();
+            web.ResetHeaders();
+            web.Encoding = Encoding.UTF8;
+            var html = web.DownloadString(u);
+            html = Regex.Replace(html, "<!.*\n", "");
+            html = Regex.Replace(html, @"<head[^>]*?>[\s\S]*?</head>", "");
+            html = Regex.Replace(html, @"<script[^>]*?>[\s\S]*?</script>", "");
+            html = Regex.Replace(html, @"<style[^>]*?>[\s\S]*?</style>", "");
+
+            HtmlToText convert = new HtmlToText();
+            var t = convert.Convert(html);
+
+            var ms = Regex.Matches(t, "(拼音|读音)(:)?[a-z].*");
+            foreach (Match item in ms)
+            {
+                ls.Add($"{c} {item.Value}");
+            }
+            ms = Regex.Matches(t, "(同|读作).*");
+            foreach (Match item in ms)
+            {
+                ls.Add($"{c} {item.Value}");
+            }
+        }
 
         static string RemoveTone(string pinyin)
         {
