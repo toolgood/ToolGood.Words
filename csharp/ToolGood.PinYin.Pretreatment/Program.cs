@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using ToolGood.Words;
 
 namespace ToolGood.PinYin.Pretreatment
@@ -389,6 +393,21 @@ namespace ToolGood.PinYin.Pretreatment
             }
 
 
+            if (File.Exists("pinyin_7_pys.txt") == false)
+            {
+                var txt = File.ReadAllText("pinyin_5_oneNoPy.txt");
+                var lines = txt.Split('\n').ToList();
+
+                List<string> ls = new List<string>();
+                foreach (var line in lines)
+                {
+                    GetBuildPinYin(line, ls);
+                }
+
+                File.WriteAllText("pinyin_7_pys.txt", string.Join("\n", ls));
+            }
+
+
 
 
 
@@ -412,12 +431,12 @@ namespace ToolGood.PinYin.Pretreatment
             HtmlToText convert = new HtmlToText();
             var t = convert.Convert(html);
 
-            var ms = Regex.Matches(t, "(拼音|读音)(:)?[a-z].*");
+            var ms = Regex.Matches(t, "(拼音|读音|发音)(:|：)?[a-zāáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜü].*");
             foreach (Match item in ms)
             {
                 ls.Add($"{c} {item.Value}");
             }
-            ms = Regex.Matches(t, "(同|读作).*");
+            ms = Regex.Matches(t, "(同|读作|异体字:).+");
             foreach (Match item in ms)
             {
                 ls.Add($"{c} {item.Value}");
@@ -466,9 +485,6 @@ namespace ToolGood.PinYin.Pretreatment
             }
             return null;
         }
-
-
-
 
         static List<string> GetWords()
         {
