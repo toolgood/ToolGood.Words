@@ -313,8 +313,9 @@ namespace ToolGood.PinYin.Pretreatment
 
                 for (int i = lines.Count - 1; i >= 0; i--) {
                     var line = lines[i];
+                    line = Regex.Replace(line, "//.*[\r\n]?", "");
                     if (string.IsNullOrWhiteSpace(line)) { continue; }
-                    var sps = line.Split(" \"': ,\r[]".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var sps = line.Split(" \"': ,\r[]?".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
                     var key = sps[0][0];
                     sps.RemoveAt(0);
                     pysDict[key] = sps;
@@ -324,8 +325,9 @@ namespace ToolGood.PinYin.Pretreatment
                 lines = txt.Split('\n').ToList();
                 for (int i = lines.Count - 1; i >= 0; i--) {
                     var line = lines[i];
+                    line = Regex.Replace(line, "//.*[\r\n]?", "");
                     if (string.IsNullOrWhiteSpace(line)) { continue; }
-                    var sps = line.Split(" \"': ,\r[]".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var sps = line.Split(" \"': ,\r[]?".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
                     var key = sps[0][0];
                     if (pysDict.ContainsKey(key) == false) {
                         sps.RemoveAt(0);
@@ -351,19 +353,27 @@ namespace ToolGood.PinYin.Pretreatment
                         nopysDict[c] = pys;
                     }
                 }
- 
+
                 List<string> ls = new List<string>();
                 foreach (var item in pysDict) {
                     ls.Add($"{item.Key} {string.Join(",", item.Value)}");
                 }
-                ls = ls.OrderBy(q => q).ToList();
 
                 List<string> ls2 = new List<string>();
                 foreach (var item in nopysDict) {
                     ls2.Add($"{item.Key} {string.Join(",", item.Value)}");
                 }
-                ls2 = ls2.OrderBy(q => q).ToList();
 
+                ls = ls.OrderBy(q => q).ToList();
+                for (int i = ls.Count - 1; i >= 0; i--) {
+                    var l = ls[i];
+                    if (l[0] > 0x9FA5) {
+                        ls.RemoveAt(i);
+                    }
+                }
+
+
+                var str = string.Join("\n", ls);
                 File.WriteAllText("pinyin_5_one.txt", string.Join("\n", ls));
                 File.WriteAllText("pinyin_5_oneNoPy.txt", string.Join("\n", ls2));
             }
@@ -386,21 +396,19 @@ namespace ToolGood.PinYin.Pretreatment
                 }
                 List<string> ls = new List<string>();
                 foreach (var item in dict) {
-                    ls.Add($"{item.Key} {  item.Value}");
+                    ls.Add($"{item.Value} {  item.Key}");
                 }
                 ls = ls.OrderBy(q => q).ToList();
                 File.WriteAllText("pinyin_6_pys.txt", string.Join("\n", ls));
             }
 
 
-            if (File.Exists("pinyin_7_pys.txt") == false)
-            {
+            if (File.Exists("pinyin_7_pys.txt") == false) {
                 var txt = File.ReadAllText("pinyin_5_oneNoPy.txt");
                 var lines = txt.Split('\n').ToList();
 
                 List<string> ls = new List<string>();
-                foreach (var line in lines)
-                {
+                foreach (var line in lines) {
                     GetBuildPinYin(line, ls);
                 }
 
@@ -432,13 +440,11 @@ namespace ToolGood.PinYin.Pretreatment
             var t = convert.Convert(html);
 
             var ms = Regex.Matches(t, "(拼音|读音|发音)(:|：)?[a-zāáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜü].*");
-            foreach (Match item in ms)
-            {
+            foreach (Match item in ms) {
                 ls.Add($"{c} {item.Value}");
             }
             ms = Regex.Matches(t, "(同|读作|异体字:).+");
-            foreach (Match item in ms)
-            {
+            foreach (Match item in ms) {
                 ls.Add($"{c} {item.Value}");
             }
         }
@@ -526,10 +532,11 @@ namespace ToolGood.PinYin.Pretreatment
             var text = File.ReadAllText(file);
             var line = text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var l in line) {
-                if (string.IsNullOrWhiteSpace(l)) {
+                var t = Regex.Replace(l, "//.*[\r\n]?", "");
+                if (string.IsNullOrWhiteSpace(t)) {
                     continue;
                 }
-                var sp = l.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                var sp = t.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 list.Add(string.Join(",", sp));
             }
         }
