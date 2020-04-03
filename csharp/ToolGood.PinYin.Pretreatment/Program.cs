@@ -39,13 +39,17 @@ namespace ToolGood.PinYin.Pretreatment
 
 
                 #region 删除通用的
+                keys.RemoveAll(q => q.Contains("大厦") && q.Length > 7);
                 keys.RemoveAll(q => q.Contains("公司") && q.Length > 5);
+                keys.RemoveAll(q => q.Contains("大楼") && q.Length > 5);
+
+                keys.RemoveAll(q => q.Contains("而") && q.Length > 5);
                 keys.RemoveAll(q => q.Contains("的") && q.Length > 5);
                 keys.RemoveAll(q => q.Contains("和") && q.Length > 7);
-                keys.RemoveAll(q => q.Contains("大厦") && q.Length > 7);
-                keys.RemoveAll(q => q.Contains("或") && q.Length > 7);
-                keys.RemoveAll(q => q.Contains("与") && q.Length > 7);
-                keys.RemoveAll(q => q.Contains("用") && q.Length > 7);
+                keys.RemoveAll(q => q.Contains("或") && q.Length > 5);
+                keys.RemoveAll(q => q.Contains("与") && q.Length > 5);
+                keys.RemoveAll(q => q.Contains("用") && q.Length > 5);
+                keys.RemoveAll(q => q.Contains("地") && q.Length > 5);
                 #endregion
 
                 #region 删除结尾
@@ -402,9 +406,9 @@ namespace ToolGood.PinYin.Pretreatment
                 File.WriteAllText("pinyin_6_pys.txt", string.Join("\n", ls));
             }
 
-
+            Console.WriteLine("第十步 检查拼音集的拼音是否错误 ");
             if (File.Exists("pinyin_7_pys.txt") == false) {
-                var txt = File.ReadAllText("pinyin_5_oneNoPy.txt");
+                var txt = File.ReadAllText("pinyin_4_ok.txt");
                 var lines = txt.Split('\n').ToList();
 
                 List<string> ls = new List<string>();
@@ -415,10 +419,68 @@ namespace ToolGood.PinYin.Pretreatment
                 File.WriteAllText("pinyin_7_pys.txt", string.Join("\n", ls));
             }
 
+            Console.WriteLine("第十一步 检查拼音集的拼音是否错误 ");
+            if (File.Exists("pinyin_8_mores_error.txt") == false) {
+                var txt = File.ReadAllText("pinyin_4_ok.txt");
+                var lines = txt.Split('\n').ToList();
+
+                List<string> errors = new List<string>();
+                for (int i = 0; i < lines.Count - 1; i++) {
+                    var l1 = lines[i].Split(',');
+                    var l2 = lines[i + 1].Split(',');
+                    if (l1[0] == l2[0] && lines[i] != lines[i + 1]) {
+                        errors.Add(lines[i]);
+                        errors.Add(lines[i + 1]);
+                    }
+                }
+                lines.RemoveAll(q => errors.Contains(q));
+
+                File.WriteAllText("pinyin_8_mores_error.txt", string.Join("\n", errors));
+                File.WriteAllText("pinyin_8_mores_ok.txt", string.Join("\n", lines));
+            }
+
+
+            Console.WriteLine("第十二步 使用搜狗拼音  ");
+            if (File.Exists("pinyin_9_mores_error.txt") == false) {
+                var dictTxt = File.ReadAllText("scel_1.txt");
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                var dictLines = dictTxt.Split('\n').ToList();
+                foreach (var line in dictLines) {
+                    if (string.IsNullOrEmpty(line)) {
+                        continue;
+                    }
+                    var sp = line.Split(' ');
+                    dict[sp[0]] = sp[1];
+                }
+
+                var txt = File.ReadAllText("pinyin_8_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+                List<string> errors = new List<string>();
+                List<string> oks = new List<string>();
+                List<string> unfind = new List<string>();
+                foreach (var line in lines) {
+                    var sp = line.Split(',').ToList();
+                    if (dict.TryGetValue(sp[0], out string py)) {
+                        sp.RemoveAt(0);
+                        var py2 = RemoveTone(string.Join(",", sp));
+                        if (py.ToLower() != py2.ToLower()) {
+                            errors.Add(line + " | " + py);
+                        } else {
+                            oks.Add(line);
+                        }
+                    } else {
+                        unfind.Add(line);
+                    }
+                }
+                File.WriteAllText("pinyin_9_mores_error.txt", string.Join("\n", errors));
+                File.WriteAllText("pinyin_9_mores_ok.txt", string.Join("\n", oks));
+                File.WriteAllText("pinyin_9_mores_unfind.txt", string.Join("\n", unfind));
+            }
 
 
 
-
+            // 百度查词组
+            //https://hanyu.baidu.com/s?wd=%E6%8C%87%E7%BB%84%E8%AF%8D&from=poem
         }
 
         static void GetBuildPinYin(string c, List<string> ls)
