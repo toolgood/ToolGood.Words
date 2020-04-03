@@ -15,6 +15,8 @@ namespace ToolGood.PinYin.Pretreatment
     {
         static void Main(string[] args)
         {
+          var tpy=  WordsHelper.GetAllPinYin('堃');
+
             // 预处理
             // 第一步 处理搜狗词库
             Console.WriteLine("第一步 处理搜狗词库");
@@ -399,11 +401,29 @@ namespace ToolGood.PinYin.Pretreatment
                     }
                 }
                 List<string> ls = new List<string>();
+                List<string> ls2 = new List<string>();
+                List<string> ls3 = new List<string>();
+                List<string> ls4 = new List<string>();
+                List<string> ls5 = new List<string>();
                 foreach (var item in dict) {
                     ls.Add($"{item.Value} {  item.Key}");
+                    ls2.Add("\""+ item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
+                    ls3.Add("\""+ item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\"");
+                    ls4.Add("\""+ item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\",\"" + item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
+                    ls5.Add(item.Value);
+                    ls5.Add(item.Key);
                 }
+
                 ls = ls.OrderBy(q => q).ToList();
+                ls2 = ls2.OrderBy(q => q).ToList();
+                ls3= ls3.Distinct().OrderBy(q => q).ToList();
+                ls4 = ls4.Distinct().OrderBy(q => q).ToList();
+                ls5 = ls5.Distinct().OrderBy(q => q).ToList();
                 File.WriteAllText("pinyin_6_pys.txt", string.Join("\n", ls));
+                File.WriteAllText("pinyin_6_pys_one.txt", string.Join(",", ls2));
+                File.WriteAllText("pinyin_6_pys_one2.txt", string.Join(",", ls3));
+                File.WriteAllText("pinyin_6_pys_all.txt", string.Join(",", ls4));
+                File.WriteAllText("pinyin_6_pys_all2.txt", string.Join(",", ls5));
             }
 
             Console.WriteLine("第十步 检查拼音集的拼音是否错误 ");
@@ -513,8 +533,8 @@ namespace ToolGood.PinYin.Pretreatment
 
         static string RemoveTone(string pinyin)
         {
-            string s = "āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜü";
-            string t = "aaaaooooeeeeiiiiuuuuvvvvv";
+            string s = "āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜüńň";
+            string t = "aaaaooooeeeeiiiiuuuuvvvvvnnm";
             for (int i = 0; i < s.Length; i++) {
                 pinyin = pinyin.Replace(s[i].ToString(), t[i].ToString());
             }
