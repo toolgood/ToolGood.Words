@@ -24,7 +24,9 @@
 
 
   <ItemGroup>
-    <None Update="..\lib\PinYinData\0x9FA6.txt" Link="dict\0x9FA6.txt" />
+    <None Update="..\lib\PinYinData\0x9FA6.txt" Link="dict\0x9FA6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="..\lib\PinYinData\dict-ci.txt" Link="dict\dict-ci.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

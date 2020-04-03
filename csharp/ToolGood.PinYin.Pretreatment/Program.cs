@@ -15,7 +15,18 @@ namespace ToolGood.PinYin.Pretreatment
     {
         static void Main(string[] args)
         {
-          var tpy=  WordsHelper.GetAllPinYin('堃');
+            var t = WordsHelper.GetAllPinYin('芃');
+
+            var a = WordsHelper.GetPinYinFast("阿");
+
+
+
+
+
+            var py222 = WordsHelper.GetPinYinFast("我爱中国");
+ 
+
+            var tpy=  WordsHelper.GetAllPinYin('堃');
 
             // 预处理
             // 第一步 处理搜狗词库
@@ -271,6 +282,7 @@ namespace ToolGood.PinYin.Pretreatment
                         mores.Add(line);
                     }
                 }
+                ones = ones.OrderBy(q => q).ToList();
                 File.WriteAllText("pinyin_2_one.txt", string.Join("\n", ones));
                 File.WriteAllText("pinyin_2_more.txt", string.Join("\n", mores));
                 ones.Clear();
@@ -342,7 +354,7 @@ namespace ToolGood.PinYin.Pretreatment
                 }
                 Dictionary<char, List<string>> nopysDict = new Dictionary<char, List<string>>();
 
-                for (int i = 0x4e00; i <= 0x9FA5; i++) {
+                for (int i = 0x3400; i <= 0x9FFF; i++) {
                     var c = (char)i;
                     if (pysDict.ContainsKey(c) == false) {
                         var pys = WordsHelper.GetAllPinYin(c);
@@ -350,16 +362,7 @@ namespace ToolGood.PinYin.Pretreatment
                         nopysDict[c] = pys;
                     }
                 }
-
-                for (int i = 0x3400; i <= 0x4DB5; i++) {
-                    var c = (char)i;
-                    if (pysDict.ContainsKey(c) == false) {
-                        var pys = WordsHelper.GetAllPinYin(c);
-                        pysDict[c] = pys;
-                        nopysDict[c] = pys;
-                    }
-                }
-
+   
                 List<string> ls = new List<string>();
                 foreach (var item in pysDict) {
                     ls.Add($"{item.Key} {string.Join(",", item.Value)}");
@@ -373,7 +376,7 @@ namespace ToolGood.PinYin.Pretreatment
                 ls = ls.OrderBy(q => q).ToList();
                 for (int i = ls.Count - 1; i >= 0; i--) {
                     var l = ls[i];
-                    if (l[0] > 0x9FA5) {
+                    if (l[0] > 0x9FFF) {
                         ls.RemoveAt(i);
                     }
                 }
@@ -427,17 +430,17 @@ namespace ToolGood.PinYin.Pretreatment
             }
 
             Console.WriteLine("第十步 检查拼音集的拼音是否错误 ");
-            if (File.Exists("pinyin_7_pys.txt") == false) {
-                var txt = File.ReadAllText("pinyin_4_ok.txt");
-                var lines = txt.Split('\n').ToList();
+            //if (File.Exists("pinyin_7_pys.txt") == false) {
+            //    var txt = File.ReadAllText("pinyin_4_ok.txt");
+            //    var lines = txt.Split('\n').ToList();
 
-                List<string> ls = new List<string>();
-                foreach (var line in lines) {
-                    GetBuildPinYin(line, ls);
-                }
+            //    List<string> ls = new List<string>();
+            //    foreach (var line in lines) {
+            //        GetBuildPinYin(line, ls);
+            //    }
 
-                File.WriteAllText("pinyin_7_pys.txt", string.Join("\n", ls));
-            }
+            //    File.WriteAllText("pinyin_7_pys.txt", string.Join("\n", ls));
+            //}
 
             Console.WriteLine("第十一步 检查拼音集的拼音是否错误 ");
             if (File.Exists("pinyin_8_mores_error.txt") == false) {
@@ -483,10 +486,12 @@ namespace ToolGood.PinYin.Pretreatment
                     if (dict.TryGetValue(sp[0], out string py)) {
                         sp.RemoveAt(0);
                         var py2 = RemoveTone(string.Join(",", sp));
-                        if (py.ToLower() != py2.ToLower()) {
-                            errors.Add(line + " | " + py);
-                        } else {
+                        if (py.ToLower() == py2.ToLower() || py.ToLower() == py2.ToLower().Replace("v","u")) {
                             oks.Add(line);
+                        } else {
+
+                            //var py3 = WordsHelper.GetAllPinYin(sp[0], true);
+                            errors.Add(line + " | " + py);
                         }
                     } else {
                         unfind.Add(line);
