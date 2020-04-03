@@ -1624,7 +1624,7 @@
 臿 chā
 䑡 chā,chà,chǎ,chá
 挿 chā
-㭦 chā
+㭦 zhái
 訍 chài
 偛 chā
 插 chā
@@ -4888,7 +4888,7 @@
 翂 fēn
 紛 fēn
 棻 fēn
-兝 fēn
+兝 gōngfēn
 酚 fēn
 躮 fēn
 訜 fēn
@@ -5804,7 +5804,7 @@
 䰸 gōng
 匔 gōng
 髸 gōng
-兣 lǐ
+兣 gōnglǐ
 篢 gōng,gǎn,lǒng
 䳍 gōng
 觵 gōng
@@ -10065,7 +10065,7 @@
 㝓 kè
 客 kè
 尅 kēi,kè
-兛 qiān
+兛 qiānkè
 㤩 kè
 㳳 kè
 袔 hè,kè
@@ -15433,7 +15433,7 @@
 㩷 qiān
 籤 qiān
 韆 qiān
-瓩 qiān
+瓩 qiānwǎ
 岒 qián
 拑 qián
 钤 qián
@@ -27017,14 +27017,14 @@
 虄 sà
 虲 xiā
 袰 bō
-襨 dùi
+襨 duì
 鐢 fán
 閪 sē,xī
 闏 fēng
 霻 fēng
 鶑 yīng
 㐂 xǐ
-㐃 
+㐃 mā
 㐇 jiǔ
 㐈 dòu
 㐉 dīng
@@ -27054,431 +27054,431 @@
 㐦 jǔ
 㐧 hóu
 㐿 
-㑆 
+㑆 fàn,yì
 㑑 lǎn,jì
-㑒 
-㑕 
-㑖 
-㑡 
-㑬 
-㒏 
+㑒 qiān
+㑕 shuì
+㑖 zhòng
+㑡 jí
+㑬 gū
+㒏 hán
 㒐 xùn
 㒗 tái
-㒘 
-㒢 
-㒣 
-㒬 
+㒘 shù
+㒢 yuè
+㒣 yìng
+㒬 wāng
 㒮 huī
-㒯 
+㒯 yè
 㒱 mèng
 㒺 wǎng
 㓀 fù
 㓁 wǎng
-㓆 
+㓆 lún
 㓇 wò
-㓍 
-㓒 
-㓙 
-㓫 
-㓿 
-㔈 
+㓍 chōng
+㓒 qī
+㓙 xiōng
+㓫 dài
+㓿 lí
+㔈 fèi
 㔔 
 㔖 jiā
 㔛 jié
 㔟 shì
 㔫 zuǒ
 㔲 guǐ
-㕀 
+㕀 yóu
 㕝 shì
 㕾 xiǎo
-㕿 
-㖈 nom
+㕿 hé,hè,huó,huò,hú
+㖈 lǎo
 㖋 
-㖌 
-㖍 
+㖌 qiú
+㖍 dǒu
 㖎 
-㖙 
+㖙 jiā
 㖚 
-㖛 
+㖛 gǔ
 㖜 xiǎng
 㖝 
 㖬 sōu
-㖯 
-㖰 
-㖱 
+㖯 tóng
+㖰 tóng
+㖱 yè
 㖲 
-㖳 
-㖴 
-㗝 
-㗟 
+㖳 rǔ
+㖴 wěn
+㗝 gāo
+㗟 zhù
 㗠 
-㗡 neus
+㗡 nǎi
 㗮 
-㗯 
+㗯 zhě
 㗷 sǎi
 㗸 xián
-㗹 
-㘏 
-㘒 
+㗹 jiào
+㘏 dào
+㘒 zhòng
 㘘 pèi
-㘮 
+㘮 yì,tú
 㘼 
-㘾 
-㙆 
-㙋 
-㙖 
+㘾 yǔ
+㙆 hóng
+㙋 qí
+㙖 yǔ
 㙜 chí
-㙭 
-㙽 
-㙿 
+㙭 quē,jué
+㙽 shì
+㙿 xī
 㚄 zhì,dì
 㚈 shēng
 㚎 qù
-㚑 
-㛇 
-㛈 
-㛉 
-㛋 
-㛌 
+㚑 líng
+㛇 zhuāng
+㛈 kǎo
+㛉 xǐ
+㛋 nǎi
+㛌 nián,niàn
 㛟 
-㛡 
-㛢 
+㛡 wán
+㛢 xiù
 㜀 shuāng
 㜁 zhā,chā,zǎ
-㜔 
-㜟 
-㜬 
+㜔 jìng
+㜟 gǎn
+㜬 zhān,dān
 㜭 dāng
-㝆 
+㝆 xǐ
 㝳 
-㞍 
-㞝 
+㞍 kāo
+㞝 qī
 㞩 lán
 㞮 chū
-㟕 
-㟡 
-㟣 
-㠃 
-㠞 
-㠤 
+㟕 dǒu
+㟡 juàn
+㟣 sōng
+㠃 dí
+㠞 zhēng
+㠤 rǎng
 㠫 gū
 㠬 gū
 㠰 
-㠳 
-㡍 
-㡤 
+㠳 mù
+㡍 mǎ
+㡤 fú
 㡬 jī,jǐ
-㢇 
-㢌 
-㢫 
+㢇 yán
+㢌 kē,ē
+㢫 shān
 㢱 mèi
-㢷 
-㢹 
-㢿 
+㢷 tāo
+㢹 bì,pì
+㢿 hū
 㣊 xiū
-㣕 
-㣖 
-㣗 
-㣡 
-㣨 
-㣩 
-㣮 
-㣳 
-㣴 
-㣸 
-㣹 
+㣕 dà
+㣖 tài
+㣗 hù
+㣡 zhōng
+㣨 gū
+㣩 lín
+㣮 nán
+㣳 wú
+㣴 huáng
+㣸 ruí
+㣹 yìng
 㤗 tài
-㥗 
-㥘 
-㥙 
-㥻 
+㥗 quān
+㥘 qiè
+㥙 zhōng
+㥻 qī
 㦙 yú
-㦠 
+㦠 duì
 㦮 qián
 㧜 liè
-㧠 
+㧠 mí
 㩂 hú
-㩑 
+㩑 zá,sà
 㪘 liǎn
-㪲 
-㪳 
-㫆 
-㫇 
+㪲 dǒu
+㪳 dǒu
+㫆 mí,mǐ
+㫇 yú
 㫈 
-㫌 
-㫠 
-㫣 
+㫌 jīng
+㫠 bàn
+㫣 měng
 㫭 shí
 㫮 zì
 㫾 shǎng
-㫿 
+㫿 suī,jū
 㬀 
-㬖 
+㬖 qǐ
 㬧 bó
-㬨 
-㬽 
-㬾 
-㭀 
-㭅 
-㭆 
-㭐 
-㭖 
+㬨 hè
+㬽 è
+㬾 yì
+㭀 shì
+㭅 shān,shā
+㭆 mò
+㭐 mò
+㭖 fá
 㭗 yù
-㭣 
-㭥 
-㭧 
-㭳 
+㭣 wèn
+㭥 fù
+㭧 nán
+㭳 xiào
 㭵 
 㭷 
-㮉 
-㮊 
-㮠 
-㮼 
-㮽 
-㯑 
-㯒 
-㯧 
-㯨 
-㯴 
-㯵 
-㯼 
-㰓 
-㰜 
+㮉 xiá
+㮊 mào
+㮠 róng
+㮼 shàn
+㮽 bān
+㯑 zhāng
+㯒 mì
+㯧 chāo
+㯨 lì
+㯴 róng
+㯵 dǒng
+㯼 kē
+㰓 lǎn
+㰜 diān
 㰸 liǎn
-㱐 
-㱑 
-㱓 
-㱝 
-㱷 
-㲐 
-㲑 
-㲮 
-㳉 
+㱐 wǔ
+㱑 suì
+㱓 líng
+㱝 wān,yǒu
+㱷 jí
+㲐 líng
+㲑 shuǐ
+㲮 tà
+㳉 qīng
 㳟 gōng
-㳣 
-㳯 
-㳱 
-㳲 
-㴌 
-㴍 
-㴟 
+㳣 lǎo
+㳯 shēn
+㳱 yáng
+㳲 tài
+㴌 gū
+㴍 chéng
+㴟 yuán
 㴡 
-㴢 
-㴣 
-㴤 
-㴺 
-㴻 
-㵇 
-㵈 
-㵉 
-㵚 
-㵛 
-㵜 
+㴢 zhōng
+㴣 yí
+㴤 zhù
+㴺 jiā
+㴻 shù,zhù
+㵇 tián
+㵈 gū
+㵉 lín
+㵚 fǔ
+㵛 shàn
+㵜 nán
 㵼 xiè
-㶂 
-㶃 
-㶊 
-㶋 
-㶐 
-㶙 
-㶝 
-㶢 
-㶩 
-㶱 
+㶂 huáng
+㶃 wú
+㶊 yí
+㶋 ruí
+㶐 yìng
+㶙 ruí
+㶝 yìng
+㶢 guāng
+㶩 shěn
+㶱 běn
 㶽 guā
 㷁 
-㷌 
-㷚 
+㷌 guī
+㷚 tūn
 㷛 bāo
-㷜 
-㷝 
-㷞 
+㷜 yì
+㷝 tū
+㷞 hòu
 㷧 yuán
-㷨 
-㷱 
+㷨 fēng
+㷱 xióng
 㷲 dòng
-㷺 
+㷺 yàn
 㷼 yàn
-㷽 
+㷽 shàn
 㸔 kàn
-㸴 
+㸴 xiǎo
 㸿 dú
 㹈 lí
-㹩 
-㹰 
+㹩 jìng
+㹰 guāng
 㺆 
-㺙 
+㺙 shí
 㺯 nòng,lòng
-㺶 
-㺻 
-㺼 
-㺾 
-㻇 
+㺶 jiū
+㺻 fú
+㺼 xuán,qióng
+㺾 jiǒng
+㻇 quán
 㻏 líng
-㻐 
-㻘 
-㻙 
-㻚 
+㻐 qūn
+㻘 shěn
+㻙 yù
+㻚 péng
 㻜 cōng
-㻢 
-㻣 
-㻤 
-㻥 
+㻢 shī
+㻣 kān
+㻤 gǒu
+㻥 yóu
 㻦 
-㻳 
+㻳 lì
 㻴 qióng
-㻻 
-㻼 
-㼀 
-㼃 
-㼅 
+㻻 duì
+㻼 tán
+㼀 dá
+㼃 liè
+㼅 kuàng
 㼆 yíng
 㽓 zhé
-㽔 
-㽶 
-㽼 
+㽔 ruí
+㽶 jiū
+㽼 yǐn
 㾱 bèi
-㾲 
-㾳 
-㿐 
+㾲 áo
+㾳 zī
+㿐 yí
 䀝 pí
-䂋 
+䂋 rǒu
 䂨 zhuó
-䃃 
-䃄 
+䃃 náo,gāng
+䃄 liáng
 䃐 tū
-䃟 
+䃟 sān
 䃨 qiáng
 䃯 lì
-䄊 
-䄖 
-䄞 
-䄣 
-䄴 
-䄵 
+䄊 zhì
+䄖 yú
+䄞 jì
+䄣 dú
+䄴 shuò
+䄵 lí
 䄹 nián
 䅪 tuí
-䅫 
-䆆 
-䆇 
+䅫 lüè
+䆆 zǎo
+䆇 fèng
 䆋 qiū
-䆌 
-䆴 
-䇄 
+䆌 yì
+䆴 zào
+䇄 yì
 䇆 
 䇉 
-䇊 
-䇳 
+䇊 hóng
+䇳 jiān
 䇴 
-䇿 
-䈨 
-䈩 
-䉇 
-䊌 
-䋅 
-䋇 
-䍏 
-䎛 
-䎞 
-䎥 
-䏭 
+䇿 cè
+䈨 xiàn
+䈩 jiàn
+䉇 shèn
+䊌 bì
+䋅 niú
+䋇 yì
+䍏 wǎng
+䎛 lǎo
+䎞 zhě
+䎥 gǔ
+䏭 zhù
 䏮 xí
-䑒 
-䑖 
+䑒 zhì
+䑖 jié
 䑮 duǒ
-䑷 
-䑾 
+䑷 jiān
+䑾 huò
 䒑 cǎo
-䒮 
-䒯 
-䓀 
+䒮 qióng
+䒯 qióng
+䓀 jié,jú
 䓔 
-䓩 
+䓩 zhī
 䓪 yì
-䓬 
-䓻 
-䔦 
-䔨 
+䓬 zhuó
+䓻 kòu
+䔦 méi
+䔨 wèng
 䔫 shū
-䕂 
+䕂 yuǎn,wěi
 䕃 yìn
-䕐 
-䕜 
+䕐 fú
+䕜 cuì
 䕶 hù
-䖾 
-䗭 
-䗳 
+䖾 wán
+䗭 huàn
+䗳 dēng
 䘞 
-䘧 
+䘧 mèi
 䙊 xiè
-䙋 
-䙍 
+䙋 xuān
+䙍 fēi
 䙓 bǎi
-䙫 
+䙫 sì
 䙶 chún,zhūn
-䚤 
-䜤 
-䜦 
-䜨 
-䜳 
+䚤 yú
+䜤 hòng
+䜦 xún
+䜨 huàn
+䜳 dòu
 䜿 shù
 䝉 mēng,méng,měng
 䞇 dié
-䞎 
-䞏 
-䞲 
+䞎 chāng
+䞏 sī
+䞲 yuè
 䟲 còng
-䟳 
-䠌 
-䠖 
-䠺 
-䡸 
-䢂 
-䢏 
-䢘 
-䢷 
-䣉 
-䣒 
+䟳 chī,yǔ
+䠌 tà
+䠖 zī
+䠺 wèn
+䡸 miè
+䢂 lì
+䢏 dǒu
+䢘 shǒu
+䢷 nà,dān
+䣉 shā
+䣒 guì
 䣭 tài
 䤀 
 䤼 xiàn
 䥜 jiàn
-䥹 
-䥻 
+䥹 niè
+䥻 wú
 䥼 wù
-䥿 
-䦁 
-䦄 
-䦉 
-䦰 
-䦸 
+䥿 lì
+䦁 bāng
+䦄 lǐ
+䦉 sì
+䦰 jiū
+䦸 yú
 䦿 
-䧀 
-䧈 
-䧩 
-䧭 
+䧀 hóng
+䧈 yīn
+䧩 gǎn
+䧭 cōng
 䨶 yǔn
-䩎 
+䩎 jiǎn
 䪟 jī
 䪣 jī
-䪪 
-䭏 
-䭜 
+䪪 jiā
+䭏 biǎn
+䭜 liáo
 䭪 liáng
-䮅 
+䮅 yuè
 䯩 
 䯻 gǎi
-䰮 
-䰳 
-䰶 
-䱦 
+䰮 yì
+䰳 dīng
+䰶 máng
+䱦 wěi
 䱨 zhì
-䱩 
-䱪 
-䲇 
-䲈 
-䲤 
-䲶 
-䳥 
-䴨 
-䶭 
+䱩 wǎng
+䱪 biǎo
+䲇 sù
+䲈 má
+䲤 jiǔ
+䲶 fèng
+䳥 líng
+䴨 yuán
+䶭 wāng
