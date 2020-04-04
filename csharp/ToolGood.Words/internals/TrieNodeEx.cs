@@ -36,6 +36,7 @@ namespace ToolGood.Words.internals
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
             m_values.Add(c, node3);
+            Count++;
         }
 
         public void SetResults(Int32 text)
@@ -59,14 +60,22 @@ namespace ToolGood.Words.internals
             Int32 start = 1;
 
             has[0] = this;
+            List<TrieNodeEx> trieNodes = new List<TrieNodeEx>() { this };
 
-            Rank(ref start, seats, has);
+            while (trieNodes.Count>0) {
+                List<TrieNodeEx> nexts = new List<TrieNodeEx>();
+                foreach (var node in trieNodes) {
+                    node.Rank(ref start, seats, has, nexts);
+                }
+                trieNodes = nexts;
+            }
+            //Rank(ref start, seats, has);
             Int32 maxCount = has.Length - 1;
             while (has[maxCount] == null) { maxCount--; }
             return maxCount;
         }
 
-        private void Rank(ref Int32 start, bool[] seats, TrieNodeEx[] has)
+        private void Rank(ref Int32 start, bool[] seats, TrieNodeEx[] has,List<TrieNodeEx> nexts)
         {
             if (maxflag == 0) return;
             if (HasRank) { return; }
@@ -96,7 +105,8 @@ namespace ToolGood.Words.internals
 
             var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
             foreach (var key in keys2) {
-                key.Value.Rank(ref start, seats, has);
+                nexts.Add(key.Value);
+                //key.Value.Rank(ref start, seats, has);
             }
         }
 

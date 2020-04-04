@@ -386,38 +386,38 @@ namespace ToolGood.Words.internals
         }
 
 
-        //private Int32 CreateDict(ICollection<string> keywords)
-        //{
-        //    Dictionary<char, Int32> dictionary = new Dictionary<char, Int32>();
+        private Int32 CreateDict()
+        {
+            Dictionary<char, Int32> dictionary = new Dictionary<char, Int32>();
 
-        //    foreach (var keyword in keywords) {
-        //        for (Int32 i = 0; i < keyword.Length; i++) {
-        //            var item = keyword[i];
-        //            if (dictionary.ContainsKey(item)) {
-        //                if (i > 0)
-        //                    dictionary[item] += 2;
-        //            } else {
-        //                dictionary[item] = i > 0 ? 2 : 1;
-        //            }
-        //        }
-        //    }
-        //    var list = dictionary.OrderByDescending(q => q.Value).Select(q => q.Key).ToList();
-        //    var list2 = new List<char>();
-        //    var sh = false;
-        //    foreach (var item in list) {
-        //        if (sh) {
-        //            list2.Add(item);
-        //        } else {
-        //            list2.Insert(0, item);
-        //        }
-        //        sh = !sh;
-        //    }
-        //    _dict = new Int32[char.MaxValue + 1];
-        //    for (Int32 i = 0; i < list2.Count; i++) {
-        //        _dict[list2[i]] = i + 1;
-        //    }
-        //    return dictionary.Count;
-        //}
+            foreach (var keyword in _keywords) {
+                for (Int32 i = 0; i < keyword.Length; i++) {
+                    var item = keyword[i];
+                    if (dictionary.ContainsKey(item)) {
+                        if (i > 0)
+                            dictionary[item] += 2;
+                    } else {
+                        dictionary[item] = i > 0 ? 2 : 1;
+                    }
+                }
+            }
+            var list = dictionary.OrderByDescending(q => q.Value).Select(q => q.Key).ToList();
+            var list2 = new List<char>();
+            var sh = false;
+            foreach (var item in list) {
+                if (sh) {
+                    list2.Add(item);
+                } else {
+                    list2.Insert(0, item);
+                }
+                sh = !sh;
+            }
+            _dict = new Int32[char.MaxValue + 1];
+            for (Int32 i = 0; i < list2.Count; i++) {
+                _dict[list2[i]] = i + 1;
+            }
+            return dictionary.Count;
+        }
         #endregion
     }
 }
