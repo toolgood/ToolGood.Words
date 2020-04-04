@@ -725,6 +725,11 @@ namespace ToolGood.PinYin.Pretreatment
                                 if (itemp == tarPy || itemp.Replace("v", "u") == tarPy) {
                                     trypy = item.ToLower();
                                     count++;
+                                    if (item.ToLower() == itemp) {
+                                        if (count > 1) {
+                                            count--;
+                                        }
+                                    }
                                 }
                             }
                             if (count == 1) {
@@ -817,6 +822,11 @@ namespace ToolGood.PinYin.Pretreatment
         static string AddTone(string pinyin)
         {
             pinyin = pinyin.ToLower();
+            if (pinyin.Contains("j") || pinyin.Contains("q") || pinyin.Contains("x")) {
+                pinyin = pinyin.Replace("v", "u");
+            }
+
+
             if (pinyin.EndsWith("1")) {
                 if (pinyin.Contains("a")) {
                     pinyin = pinyin.Replace("a", "ā");
