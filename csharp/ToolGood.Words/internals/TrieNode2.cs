@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    class TrieNode2
+    public class TrieNode2
     {
         public bool End;
         public List<int> Results;
@@ -31,7 +31,7 @@ namespace ToolGood.Words.internals
             if (End == false) {
                 End = true;
             }
-            if (Results.Contains(index)==false) {
+            if (Results.Contains(index) == false) {
                 Results.Add(index);
             }
         }
