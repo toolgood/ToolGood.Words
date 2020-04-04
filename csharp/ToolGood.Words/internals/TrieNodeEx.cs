@@ -9,6 +9,7 @@ namespace ToolGood.Words.internals
     {
         internal int Char;
         internal bool End;
+        internal bool HasRank;
         internal List<Int32> Results;
         internal Dictionary<int, TrieNodeEx> m_values;
         private Int32 minflag = Int32.MaxValue;
@@ -68,6 +69,8 @@ namespace ToolGood.Words.internals
         private void Rank(ref Int32 start, bool[] seats, TrieNodeEx[] has)
         {
             if (maxflag == 0) return;
+            if (HasRank) { return; }
+            HasRank = true;
             var keys = m_values.Select(q => (Int32)q.Key).ToList();
 
             while (has[start] != null) { start++; }
