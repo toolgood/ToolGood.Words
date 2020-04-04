@@ -335,10 +335,12 @@ namespace ToolGood.Words.internals
         {
             int[] has = new int[0x00FFFFFF];
             bool[] seats = new bool[0x00FFFFFF];
+            bool[] seats2 = new bool[0x00FFFFFF];
             Int32 start = 1;
+            Int32 oneStart = 1;
             for (int i = 0; i < nodes.Count; i++) {
                 var node = nodes[i];
-                node.Rank(ref start, seats, has);
+                node.Rank3(ref oneStart, ref start, seats, seats2, has);
             }
             Int32 maxCount = has.Length - 1;
             while (has[maxCount] == 0) { maxCount--; }
