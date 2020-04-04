@@ -1,4 +1,5 @@
-﻿using Studyzy.IMEWLConverter.IME;
+﻿using Microsoft.International.Converters.PinYinConverter;
+using Studyzy.IMEWLConverter.IME;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,9 +25,9 @@ namespace ToolGood.PinYin.Pretreatment
 
 
             var py222 = WordsHelper.GetPinYinFast("我爱中国");
- 
 
-            var tpy=  WordsHelper.GetAllPinYin('堃');
+
+            var tpy = WordsHelper.GetAllPinYin('堃');
 
             // 预处理
             // 第一步 处理搜狗词库
@@ -362,7 +363,7 @@ namespace ToolGood.PinYin.Pretreatment
                         nopysDict[c] = pys;
                     }
                 }
-   
+
                 List<string> ls = new List<string>();
                 foreach (var item in pysDict) {
                     ls.Add($"{item.Key} {string.Join(",", item.Value)}");
@@ -386,6 +387,52 @@ namespace ToolGood.PinYin.Pretreatment
                 File.WriteAllText("pinyin_5_one.txt", string.Join("\n", ls));
                 File.WriteAllText("pinyin_5_oneNoPy.txt", string.Join("\n", ls2));
             }
+            Console.WriteLine("第八步补 获取拼音集 ");
+            if (File.Exists("pinyin_5_1_one.txt") == false) {
+                var pyText = File.ReadAllText("pinyin_5_one.txt");
+                var pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+                foreach (var line in pyLines) {
+                    var sp = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                    List<string> pys = new List<string>();
+
+                    for (int i = 1; i < sp.Length; i++) {
+                        pys.Add(sp[i]);
+                    }
+                    dict[sp[0]] = pys;
+                }
+                for (int i = 0x3400; i <= 0x9fff; i++) {
+                    var c = ((char)i);
+                    var cStr = c.ToString();
+                    if (cStr == "色") {
+
+                    }
+                    if (ChineseChar.IsValidChar(c)) {
+                        List<string> pys2 = new List<string>();
+                        ChineseChar chineseChar = new ChineseChar(c);
+                        foreach (string value in chineseChar.Pinyins) {
+                            if (string.IsNullOrEmpty(value)) { continue; }
+                            pys2.Add(AddTone(value));
+                        }
+                        List<string> pys;
+                        if (dict.TryGetValue(cStr, out pys) == false) {
+                            pys = new List<string>();
+                        }
+                        pys2.RemoveAll(q => pys.Contains(q));
+                        if (pys2.Count > 0) {
+                            pys.AddRange(pys2);
+                            dict[cStr] = pys;
+                        }
+                    }
+                }
+                List<string> ls2 = new List<string>();
+                foreach (var item in dict) {
+                    ls2.Add($"{item.Key} {string.Join(",", item.Value)}");
+                }
+                File.WriteAllText("pinyin_5_1_one.txt", string.Join("\n", ls2));
+            }
+
+
 
             // 第九步 获取拼音集
             Console.WriteLine("第九步 获取拼音集 ");
@@ -410,16 +457,16 @@ namespace ToolGood.PinYin.Pretreatment
                 List<string> ls5 = new List<string>();
                 foreach (var item in dict) {
                     ls.Add($"{item.Value} {  item.Key}");
-                    ls2.Add("\""+ item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
-                    ls3.Add("\""+ item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\"");
-                    ls4.Add("\""+ item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\",\"" + item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
+                    ls2.Add("\"" + item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
+                    ls3.Add("\"" + item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\"");
+                    ls4.Add("\"" + item.Value.ToUpper()[0] + item.Value.ToLower().Substring(1) + "\",\"" + item.Key.ToUpper()[0] + item.Key.ToLower().Substring(1) + "\"");
                     ls5.Add(item.Value);
                     ls5.Add(item.Key);
                 }
 
                 ls = ls.OrderBy(q => q).ToList();
                 ls2 = ls2.OrderBy(q => q).ToList();
-                ls3= ls3.Distinct().OrderBy(q => q).ToList();
+                ls3 = ls3.Distinct().OrderBy(q => q).ToList();
                 ls4 = ls4.Distinct().OrderBy(q => q).ToList();
                 ls5 = ls5.Distinct().OrderBy(q => q).ToList();
                 File.WriteAllText("pinyin_6_pys.txt", string.Join("\n", ls));
@@ -486,7 +533,7 @@ namespace ToolGood.PinYin.Pretreatment
                     if (dict.TryGetValue(sp[0], out string py)) {
                         sp.RemoveAt(0);
                         var py2 = RemoveTone(string.Join(",", sp));
-                        if (py.ToLower() == py2.ToLower() || py.ToLower() == py2.ToLower().Replace("v","u")) {
+                        if (py.ToLower() == py2.ToLower() || py.ToLower() == py2.ToLower().Replace("v", "u")) {
                             oks.Add(line);
                         } else {
 
@@ -502,7 +549,72 @@ namespace ToolGood.PinYin.Pretreatment
                 File.WriteAllText("pinyin_9_mores_unfind.txt", string.Join("\n", unfind));
             }
 
+            Console.WriteLine("第十三步 修复错误拼音  ");
+            if (File.Exists("pinyin_10_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_9_mores_error.txt");
+                var lines = txt.Split('\n').ToList();
 
+                List<string> ls = new List<string>();
+                List<string> errors = new List<string>();
+                foreach (var line in lines) {
+                    var lsp = line.Split(" |".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var tarPy = lsp[1].Split(",");
+                    var sp = lsp[0].Split(',');
+
+                    for (int i = 1; i < sp.Length; i++) {
+                        var py = RemoveTone(sp[i]).ToLower();//.Replace("v", "u");
+                        var py2 = RemoveTone(sp[i]).ToLower().Replace("v", "u");
+                        var tpy2 = tarPy[i - 1];
+                        if (py != tpy2 && py2 != tpy2) {
+                            var c = sp[0][i - 1];
+                            var pys = WordsHelper.GetAllPinYin(c, true);
+                            var count = 0; //读音为1种，则成功
+                            var trypy = "";// 读音
+                            foreach (var item in pys) {
+                                var itemp = RemoveTone(item.ToLower());
+                                if (itemp == tarPy[i - 1] || itemp.Replace("v", "u") == tarPy[i - 1]) {
+                                    //sp[i] = item.ToLower();
+                                    trypy = item.ToLower();
+                                    count++;
+                                }
+                            }
+                            if (count == 1) {
+                                sp[i] = trypy;
+                            }
+                        }
+                    }
+                    var isok = true;
+                    for (int i = 1; i < sp.Length; i++) {
+                        var py = RemoveTone(sp[i]).ToLower();//.Replace("v", "u");
+                        if (py != tarPy[i - 1] && py.Replace("v", "u") != tarPy[i - 1]) {
+                            isok = false;
+                            break;
+                        }
+                    }
+                    if (isok) {
+                        ls.Add(string.Join(",", sp));
+                    } else {
+                        errors.Add(line);
+                    }
+                }
+                File.WriteAllText("pinyin_10_mores_ok.txt", string.Join("\n", ls));
+                File.WriteAllText("pinyin_10_mores_error.txt", string.Join("\n", errors));
+
+            }
+
+
+            Console.WriteLine("第N步 合并拼音组  ");
+            if (File.Exists("pinyin_n_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_9_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+                txt = File.ReadAllText("pinyin_10_mores_ok.txt");
+                var lines2 = txt.Split('\n').ToList();
+                lines.AddRange(lines2);
+
+
+                lines = lines.OrderBy(q => q).ToList();
+                File.WriteAllText("pinyin_n_mores_ok.txt", string.Join("\n", lines));
+            }
 
             // 百度查词组
             //https://hanyu.baidu.com/s?wd=%E6%8C%87%E7%BB%84%E8%AF%8D&from=poem
@@ -534,6 +646,92 @@ namespace ToolGood.PinYin.Pretreatment
             foreach (Match item in ms) {
                 ls.Add($"{c} {item.Value}");
             }
+        }
+
+        static string AddTone(string pinyin)
+        {
+            pinyin = pinyin.ToLower();
+            if (pinyin.EndsWith("1")) {
+                if (pinyin.Contains("a")) {
+                    pinyin = pinyin.Replace("a", "ā");
+                } else if (pinyin.Contains("o")) {
+                    pinyin = pinyin.Replace("o", "ō");
+                } else if (pinyin.Contains("e")) {
+                    pinyin = pinyin.Replace("e", "ē");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ī");
+                } else if (pinyin.Contains("u")) {
+                    pinyin = pinyin.Replace("u", "ū");
+                } else if (pinyin.Contains("v")) {
+                    pinyin = pinyin.Replace("v", "ǖ");
+                } else {
+                    throw new Exception("");
+                }
+            } else if (pinyin.EndsWith("2")) {
+                if (pinyin.Contains("a")) {
+                    pinyin = pinyin.Replace("a", "á");
+                } else if (pinyin.Contains("o")) {
+                    pinyin = pinyin.Replace("o", "ó");
+                } else if (pinyin.Contains("e")) {
+                    pinyin = pinyin.Replace("e", "é");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "í");
+                } else if (pinyin.Contains("u")) {
+                    pinyin = pinyin.Replace("u", "ú");
+                } else if (pinyin.Contains("v")) {
+                    pinyin = pinyin.Replace("v", "ǘ");
+                } else {
+                    throw new Exception("");
+                }
+            } else if (pinyin.EndsWith("3")) {
+                if (pinyin.Contains("a")) {
+                    pinyin = pinyin.Replace("a", "ǎ");
+                } else if (pinyin.Contains("o")) {
+                    pinyin = pinyin.Replace("o", "ǒ");
+                } else if (pinyin.Contains("e")) {
+                    pinyin = pinyin.Replace("e", "ě");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ǐ");
+                } else if (pinyin.Contains("u")) {
+                    pinyin = pinyin.Replace("u", "ǔ");
+                } else if (pinyin.Contains("v")) {
+                    pinyin = pinyin.Replace("v", "ǚ");
+                } else {
+                    throw new Exception("");
+                }
+            } else if (pinyin.EndsWith("4")) {
+                if (pinyin.Contains("a")) {
+                    pinyin = pinyin.Replace("a", "à");
+                } else if (pinyin.Contains("o")) {
+                    pinyin = pinyin.Replace("o", "ò");
+                } else if (pinyin.Contains("e")) {
+                    pinyin = pinyin.Replace("e", "è");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ì");
+                } else if (pinyin.Contains("u")) {
+                    pinyin = pinyin.Replace("u", "ù");
+                } else if (pinyin.Contains("v")) {
+                    pinyin = pinyin.Replace("v", "ǜ");
+                } else {
+                    throw new Exception("");
+                }
+            } else if (pinyin.EndsWith("0") || pinyin.EndsWith("5")) {
+                if (pinyin.Contains("a")) {
+                } else if (pinyin.Contains("o")) {
+                } else if (pinyin.Contains("e")) {
+                } else if (pinyin.Contains("i")) {
+                } else if (pinyin.Contains("u")) {
+                } else if (pinyin.Contains("v")) {
+                    pinyin = pinyin.Replace("v", "ü");
+                } else {
+                    throw new Exception("");
+                }
+            } else if (pinyin.EndsWith("6") || pinyin.EndsWith("7") || pinyin.EndsWith("8") || pinyin.EndsWith("9")) {
+                throw new Exception("");
+            }
+            pinyin = Regex.Replace(pinyin, @"\d", "");
+
+            return pinyin;
         }
 
         static string RemoveTone(string pinyin)

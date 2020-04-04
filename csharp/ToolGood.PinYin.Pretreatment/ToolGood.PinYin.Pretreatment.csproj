@@ -24,6 +24,13 @@
 
 
   <ItemGroup>
+    <Reference Include="ChnCharInfo">
+      <HintPath>..\lib\ChnCharInfo.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
     <None Update="..\lib\PinYinData\0x9FA6.txt" Link="dict\0x9FA6.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
