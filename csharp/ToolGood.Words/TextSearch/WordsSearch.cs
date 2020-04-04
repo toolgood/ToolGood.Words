@@ -12,9 +12,10 @@ namespace ToolGood.Words
     public class WordsSearch
     {
         #region 私有变量
-        //private TrieNode _root = new TrieNode();
         private TrieNode2[] _first = new TrieNode2[char.MaxValue + 1];
         internal string[] _keywords;
+        internal string[] _others;
+        internal int[] _indexs;
         #endregion
 
         #region 设置关键字
@@ -24,12 +25,13 @@ namespace ToolGood.Words
         /// <param name="keywords">关键字列表</param>
         public void SetKeywords(ICollection<string> keywords)
         {
-            Dictionary<string, int> dict = new Dictionary<string, int>();
-            int index = 0;
-            foreach (var item in keywords) {
-                dict[item] = index++;
+            _keywords = keywords.ToArray();
+            List<int> indexs = new List<int>();
+            for (int i = 0; i < keywords.Count; i++) {
+                indexs.Add(i);
             }
-            SetKeywords(dict);
+            _indexs = indexs.ToArray();
+            SetKeywords();
         }
         /// <summary>
         /// 设置关键字
@@ -39,67 +41,115 @@ namespace ToolGood.Words
         public void SetKeywords(ICollection<string> keywords, ICollection<int> indexs)
         {
             if (keywords.Count != indexs.Count) { throw new Exception("数量不一样"); }
-            Dictionary<string, int> dict = new Dictionary<string, int>();
-            long index = 0;
-            var ind = indexs.ToArray();
-            foreach (var item in keywords) {
-                dict[item] = ind[index++];
-            }
-            SetKeywords(dict);
-
+            _keywords = keywords.ToArray();
+            _indexs = indexs.ToArray();
+            SetKeywords();
         }
+
         /// <summary>
         /// 设置关键字
         /// </summary>
         /// <param name="keywords">关键字列表</param>
         public void SetKeywords(IDictionary<string, int> keywords)
         {
-            var first = new TrieNode2[char.MaxValue + 1];
-            var root = new TrieNode2();
-            foreach (var key in keywords) {
-                var p = key.Key;
-                if (string.IsNullOrEmpty(p)) continue;
-
-                var nd = first[p[0]];
-                if (nd == null) {
-                    nd = root.Add(p[0]);
-                    first[p[0]] = nd;
-                }
-                for (int i = 1; i < p.Length; i++) {
-                    nd = nd.Add(p[i]);
-                }
-                nd.SetResults(p, key.Value);
-            }
-            this._first = first;
-
-            Dictionary<TrieNode2, TrieNode2> links = new Dictionary<TrieNode2, TrieNode2>();
-            foreach (var item in root.m_values) {
-                TryLinks(item.Value, null, links);
-            }
-
-            foreach (var item in links) {
-                item.Key.Merge(item.Value);
-            }
-
-            //_root = root;
+            _keywords = keywords.Keys.ToArray();
+            _indexs = keywords.Values.ToArray();
+            SetKeywords();
         }
 
-        private void TryLinks(TrieNode2 node, TrieNode2 node2, Dictionary<TrieNode2, TrieNode2> links)
+        private void SetKeywords()
         {
-            foreach (var item in node.m_values) {
-                TrieNode2 tn;
-                if (node2 == null) {
-                    tn = _first[item.Key];
-                    if (tn != null) {
-                        links[item.Value] = tn;
-                    } 
-                } else {
-                    if (node2.TryGetValue(item.Key, out tn)) {
-                        links[item.Value] = tn;
+            var root = new TrieNode();
+
+            List<TrieNode> allNode = new List<TrieNode>();
+            allNode.Add(root);
+
+            for (int i = 0; i < _keywords.Length; i++) {
+                var p = _keywords[i];
+                var nd = root;
+                for (int j = 0; j < p.Length; j++) {
+                    nd = nd.Add((char)p[j]);
+                    if (nd.Layer == 0) {
+                        nd.Layer = j + 1;
+                        allNode.Add(nd);
                     }
                 }
-                TryLinks(item.Value, tn, links);
+                nd.SetResults(i);
             }
+
+
+            List<TrieNode> nodes = new List<TrieNode>();
+            // Find failure functions
+            //ArrayList nodes = new ArrayList();
+            // level 1 nodes - fail to root node
+            foreach (TrieNode nd in root.m_values.Values) {
+                nd.Failure = root;
+                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
+            }
+            // other nodes - using BFS
+            while (nodes.Count != 0) {
+                List<TrieNode> newNodes = new List<TrieNode>();
+                foreach (TrieNode nd in nodes) {
+                    TrieNode r = nd.Parent.Failure;
+                    char c = nd.Char;
+
+                    while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                    if (r == null)
+                        nd.Failure = root;
+                    else {
+                        nd.Failure = r.m_values[c];
+                        foreach (var result in nd.Failure.Results)
+                            nd.SetResults(result);
+                    }
+                    // add child nodes to BFS list 
+                    foreach (TrieNode child in nd.m_values.Values)
+                        newNodes.Add(child);
+                }
+                nodes = newNodes;
+            }
+            root.Failure = root;
+
+            allNode = allNode.OrderBy(q => q.Layer).ToList();
+            for (int i = 0; i < allNode.Count; i++) { allNode[i].Index = i; }
+
+            var allNode2 = new List<TrieNode2>();
+            for (int i = 0; i < allNode.Count; i++) {
+                allNode2.Add(new TrieNode2());
+            }
+            for (int i = 0; i < allNode2.Count; i++) {
+                var oldNode = allNode[i];
+                var newNode = allNode2[i];
+
+                foreach (var item in oldNode.m_values) {
+                    var key = item.Key;
+                    var index = item.Value.Index;
+                    newNode.Add(key, allNode2[index]);
+                }
+                foreach (var item in oldNode.Results) {
+                    newNode.SetResults(item);
+                }
+                if (oldNode.Failure != root) {
+                    foreach (var item in oldNode.Failure.m_values) {
+                        var key = item.Key;
+                        var index = item.Value.Index;
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2[index]);
+                        }
+                    }
+                    foreach (var item in oldNode.Failure.Results) {
+                        newNode.SetResults(item);
+                    }
+                }
+            }
+            allNode.Clear();
+            allNode = null;
+            root = null;
+
+            TrieNode2[] first = new TrieNode2[char.MaxValue + 1];
+            foreach (var item in allNode2[0].m_values) {
+                first[item.Key] = item.Value;
+            }
+            _first = first;
         }
 
         #endregion
@@ -151,7 +201,7 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         var item = tn.Results[0];
-                        return new WordsSearchResult(item.Item1, i + 1 - item.Item1.Length, i, item.Item2);
+                        return new WordsSearchResult(_keywords[item], i + 1 - _keywords[item].Length, i, _indexs[item]);
                     }
                 }
                 ptr = tn;
@@ -180,7 +230,7 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            list.Add(new WordsSearchResult(item.Item1, i + 1 - item.Item1.Length, i, item.Item2));
+                            list.Add(new WordsSearchResult(_keywords[item], i + 1 - _keywords[item].Length, i, _indexs[item]));
                         }
                     }
                 }
@@ -211,7 +261,7 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        var maxLength = tn.Results[0].Item1.Length;
+                        var maxLength = _keywords[tn.Results[0]].Length;
 
                         var start = i + 1 - maxLength;
                         for (int j = start; j <= i; j++) {
@@ -222,7 +272,7 @@ namespace ToolGood.Words
                 ptr = tn;
             }
             return result.ToString();
-        } 
+        }
         #endregion
 
     }

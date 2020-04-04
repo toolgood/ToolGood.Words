@@ -85,7 +85,7 @@ namespace ToolGood.Words.internals
                     sb.Append(text[index]);
                     index++;
                 } else {
-                    sb.Append(wordsSearch._keywords[t.Index]);
+                    sb.Append(wordsSearch._others[t.Index]);
                     index = t.End + 1;
                 }
             }
@@ -138,10 +138,10 @@ namespace ToolGood.Words.internals
             WordsSearch wordsSearch = new WordsSearch();
             if (reverse) {
                 wordsSearch.SetKeywords(dict.Select(q => q.Value).ToList());
-                wordsSearch._keywords = dict.Select(q => q.Key).ToArray();
+                wordsSearch._others = dict.Select(q => q.Key).ToArray();
             } else {
                 wordsSearch.SetKeywords(dict.Select(q => q.Key).ToList());
-                wordsSearch._keywords = dict.Select(q => q.Value).ToArray();
+                wordsSearch._others = dict.Select(q => q.Value).ToArray();
             }
             return wordsSearch;
         }

@@ -7,16 +7,38 @@ namespace ToolGood.Words.internals
 {
     class TrieNode2
     {
-        public bool End { get; set; }
-        public List<Tuple<string, int>> Results { get; set; }
-        internal Dictionary<char, TrieNode2> m_values;
+        public bool End;
+        public List<int> Results;
+        public Dictionary<char, TrieNode2> m_values;
         private uint minflag = uint.MaxValue;
         private uint maxflag = uint.MinValue;
 
         public TrieNode2()
         {
+            Results = new List<int>();
             m_values = new Dictionary<char, TrieNode2>();
-            Results = new List<Tuple<string, int>>();
+        }
+
+        public void Add(char c, TrieNode2 node3)
+        {
+            if (minflag > c) { minflag = c; }
+            if (maxflag < c) { maxflag = c; }
+            m_values.Add(c, node3);
+        }
+
+        public void SetResults(int index)
+        {
+            if (End == false) {
+                End = true;
+            }
+            if (Results.Contains(index)==false) {
+                Results.Add(index);
+            }
+        }
+
+        public bool HasKey(char c)
+        {
+            return m_values.ContainsKey(c);
         }
 
         public bool TryGetValue(char c, out TrieNode2 node)
@@ -26,47 +48,6 @@ namespace ToolGood.Words.internals
             }
             node = null;
             return false;
-        }
-
-        public TrieNode2 Add(char c)
-        {
-            TrieNode2 node;
-            if (minflag > c) { minflag = c; }
-            if (maxflag < c) { maxflag = c; }
-            if (m_values.TryGetValue(c, out node)) {
-                return node;
-            }
-            node = new TrieNode2();
-            m_values[c] = node;
-            return node;
-        }
-
-        public void SetResults(string text, int index)
-        {
-            if (End == false) {
-                End = true;
-            }
-            Results.Add(Tuple.Create(text, index));
-        }
-
-        public void Merge(TrieNode2 node)
-        {
-            if (node.End) {
-                if (End == false) {
-                    End = true;
-                }
-                foreach (var item in node.Results) {
-                    Results.Add(item);
-                }
-            }
-
-            foreach (var item in node.m_values) {
-                if (m_values.ContainsKey(item.Key) == false) {
-                    if (minflag > item.Key) { minflag = item.Key; }
-                    if (maxflag < item.Key) { maxflag = item.Key; }
-                    m_values[item.Key] = item.Value;
-                }
-            }
         }
 
     }
