@@ -12,7 +12,7 @@ using ToolGood.Words;
 
 namespace ToolGood.PinYin.Pretreatment
 {
-    class Program
+    partial class Program
     {
         static void Main(string[] args)
         {
@@ -611,14 +611,84 @@ namespace ToolGood.PinYin.Pretreatment
                 var lines2 = txt.Split('\n').ToList();
                 lines.AddRange(lines2);
 
-
                 lines = lines.OrderBy(q => q).ToList();
                 File.WriteAllText("pinyin_n_mores_ok.txt", string.Join("\n", lines));
             }
 
+            Console.WriteLine("第N+1步 缩小拼音组  ");
+            if (File.Exists("pinyin_n1_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_n_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+
+                Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+                foreach (var line in lines) {
+                    var sp = line.Split(',').ToList();
+                    var key = sp[0];
+                    sp.RemoveAt(0);
+                    dict[key] = sp;
+                }
+
+                var keys = dict.Select(q => q.Key).OrderBy(q => q.Length).ToList();
+                for (int i = 3; i < 5; i++) {
+                    var keywords = keys.Where(q => q.Length <= i).ToList();
+                    WordsSearch wordsSearch = new WordsSearch();
+                    wordsSearch.SetKeywords(keywords);
+                    for (int j = keys.Count - 1; j >= 0; j--) {
+                        var k = keys[j];
+                        if (k.Length <= i) { break; }
+                        var all = wordsSearch.FindAll(k);
+                        if (all.Count > 1 && all.Any(q => q.Start == 0) && all.Sum(q => q.Keyword.Length) >= k.Length) {
+                            var py = string.Join(",", dict[k]);
+                            var rootNode = GetTextNode(k, all);
+                            var keyspss = rootNode.GetFullTextLine();
+                            foreach (var item in keyspss) {
+                                List<string> py2 = new List<string>();
+                                var sp = item.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var s in sp) {
+                                    py2.AddRange(dict[s]);
+                                }
+                                var py3 = string.Join(",", py2);
+                                if (py3==py) {
+                                    keys.RemoveAt(j);
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                var ls = new List<string>();
+                foreach (var key in keys) {
+                    ls.Add($"{key},{string.Join(",", dict[key])}");
+                }
+                File.WriteAllText("pinyin_n1_mores_ok.txt", string.Join("\n", ls));
+            }
+
+
+
             // 百度查词组
             //https://hanyu.baidu.com/s?wd=%E6%8C%87%E7%BB%84%E8%AF%8D&from=poem
         }
+
+        static TextNode GetTextNode(string txt, List<WordsSearchResult> results)
+        {
+            TextNode[] nodes = new TextNode[txt.Length + 1];
+            for (int i = 0; i < nodes.Length; i++) { nodes[i] = new TextNode(); }
+            nodes[nodes.Length - 1].IsEnd = true;
+
+            foreach (var item in results) {
+                TextLine line = new TextLine() {
+                    Start = item.Start,
+                    End = item.End,
+                    Keyword = item.Keyword,
+                };
+                nodes[item.Start].Children.Add(line);
+                line.Next = nodes[item.End + 1];
+            }
+            return nodes[0];
+        }
+
 
         static void GetBuildPinYin(string c, List<string> ls)
         {
