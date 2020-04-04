@@ -115,9 +115,9 @@ namespace ToolGood.Words.internals
             return bytArr;
         }
 
-#endregion
+        #endregion
 
-#region 加载文件
+        #region 加载文件
         /// <summary>
         /// 加载文件
         /// </summary>
@@ -213,9 +213,10 @@ namespace ToolGood.Words.internals
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }
-#endregion
+        #endregion
 
-#region 设置关键字
+        #region 设置关键字
+
         /// <summary>
         /// 设置关键字
         /// </summary>
@@ -223,33 +224,42 @@ namespace ToolGood.Words.internals
         public virtual void SetKeywords(ICollection<string> keywords)
         {
             _keywords = keywords.ToArray();
-            var length = CreateDict(keywords);
-            var root = new TrieNodeEx();
+            SetKeywords();
+        }
 
-            for (Int32 i = 0; i < _keywords.Length; i++) {
+        private void SetKeywords()
+        {
+            var root = new TrieNode();
+
+            List<TrieNode> allNode = new List<TrieNode>();
+            allNode.Add(root);
+
+            for (int i = 0; i < _keywords.Length; i++) {
                 var p = _keywords[i];
                 var nd = root;
-                for (Int32 j = 0; j < p.Length; j++) {
-                    nd = nd.Add((char)_dict[p[j]]);
+                for (int j = 0; j < p.Length; j++) {
+                    nd = nd.Add((char)p[j]);
+                    if (nd.Layer == 0) {
+                        nd.Layer = j + 1;
+                        allNode.Add(nd);
+                    }
                 }
                 nd.SetResults(i);
             }
 
-            List<TrieNodeEx> nodes = new List<TrieNodeEx>();
+
+            List<TrieNode> nodes = new List<TrieNode>();
             // Find failure functions
-            //ArrayList nodes = new ArrayList();
             // level 1 nodes - fail to root node
-            foreach (TrieNodeEx nd in root.m_values.Values) {
+            foreach (TrieNode nd in root.m_values.Values) {
                 nd.Failure = root;
-                foreach (TrieNodeEx trans in nd.m_values.Values) nodes.Add(trans);
+                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
             }
             // other nodes - using BFS
             while (nodes.Count != 0) {
-                List<TrieNodeEx> newNodes = new List<TrieNodeEx>();
-
-                //ArrayList newNodes = new ArrayList();
-                foreach (TrieNodeEx nd in nodes) {
-                    TrieNodeEx r = nd.Parent.Failure;
+                List<TrieNode> newNodes = new List<TrieNode>();
+                foreach (TrieNode nd in nodes) {
+                    TrieNode r = nd.Parent.Failure;
                     char c = nd.Char;
 
                     while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
@@ -260,26 +270,66 @@ namespace ToolGood.Words.internals
                         foreach (var result in nd.Failure.Results)
                             nd.SetResults(result);
                     }
-
                     // add child nodes to BFS list 
-                    foreach (TrieNodeEx child in nd.m_values.Values)
+                    foreach (TrieNode child in nd.m_values.Values)
                         newNodes.Add(child);
                 }
                 nodes = newNodes;
             }
             root.Failure = root;
-            foreach (var item in root.m_values.Values) {
-                TryLinks(item);
+
+            allNode = allNode.OrderBy(q => q.Layer).ToList();
+            for (int i = 0; i < allNode.Count; i++) { allNode[i].Index = i; }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 1; i < allNode.Count; i++) {
+                stringBuilder.Append(allNode[i].Char);
             }
-            build(root, length);
-        }
-        private void TryLinks(TrieNodeEx node)
-        {
-            node.Merge(node.Failure);
-            foreach (var item in node.m_values.Values) {
-                TryLinks(item);
+            var length = CreateDict(stringBuilder.ToString());
+            stringBuilder = null;
+
+            var allNode2 = new List<TrieNodeEx>();
+            for (int i = 0; i < allNode.Count; i++) {
+                allNode2.Add(new TrieNodeEx());
             }
+            for (int i = 0; i < allNode2.Count; i++) {
+                var oldNode = allNode[i];
+                var newNode = allNode2[i];
+                newNode.Char = _dict[oldNode.Char];
+
+                foreach (var item in oldNode.m_values) {
+                    var key = _dict[item.Key];
+                    var index = item.Value.Index;
+                    newNode.Add(key, allNode2[index]);
+                }
+                foreach (var item in oldNode.Results) {
+                    newNode.SetResults(item);
+                }
+                if (oldNode.Failure != root) {
+                    foreach (var item in oldNode.Failure.m_values) {
+                        var key = _dict[item.Key];
+                        var index = item.Value.Index;
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2[index]);
+                        }
+                    }
+                    foreach (var item in oldNode.Failure.Results) {
+                        newNode.SetResults(item);
+                    }
+                }
+            }
+            allNode.Clear();
+            allNode = null;
+            root = null;
+
+
+            build(allNode2[0], length);
         }
+
+
+
+
+
 
         private void build(TrieNodeEx root, Int32 length)
         {
@@ -303,23 +353,18 @@ namespace ToolGood.Words.internals
             _guides = guides.ToArray();
         }
 
-#endregion
+        #endregion
 
-#region 生成映射字典
+        #region 生成映射字典
 
-        private Int32 CreateDict(ICollection<string> keywords)
+        private int CreateDict(string keywords)
         {
             Dictionary<char, Int32> dictionary = new Dictionary<char, Int32>();
-
-            foreach (var keyword in keywords) {
-                for (Int32 i = 0; i < keyword.Length; i++) {
-                    var item = keyword[i];
-                    if (dictionary.ContainsKey(item)) {
-                        if (i > 0)
-                            dictionary[item] += 2;
-                    } else {
-                        dictionary[item] = i > 0 ? 2 : 1;
-                    }
+            foreach (var item in keywords) {
+                if (dictionary.ContainsKey(item)) {
+                    dictionary[item] += 1;
+                } else {
+                    dictionary[item] = 1;
                 }
             }
             var list = dictionary.OrderByDescending(q => q.Value).Select(q => q.Key).ToList();
@@ -339,6 +384,40 @@ namespace ToolGood.Words.internals
             }
             return dictionary.Count;
         }
-#endregion
+
+
+        //private Int32 CreateDict(ICollection<string> keywords)
+        //{
+        //    Dictionary<char, Int32> dictionary = new Dictionary<char, Int32>();
+
+        //    foreach (var keyword in keywords) {
+        //        for (Int32 i = 0; i < keyword.Length; i++) {
+        //            var item = keyword[i];
+        //            if (dictionary.ContainsKey(item)) {
+        //                if (i > 0)
+        //                    dictionary[item] += 2;
+        //            } else {
+        //                dictionary[item] = i > 0 ? 2 : 1;
+        //            }
+        //        }
+        //    }
+        //    var list = dictionary.OrderByDescending(q => q.Value).Select(q => q.Key).ToList();
+        //    var list2 = new List<char>();
+        //    var sh = false;
+        //    foreach (var item in list) {
+        //        if (sh) {
+        //            list2.Add(item);
+        //        } else {
+        //            list2.Insert(0, item);
+        //        }
+        //        sh = !sh;
+        //    }
+        //    _dict = new Int32[char.MaxValue + 1];
+        //    for (Int32 i = 0; i < list2.Count; i++) {
+        //        _dict[list2[i]] = i + 1;
+        //    }
+        //    return dictionary.Count;
+        //}
+        #endregion
     }
 }

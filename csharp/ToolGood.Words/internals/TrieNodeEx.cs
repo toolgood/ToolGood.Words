@@ -7,13 +7,10 @@ namespace ToolGood.Words.internals
 {
     class TrieNodeEx
     {
-        public TrieNodeEx Parent;
-        public TrieNodeEx Failure;
-        public char Char;
+        internal int Char;
         internal bool End;
         internal List<Int32> Results;
-        internal Dictionary<char, TrieNodeEx> m_values;
-        internal Dictionary<char, TrieNodeEx> merge_values;
+        internal Dictionary<int, TrieNodeEx> m_values;
         private Int32 minflag = Int32.MaxValue;
         private Int32 maxflag = 0;
         internal Int32 Next;
@@ -21,12 +18,11 @@ namespace ToolGood.Words.internals
 
         public TrieNodeEx()
         {
-            m_values = new Dictionary<char, TrieNodeEx>();
-            merge_values = new Dictionary<char, TrieNodeEx>();
+            m_values = new Dictionary<int, TrieNodeEx>();
             Results = new List<Int32>();
         }
 
-        public bool TryGetValue(char c, out TrieNodeEx node)
+        public bool TryGetValue(int c, out TrieNodeEx node)
         {
             if (minflag <= (Int32)c && maxflag >= (Int32)c) {
                 return m_values.TryGetValue(c, out node);
@@ -34,24 +30,11 @@ namespace ToolGood.Words.internals
             node = null;
             return false;
         }
-
-        public TrieNodeEx Add(char c)
+        public void Add(int c, TrieNodeEx node3)
         {
-            TrieNodeEx node;
-
-            if (m_values.TryGetValue(c, out node)) {
-                return node;
-            }
-
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
-
-            node = new TrieNodeEx();
-            node.Parent = this;
-            node.Char = c;
-            m_values[c] = node;
-            Count++;
-            return node;
+            m_values.Add(c, node3);
         }
 
         public void SetResults(Int32 text)
@@ -64,22 +47,9 @@ namespace ToolGood.Words.internals
             }
         }
 
-        public void Merge(TrieNodeEx node)
+        public bool HasKey(int c)
         {
-            var nd = node;
-            while (nd.Char != 0) {
-                foreach (var item in node.m_values) {
-                    if (m_values.ContainsKey(item.Key) == false) {
-                        if (merge_values.ContainsKey(item.Key) == false) {
-                            if (minflag > item.Key) { minflag = item.Key; }
-                            if (maxflag < item.Key) { maxflag = item.Key; }
-                            merge_values[item.Key] = item.Value;
-                            Count++;
-                        }
-                    }
-                }
-                nd = nd.Failure;
-            }
+            return m_values.ContainsKey(c);
         }
 
         public Int32 Rank(TrieNodeEx[] has)
@@ -99,7 +69,6 @@ namespace ToolGood.Words.internals
         {
             if (maxflag == 0) return;
             var keys = m_values.Select(q => (Int32)q.Key).ToList();
-            keys.AddRange(merge_values.Select(q => (Int32)q.Key).ToList());
 
             while (has[start] != null) { start++; }
             var s = start < (Int32)minflag ? (Int32)minflag : start;
@@ -133,11 +102,6 @@ namespace ToolGood.Words.internals
         {
             Next = next;
             seats[next] = true;
-
-            foreach (var item in merge_values) {
-                var position = next + item.Key;
-                has[position] = item.Value;
-            }
 
             foreach (var item in m_values) {
                 var position = next + item.Key;

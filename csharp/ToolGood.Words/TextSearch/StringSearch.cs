@@ -48,7 +48,6 @@ namespace ToolGood.Words
 
             List<TrieNode> nodes = new List<TrieNode>();
             // Find failure functions
-            //ArrayList nodes = new ArrayList();
             // level 1 nodes - fail to root node
             foreach (TrieNode nd in root.m_values.Values) {
                 nd.Failure = root;
