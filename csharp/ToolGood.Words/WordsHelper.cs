@@ -20,11 +20,10 @@ namespace ToolGood.Words
         /// 获取首字母，中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
-        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetFirstPinYin(string text, bool tone = false)
+        public static string GetFirstPinYin(string text)
         {
-            return PinYinDict.GetFirstPinYin(text, tone ? 1 : 0);
+            return PinYinDict.GetFirstPinYin(text, 0);
         }
 
         /// <summary>
