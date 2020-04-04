@@ -107,16 +107,97 @@ namespace ToolGood.PinYin.Build
             Compression("pyName.txt");
 
             //生成多字拼音
+            Dictionary<string, List<string>> pyWords = new Dictionary<string, List<string>>();
+            pyText = File.ReadAllText("dict\\_word.txt");
+            pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in pyLines) {
+                var sp = line.Split(", ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries).ToList();
+                var key = sp[0];
+                sp.RemoveAt(0);
+                pyWords[key] = sp;
+            }
 
 
+            Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
+            List<string> tempClearKeys = new List<string>();
 
+            foreach (var item in pyWords) {
+                var py = Words.WordsHelper.GetPinYinFast(item.Key, true).ToLower();
+                if (py == string.Join("", item.Value)) {
+                    tempClearWords[item.Key] = item.Value;
+                    tempClearKeys.Add(item.Key);
+                }
+            }
+            var pyWords2 = new Dictionary<string, List<string>>();
+            foreach (var item in pyWords) {
+                pyWords2[item.Key] = item.Value;
+            }
 
+            foreach (var item in tempClearWords) {
+                pyWords2.Remove(item.Key);
+            }
 
+            List<string> AddKeys = new List<string>();
+            var keys = pyWords2.Select(q => q.Key).ToList();
+            Words.WordsSearch wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(keys);
+            foreach (var item in tempClearKeys) {
+                if (wordsSearch.ContainsAny(item)) {
+                    AddKeys.Add(item);
+                }
+            }
 
+            List<string> AddKeys2 = new List<string>();
+            List<string> keys2 = new List<string>();
+            foreach (var item in pyWords2) {
+                var py = Words.WordsHelper.GetPinYinFast(item.Key, true).ToLower();
+                if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
+                    for (int i = 0; i < item.Key.Length - 1; i++) {
+                        keys2.Add(item.Key.Substring(0, i + 1));
+                    }
+                }
+            }
+            keys2 = keys2.Distinct().ToList();
+            wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(keys2);
+            foreach (var item in tempClearKeys) {
+                if (item.Length >= 5) { continue; } //排除诗句 歇后语
+                var all = wordsSearch.FindAll(item);
+                if (all.Any(q => q.End + 1 == item.Length)) {
+                    AddKeys2.Add(item);
+                }
+            }
 
+            AddKeys.AddRange(AddKeys2);
+            AddKeys.AddRange(keys);
+            AddKeys = AddKeys.Distinct().ToList();
 
+            ls = new List<string>();
+            foreach (var item in AddKeys) {
+                var str = item;
+                List<string> pys = pyWords[str];
+                foreach (var py in pys) {
+                    var idx = upyShow.IndexOf(py) * 2 + 1;
+                    if (idx==-1) {
+                        throw new Exception("");
+                    }
+                    str += "," + idx.ToString("X");
+                }
+                ls.Add(str);
+            }
+            ls = ls.OrderBy(q => q).ToList();
+            File.WriteAllText("pyWords.txt", string.Join("\n", ls));
+            Compression("pyWords.txt");
+        }
 
-
+        static string RemoveTone(string pinyin)
+        {
+            string s = "āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜüńň";
+            string t = "aaaaooooeeeeiiiiuuuuvvvvvnnm";
+            for (int i = 0; i < s.Length; i++) {
+                pinyin = pinyin.Replace(s[i].ToString(), t[i].ToString());
+            }
+            return pinyin;
         }
 
 
@@ -235,30 +316,7 @@ namespace ToolGood.PinYin.Build
             return 5;
         }
 
-        static Dictionary<char, char> ToneDict;
-        static string RemoveTone(string text)
-        {
-            if (ToneDict == null) {
-                var tones = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü".Split('|');
-                var dict = new Dictionary<char, char>();
-                foreach (var tone in tones) {
-                    for (int i = 1; i < tone.Length; i++) {
-                        dict[tone[i]] = tone[0];
-                    }
-                }
-                ToneDict = dict;
-            }
-            var dic = ToneDict;
-            var str = "";
-            foreach (var t in text) {
-                if (dic.TryGetValue(t, out char c)) {
-                    str += c;
-                } else {
-                    str += t;
-                }
-            }
-            return str;
-        }
+
 
     }
 }

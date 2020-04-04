@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="dict\_py.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
