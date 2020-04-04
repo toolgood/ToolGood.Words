@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToolGood.Words;
+using ToolGood.Words.internals;
 
 namespace ToolGood.PinYin.Pretreatment
 {
@@ -648,7 +649,7 @@ namespace ToolGood.PinYin.Pretreatment
                                     py2.AddRange(dict[s]);
                                 }
                                 var py3 = string.Join(",", py2);
-                                if (py3==py) {
+                                if (py3 == py) {
                                     keys.RemoveAt(j);
                                     break;
                                 }
@@ -663,6 +664,84 @@ namespace ToolGood.PinYin.Pretreatment
                     ls.Add($"{key},{string.Join(",", dict[key])}");
                 }
                 File.WriteAllText("pinyin_n1_mores_ok.txt", string.Join("\n", ls));
+            }
+
+            Console.WriteLine("第N+2步 修复拼音组  ");
+            if (File.Exists("pinyin_n2_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_n1_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+
+                Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+                foreach (var line in lines) {
+                    var sp = line.Split(',').ToList();
+                    var key = sp[0];
+                    sp.RemoveAt(0);
+
+                    for (int i = 0; i < sp.Count; i++) {
+                        var py = sp[i];
+                        var pyIndex = GetToneIndex(py);
+                        py = RemoveTone(py);
+                        py = AddTone(py + pyIndex.ToString());
+                        sp[i] = py;
+                    }
+
+                    dict[key] = sp;
+                }
+                var ls = new List<string>();
+                foreach (var key in dict) {
+                    ls.Add($"{key.Key},{string.Join(",", key.Value)}");
+                }
+                File.WriteAllText("pinyin_n2_mores_ok.txt", string.Join("\n", ls));
+            }
+
+            Console.WriteLine("第N+3步 修复拼音组  ");
+            if (File.Exists("pinyin_n3_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_n2_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+
+                Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+                var pdict = PinYinDict.PyShow;
+                for (int j = 0; j < pdict.Length; j++) {
+                    pdict[j] = pdict[j].ToLower();
+                }
+
+                foreach (var line in lines) {
+                    var sp = line.Split(',').ToList();
+                    var key = sp[0];
+                    sp.RemoveAt(0);
+
+                    for (int i = 0; i < sp.Count; i++) {
+                        var py = sp[i];
+                        if (pdict.Contains(py) == false) {
+                            var pys = WordsHelper.GetAllPinYin(key[i], true);
+                            for (int j = 0; j < pys.Count; j++) {
+                                pys[j] = pys[j].ToLower();
+                            }
+                            var count = 0; //读音为1种，则成功
+                            var trypy = "";// 读音
+                            var tarPy = RemoveTone(py);
+                            foreach (var item in pys) {
+                                var itemp = RemoveTone(item.ToLower());
+                                if (itemp == tarPy || itemp.Replace("v", "u") == tarPy) {
+                                    trypy = item.ToLower();
+                                    count++;
+                                }
+                            }
+                            if (count == 1) {
+                                py = trypy;
+                            }
+                        }
+                        sp[i] = py;
+                    }
+                    dict[key] = sp;
+                }
+
+
+                var ls = new List<string>();
+                foreach (var key in dict) {
+                    ls.Add($"{key.Key},{string.Join(",", key.Value)}");
+                }
+                File.WriteAllText("pinyin_n3_mores_ok.txt", string.Join("\n", ls));
             }
 
 
@@ -716,6 +795,23 @@ namespace ToolGood.PinYin.Pretreatment
             foreach (Match item in ms) {
                 ls.Add($"{c} {item.Value}");
             }
+        }
+
+        static int GetToneIndex(string text)
+        {
+            var tone = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü"
+                    .Replace("a", " ").Replace("o", " ").Replace("i", " ")
+                    .Replace("u", " ").Replace("v", " ")
+                    .Split('|');
+            foreach (var c in text) {
+                foreach (var to in tone) {
+                    var index = to.IndexOf(c);
+                    if (index > 0) {
+                        return index;
+                    }
+                }
+            }
+            return 5;
         }
 
         static string AddTone(string pinyin)
