@@ -19,7 +19,7 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.5.0.2</Version>
+    <Version>2.5.1.0</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -43,6 +43,8 @@
     <EmbeddedResource Include="dict\t2s.dat.z" />
     <EmbeddedResource Include="dict\t2tw.dat.z" />
     <EmbeddedResource Include="dict\pyIndex.txt.z" />
+    <EmbeddedResource Include="dict\pyName.txt.z" />
+    <EmbeddedResource Include="dict\pyWords.txt.z" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
@@ -51,6 +53,8 @@
     <EmbeddedResource Include="dict\t2s.dat.br" />
     <EmbeddedResource Include="dict\t2tw.dat.br" />
     <EmbeddedResource Include="dict\pyIndex.txt.br" />
+    <EmbeddedResource Include="dict\pyName.txt.br" />
+    <EmbeddedResource Include="dict\pyWords.txt.br" />
   </ItemGroup>
 
  

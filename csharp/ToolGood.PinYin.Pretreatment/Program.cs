@@ -603,6 +603,84 @@ namespace ToolGood.PinYin.Pretreatment
 
             }
 
+            Console.WriteLine("第十四步 添加搜狗拼音词组  ");
+            if (File.Exists("pinyin_11_mores_ok.txt") == false) {
+                var txt = File.ReadAllText("pinyin_9_mores_ok.txt");
+                var lines = txt.Split('\n').ToList();
+                txt = File.ReadAllText("pinyin_10_mores_ok.txt");
+                var lines2 = txt.Split('\n').ToList();
+                lines.AddRange(lines2);
+                List<string> oldKeys = new List<string>();
+                foreach (var item in lines) {
+                    var sp = item.Split(',');
+                    oldKeys.Add(sp[0]);
+                }
+
+
+                Dictionary<string, int> remove = new Dictionary<string, int>();
+
+                txt = File.ReadAllText("scel_1.txt");
+                lines = txt.Split('\n').ToList();
+                Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+                foreach (var item in lines) {
+                    var sp = item.Split(" ,|".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var key = sp[0];
+                    if (oldKeys.Contains(key)) { continue; }
+                    sp.RemoveAt(0);
+
+                    var isok = true;
+                    for (int i = 0; i < key.Length; i++) {
+                        int count;
+                        if (remove.TryGetValue(key[i] + sp[i], out count)) {
+                            if (i == 0) {
+                                if (count > 2) {
+                                    isok = false;
+                                    break;
+                                }
+                            } else {
+                                isok = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (isok == false) { continue; }
+
+
+                    List<string> pys = new List<string>();
+                    for (int i = 0; i < key.Length; i++) {
+                        var ps = WordsHelper.GetAllPinYin(key[i], true);
+                        var count = 0; //读音为1种，则成功
+                        var count2 = 0; //读音为1种，则成功
+                        var trypy = "";// 读音
+                        foreach (var p in ps) {
+                            var itemp = RemoveTone(p.ToLower());
+                            if (itemp == sp[i] || itemp.Replace("v", "u") == sp[i]) {
+                                if (count == 0) { trypy = p.ToLower(); }
+                                count++;
+                                count2++;
+                                if (count > 1 && i == 0 && p.ToLower() == itemp) { count--; }
+                                if (count2 > 1) {
+                                    remove[key[i] + sp[i]] = count2;
+                                }
+                            }
+                        }
+                        if (count == 1) {
+                            pys.Add(trypy);
+                        }
+                    }
+                    if (sp.Count == pys.Count) {
+                        dict[key] = pys;
+                    }
+                }
+
+                var ls = new List<string>();
+                foreach (var key in dict) {
+                    ls.Add($"{key.Key},{string.Join(",", key.Value)}");
+                }
+                File.WriteAllText("pinyin_11_mores_ok.txt", string.Join("\n", ls));
+            }
+
+
 
             Console.WriteLine("第N步 合并拼音组  ");
             if (File.Exists("pinyin_n_mores_ok.txt") == false) {
@@ -610,6 +688,9 @@ namespace ToolGood.PinYin.Pretreatment
                 var lines = txt.Split('\n').ToList();
                 txt = File.ReadAllText("pinyin_10_mores_ok.txt");
                 var lines2 = txt.Split('\n').ToList();
+                lines.AddRange(lines2);
+                txt = File.ReadAllText("pinyin_11_mores_ok.txt");
+                lines2 = txt.Split('\n').ToList();
                 lines.AddRange(lines2);
 
                 lines = lines.OrderBy(q => q).ToList();

@@ -412,7 +412,7 @@ namespace ToolGood.Words
             if (_pinyinSplit == null) {
                 _pinyinSplit = new WordsSearch();
                 List<string> pys = new List<string>();
-                foreach (var item in PinYinDict.pyName) {
+                foreach (var item in PinYinDict.PyShow) {
                     var t = item.ToUpper();
                     if (t.Length < 2) continue;
                     pys.Add(t);

@@ -17,49 +17,64 @@ namespace ToolGood.Words
     {
         #region 拼音 操作
         /// <summary>
-        /// 获取首字母，中文字符集为[0x4E00,0x9FA5]
+        /// 获取首字母，中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">原文本</param>
+        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetFirstPinYin(string text)
+        public static string GetFirstPinYin(string text, bool tone = false)
         {
-            return PinYinDict.GetFirstPinYin(text);
+            return PinYinDict.GetFirstPinYin(text, tone ? 1 : 0);
         }
 
         /// <summary>
-        /// 获取拼音全拼, 不支持多音,中文字符集为[0x4E00,0x9FA5]
+        /// 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">原文本</param>
+        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
         [Obsolete("请使用GetPinYin方法，此方法不支持多音")]
-        public static string GetPinYinFast(string text)
+        public static string GetPinYinFast(string text, bool tone = false)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
                 var c = text[i];
-                sb.Append(PinYinDict.GetPinYinFast(c));
+                sb.Append(PinYinDict.GetPinYinFast(c, tone ? 1 : 0));
             }
             return sb.ToString();
         }
 
         /// <summary>
-        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FA5]
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">原文本</param>
+        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYin(string text)
+        public static string GetPinYin(string text, bool tone = false)
         {
-            return PinYinDict.GetPinYin(text);
+            return PinYinDict.GetPinYin(text, tone ? 1 : 0);
         }
 
         /// <summary>
-        /// 获取所有拼音,中文字符集为[0x4E00,0x9FA5]
+        /// 获取所有拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="c">原文本</param>
+        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetAllPinYin(char s)
+        public static List<string> GetAllPinYin(char c, bool tone = false)
         {
-            return PinYinDict.GetAllPinYin(s);
+            return PinYinDict.GetAllPinYin(c, tone ? 1 : 0);
+        }
+
+        /// <summary>
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="name">姓名</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns></returns>
+        public static List<string> GetPinYinForName(string name, bool tone = false)
+        {
+            return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
         }
 
         #endregion
@@ -247,7 +262,7 @@ namespace ToolGood.Words
         /// </summary>
         public static void ClearTranslate()
         {
-              Translate.ClearTranslate();
+            Translate.ClearTranslate();
         }
 
 

@@ -111,11 +111,23 @@ namespace ToolGood.PinYin.Build
             pyText = File.ReadAllText("dict\\_word.txt");
             pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in pyLines) {
-                var sp = line.Split(", ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries).ToList();
+                var sp = line.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
                 var key = sp[0];
+                if (key.Length == 1) { continue; }
                 sp.RemoveAt(0);
                 pyWords[key] = sp;
             }
+            // 搜狗拼音也有错误的
+            pyText = File.ReadAllText("dict\\_wordRevise.txt");
+            pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in pyLines) {
+                var sp = line.Split(", []=|:\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                var key = sp[0];
+                if (key.Length == 1) { continue; }
+                sp.RemoveAt(0);
+                pyWords[key] = sp;
+            }
+
 
 
             Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
@@ -161,7 +173,7 @@ namespace ToolGood.PinYin.Build
             wordsSearch = new Words.WordsSearch();
             wordsSearch.SetKeywords(keys2);
             foreach (var item in tempClearKeys) {
-                if (item.Length >= 5) { continue; } //排除诗句 歇后语
+                if (item.Length >= 4) { continue; } //排除诗句 歇后语
                 var all = wordsSearch.FindAll(item);
                 if (all.Any(q => q.End + 1 == item.Length)) {
                     AddKeys2.Add(item);
@@ -178,7 +190,7 @@ namespace ToolGood.PinYin.Build
                 List<string> pys = pyWords[str];
                 foreach (var py in pys) {
                     var idx = upyShow.IndexOf(py) * 2 + 1;
-                    if (idx==-1) {
+                    if (idx == -1) {
                         throw new Exception("");
                     }
                     str += "," + idx.ToString("X");

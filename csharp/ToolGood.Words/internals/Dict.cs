@@ -6,7 +6,8 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
-    internal class Dict
+    //public internal class Dict
+    class Dict
     {
         internal static string _Simplified;
         public static string Simplified {
@@ -29,7 +30,7 @@ namespace ToolGood.Words
                     for (int i = 0x4e00; i <= 0x9fa5; i++) {
                         var m = ((char)i).ToString();
                         if (dict3.TryGetValue(m, out string v2)) {
-                            if (v2.Length==1) {
+                            if (v2.Length == 1) {
                                 str2 += v2;
                             } else {
                                 str2 += m;
