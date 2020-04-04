@@ -8,7 +8,7 @@ ToolGood.Words
 csharp 文件夹说明：
 ```
 ToolGood.PinYin.Build:          生成词的拼音
-ToolGood.PinYin.WordsBuild:     生成多音词的拼音
+ToolGood.PinYin.Pretreatment:   生成拼音预处理，核对拼音，词组最小化
 ToolGood.Transformation.Build： 生成简体繁体转换文档，更新时文档放在同一目录下，词库参考 https://github.com/BYVoid/OpenCC
 ToolGood.Words.Contrast:        字符串搜索对比
 ToolGood.Words.Test:            单元测试
@@ -43,10 +43,14 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
     WordsHelper.ToNumber("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
     // 获取全拼
     WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
+    WordsHelper.GetPinYin("我爱中国",true);//WǒÀiZhōngGuó
     // 获取首字母
     WordsHelper.GetFirstPinYin("我爱中国");//WAZG
     // 获取全部拼音
     WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
+    // 获取姓名
+    WordsHelper.GetPinYinForName("单一一")//ShanYiYi
+    WordsHelper.GetPinYinForName("单一一",true)//ShànYīYī
 ``` 
 `WordsHelper.ClearTranslate()` 清理缓存
  
