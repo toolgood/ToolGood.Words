@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ToolGood.Words.internals;
 
@@ -7,68 +8,122 @@ namespace ToolGood.Words.internals
 {
     class MiniSearch
     {
-        TrieNode[] _first = new TrieNode[char.MaxValue + 1];
+        TrieNode2[] _first = new TrieNode2[char.MaxValue + 1];
+        internal string[] _keywords;
 
         /// <summary>
         /// 设置关键字
         /// </summary>
-        /// <param name="_keywords">关键字列表</param>
-        public virtual void SetKeywords(ICollection<string> _keywords)
+        /// <param name="keywords">关键字列表</param>
+        public virtual void SetKeywords(ICollection<string> keywords)
         {
-            var first = new TrieNode[char.MaxValue + 1];
-            var root = new TrieNode();
-
-            foreach (var p in _keywords) {
-                if (string.IsNullOrEmpty(p)) continue;
-
-                var nd = _first[p[0]];
-                if (nd == null) {
-                    nd = root.Add(p[0]);
-                    first[p[0]] = nd;
-                }
-                for (int i = 1; i < p.Length; i++) {
-                    nd = nd.Add(p[i]);
-                }
-                nd.SetResults(p);
-            }
-            this._first = first;// root.ToArray();
-
-            Dictionary<TrieNode, TrieNode> links = new Dictionary<TrieNode, TrieNode>();
-            foreach (var item in root.m_values) {
-                TryLinks(item.Value, null, links);
-            }
-
-            foreach (var item in links) {
-                item.Key.Merge(item.Value, links);
-            }
-
-            //_root = root;
+            _keywords = keywords.ToArray();
+            SetKeywords();
         }
 
-        private void TryLinks(TrieNode node, TrieNode node2, Dictionary<TrieNode, TrieNode> links)
+        private void SetKeywords()
         {
-            foreach (var item in node.m_values) {
-                TrieNode tn = null;
-                if (node2 == null) {
-                    tn = _first[item.Key];
-                    if (tn != null) {
-                        links[item.Value] = tn;
+            var root = new TrieNode();
+
+            List<TrieNode> allNode = new List<TrieNode>();
+            allNode.Add(root);
+
+            for (int i = 0; i < _keywords.Length; i++) {
+                var p = _keywords[i];
+                var nd = root;
+                for (int j = 0; j < p.Length; j++) {
+                    nd = nd.Add((char)p[j]);
+                    if (nd.Layer == 0) {
+                        nd.Layer = j + 1;
+                        allNode.Add(nd);
                     }
-                } else if (node2.TryGetValue(item.Key, out tn)) {
-                    links[item.Value] = tn;
                 }
-                TryLinks(item.Value, tn, links);
+                nd.SetResults(i);
             }
+
+
+            List<TrieNode> nodes = new List<TrieNode>();
+            // Find failure functions
+            //ArrayList nodes = new ArrayList();
+            // level 1 nodes - fail to root node
+            foreach (TrieNode nd in root.m_values.Values) {
+                nd.Failure = root;
+                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
+            }
+            // other nodes - using BFS
+            while (nodes.Count != 0) {
+                List<TrieNode> newNodes = new List<TrieNode>();
+                foreach (TrieNode nd in nodes) {
+                    TrieNode r = nd.Parent.Failure;
+                    char c = nd.Char;
+
+                    while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                    if (r == null)
+                        nd.Failure = root;
+                    else {
+                        nd.Failure = r.m_values[c];
+                        foreach (var result in nd.Failure.Results)
+                            nd.SetResults(result);
+                    }
+                    // add child nodes to BFS list 
+                    foreach (TrieNode child in nd.m_values.Values)
+                        newNodes.Add(child);
+                }
+                nodes = newNodes;
+            }
+            root.Failure = root;
+
+            allNode = allNode.OrderBy(q => q.Layer).ToList();
+            for (int i = 0; i < allNode.Count; i++) { allNode[i].Index = i; }
+
+            var allNode2 = new List<TrieNode2>();
+            for (int i = 0; i < allNode.Count; i++) {
+                allNode2.Add(new TrieNode2());
+            }
+            for (int i = 0; i < allNode2.Count; i++) {
+                var oldNode = allNode[i];
+                var newNode = allNode2[i];
+
+                foreach (var item in oldNode.m_values) {
+                    var key = item.Key;
+                    var index = item.Value.Index;
+                    newNode.Add(key, allNode2[index]);
+                }
+                foreach (var item in oldNode.Results) {
+                    newNode.SetResults(item);
+                }
+                if (oldNode.Failure != root) {
+                    foreach (var item in oldNode.Failure.m_values) {
+                        var key = item.Key;
+                        var index = item.Value.Index;
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2[index]);
+                        }
+                    }
+                    foreach (var item in oldNode.Failure.Results) {
+                        newNode.SetResults(item);
+                    }
+                }
+            }
+            allNode.Clear();
+            allNode = null;
+            root = null;
+
+            TrieNode2[] first = new TrieNode2[char.MaxValue + 1];
+            foreach (var item in allNode2[0].m_values) {
+                first[item.Key] = item.Value;
+            }
+            _first = first;
         }
 
 
         public List<MiniSearchResult> FindAll(string text)
         {
-            internals.TrieNode ptr = null;
+            internals.TrieNode2 ptr = null;
             List<MiniSearchResult> list = new List<MiniSearchResult>();
 
             for (int i = 0; i < text.Length; i++) {
-                internals.TrieNode tn;
+                internals.TrieNode2 tn;
                 if (ptr == null) {
                     tn = _first[text[i]];
                 } else {
@@ -79,7 +134,7 @@ namespace ToolGood.Words.internals
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            list.Add(new MiniSearchResult(item, i + 1 - item.Length, i));
+                            list.Add(new MiniSearchResult(_keywords[item], i + 1 - _keywords[item].Length, i));
                         }
                     }
                 }
