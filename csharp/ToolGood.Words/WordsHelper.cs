@@ -71,7 +71,18 @@ namespace ToolGood.Words
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetPinYinForName(string name, bool tone = false)
+        public static string GetPinYinForName(string name, bool tone = false)
+        {
+            return string.Join("", PinYinDict.GetPinYinForName(name, tone ? 1 : 0));
+        }
+
+        /// <summary>
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="name">姓名</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns></returns>
+        public static List<string> GetPinYinListForName(string name, bool tone = false)
         {
             return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
         }

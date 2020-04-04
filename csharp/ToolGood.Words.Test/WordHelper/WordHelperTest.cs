@@ -53,6 +53,11 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("Chuan", pys[0]);
             Assert.AreEqual("Zhuan", pys[1]);
 
+            py = WordsHelper.GetPinYinForName("单一一");
+            Assert.AreEqual("ShanYiYi", py);
+
+            py = WordsHelper.GetPinYinForName("单一一",true);
+            Assert.AreEqual("ShànYīYī", py);
 
         }
 

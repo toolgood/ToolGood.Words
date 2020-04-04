@@ -78,9 +78,12 @@ namespace ToolGood.PinYin.Build
             pyText = File.ReadAllText("dict\\_pyName.txt");
             pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in pyLines) {
-                var sp = line.Split("\t,:| '\"=>-[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                var sp = line.Split("\t,:| '\"=>-[]，　?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (sp.Length > 1) {
                     var key = sp[0];
+                    if (key=="单") {
+
+                    }
                     List<int> indexs = new List<int>();
                     for (int i = 1; i < sp.Length; i++) {
                         var py = sp[i];
