@@ -619,10 +619,11 @@ namespace ToolGood.PinYin.Pretreatment
 
                 Dictionary<string, int> remove = new Dictionary<string, int>();
 
-                txt = File.ReadAllText("scel_1.txt");
+                txt = File.ReadAllText("scel_2.txt");
                 lines = txt.Split('\n').ToList();
                 Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
                 foreach (var item in lines) {
+                    if (string.IsNullOrWhiteSpace(item)) { continue; }
                     var sp = item.Split(" ,|".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
                     var key = sp[0];
                     if (oldKeys.Contains(key)) { continue; }
@@ -756,6 +757,7 @@ namespace ToolGood.PinYin.Pretreatment
                 foreach (var line in lines) {
                     var sp = line.Split(',').ToList();
                     var key = sp[0];
+                    if (string.IsNullOrEmpty(key)) { continue; }
                     sp.RemoveAt(0);
 
                     for (int i = 0; i < sp.Count; i++) {
