@@ -9,7 +9,7 @@ namespace ToolGood.Words.internals
     {
         internal int Char;
         internal bool End;
-        internal bool HasRank;
+        internal int Index;
         internal List<Int32> Results;
         internal Dictionary<int, TrieNodeEx> m_values;
         private Int32 minflag = Int32.MaxValue;
@@ -54,46 +54,45 @@ namespace ToolGood.Words.internals
             return m_values.ContainsKey(c);
         }
 
-        public Int32 Rank(TrieNodeEx[] has)
-        {
-            bool[] seats = new bool[has.Length];
-            Int32 start = 1;
+        //public Int32 Rank(TrieNodeEx[] has)
+        //{
+        //    bool[] seats = new bool[has.Length];
+        //    Int32 start = 1;
 
-            has[0] = this;
-            List<TrieNodeEx> trieNodes = new List<TrieNodeEx>() { this };
+        //    has[0] = this;
+        //    List<TrieNodeEx> trieNodes = new List<TrieNodeEx>() { this };
 
-            while (trieNodes.Count>0) {
-                List<TrieNodeEx> nexts = new List<TrieNodeEx>();
-                foreach (var node in trieNodes) {
-                    node.Rank(ref start, seats, has, nexts);
-                }
-                trieNodes = nexts;
-            }
-            //Rank(ref start, seats, has);
-            Int32 maxCount = has.Length - 1;
-            while (has[maxCount] == null) { maxCount--; }
-            return maxCount;
-        }
+        //    while (trieNodes.Count > 0) {
+        //        List<TrieNodeEx> nexts = new List<TrieNodeEx>();
+        //        foreach (var node in trieNodes) {
+        //            node.Rank(ref start, seats, has, nexts);
+        //        }
+        //        trieNodes = nexts;
+        //    }
+        //    Int32 maxCount = has.Length - 1;
+        //    while (has[maxCount] == null) { maxCount--; }
+        //    return maxCount;
+        //}
 
-        private void Rank(ref Int32 start, bool[] seats, TrieNodeEx[] has,List<TrieNodeEx> nexts)
+        public void Rank(ref Int32 start, bool[] seats, int[] has)
         {
             if (maxflag == 0) return;
-            if (HasRank) { return; }
-            HasRank = true;
+            //if (HasRank) { return; }
+            //HasRank = true;
             var keys = m_values.Select(q => (Int32)q.Key).ToList();
 
-            while (has[start] != null) { start++; }
+            while (has[start] != 0) { start++; }
             var s = start < (Int32)minflag ? (Int32)minflag : start;
 
             for (Int32 i = s; i < has.Length; i++) {
-                if (has[i] == null) {
+                if (has[i] == 0) {
                     var next = i - (Int32)minflag;
                     //if (next < 0) continue;
                     if (seats[next]) continue;
 
                     var isok = true;
                     foreach (var item in keys) {
-                        if (has[next + item] != null) { isok = false; break; }
+                        if (has[next + item] != 0) { isok = false; break; }
                     }
                     if (isok) {
                         SetSeats(next, seats, has);
@@ -101,24 +100,23 @@ namespace ToolGood.Words.internals
                     }
                 }
             }
-            start += keys.Count / 2;
+            start += keys.Count * keys.Count / (maxflag - minflag + 1);
 
-            var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
-            foreach (var key in keys2) {
-                nexts.Add(key.Value);
-                //key.Value.Rank(ref start, seats, has);
-            }
+            //var keys2 = m_values.OrderByDescending(q => q.Value.Count).ThenByDescending(q => q.Value.maxflag - q.Value.minflag);
+            //foreach (var key in keys2) {
+            //    nexts.Add(key.Value);
+            //}
         }
 
 
-        private void SetSeats(Int32 next, bool[] seats, TrieNodeEx[] has)
+        private void SetSeats(Int32 next, bool[] seats, int[] has)
         {
             Next = next;
             seats[next] = true;
 
             foreach (var item in m_values) {
                 var position = next + item.Key;
-                has[position] = item.Value;
+                has[position] = item.Value.Index;
             }
 
         }
