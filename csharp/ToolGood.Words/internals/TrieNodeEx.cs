@@ -22,14 +22,6 @@ namespace ToolGood.Words.internals
             Results = new List<Int32>();
         }
 
-        public bool TryGetValue(int c, out TrieNodeEx node)
-        {
-            if (minflag <= (Int32)c && maxflag >= (Int32)c) {
-                return m_values.TryGetValue(c, out node);
-            }
-            node = null;
-            return false;
-        }
         public void Add(int c, TrieNodeEx node3)
         {
             if (minflag > c) { minflag = c; }
@@ -98,7 +90,7 @@ namespace ToolGood.Words.internals
                 }
             }
             start += keys.Count / 2;
-            Array.Clear(seats2, start, max + maxflag - start + 1);
+            Array.Clear(seats2, start, max + maxflag - start + 1 - start);
         }
 
         private void RankOne(ref int start, bool[] seats, int[] has)
