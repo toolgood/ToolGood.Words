@@ -73,6 +73,23 @@ namespace ToolGood.PinYin.Build
             File.WriteAllText("pyIndex.txt", outText);
             Compression("pyIndex.txt");
 
+            File.WriteAllText("_pyShow.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyShow));
+
+            List<int> pyIndex2 = new List<int>() { 0 };
+            List<int> pyData2 = new List<int>();
+            for (int i = 0; i < pyData.Count; i++) {
+                var idxs = pyData[i];
+                if (idxs != "0") {
+                    foreach (var idx in idxs.Split(',')) {
+                        pyData2.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
+                    }
+                }
+                pyIndex2.Add((ushort)pyData2.Count);
+            }
+            File.WriteAllText("_pyIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
+            File.WriteAllText("_pyData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
+
+
             // 获取 姓名拼音
             Dictionary<string, List<int>> pyName = new Dictionary<string, List<int>>();
             pyText = File.ReadAllText("dict\\_pyName.txt");
@@ -81,7 +98,7 @@ namespace ToolGood.PinYin.Build
                 var sp = line.Split("\t,:| '\"=>-[]，　?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (sp.Length > 1) {
                     var key = sp[0];
-                    if (key=="单") {
+                    if (key == "单") {
 
                     }
                     List<int> indexs = new List<int>();
@@ -108,6 +125,8 @@ namespace ToolGood.PinYin.Build
             }
             File.WriteAllText("pyName.txt", string.Join("\n", ls));
             Compression("pyName.txt");
+
+            File.WriteAllText("_pyName.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyName));
 
             //生成多字拼音
             Dictionary<string, List<string>> pyWords = new Dictionary<string, List<string>>();
@@ -203,6 +222,28 @@ namespace ToolGood.PinYin.Build
             ls = ls.OrderBy(q => q).ToList();
             File.WriteAllText("pyWords.txt", string.Join("\n", ls));
             Compression("pyWords.txt");
+            File.WriteAllText("pyWords.js.txt", string.Join("|", ls));
+
+            File.WriteAllText("_pyWordsKey.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(AddKeys));
+
+            pyIndex2 = new List<int>() { 0 };
+            pyData2 = new List<int>();
+            foreach (var item in AddKeys) {
+                var str = item;
+                List<string> pys = pyWords[str];
+                foreach (var py in pys) {
+                    var idx = upyShow.IndexOf(py) * 2 + 1;
+                    if (idx == -1) {
+                        throw new Exception("");
+                    }
+                    pyData2.Add(idx);
+                }
+                pyIndex2.Add(pyData2.Count);
+            }
+            File.WriteAllText("_pyWordsIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
+            File.WriteAllText("_pyWordsData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
+
+
         }
 
         static string RemoveTone(string pinyin)
