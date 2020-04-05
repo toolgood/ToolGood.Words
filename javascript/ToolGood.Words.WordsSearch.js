@@ -224,7 +224,7 @@ function WordsSearch() {
                         Keyword: keyword,
                         Success: true,
                         End: i,
-                        Start: i + 1 - _keywords[item].Length,
+                        Start: i + 1 - _keywords[item].length,
                         Index: _indexs[item],
                     }
                 }
@@ -258,7 +258,7 @@ function WordsSearch() {
                             Keyword: keyword,
                             Success: true,
                             End: i,
-                            Start: i + 1 - _keywords[item].Length,
+                            Start: i + 1 - _keywords[item].length,
                             Index: _indexs[item],
                         });
                     }
