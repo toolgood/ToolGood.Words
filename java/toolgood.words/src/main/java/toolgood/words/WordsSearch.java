@@ -11,7 +11,7 @@ import toolgood.words.internals.TrieNode2;
 public class WordsSearch{
     protected TrieNode2[] _first = new TrieNode2[Character.MAX_VALUE + 1];
     String[] _keywords;
-    String[] _others;
+    public  String[] _others;
     int[] _indexs;
 
 
@@ -275,9 +275,7 @@ public class WordsSearch{
             }
             if (tn != null) {
                 if (tn.End) {
-                    Integer index= tn.Results.get(0);
-                    Integer maxLength= _keywords[index].length();
-       
+                    int maxLength =_keywords[tn.Results.get(0)].length();
                     int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
