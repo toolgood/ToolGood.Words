@@ -128,7 +128,6 @@ public abstract class BaseSearchEx {
         }
     }
 
-
     /**
      * 设置关键字
      *
@@ -136,31 +135,42 @@ public abstract class BaseSearchEx {
      */
     public void SetKeywords(List<String> keywords) {
         _keywords = keywords.toArray(new String[0]);
-        int length = CreateDict(keywords);
-        TrieNodeEx root = new TrieNodeEx();
+
+        SetKeywords();
+    }
+
+    private void SetKeywords() {
+        TrieNode root = new TrieNode();
+
+        List<TrieNode> allNode = new ArrayList<TrieNode>();
+        allNode.add(root);
 
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
-            TrieNodeEx nd = root;
+            TrieNode nd = root;
             for (int j = 0; j < p.length(); j++) {
-                nd = nd.Add((char) _dict[p.charAt(j)]);
+                nd = nd.Add(p.charAt(j));
+                if (nd.Layer == 0) {
+                    nd.Layer = j + 1;
+                    allNode.add(nd);
+                }
             }
             nd.SetResults(i);
         }
 
-        List<TrieNodeEx> nodes = new ArrayList<TrieNodeEx>();
-        for (int key : root.m_values.keySet()) {
-            TrieNodeEx nd = root.m_values.get(key);
+        List<TrieNode> nodes = new ArrayList<TrieNode>();
+        for (Character key : root.m_values.keySet()) {
+            TrieNode nd = root.m_values.get(key);
             nd.Failure = root;
-            for (TrieNodeEx trans : nd.m_values.values()) {
+            for (TrieNode trans : nd.m_values.values()) {
                 nodes.add(trans);
             }
         }
         while (nodes.size() != 0) {
-            List<TrieNodeEx> newNodes = new ArrayList<TrieNodeEx>();
-            for (TrieNodeEx nd : nodes) {
-                TrieNodeEx r = nd.Parent.Failure;
-                int c = (int) nd.Char;
+            List<TrieNode> newNodes = new ArrayList<TrieNode>();
+            for (TrieNode nd : nodes) {
+                TrieNode r = nd.Parent.Failure;
+                Character c = nd.Char;
                 while (r != null && !r.m_values.containsKey(c)) {
                     r = r.Failure;
                 }
@@ -173,37 +183,90 @@ public abstract class BaseSearchEx {
                     }
                 }
 
-                for (TrieNodeEx child : nd.m_values.values()) {
+                for (TrieNode child : nd.m_values.values()) {
                     newNodes.add(child);
                 }
             }
             nodes = newNodes;
         }
         root.Failure = root;
-        for (TrieNodeEx item : root.m_values.values()) {
-            TryLinks(item);
+
+        Collections.sort(allNode);
+        for (int i = 0; i < allNode.size(); i++) {
+            allNode.get(i).Index = i;
         }
-        build(root, length);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < allNode.size(); i++) {
+            stringBuilder.append(allNode.get(i).Char);
+        }
+        Integer length = CreateDict(stringBuilder.toString());
+        stringBuilder = null;
+
+        List<TrieNodeEx> allNode2 = new ArrayList<TrieNodeEx>();
+        for (int i = 0; i < allNode.size(); i++) {
+            TrieNodeEx nd = new TrieNodeEx();
+            nd.Index = i;
+            allNode2.add(nd);
+        }
+        for (int i = 0; i < allNode2.size(); i++) {
+            TrieNode oldNode = allNode.get(i);
+            TrieNodeEx newNode = allNode2.get(i);
+            newNode.Char = _dict[oldNode.Char];
+
+            for (Character key : oldNode.m_values.keySet()) {
+                TrieNode nd = oldNode.m_values.get(key);
+                newNode.Add(_dict[key], allNode2.get(nd.Index));
+            }
+            oldNode.Results.forEach(item -> {
+                newNode.SetResults(item);
+            });
+
+            if (oldNode.Failure != root) {
+                for (Character key : oldNode.Failure.m_values.keySet()) {
+                    if (newNode.HasKey(_dict[key]) == false) {
+                        TrieNode nd = oldNode.Failure.m_values.get(key);
+                        newNode.Add(_dict[key], allNode2.get(nd.Index));
+                    }
+                }
+                oldNode.Failure.Results.forEach(item -> {
+                    newNode.SetResults(item);
+                });
+            }
+        }
+        allNode.clear();
+        allNode = null;
+        root = null;
+
+        build(allNode2, length);
     }
 
-    private void TryLinks(TrieNodeEx node) {
-        node.Merge(node.Failure);
-        for (TrieNodeEx item : node.m_values.values()) {
-            TryLinks(item);
+    private void build(List<TrieNodeEx> nodes, int length) {
+        Integer[] has = new Integer[0x00FFFFFF];
+        boolean[] seats = new boolean[0x00FFFFFF];
+        boolean[] seats2 = new boolean[0x00FFFFFF];
+        Integer start = 1;
+        Integer oneStart = 1;
+        for (int i = 0; i < nodes.size(); i++) {
+            TrieNodeEx node = nodes.get(i);
+            node.Rank(oneStart, start, seats, seats2, has);
         }
-    }
+        Integer maxCount = has.length - 1;
+        while (has[maxCount] == null) {
+            maxCount--;
+        }
+        length = maxCount + length + 1;
 
-    private void build(TrieNodeEx root, int length) {
-        TrieNodeEx[] has = new TrieNodeEx[0x00FFFFFF];
-        length = root.Rank(has) + length + 1;
+        // length = root.Rank(has) + length + 1;
         _key = new int[length];
         _next = new int[length];
         _check = new int[length];
         List<Integer[]> guides = new ArrayList<Integer[]>();
-        guides.add(new Integer[]{0});
+        guides.add(new Integer[] { 0 });
         for (int i = 0; i < length; i++) {
-            TrieNodeEx item = has[i];
-            if (item == null) continue;
+            if (has[i] == null)
+                continue;
+            TrieNodeEx item = nodes.get(has[i]);
             _key[i] = item.Char;
             _next[i] = item.Next;
             if (item.End) {
@@ -220,41 +283,26 @@ public abstract class BaseSearchEx {
                 _guides[i][j] = array[j];
             }
         }
+
     }
 
-
-    private int CreateDict(List<String> keywords) {
+    private int CreateDict(String keywords) {
         Map<Character, Integer> dictionary = new Hashtable<Character, Integer>();
-
-        for (String keyword : keywords) {
-            for (int i = 0; i < keyword.length(); i++) {
-                Character item = keyword.charAt(i);
-                if (dictionary.containsKey(item)) {
-                    if (i > 0)
-                        dictionary.put(item, dictionary.get(item) + 2);
-                } else {
-                    dictionary.put(item, i > 0 ? 2 : 1);
-                }
+        for (int i = 0; i < keywords.length(); i++) {
+            Character item = keywords.charAt(i);
+            if (dictionary.containsKey(item)) {
+                dictionary.put(item, dictionary.get(item) + 1);
+            } else {
+                dictionary.put(item, 1);
             }
         }
-        Map<Character, Integer> dictionary2 = dictionary
-                .entrySet()
-                .stream()
+        Map<Character, Integer> dictionary2 = dictionary.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .collect(
-                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-                                LinkedHashMap::new));
-
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
         List<Character> list2 = new ArrayList<Character>();
-        boolean sh = false;
         for (Character item : dictionary2.keySet()) {
-            if (sh) {
-                list2.add(item);
-            } else {
-                list2.add(0, item);
-            }
-            sh = !sh;
+            list2.add(item);
         }
 
         _dict = new int[Character.MAX_VALUE + 1];
@@ -263,4 +311,5 @@ public abstract class BaseSearchEx {
         }
         return dictionary.size();
     }
+
 }

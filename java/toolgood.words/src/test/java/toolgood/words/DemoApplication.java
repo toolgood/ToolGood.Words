@@ -427,6 +427,7 @@ public class DemoApplication {
 	}
 
 	private static void test_words() throws Exception {
+		System.out.println("test_words run Test.");
 		String s = WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
 		if (s.equals("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分") == false) {
 			System.out.println("ToSimplifiedChinese is Error.");
