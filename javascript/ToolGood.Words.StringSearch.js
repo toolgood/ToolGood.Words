@@ -48,11 +48,11 @@ function StringSearch() {
             }
         }
         this.HasKey = function (c) {
-            return m_values[c] != undefined;
+            return this.m_values[c] != undefined;
         }
         this.TryGetValue = function (c) {
-            if (minflag <= c && maxflag >= c) {
-                return m_values[c];
+            if (this.minflag <= c && this.maxflag >= c) {
+                return this.m_values[c];
             }
             return null;
         }
@@ -100,7 +100,7 @@ function StringSearch() {
             var p = _keywords[i];
             var nd = root;
             for (var j = 0; j < p.length; j++) {
-                nd = nd.push(p.charCodeAt(j));
+                nd = nd.Add(p.charCodeAt(j));
                 if (nd.Layer == 0) {
                     nd.Layer = j + 1;
                     allNode.push(nd);
@@ -115,7 +115,7 @@ function StringSearch() {
             var nd = root.m_values[key];
             nd.Failure = root;
             for (const trans in nd.m_values) {
-                if (root.m_values.hasOwnProperty(trans) == false) { continue; }
+                if (nd.m_values.hasOwnProperty(trans) == false) { continue; }
                 nodes.push(nd.m_values[trans]);
             }
         }
@@ -125,10 +125,11 @@ function StringSearch() {
             var newNodes = [];
             for (var key in nodes) {
                 if (nodes.hasOwnProperty(key) == false) { continue; }
-                var nd = object[key];
+                var nd = nodes[key];
                 var r = nd.Parent.Failure;
                 var c = nd.Char;
-                while (r != null && !r.m_values[c]) r = r.Failure;
+                while (r != null && !r.m_values[c])
+                    r = r.Failure;
                 if (r == null)
                     nd.Failure = root;
                 else {
@@ -139,8 +140,9 @@ function StringSearch() {
                         nd.SetResults(result);
                     }
                 }
-                for (const key in nd.m_values.Values) {
-                    if (nd.m_values.Values.hasOwnProperty(key) == false) { continue }
+                for (const key2 in nd.m_values) {
+                    if (nd.m_values.hasOwnProperty(key2) == false) { continue }
+                    var child = nd.m_values[key2];
                     newNodes.push(child);
                 }
             }
@@ -148,14 +150,14 @@ function StringSearch() {
         }
         root.Failure = root;
 
-        allNode = quickSort(allNode);
+        allNode = quickSort(allNode)[0];
         for (var i = 0; i < allNode.length; i++) { allNode[i].Index = i; }
 
         var allNode2 = [];
-        for (var i = 0; i < allNode.Count; i++) {
-            allNode2.Add(new TrieNode2());
+        for (var i = 0; i < allNode.length; i++) {
+            allNode2.push(new TrieNode2());
         }
-        for (var i = 0; i < allNode2.Count; i++) {
+        for (var i = 0; i < allNode2.length; i++) {
             var oldNode = allNode[i];
             var newNode = allNode2[i];
 
@@ -192,20 +194,20 @@ function StringSearch() {
         }
         for (const key in allNode2[0].m_values) {
             if (allNode2[0].m_values.hasOwnProperty(key) == false) { continue; }
-            first[item.Key] = item.Value;
+            first[key] = allNode2[0].m_values[key];
         }
         _first = first;
     }
     this.FindFirst = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
-            const t = array.charCodeAt(index);
+            const t = text.charCodeAt(index);
             var tn = null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                var nd = ptr.TryGetValue(t);
-                if (nd == null) {
+                tn = ptr.TryGetValue(t);
+                if (!tn) {
                     tn = _first[t];
                 }
             }
@@ -224,13 +226,13 @@ function StringSearch() {
         var list = [];
 
         for (let index = 0; index < text.length; index++) {
-            const t = array.charCodeAt(index);
+            const t = text.charCodeAt(index);
             var tn = null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                var nd = ptr.TryGetValue(t);
-                if (nd == null) {
+                tn = ptr.TryGetValue(t);
+                if (!tn) {
                     tn = _first[t];
                 }
             }
@@ -250,13 +252,13 @@ function StringSearch() {
     this.ContainsAny = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
-            const t = array.charCodeAt(index);
+            const t = text.charCodeAt(index);
             var tn = null;
             if (ptr == null) {
                 tn = _first[t];
             } else {
-                var nd = ptr.TryGetValue(t);
-                if (nd == null) {
+                tn = ptr.TryGetValue(t);
+                if (!tn) {
                     tn = _first[t];
                 }
             }
@@ -274,19 +276,21 @@ function StringSearch() {
         var result = text.split('');
 
         var ptr = null;
-        for (var i = 0; i < text.Length; i++) {
+        for (var i = 0; i < text.length; i++) {
+            const t = text.charCodeAt(i);
+
             var tn = null;
             if (ptr == null) {
-                tn = _first[text[i]];
+                tn = _first[t];
             } else {
-                var nd = ptr.TryGetValue(t);
-                if (nd == null) {
+                tn = ptr.TryGetValue(t);
+                if (!tn) {
                     tn = _first[t];
                 }
             }
             if (tn != null) {
                 if (tn.End) {
-                    var maxLength = _keywords[tn.Results[0]].Length;
+                    var maxLength = _keywords[tn.Results[0]].length;
                     var start = i + 1 - maxLength;
                     for (var j = start; j <= i; j++) {
                         result[j] = replaceChar;
