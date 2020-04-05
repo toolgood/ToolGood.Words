@@ -7,7 +7,6 @@ import java.util.List;
 import toolgood.words.internals.TrieNode;
 import toolgood.words.internals.TrieNode2;
 
-
 public class StringSearch {
     private TrieNode2[] _first = new TrieNode2[Character.MAX_VALUE + 1];
     private String[] _keywords;
