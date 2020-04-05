@@ -52,33 +52,7 @@ namespace ToolGood.Words.internals
             return m_values.ContainsKey(c);
         }
 
-
-        public void Rank(ref Int32 start, bool[] seats, int[] has)
-        {
-            if (maxflag == 0) return;
-            var keys = m_values.Select(q => (Int32)q.Key).ToList();
-
-            while (has[start] != 0) { start++; }
-            var s = start < (Int32)minflag ? (Int32)minflag : start;
-
-            for (Int32 i = s; i < has.Length; i++) {
-                if (has[i] == 0) {
-                    var next = i - (Int32)minflag;
-                    if (seats[next]) continue;
-
-                    var isok = true;
-                    foreach (var item in keys) {
-                        if (has[next + item] != 0) { isok = false; break; }
-                    }
-                    if (isok) {
-                        SetSeats(next, seats, has);
-                        break;
-                    }
-                }
-            }
-            start += keys.Count * keys.Count / (maxflag - minflag + 1);
-        }
-        public void Rank3(ref Int32 oneStart, ref Int32 start, bool[] seats, bool[] seats2, int[] has)
+        public void Rank(ref Int32 oneStart, ref Int32 start, bool[] seats, bool[] seats2, int[] has)
         {
             if (maxflag == 0) return;
             if (minflag == maxflag) {
@@ -141,59 +115,6 @@ namespace ToolGood.Words.internals
                 }
             }
             start++;
-        }
-
-        public void Rank2(ref Int32 start, bool[] seats, List<List<int>> notSeets, int[] has)
-        {
-            if (maxflag == 0) return;
-            var keys = m_values.Select(q => (Int32)q.Key).ToList();
-
-            while (has[start] != 0) { start++; }
-            var s = start < (Int32)minflag ? (Int32)minflag : start;
-
-            for (Int32 i = s; i < has.Length; i++) {
-                if (has[i] == 0) {
-                    var next = i - (Int32)minflag;
-                    if (seats[next]) continue;
-                    while (notSeets.Count < next + maxflag) {
-                        notSeets.Add(new List<int>());
-                    }
-                    if (notSeets[next].Contains(minflag)) {
-                        continue;
-                    }
-                    if (notSeets[next].Contains(maxflag)) {
-                        continue;
-                    }
-                    foreach (var key in keys) {
-                        for (int j = 1; j < key - 1; j++) {
-                            if (seats[next + j]) continue;
-                            notSeets[next + j].Add(key - j);
-                        }
-                    }
-
-
-                    //for (int j = 1; j < maxflag; j++) {
-                    //    notSeets[next + j].Add(maxflag - j);
-                    //}
-                    //SetSeats(next, seats, has);
-                    //break;
-
-
-                    var isok = true;
-                    foreach (var item in keys) {
-                        if (has[next + item] != 0) {
-                            isok = false;
-                            break;
-                        }
-                    }
-                    if (isok) {
-                        SetSeats(next, seats, has);
-                        break;
-                    }
-                }
-            }
-            start += keys.Count / 2;// * keys.Count / (maxflag - minflag + 1);
-
         }
 
 

@@ -340,7 +340,7 @@ namespace ToolGood.Words.internals
             Int32 oneStart = 1;
             for (int i = 0; i < nodes.Count; i++) {
                 var node = nodes[i];
-                node.Rank3(ref oneStart, ref start, seats, seats2, has);
+                node.Rank(ref oneStart, ref start, seats, seats2, has);
             }
             Int32 maxCount = has.Length - 1;
             while (has[maxCount] == 0) { maxCount--; }
