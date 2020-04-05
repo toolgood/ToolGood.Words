@@ -15,6 +15,7 @@
     </div>
     <script src="ToolGood.Words.StringSearch.js"></script>
     <script src="ToolGood.Words.WordsSearch.js"></script>
+    <script src="ToolGood.Words.PinYin.js"></script>
     <script>
         function log(txt) {
             var ele = document.getElementById("result");
@@ -30,31 +31,31 @@
         log("StringSearch ContainsAny is run.");
         var b = iwords.ContainsAny(test);
         if (b == false) {
-            log("StringSearch ContainsAny is error.");
+            log("StringSearch ContainsAny is error.............................");
         }
 
         log("StringSearch FindFirst is run.");
         var f = iwords.FindFirst(test);
         if (f != "中国") {
-            log("StringSearch FindFirst is error.");
+            log("StringSearch FindFirst is error.............................");
         }
 
         log("StringSearch FindAll is run.");
         var all = iwords.FindAll(test);
         if (all[0] != "中国") {
-            log("StringSearch FindAll is error.");
+            log("StringSearch FindAll is error.............................");
         }
         if (all[1] != "国人") {
-            log("StringSearch FindAll is error.");
+            log("StringSearch FindAll is error.............................");
         }
         if (all.length != 2) {
-            log("StringSearch FindAll is error.");
+            log("StringSearch FindAll is error.............................");
         }
 
         log("StringSearch Replace is run.");
         var str = iwords.Replace(test, '*');
         if (str != "我是***") {
-            log("StringSearch Replace is error.");
+            log("StringSearch Replace is error.............................");
         }
 
 
@@ -66,7 +67,7 @@
         log("WordsSearch ContainsAny is run.");
         b = wordsSearch.ContainsAny(test);
         if (b == false) {
-            log("WordsSearch ContainsAny is error.");
+            log("WordsSearch ContainsAny is error.............................");
         }
 
 
@@ -74,29 +75,29 @@
         log("WordsSearch FindFirst is run.");
         var f = wordsSearch.FindFirst(test);
         if (f.Keyword != "中国") {
-            log("WordsSearch FindFirst is error.");
+            log("WordsSearch FindFirst is error.............................");
         }
 
 
         log("WordsSearch FindAll is run.");
         var alls = wordsSearch.FindAll(test);
         if (alls[0].Keyword != "中国") {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
         if (alls[1].Keyword != "国人") {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
         if (alls.length != 2) {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
         if (alls[0].Start != 2) {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
         if (alls[0].End != 3) {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
         if (alls[0].Index != 0) {
-            log("WordsSearch FindAll is error.");
+            log("WordsSearch FindAll is error.............................");
         }
 
 
@@ -105,13 +106,83 @@
         log("WordsSearch Replace is run.");
         var t = wordsSearch.Replace(test, '*');
         if (str != "我是***") {
-            log("WordsSearch Replace is error.");
+            log("WordsSearch Replace is error.............................");
+        }
+
+
+        log("-----------------------------------  PinYin  -----------------------------------");
+        var pinyin = new PinYin();
+
+        log("PinYin GetPinYinForName is run.");
+        py = pinyin.GetPinYinForName("单一一");
+        if (py != "ShanYiYi") {
+            log("PinYin GetPinYinForName is error.............................");
+        }
+
+        log("PinYin GetPinYinForName is run.");
+        py = pinyin.GetPinYinForName("单一一", true);
+        if (py != "ShànYīYī") {
+            log("PinYin GetPinYinForName is error.............................");
+        }
+
+        log("PinYin GetAllPinYin is run.");
+        var t = pinyin.GetAllPinYin('芃');
+        if (t[0] != "Peng") {
+            log("PinYin GetAllPinYin is error.............................");
+        }
+
+        log("PinYin GetPinYin is run.");
+        var b = pinyin.GetPinYin("摩擦棒");
+        if (b != "MoCaBang") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+   
+        log("PinYin GetPinYin is run.");
+        b = pinyin.GetPinYin("秘鲁");
+        if (b != "BiLu") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+
+        log("PinYin GetPinYin is run.");
+        py = pinyin.GetPinYin("快乐，乐清");
+        if (py != "KuaiLe，YueQing") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+        log("PinYin GetPinYin is run.");
+        py = pinyin.GetPinYin("快乐清理");
+        if (py != "KuaiLeQingLi") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+        log("PinYin GetPinYin is run.");
+        py = pinyin.GetPinYin("我爱中国");
+        if (py != "WoAiZhongGuo") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+        log("PinYin GetPinYin is run.");
+        py = pinyin.GetPinYin("我爱中国", true);
+        if (py != "WǒÀiZhōngGuó") {
+            log("PinYin GetPinYin is error.............................");
+        }
+
+
+        log("PinYin GetAllPinYin is run.");
+        var pys = pinyin.GetAllPinYin('传');
+        if (pys[0] != "Chuan") {
+            log("PinYin GetAllPinYin is error.............................");
+        }
+        if (pys[1] != "Zhuan") {
+            log("PinYin GetAllPinYin is error.............................");
         }
 
 
 
 
-
+ 
         log("-----------------------------------  Test End  -----------------------------------");
 
     </script>
