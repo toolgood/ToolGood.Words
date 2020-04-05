@@ -138,15 +138,15 @@ public class PinYinDict {
                 for (Integer index : indexs) {
                     list.add(_pyShow[index + tone]);
                 }
+                if (name.length() > 2) {
+                    ming = name.substring(2);
+                    String[] pys=GetPinYinList(ming, tone);
+                    for (String py : pys) {
+                        list.add(py);
+                    }
+                } 
+                return list;
             }
-            if (name.length() > 2) {
-                ming = name.substring(2);
-                String[] pys=GetPinYinList(ming, tone);
-                for (String py : pys) {
-                    list.add(py);
-                }
-            } 
-            return list;
         }
         xing = name.substring(0, 1);
         if(_pyName.containsKey(xing)){

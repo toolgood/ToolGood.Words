@@ -21,6 +21,7 @@ public class WordsSearch{
      */
     public void SetKeywords(List<String> keywords)
     {
+        _keywords=new  String[keywords.size()];
         _keywords= keywords.toArray(_keywords);
         _indexs=new int[_keywords.length];
         for (int i = 0; i < keywords.size(); i++) {
@@ -123,7 +124,9 @@ public class WordsSearch{
             if (oldNode.Failure != root) {
                 for (Character key : oldNode.Failure.m_values.keySet()) {
                     TrieNode nd = oldNode.Failure.m_values.get(key);
-                    newNode.Add(key,allNode2.get(nd.Index) );
+                    if (newNode.HasKey(key) == false) {
+                        newNode.Add(key,allNode2.get(nd.Index) );
+                    }
                 }
                 oldNode.Failure.Results.forEach(item->{
                     newNode.SetResults(item);

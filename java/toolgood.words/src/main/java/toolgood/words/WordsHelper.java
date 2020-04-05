@@ -41,6 +41,23 @@ public class WordsHelper {
     }
 
     /**
+     * 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证 请使用GetPinYin方法，此方法不支持多音
+     * 
+     * @param text
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public static String GetPinYinFast(String text) throws NumberFormatException, IOException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            Character c = text.charAt(i);
+            sb.append(PinYinDict.GetPinYinFast(c, 0));
+        }
+        return sb.toString();
+    }
+
+    /**
      * 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
      * 
      * @param text 原文本
@@ -54,6 +71,18 @@ public class WordsHelper {
     }
 
     /**
+     * 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+     * 
+     * @param text
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public static String GetPinYin(String text) throws NumberFormatException, IOException {
+        return PinYinDict.GetPinYin(text, 0);
+    }
+
+    /**
      * 获取所有拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
      * 
      * @param c    原文本
@@ -64,6 +93,18 @@ public class WordsHelper {
      */
     public static List<String> GetAllPinYin(char c, Boolean tone) throws NumberFormatException, IOException {
         return PinYinDict.GetAllPinYin(c, tone ? 1 : 0);
+    }
+
+    /**
+     * 获取所有拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+     * 
+     * @param c
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public static List<String> GetAllPinYin(char c) throws NumberFormatException, IOException {
+        return PinYinDict.GetAllPinYin(c, 0);
     }
 
     /**
@@ -82,6 +123,18 @@ public class WordsHelper {
     /**
      * 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
      * 
+     * @param name
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public static String GetPinYinForName(String name) throws NumberFormatException, IOException {
+        return String.join("", PinYinDict.GetPinYinForName(name, 0));
+    }
+
+    /**
+     * 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+     * 
      * @param name 姓名
      * @param tone 是否带声调
      * @return
@@ -91,6 +144,17 @@ public class WordsHelper {
     public static List<String> GetPinYinListForName(String name, Boolean tone)
             throws NumberFormatException, IOException {
         return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
+    }
+
+    /**
+     * 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+     * @param name
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public static List<String> GetPinYinListForName(String name) throws NumberFormatException, IOException {
+        return PinYinDict.GetPinYinForName(name, 0);
     }
 
     /**
@@ -240,8 +304,7 @@ public class WordsHelper {
      * @return
      * @throws Exception
      */
-    public static String ToSimplifiedChinese(String text) throws Exception
-    {
+    public static String ToSimplifiedChinese(String text) throws Exception {
         return Translate.ToSimplifiedChinese(text, 0);
     }
 
@@ -253,8 +316,7 @@ public class WordsHelper {
      * @return
      * @throws Exception
      */
-    public static String ToSimplifiedChinese(String text, int srcType) throws Exception
-    {
+    public static String ToSimplifiedChinese(String text, int srcType) throws Exception {
         return Translate.ToSimplifiedChinese(text, srcType);
     }
 

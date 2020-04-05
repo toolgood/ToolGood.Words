@@ -86,15 +86,15 @@ public class Translate {
         StringBuilder sb = new StringBuilder();
         int index = 0;
         while (index < text.length()) {
-            WordsSearchResult t=null;
-            int end=0;
+            WordsSearchResult t = null;
+            int end = -1;
             for (WordsSearchResult wordsSearchResult : ts) {
-                if (wordsSearchResult.Start==index){
-                    if(end<wordsSearchResult.End){
-                        end=wordsSearchResult.End;
-                        t=wordsSearchResult;
+                if (wordsSearchResult.Start == index) {
+                    if (end < wordsSearchResult.End) {
+                        end = wordsSearchResult.End;
+                        t = wordsSearchResult;
                     }
-                } 
+                }
             }
             if (t == null) {
                 sb.append(text.charAt(index));
@@ -148,36 +148,37 @@ public class Translate {
 
     private static WordsSearch BuildWordsSearch(String fileName, Boolean reverse) throws IOException {
         Map<String, String> dict = GetTransformationDict(fileName);
-        List<String> Keys=new ArrayList<String>();
-        List<String> Values=new ArrayList<String>();
-        dict.forEach((k,v)->{
+        List<String> Keys = new ArrayList<String>();
+        List<String> Values = new ArrayList<String>();
+        dict.forEach((k, v) -> {
             Keys.add(k);
-            Values.add(k);
+            Values.add(v);
         });
         WordsSearch wordsSearch = new WordsSearch();
         if (reverse) {
             wordsSearch.SetKeywords(Values);
-            String[] temp=new  String[Keys.size()];
-            wordsSearch._others =Keys.toArray(temp);
+            String[] temp = new String[Keys.size()];
+            wordsSearch._others = Keys.toArray(temp);
         } else {
             wordsSearch.SetKeywords(Keys);
-            String[] temp=new  String[Keys.size()];
-            wordsSearch._others =Values.toArray(temp);
+            String[] temp = new String[Keys.size()];
+            wordsSearch._others = Values.toArray(temp);
         }
         return wordsSearch;
     }
 
-    static Map<String, String> GetTransformationDict(String fileName) throws IOException
-    {
+    static Map<String, String> GetTransformationDict(String fileName) throws IOException {
         String resourceName = fileName;
         InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
-        BufferedReader br=new BufferedReader(new InputStreamReader(u1));
+        BufferedReader br = new BufferedReader(new InputStreamReader(u1));
 
-        String tStr="";
+        String tStr = "";
         Map<String, String> dict = new HashMap<String, String>();
-        while((tStr=br.readLine())!=null){
-            String[] ss= tStr.split("\t");
-            if (ss.length < 2) { continue; }
+        while ((tStr = br.readLine()) != null) {
+            String[] ss = tStr.split("\t");
+            if (ss.length < 2) {
+                continue;
+            }
             dict.put(ss[0], ss[1]);
         }
         br.close();

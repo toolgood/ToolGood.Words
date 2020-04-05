@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrieNode implements Comparable<TrieNode>{
+public class TrieNode implements Comparable<TrieNode> {
 
     public int Index;
     public int Layer;
@@ -15,12 +15,10 @@ public class TrieNode implements Comparable<TrieNode>{
     public TrieNode Failure;
     public TrieNode Parent;
 
-    public TrieNode()
-    {
+    public TrieNode() {
         m_values = new HashMap<Character, TrieNode>();
         Results = new ArrayList<Integer>();
     }
-
 
     public TrieNode Add(final Character c) {
         if (m_values.containsKey(c)) {
@@ -33,7 +31,7 @@ public class TrieNode implements Comparable<TrieNode>{
         return node;
     }
 
-    public void SetResults(final int index) {
+    public void SetResults(Integer index) {
         if (End == false) {
             End = true;
         }
@@ -44,6 +42,6 @@ public class TrieNode implements Comparable<TrieNode>{
 
     @Override
     public int compareTo(TrieNode o) {
-        return this.Layer - o.Layer ;
+        return this.Layer - o.Layer  ;
     }
 }

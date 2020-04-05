@@ -25,7 +25,7 @@ public class TrieNode2{
         m_values.put(c, node3);
     }
 
-    public void SetResults(int index)
+    public void SetResults(Integer index)
     {
         if (End == false) {
             End = true;
@@ -35,10 +35,6 @@ public class TrieNode2{
         }
     }
 
-    public boolean HasKey(char c)
-    {
-        return m_values.containsKey(c);
-    }
     public boolean HasKey(Character c)
     {
         if (minflag <= c && maxflag >= c) {
