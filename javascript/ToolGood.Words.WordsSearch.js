@@ -1,4 +1,4 @@
-function StringSearch() {
+function WordsSearch() {
     function TrieNode() {
         this.Index = 0;
         this.Layer = 0;
@@ -57,29 +57,38 @@ function StringSearch() {
             return null;
         }
     }
-    function quickSort(arr) {
-        if (arr.length <= 1) {
-            return arr;
-        }
-        var pivotIndex = Math.floor(arr.length / 2);
-        var pivot = arr.splice(pivotIndex, 1)[0];
-        var left = [];
-        var right = [];
-
-        for (var i = 0; i < arr.length; i++) {
-            if (arr[i].Layer < pivot.Layer) {
-                left.push(arr[i]);
-            } else {
-                right.push(arr[i]);
+    function swap(A, i, j) { const t = A[i]; A[i] = A[j]; A[j] = t; }
+    function divide(A, p, r) {
+        const x = A[r - 1].Layer;
+        let i = p - 1;
+        for (let j = p; j < r - 1; j++) {
+            if (A[j].Layer <= x) {
+                i++;
+                swap(A, i, j);
             }
         }
-        return quickSort(left).concat([pivot], quickSort(right));
-    };
+        swap(A, i + 1, r - 1);
+        return i + 1;
+    }
+    function quickSort(A, p = 0, r) {
+        r = r || A.length;
+        if (p < r - 1) {
+            const q = divide(A, p, r);
+            qsort(A, p, q);
+            qsort(A, q + 1, r);
+        }
+        return A;
+    }
+
     var _first = [];
     var _keywords = [];
+    var _indexs = [];
 
     this.SetKeywords = function (keywords) {
         _keywords = keywords;
+        for (var i = 0; i < keywords.length; i++) {
+            _indexs.push(i);
+        }
         SetKeywords2();
     }
     function SetKeywords2() {
@@ -187,6 +196,7 @@ function StringSearch() {
         }
         _first = first;
     }
+
     this.FindFirst = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
@@ -202,7 +212,15 @@ function StringSearch() {
             }
             if (tn != null) {
                 if (tn.End) {
-                    return _keywords[tn.Results[0]];
+                    var item = tn.Results[0];
+                    var keyword = _keywords[item];
+                    return {
+                        Keyword : keyword,
+                        Success = true,
+                        End = i,
+                        Start = i + 1 - _keywords[item].Length,
+                        Index = _indexs[item],
+                    }
                 }
             }
             ptr = tn;
@@ -229,7 +247,14 @@ function StringSearch() {
                 if (tn.End) {
                     for (let j = 0; j < tn.Results.length; j++) {
                         const item = tn.Results[j];
-                        list.push(_keywords[item]);
+                        var keyword = _keywords[item];
+                        list.push({
+                            Keyword: keyword,
+                            Success = true,
+                            End = i,
+                            Start = i + 1 - _keywords[item].Length,
+                            Index = _indexs[item],
+                        });
                     }
                 }
             }
@@ -237,6 +262,9 @@ function StringSearch() {
         }
         return list;
     }
+
+
+
 
     this.ContainsAny = function (text) {
         var ptr = null;
@@ -288,4 +316,5 @@ function StringSearch() {
         }
         return result.join("");
     }
+
 }
