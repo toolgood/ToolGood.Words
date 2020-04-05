@@ -95,7 +95,7 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](10W次性能对比(20191014).png)
+![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20191014).png)
 
 注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
 
@@ -165,7 +165,16 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
     [9]: "倒台"
     [10]: "黑社会"
 
-
-
 #### 猜想
    非法词(敏感词)检测方法可用于电脑病毒检测及基因检测。
+
+
+## 捐赠
+
+如果这个类库有帮助到您，请 Star 这个仓库。
+
+你也可以选择使用支付宝或微信给我捐赠：
+
+![Alipay, WeChat](https://toolgood.github.io/image/toolgood.png)
+
+
