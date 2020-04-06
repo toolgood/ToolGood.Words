@@ -91,7 +91,7 @@ function StringSearch() {
     var _keywords = [];
 
     /**
-     * ÉèÖÃ¹Ø¼ü×Ö
+     * è®¾ç½®å…³é”®å­—
      * @param {any} keywords
      */
     this.SetKeywords = function (keywords) {
@@ -206,7 +206,7 @@ function StringSearch() {
         _first = first;
     }
     /**
-     * ²éÕÒµÚÒ»¸öÆ¥Åä ×Ö·û´®
+     * æŸ¥æ‰¾ç¬¬ä¸€ä¸ªåŒ¹é… å­—ç¬¦ä¸²
      * @param {any} text
      */
     this.FindFirst = function (text) {
@@ -233,7 +233,7 @@ function StringSearch() {
     }
 
     /**
-     * ²éÕÒËùÓĞÆ¥Åä ×Ö·û´®
+     * æŸ¥æ‰¾æ‰€æœ‰åŒ¹é… å­—ç¬¦ä¸²
      * @param {any} text
      */
     this.FindAll = function (text) {
@@ -265,7 +265,7 @@ function StringSearch() {
     }
 
     /**
-     * ¼ì²éÊÇ·ñ°üº¬
+     * æ£€æŸ¥æ˜¯å¦åŒ…å«
      * @param {any} text
      */
     this.ContainsAny = function (text) {
@@ -292,7 +292,7 @@ function StringSearch() {
     }
 
     /**
-     * ²éÕÒËùÓĞÆ¥ÅäÈ«²¿Ìæ»»
+     * æŸ¥æ‰¾æ‰€æœ‰åŒ¹é…å…¨éƒ¨æ›¿æ¢
      * @param {any} text
      * @param {any} replaceChar
      */

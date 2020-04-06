@@ -91,7 +91,7 @@ function WordsSearch() {
     var _keywords = [];
     var _indexs = [];
     /**
-     * ÉèÖÃ¹Ø¼ü×Ö
+     * è®¾ç½®å…³é”®å­—
      * @param {any} keywords 
      */
     this.SetKeywords = function (keywords) {
@@ -210,7 +210,7 @@ function WordsSearch() {
     }
 
     /**
-     * ²éÕÒµÚÒ»¸öÆ¥Åä ×Ö·û´®£¬´øÎ»ÖÃĞÅÏ¢ºÍË÷Òı±àºÅ
+     * æŸ¥æ‰¾ç¬¬ä¸€ä¸ªåŒ¹é… å­—ç¬¦ä¸²ï¼Œå¸¦ä½ç½®ä¿¡æ¯å’Œç´¢å¼•ç¼–å·
      * @param {any} text
      */
     this.FindFirst = function (text) {
@@ -245,7 +245,7 @@ function WordsSearch() {
     }
 
     /**
-     * ²éÕÒËùÓĞÆ¥Åä ×Ö·û´®£¬´øÎ»ÖÃĞÅÏ¢ºÍË÷Òı±àºÅ
+     * æŸ¥æ‰¾æ‰€æœ‰åŒ¹é… å­—ç¬¦ä¸²ï¼Œå¸¦ä½ç½®ä¿¡æ¯å’Œç´¢å¼•ç¼–å·
      * @param {any} text
      */
     this.FindAll = function (text) {
@@ -284,7 +284,7 @@ function WordsSearch() {
     }
 
     /**
-     * ¼ì²éÊÇ·ñ°üº¬
+     * æ£€æŸ¥æ˜¯å¦åŒ…å«
      * @param {any} text
      */
     this.ContainsAny = function (text) {
@@ -311,7 +311,7 @@ function WordsSearch() {
     }
 
     /**
-     * ²éÕÒËùÓĞÆ¥ÅäÈ«²¿Ìæ»»
+     * æŸ¥æ‰¾æ‰€æœ‰åŒ¹é…å…¨éƒ¨æ›¿æ¢
      * @param {any} text
      * @param {any} replaceChar
      */
