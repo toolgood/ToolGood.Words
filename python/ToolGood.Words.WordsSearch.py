@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-# ToolGood.Words.StringSearch.py
+# ToolGood.Words.WordsSearch.py
 # 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 # Licensed under the Apache License 2.0
 
-__all__ = ['StringSearch']
+__all__ = ['WordsSearch']
 __author__ = 'Lin Zhijun'
 __date__ = '2020.04.06'
 
@@ -56,7 +56,7 @@ class TrieNode2():
             self.Results.append(index)
 
     def HasKey(self,c):
-        return c in self.m_values;
+        return c in self.m_values
         
  
     def TryGetValue(self,c):
@@ -65,10 +65,11 @@ class TrieNode2():
         return None
 
 
-class StringSearch():
+class WordsSearch():
     def __init__(self):
         self._first = []
         self._keywords = []
+        self._indexs=[]
 
     def __swap(self,A, i, j):
         t = A[i]
@@ -99,6 +100,10 @@ class StringSearch():
     
     def SetKeywords(self,keywords):
         self._keywords = keywords
+        self._indexs=[]
+        for i in range(len(keywords)):
+            self._indexs.append(i)
+
         root = TrieNode()
         allNode = []
         allNode.append(root)
@@ -201,7 +206,9 @@ class StringSearch():
             
             if (tn != None):
                 if (tn.End):
-                    return self._keywords[tn.Results[0]]
+                    item = tn.Results[0]
+                    keyword = self._keywords[item]
+                    return { "Keyword": keyword, "Success": True, "End": index, "Start": index + 1 - len(keyword), "Index": self._indexs[item] }
             ptr = tn
         return None
 
@@ -224,7 +231,8 @@ class StringSearch():
                 if (tn.End):
                     for j in range(len(tn.Results)): # for (j = 0; j < tn.Results.length; j++) 
                         item = tn.Results[j]
-                        list.append(self._keywords[item])
+                        keyword = self._keywords[item]
+                        list.append({ "Keyword": keyword, "Success": True, "End": index, "Start": index + 1 - len(keyword), "Index": self._indexs[item] })
             ptr = tn
         return list
 
@@ -275,34 +283,38 @@ if __name__ == "__main__":
     test = "我是中国人"
 
 
-    search = StringSearch()
+    search = WordsSearch()
     search.SetKeywords(s.split('|'))
 
-    print("-----------------------------------  StringSearch  -----------------------------------" )
+    print("-----------------------------------  WordsSearch  -----------------------------------" )
 
-    print("StringSearch FindFirst is run.")
+    print("WordsSearch FindFirst is run.")
     f = search.FindFirst(test)
-    if f!="中国" :
-        print("StringSearch FindFirst is error.............................")
+    if f["Keyword"]!="中国" :
+        print("WordsSearch FindFirst is error.............................")
  
-    print("StringSearch FindAll is run.")
+    print("WordsSearch FindAll is run.")
     all = search.FindAll(test)
-    if all[0]!="中国" :
-        print("StringSearch FindAll is error.............................")
-    if all[1]!="国人" :
-        print("StringSearch FindAll is error.............................")
+    if all[0]["Keyword"]!="中国" :
+        print("WordsSearch FindAll is error.............................")
+    if all[1]["Keyword"]!="国人" :
+        print("WordsSearch FindAll is error.............................")
+    if all[0]["Start"]!=2 :
+        print("WordsSearch FindAll is error.............................")
+    if all[0]["End"]!=3 :
+        print("WordsSearch FindAll is error.............................")
     if len(all)!=2 :
-        print("StringSearch FindAll is error.............................")
+        print("WordsSearch FindAll is error.............................")
 
-    print("StringSearch ContainsAny is run.")
+    print("WordsSearch ContainsAny is run.")
     b = search.ContainsAny(test)
     if b==False :
-        print("StringSearch ContainsAny is error.............................")
+        print("WordsSearch ContainsAny is error.............................")
 
-    print("StringSearch Replace  is run.")
+    print("WordsSearch Replace  is run.")
     txt = search.Replace (test)
     if (txt != "我是***"):
-        print("StringSearch Replace  is error.............................")
+        print("WordsSearch Replace  is error.............................")
 
     print("-----------------------------------  Test End  -----------------------------------") 
 
