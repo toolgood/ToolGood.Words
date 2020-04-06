@@ -16,6 +16,7 @@
     <script src="ToolGood.Words.StringSearch.js"></script>
     <script src="ToolGood.Words.WordsSearch.js"></script>
     <script src="ToolGood.Words.PinYin.js"></script>
+    <script src="ToolGood.Words.Translate.js"></script>
     <script>
         function log(txt) {
             var ele = document.getElementById("result");
@@ -137,7 +138,7 @@
             log("PinYin GetPinYin is error.............................");
         }
 
-   
+
         log("PinYin GetPinYin is run.");
         b = pinyin.GetPinYin("秘鲁");
         if (b != "BiLu") {
@@ -178,11 +179,40 @@
         if (pys[1] != "Zhuan") {
             log("PinYin GetAllPinYin is error.............................");
         }
+        log("-----------------------------------  Translate  -----------------------------------");
+        var translate = new Translate();
 
+        log("Translate ToSimplifiedChinese is run.");
+        var tw = translate.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
+        if (tw != "壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分") {
+            log("Translate ToSimplifiedChinese is error.............................");
+        }
 
-
-
+        log("Translate ToTraditionalChinese is run.");
+        var tw = translate.ToTraditionalChinese("我爱中国");
+        if (tw != "我愛中國") {
+            log("Translate ToTraditionalChinese is error.............................");
+        }
  
+        log("Translate ToTraditionalChinese is run.");
+        var tw = translate.ToTraditionalChinese("原代码11", 2);
+        if (tw != "原始碼11") {
+            log("Translate ToTraditionalChinese is error.............................");
+        }
+ 
+        log("Translate ToTraditionalChinese is run.");
+        var tw = translate.ToTraditionalChinese("反反复复", 2);
+        if (tw != "反反覆覆") {
+            log("Translate ToTraditionalChinese is error.............................");
+        }
+
+        log("Translate ToTraditionalChinese is run.");
+        var tw = translate.ToTraditionalChinese("这人考虑事情总是反反复复的", 2);
+        if (tw != "這人考慮事情總是反反覆覆的") {
+            log("Translate ToTraditionalChinese is error.............................");
+        }
+
+
         log("-----------------------------------  Test End  -----------------------------------");
 
     </script>

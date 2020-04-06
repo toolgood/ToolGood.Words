@@ -90,7 +90,10 @@ function WordsSearch() {
     var _first = [];
     var _keywords = [];
     var _indexs = [];
-
+    /**
+     * 设置关键字
+     * @param {any} keywords 
+     */
     this.SetKeywords = function (keywords) {
         _keywords = keywords;
         for (var i = 0; i < keywords.length; i++) {
@@ -206,6 +209,10 @@ function WordsSearch() {
         _first = first;
     }
 
+    /**
+     * 查找第一个匹配 字符串，带位置信息和索引编号
+     * @param {any} text
+     */
     this.FindFirst = function (text) {
         var ptr = null;
         for (let i = 0; i < text.length; i++) {
@@ -237,6 +244,10 @@ function WordsSearch() {
         return null;
     }
 
+    /**
+     * 查找所有匹配 字符串，带位置信息和索引编号
+     * @param {any} text
+     */
     this.FindAll = function (text) {
         var ptr = null;
         var list = [];
@@ -272,9 +283,10 @@ function WordsSearch() {
         return list;
     }
 
-
-
-
+    /**
+     * 检查是否包含
+     * @param {any} text
+     */
     this.ContainsAny = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
@@ -298,6 +310,11 @@ function WordsSearch() {
         return false;
     }
 
+    /**
+     * 查找所有匹配全部替换
+     * @param {any} text
+     * @param {any} replaceChar
+     */
     this.Replace = function (text, replaceChar = '*') {
         var result = text.split('');
 

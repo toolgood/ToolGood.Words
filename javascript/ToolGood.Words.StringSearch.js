@@ -90,6 +90,10 @@ function StringSearch() {
     var _first = [];
     var _keywords = [];
 
+    /**
+     * 设置关键字
+     * @param {any} keywords
+     */
     this.SetKeywords = function (keywords) {
         _keywords = keywords;
         SetKeywords2();
@@ -201,6 +205,10 @@ function StringSearch() {
         }
         _first = first;
     }
+    /**
+     * 查找第一个匹配 字符串
+     * @param {any} text
+     */
     this.FindFirst = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
@@ -224,6 +232,10 @@ function StringSearch() {
         return null;
     }
 
+    /**
+     * 查找所有匹配 字符串
+     * @param {any} text
+     */
     this.FindAll = function (text) {
         var ptr = null;
         var list = [];
@@ -252,6 +264,10 @@ function StringSearch() {
         return list;
     }
 
+    /**
+     * 检查是否包含
+     * @param {any} text
+     */
     this.ContainsAny = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
@@ -275,6 +291,11 @@ function StringSearch() {
         return false;
     }
 
+    /**
+     * 查找所有匹配全部替换
+     * @param {any} text
+     * @param {any} replaceChar
+     */
     this.Replace = function (text, replaceChar = '*') {
         var result = text.split('');
 
