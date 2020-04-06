@@ -1,4 +1,4 @@
-####!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # ToolGood.Words.Translate.js
 # 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
