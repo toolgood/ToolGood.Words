@@ -203,7 +203,7 @@ public class WordsHelper {
      * @return
      */
     public static boolean HasChinese(String content) {
-        return Pattern.matches("[\\u4e00-\\u9fa5]", content);
+        return Pattern.matches("[\\u3400-\\u4db5\\u4e00-\\u9fd5]", content);
     }
 
     /**
@@ -213,7 +213,7 @@ public class WordsHelper {
      * @return
      */
     public static boolean IsAllChinese(String content) {
-        return Pattern.matches("^[\\u4e00-\\u9fa5]*$", content);
+        return Pattern.matches("^[\\u3400-\\u4db5\\u4e00-\\u9fd5]*$", content);
     }
 
     /**

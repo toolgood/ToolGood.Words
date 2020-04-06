@@ -26,13 +26,13 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
 
 ``` csharp
     // 转成简体
-    WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分");
-    WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分",1);// 港澳繁体 转 简体
-    WordsHelper.ToSimplifiedChinese("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分",2);// 台湾正体 转 简体
+    WordsHelper.ToSimplifiedChinese("我愛中國");
+    WordsHelper.ToSimplifiedChinese("我愛中國",1);// 港澳繁体 转 简体
+    WordsHelper.ToSimplifiedChinese("我愛中國",2);// 台湾正体 转 简体
     // 转成繁体
-    WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
-    WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分",1);// 简体 转 港澳繁体
-    WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分",2);// 简体 转 台湾正体
+    WordsHelper.ToTraditionalChinese("我爱中国");
+    WordsHelper.ToTraditionalChinese("我爱中国",1);// 简体 转 港澳繁体
+    WordsHelper.ToTraditionalChinese("我爱中国",2);// 简体 转 台湾正体
     // 转成全角
     WordsHelper.ToSBC("abcABC123");
     // 转成半角

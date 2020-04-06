@@ -8,6 +8,33 @@ ToolGood.Words
 目前java版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`及部分`WordsHelper`
 
 
+## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
+``` java
+	import toolgood.words.WordsHelper;
+    // 转成简体
+    WordsHelper.ToSimplifiedChinese("我愛中國");
+    WordsHelper.ToSimplifiedChinese("我愛中國",1);// 港澳繁体 转 简体
+    WordsHelper.ToSimplifiedChinese("我愛中國",2);// 台湾正体 转 简体
+    // 转成繁体
+    WordsHelper.ToTraditionalChinese("我爱中国");
+    WordsHelper.ToTraditionalChinese("我爱中国",1);// 简体 转 港澳繁体
+    WordsHelper.ToTraditionalChinese("我爱中国",2);// 简体 转 台湾正体
+    // 转成全角
+    WordsHelper.ToSBC("abcABC123");
+    // 转成半角
+    WordsHelper.ToDBC("ａｂｃＡＢＣ１２３");
+    // 获取全拼
+    WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
+    WordsHelper.GetPinYin("我爱中国",true);//WǒÀiZhōngGuó
+    // 获取首字母
+    WordsHelper.GetFirstPinYin("我爱中国");//WAZG
+    // 获取全部拼音
+    WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
+    // 获取姓名
+    WordsHelper.GetPinYinForName("单一一")//ShanYiYi
+    WordsHelper.GetPinYinForName("单一一",true)//ShànYīYī
+```
+
 ## 非法词(敏感词)检测（字符串搜索）
 非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`;
 
@@ -25,40 +52,48 @@ ToolGood.Words
 
 
 ``` java
-			String test = "我是中国人";
-			List<String> list=new ArrayList<String>();
-			list.add("中国");		 
-			list.add("国人");
-			list.add("zg人");
-			System.out.println("StringSearch run Test.");
+	import toolgood.words.IllegalWordsSearch;
+	import toolgood.words.IllegalWordsSearchResult;
+	import toolgood.words.StringSearch;
+	import toolgood.words.StringSearchEx;
+	import toolgood.words.WordsSearch;
+	import toolgood.words.WordsSearchEx;
+	import toolgood.words.WordsSearchResult;
 
-            StringSearch iwords = new StringSearch();
-            iwords.SetKeywords(list);
+	String test = "我是中国人";
+	List<String> list=new ArrayList<String>();
+	list.add("中国");		 
+	list.add("国人");
+	list.add("zg人");
+	System.out.println("StringSearch run Test.");
 
-			boolean b = iwords.ContainsAny(test);
-			if(b==false){
-				System.out.println("ContainsAny is Error.");
-			}
+	StringSearch iwords = new StringSearch();
+	iwords.SetKeywords(list);
 
-			String f = iwords.FindFirst(test);
-			if(f!="中国"){
-				System.out.println("FindFirst is Error.");
-			}
+	boolean b = iwords.ContainsAny(test);
+	if(b==false){
+		System.out.println("ContainsAny is Error.");
+	}
 
-			List<String> all = iwords.FindAll(test);
-			if(all.get(0)!="中国"){
-				System.out.println("FindAll is Error.");
-			}
-			if(all.get(1)!="国人"){
-				System.out.println("FindAll is Error.");
-			}
-			if(all.size()!=2){
-				System.out.println("FindAll is Error.");
-			}
+	String f = iwords.FindFirst(test);
+	if(f!="中国"){
+		System.out.println("FindFirst is Error.");
+	}
 
-			String str = iwords.Replace(test, '*');
-			if(str.equals("我是***")==false ){
-				System.out.println("Replace is Error.");
-			}
+	List<String> all = iwords.FindAll(test);
+	if(all.get(0)!="中国"){
+		System.out.println("FindAll is Error.");
+	}
+	if(all.get(1)!="国人"){
+		System.out.println("FindAll is Error.");
+	}
+	if(all.size()!=2){
+		System.out.println("FindAll is Error.");
+	}
+
+	String str = iwords.Replace(test, '*');
+	if(str.equals("我是***")==false ){
+		System.out.println("Replace is Error.");
+	}
 ``` 
  

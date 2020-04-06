@@ -150,26 +150,26 @@ namespace ToolGood.Words
 
         #region 判断输入是否为中文
         /// <summary>
-        /// 判断输入是否为中文  ,中文字符集为[0x4E00,0x9FA5]
+        /// 判断输入是否为中文  ,中文字符集为[0x4E00,0x9FA5][0x3400,0x4db5]
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
         public static bool HasChinese(string content)
         {
-            if (Regex.IsMatch(content, @"[\u4e00-\u9fa5]")) {
+            if (Regex.IsMatch(content, @"[\u3400-\u4db5\u4e00-\u9fd5]")) {
                 return true;
             } else {
                 return false;
             }
         }
         /// <summary>
-        /// 判断输入是否全为中文,中文字符集为[0x4E00,0x9FA5]
+        /// 判断输入是否全为中文,中文字符集为[0x4E00,0x9FA5][0x3400,0x4db5]
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
         public static bool IsAllChinese(string content)
         {
-            if (Regex.IsMatch(content, @"^[\u4e00-\u9fa5]*$")) {
+            if (Regex.IsMatch(content, @"^[\u3400-\u4db5\u4e00-\u9fd5]*$")) {
                 return true;
             } else {
                 return false;
