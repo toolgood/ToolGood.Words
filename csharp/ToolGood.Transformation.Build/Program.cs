@@ -62,14 +62,24 @@ namespace ToolGood.Transformation.Build
 
 
             List<string> list = new List<string>();
+            List<string> keys = new List<string>();
+            List<string> values = new List<string>();
+
             foreach (var item in dict) {
                 list.Add($"{item.Key}\t{item.Value}");
+                keys.Add(item.Key);
+                values.Add(item.Value);
             }
             foreach (var item in rsp2) {
                 list.Add($"{item[0]}\t{item[1]}");
+                keys.Add(item[0]);
+                values.Add(item[1]);
             }
             var str = string.Join("\n", list);
             File.WriteAllText("t2s.dat", str, Encoding.UTF8);
+            File.WriteAllText("_t2s_t.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));
+            File.WriteAllText("_t2s_s.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(values));
+
         }
 
         /// <summary>
@@ -89,14 +99,22 @@ namespace ToolGood.Transformation.Build
             List<List<string>> stp2 = SimplifyWords4(stp, dict, null);
 
             List<string> list = new List<string>();
+            List<string> keys = new List<string>();
+            List<string> values = new List<string>();
             foreach (var item in dict) {
                 list.Add($"{item.Key}\t{item.Value}");
+                keys.Add(item.Key);
+                values.Add(item.Value);
             }
             foreach (var item in stp2) {
                 list.Add($"{item[0]}\t{item[1]}");
+                keys.Add(item[0]);
+                values.Add(item[1]);
             }
             var str = string.Join("\n", list);
             File.WriteAllText("s2t.dat", str, Encoding.UTF8);
+            File.WriteAllText("_s2t_s.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));
+            File.WriteAllText("_s2t_t.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(values));
         }
         private static void t2hk()
         {
@@ -129,14 +147,22 @@ namespace ToolGood.Transformation.Build
 
 
             List<string> list = new List<string>();
+            List<string> keys = new List<string>();
+            List<string> values = new List<string>();
             foreach (var item in dict2) {
                 list.Add($"{item.Key}\t{item.Value}");
+                keys.Add(item.Key);
+                values.Add(item.Value);
             }
             foreach (var item in stp22) {
                 list.Add($"{item[0]}\t{item[1]}");
+                keys.Add(item[0]);
+                values.Add(item[1]);
             }
             var str = string.Join("\n", list);
             File.WriteAllText("t2hk.dat", str, Encoding.UTF8);
+            File.WriteAllText("_t2hk_t.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));
+            File.WriteAllText("_t2hk_hk.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(values));
         }
         private static void t2tw()
         {
@@ -171,14 +197,22 @@ namespace ToolGood.Transformation.Build
             List<List<string>> stp22 = SimplifyWords(twv, dict, dict2);
 
             List<string> list = new List<string>();
+            List<string> keys = new List<string>();
+            List<string> values = new List<string>();
             foreach (var item in dict2) {
                 list.Add($"{item.Key}\t{item.Value}");
+                keys.Add(item.Key);
+                values.Add(item.Value);
             }
             foreach (var item in stp22) {
                 list.Add($"{item[0]}\t{item[1]}");
+                keys.Add(item[0]);
+                values.Add(item[1]);
             }
             var str = string.Join("\n", list);
             File.WriteAllText("t2tw.dat", str, Encoding.UTF8);
+            File.WriteAllText("_t2tw_t.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));
+            File.WriteAllText("_t2tw_tw.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(values));
         }
 
 
