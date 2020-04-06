@@ -61,32 +61,6 @@ function Translate() {
                 return null;
             }
         }
-        function swap(A, i, j) { const t = A[i]; A[i] = A[j]; A[j] = t; }
-        function divide(A, p, r) {
-            const x = A[r - 1].Layer;
-            let i = p - 1;
-            for (let j = p; j < r - 1; j++) {
-                if (A[j].Layer <= x) {
-                    i++;
-                    swap(A, i, j);
-                }
-            }
-            swap(A, i + 1, r - 1);
-            return i + 1;
-        }
-        function qsort(A, p = 0, r) {
-            r = r || A.length;
-            if (p < r - 1) {
-                const q = divide(A, p, r);
-                qsort(A, p, q);
-                qsort(A, q + 1, r);
-            }
-            return A;
-        }
-        function quickSort(arr) {
-            if (arr.length <= 1) { return arr; }
-            return qsort(arguments, 0, arguments.length);
-        }
 
         var _first = [];
         var _keywords = [];
@@ -97,6 +71,7 @@ function Translate() {
             var root = new TrieNode();
             var allNode = [];
             allNode.push(root);
+            var allNodeLayer = {};
 
             for (var i = 0; i < _keywords.length; i++) {
                 var p = _keywords[i];
@@ -105,11 +80,24 @@ function Translate() {
                     nd = nd.Add(p.charCodeAt(j));
                     if (nd.Layer == 0) {
                         nd.Layer = j + 1;
-                        allNode.push(nd);
+                        if (allNodeLayer[nd.Layer]) {
+                            allNodeLayer[nd.Layer].push(nd)
+                        } else {
+                            allNodeLayer[nd.Layer] = [];
+                            allNodeLayer[nd.Layer].push(nd)
+                        }
                     }
                 }
                 nd.SetResults(i);
             }
+
+            for (var key in allNodeLayer) {
+                var nds = allNodeLayer[key];
+                for (var i = 0; i < nds.length; i++) {
+                    allNode.push(nds[i]);
+                }
+            }
+            allNodeLayer = null;
 
             var nodes = [];
             for (var key in root.m_values) {
@@ -152,7 +140,6 @@ function Translate() {
             }
             root.Failure = root;
 
-            allNode = quickSort(allNode)[0];
             for (var i = 0; i < allNode.length; i++) { allNode[i].Index = i; }
 
             var allNode2 = [];
@@ -276,7 +263,7 @@ function Translate() {
      * @param {any} srcType 0、繁体中文，1、港澳繁体，2、台湾正体
      */
     this.ToSimplifiedChinese = function (text, srcType = 0) {
-        if (srcType > 2 || srcType < 0) { throw "type 不支持该类型"; }
+        if (srcType > 2 || srcType < 0) { throw "srcType 不支持该类型"; }
         if (srcType > 0) {
             var t2 = GetWordsSearch(false, srcType);
             text = TransformationReplace(text, t2);
