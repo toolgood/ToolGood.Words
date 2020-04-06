@@ -8,9 +8,9 @@ ToolGood.Words
 目前java版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`及部分`WordsHelper`
 
 
-## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
+## 繁体简体互换、全角半角互换、拼音操作
 ``` java
-	import toolgood.words.WordsHelper;
+    import toolgood.words.WordsHelper;
     // 转成简体
     WordsHelper.ToSimplifiedChinese("我愛中國");
     WordsHelper.ToSimplifiedChinese("我愛中國",1);// 港澳繁体 转 简体
