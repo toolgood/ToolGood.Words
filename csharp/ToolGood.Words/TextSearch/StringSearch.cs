@@ -31,6 +31,7 @@ namespace ToolGood.Words
 
             List<TrieNode> allNode = new List<TrieNode>();
             allNode.Add(root);
+            Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
 
             for (int i = 0; i < _keywords.Length; i++) {
                 var p = _keywords[i];
@@ -39,12 +40,23 @@ namespace ToolGood.Words
                     nd = nd.Add((char)p[j]);
                     if (nd.Layer == 0) {
                         nd.Layer = j + 1;
-                        allNode.Add(nd);
+                        List<TrieNode> trieNodes;
+                        if (allNodeLayers.TryGetValue(nd.Layer, out trieNodes) == false) {
+                            trieNodes = new List<TrieNode>();
+                            allNodeLayers[nd.Layer] = trieNodes;
+                        }
+                        trieNodes.Add(nd);
                     }
                 }
                 nd.SetResults(i);
             }
 
+            foreach (var trieNodes in allNodeLayers) {
+                foreach (var nd in trieNodes.Value) {
+                    allNode.Add(nd);
+                }
+            }
+            allNodeLayers = null;
 
             List<TrieNode> nodes = new List<TrieNode>();
             // Find failure functions
@@ -76,7 +88,6 @@ namespace ToolGood.Words
             }
             root.Failure = root;
 
-            allNode = allNode.OrderBy(q => q.Layer).ToList();
             for (int i = 0; i < allNode.Count; i++) { allNode[i].Index = i; }
 
             var allNode2 = new List<TrieNode2>();

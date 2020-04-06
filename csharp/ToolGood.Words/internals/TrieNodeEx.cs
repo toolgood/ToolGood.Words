@@ -90,7 +90,7 @@ namespace ToolGood.Words.internals
                 }
             }
             start += keys.Count / 2;
-            Array.Clear(seats2, start, max + maxflag - start + 1 - start);
+            Array.Clear(seats2, start, max + maxflag*2 - start + 1 );
         }
 
         private void RankOne(ref int start, bool[] seats, int[] has)
