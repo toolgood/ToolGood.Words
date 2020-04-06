@@ -15,11 +15,6 @@ ToolGood.Words.Test:            单元测试
 ToolGood.Words:                 本项目源代码
 ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
 ```
-java版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`、`StringTypoSearch`、`NumberTypoSearch`及部分`WordsHelper`
-
-golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`WordsSearchEx`、`IllegalWordsSearch`
-
-
 
 
 ## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
@@ -52,7 +47,6 @@ golang版本已移植了`StringSearch`、`StringSearchEx`、`WordsSearch`、`Wor
     WordsHelper.GetPinYinForName("单一一")//ShanYiYi
     WordsHelper.GetPinYinForName("单一一",true)//ShànYīYī
 ``` 
-`WordsHelper.ClearTranslate()` 清理缓存
  
 ## 非法词(敏感词)检测（字符串搜索）
 非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
