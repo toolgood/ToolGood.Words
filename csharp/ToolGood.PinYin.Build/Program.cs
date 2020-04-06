@@ -151,6 +151,8 @@ namespace ToolGood.PinYin.Build
             }
 
 
+            //Words.StringSearch stringSearch = new Words.StringSearch();
+            //stringSearch.SetKeywords(pyWords.Keys.ToList());
 
             Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
             List<string> tempClearKeys = new List<string>();

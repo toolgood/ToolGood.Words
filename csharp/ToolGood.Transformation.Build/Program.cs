@@ -59,22 +59,25 @@ namespace ToolGood.Transformation.Build
                 dict[st[0]] = st[1];
             }
             List<List<string>> rsp2 = SimplifyWords(tsp, dict, null);
+            foreach (var item in rsp2) {
+                dict[item[0]] = item[1];
+            }
 
 
             List<string> list = new List<string>();
             List<string> keys = new List<string>();
             List<string> values = new List<string>();
 
-            foreach (var item in dict) {
+            foreach (var item in dict.OrderBy(q=>q.Key.Length).OrderBy(q=>q.Key)) {
                 list.Add($"{item.Key}\t{item.Value}");
                 keys.Add(item.Key);
                 values.Add(item.Value);
             }
-            foreach (var item in rsp2) {
-                list.Add($"{item[0]}\t{item[1]}");
-                keys.Add(item[0]);
-                values.Add(item[1]);
-            }
+            //foreach (var item in rsp2) {
+            //    list.Add($"{item[0]}\t{item[1]}");
+            //    keys.Add(item[0]);
+            //    values.Add(item[1]);
+            //}
             var str = string.Join("\n", list);
             File.WriteAllText("t2s.dat", str, Encoding.UTF8);
             File.WriteAllText("_t2s_t.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));
@@ -97,20 +100,25 @@ namespace ToolGood.Transformation.Build
             }
 
             List<List<string>> stp2 = SimplifyWords4(stp, dict, null);
+            foreach (var item in stp2) {
+                dict[item[0]] = item[1];
+            }
+
+
 
             List<string> list = new List<string>();
             List<string> keys = new List<string>();
             List<string> values = new List<string>();
-            foreach (var item in dict) {
+            foreach (var item in dict.OrderBy(q=>q.Key.Length)) {
                 list.Add($"{item.Key}\t{item.Value}");
                 keys.Add(item.Key);
                 values.Add(item.Value);
             }
-            foreach (var item in stp2) {
-                list.Add($"{item[0]}\t{item[1]}");
-                keys.Add(item[0]);
-                values.Add(item[1]);
-            }
+            //foreach (var item in stp2) {
+            //    list.Add($"{item[0]}\t{item[1]}");
+            //    keys.Add(item[0]);
+            //    values.Add(item[1]);
+            //}
             var str = string.Join("\n", list);
             File.WriteAllText("s2t.dat", str, Encoding.UTF8);
             File.WriteAllText("_s2t_s.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(keys));

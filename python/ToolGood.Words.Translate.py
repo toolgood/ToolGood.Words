@@ -93,10 +93,10 @@ class WordsSearch():
                 if (nd.Layer == 0):
                     nd.Layer = j + 1
                     if nd.Layer in allNodeLayer:
-                        allNodeLayer[nd.Layer].append(nd);
+                        allNodeLayer[nd.Layer].append(nd)
                     else:
                         allNodeLayer[nd.Layer]=[]
-                        allNodeLayer[nd.Layer].append(nd);
+                        allNodeLayer[nd.Layer].append(nd)
             nd.SetResults(i)
 
         for key in allNodeLayer.keys():
