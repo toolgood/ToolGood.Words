@@ -144,6 +144,7 @@ public abstract class BaseSearchEx {
 
         List<TrieNode> allNode = new ArrayList<TrieNode>();
         allNode.add(root);
+        Map<Integer,List<TrieNode>> allNodeLayers=new Hashtable<Integer,List<TrieNode>>();
 
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
@@ -152,11 +153,24 @@ public abstract class BaseSearchEx {
                 nd = nd.Add(p.charAt(j));
                 if (nd.Layer == 0) {
                     nd.Layer = j + 1;
-                    allNode.add(nd);
-                }
+                    if(allNodeLayers.containsKey(nd.Layer)==false){
+                        List<TrieNode> nodes=new ArrayList<TrieNode>();
+                        nodes.add(nd);
+                        allNodeLayers.put(nd.Layer, nodes);
+                    }else {
+                        allNodeLayers.get(nd.Layer).add(nd);
+                    }                }
             }
             nd.SetResults(i);
         }
+        for (int layer : allNodeLayers.keySet()) {
+            List<TrieNode> nodes=allNodeLayers.get(layer);
+            for (int i = 0; i < nodes.size(); i++) {
+                allNode.add(nodes.get(i));
+            }
+        }
+        allNodeLayers.clear();
+        allNodeLayers=null;
 
         List<TrieNode> nodes = new ArrayList<TrieNode>();
         for (Character key : root.m_values.keySet()) {
@@ -191,7 +205,7 @@ public abstract class BaseSearchEx {
         }
         root.Failure = root;
 
-        Collections.sort(allNode);
+        //Collections.sort(allNode);
         for (int i = 0; i < allNode.size(); i++) {
             allNode.get(i).Index = i;
         }
