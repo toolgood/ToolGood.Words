@@ -253,7 +253,7 @@ function PinYin() {
      */
     this.GetPinYinList = function (text, tone = 0) {
         InitPyWords();
-        if (tone) { tone = 1;}
+        if (tone) { tone = 1; }
         var list = [];
         for (var i = 0; i < text.length; i++) {
             list.push(null);
@@ -302,6 +302,24 @@ function PinYin() {
                 sb += list[i];
             } else {
                 sb += text[i];
+            }
+        }
+        return sb;
+    }
+    /**
+     * 获取拼音首字母
+     * @param {any} text
+     * @param {any} tone 是否带声调 1 是 0否
+     */
+    this.GetFirstPinYin = function (text, tone = 0) {
+        if (tone) { tone = 1; }
+
+        var list = this.GetPinYinList(text, tone);
+        var sb = "";
+        for (var i = 0; i < list.length; i++) {
+            var c = list[i];
+            if (c != null) {
+                sb += c[0];
             }
         }
         return sb;

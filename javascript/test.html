@@ -164,12 +164,18 @@
             log("PinYin GetPinYin is error.............................");
         }
 
+
         log("PinYin GetPinYin is run.");
         py = pinyin.GetPinYin("我爱中国", true);
         if (py != "WǒÀiZhōngGuó") {
             log("PinYin GetPinYin is error.............................");
         }
 
+        log("PinYin GetFirstPinYin is run.");
+        py = pinyin.GetFirstPinYin("我爱中国");
+        if (py != "WAZG") {
+            log("PinYin GetFirstPinYin is error.............................");
+        }
 
         log("PinYin GetAllPinYin is run.");
         var pys = pinyin.GetAllPinYin('传');
