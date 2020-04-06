@@ -1,3 +1,6 @@
+// ToolGood.Words.StringSearch.js
+// 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
+// Licensed under the Apache License 2.0
 function StringSearch() {
     function TrieNode() {
         this.Index = 0;
