@@ -11,7 +11,7 @@ ToolGood.Words.WordsSearch.js   字符串检索，包含位置信息、索引
 ```
 
 ### 拼音操作
-```
+``` javascript
     var pinyin = new PinYin();
     // 获取全拼
     pinyin.GetPinYin("我爱中国");//WoAiZhongGuo
@@ -26,7 +26,7 @@ ToolGood.Words.WordsSearch.js   字符串检索，包含位置信息、索引
 ```
 
 ### 繁体简体互换
-```
+``` javascript
     var translate = new Translate();
     // 转成简体
     translate.ToSimplifiedChinese("我愛中國");
@@ -39,7 +39,7 @@ ToolGood.Words.WordsSearch.js   字符串检索，包含位置信息、索引
 ```
 
 ### 字符串检测
-```
+``` javascript
     string s = "中国|国人|zg人";
     string test = "我是中国人";
     var search = new WordsSearch();// 或  var search = new StringSearch();
