@@ -56,12 +56,13 @@ class TrieNode2():
             self.Results.append(index)
 
     def HasKey(self,c):
-        return c in self.m_values;
+        return c in self.m_values
         
  
     def TryGetValue(self,c):
         if (self.minflag <= c and self.maxflag >= c):
-            return self.m_values[c]
+            if c in self.m_values:
+                return self.m_values[c]
         return None
 
 
@@ -69,39 +70,13 @@ class StringSearch():
     def __init__(self):
         self._first = []
         self._keywords = []
-
-    def __swap(self,A, i, j):
-        t = A[i]
-        A[i] = A[j]
-        A[j] = t
-
-    def __divide(self,A, p, r):
-        x = A[r - 1].Layer
-        i = p - 1
-        for j in range(p,r - 1): # for (j = p; j < r - 1; j++) 
-            if (A[j].Layer <= x):
-                i=i+1
-                self.__swap(A, i, j)
-        self.__swap(A, i + 1, r - 1)
-        return i + 1
-
-    def __qsort(self,A, p , r):
-        r = r or A.length
-        if (p < r - 1):
-            q = self.__divide(A, p, r)
-            self.__qsort(A, p, q)
-            self.__qsort(A, q + 1, r)
-        return A
-    def __quickSort(self,arr):
-        if ( len(arr) <= 1):
-            return arr
-        return self.__qsort(arr, 0, len(arr))
     
     def SetKeywords(self,keywords):
         self._keywords = keywords
         root = TrieNode()
         allNode = []
         allNode.append(root)
+        allNodeLayer={}
 
         for i in range(len(self._keywords)): # for (i = 0; i < _keywords.length; i++) 
             p = self._keywords[i]
@@ -110,8 +85,16 @@ class StringSearch():
                 nd = nd.Add(ord(p[j]))
                 if (nd.Layer == 0):
                     nd.Layer = j + 1
-                    allNode.append(nd)
+                    if nd.Layer in allNodeLayer:
+                        allNodeLayer[nd.Layer].append(nd);
+                    else:
+                        allNodeLayer[nd.Layer]=[]
+                        allNodeLayer[nd.Layer].append(nd);
             nd.SetResults(i)
+
+        for key in allNodeLayer.keys():
+            for nd in allNodeLayer[key]:
+                allNode.append(nd)
 
         nodes = []
         for  key in root.m_values.keys() :
@@ -133,8 +116,7 @@ class StringSearch():
                 else:
                     nd.Failure = r.m_values[c]
                     for key2 in nd.Failure.Results :
-                        result = nd.Failure.Results[key2]
-                        nd.SetResults(result)
+                        nd.SetResults(key2)
                     
                 
                 for key2 in nd.m_values :
@@ -143,7 +125,6 @@ class StringSearch():
             nodes = newNodes
         root.Failure = root
 
-        allNode = self.__quickSort(allNode)
         for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++) 
              allNode[i].Index = i
 
