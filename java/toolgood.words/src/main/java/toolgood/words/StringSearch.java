@@ -27,74 +27,53 @@ public class StringSearch {
     private void SetKeywords()
     {
         TrieNode root = new TrieNode();
-
-        List<TrieNode> allNode = new ArrayList<TrieNode>();
-        allNode.add(root);
-        Map<Integer,List<TrieNode>> allNodeLayers=new Hashtable<Integer,List<TrieNode>>();
-
+        Map<Integer, List<TrieNode>> allNodeLayers = new Hashtable<Integer, List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
             TrieNode nd = root;
             for (int j = 0; j < p.length(); j++) {
-                nd = nd.Add(p.charAt(j) );
+                nd = nd.Add(p.charAt(j));
                 if (nd.Layer == 0) {
                     nd.Layer = j + 1;
-                    if(allNodeLayers.containsKey(nd.Layer)==false){
-                        List<TrieNode> nodes=new ArrayList<TrieNode>();
+                    if (allNodeLayers.containsKey(nd.Layer) == false) {
+                        List<TrieNode> nodes = new ArrayList<TrieNode>();
                         nodes.add(nd);
                         allNodeLayers.put(nd.Layer, nodes);
-                    }else {
+                    } else {
                         allNodeLayers.get(nd.Layer).add(nd);
                     }
                 }
             }
             nd.SetResults(i);
         }
-        for (int layer : allNodeLayers.keySet()) {
-            List<TrieNode> nodes=allNodeLayers.get(layer);
-            for (int i = 0; i < nodes.size(); i++) {
-                allNode.add(nodes.get(i));
+ 
+        List<TrieNode> allNode = new ArrayList<TrieNode>();
+        allNode.add(root);
+        for (int i = 0; i < allNodeLayers.size(); i++) { //注意 这里不能用 keySet()
+            List<TrieNode> nodes = allNodeLayers.get(i+1);
+            for (int j = 0; j < nodes.size(); j++) {
+                allNode.add(nodes.get(j));
             }
         }
         allNodeLayers.clear();
-        allNodeLayers=null;
+        allNodeLayers = null;
 
-        List<TrieNode> nodes = new ArrayList<TrieNode>();
-        for (Character key : root.m_values.keySet()) {
-            TrieNode nd = root.m_values.get(key);
-            nd.Failure = root;
-            for (TrieNode trans : nd.m_values.values()) {
-                nodes.add(trans);
-            }
-        }
-        while (nodes.size() != 0) {
-            List<TrieNode> newNodes = new ArrayList<TrieNode>();
-            for (TrieNode nd : nodes) {
-                TrieNode r = nd.Parent.Failure;
-                Character c = nd.Char;
-                while (r != null && !r.m_values.containsKey(c)) {
-                    r = r.Failure;
-                }
-                if (r == null) {
-                    nd.Failure = root;
-                } else {
-                    nd.Failure = r.m_values.get(c);
-                    for (Integer result : nd.Failure.Results) {
-                        nd.SetResults(result);
-                    }
-                }
-
-                for (TrieNode child : nd.m_values.values()) {
-                    newNodes.add(child);
+        for (int i = 1; i < allNode.size(); i++) {
+            TrieNode nd = allNode.get(i);
+            nd.Index = i;
+            TrieNode r = nd.Parent.Failure;
+            Character c = nd.Char;
+            while (r != null && !r.m_values.containsKey(c)) r = r.Failure;
+            if (r == null)
+                nd.Failure = root;
+            else {
+                nd.Failure = r.m_values.get(c);
+                for (Integer result : nd.Failure.Results) {
+                    nd.SetResults(result);
                 }
             }
-            nodes = newNodes;
         }
         root.Failure = root;
-
-        //Collections.sort(allNode);
-        for (int i = 0; i < allNode.size(); i++) { allNode.get(i).Index = i; }
-        
 
         List<TrieNode2> allNode2 = new ArrayList<TrieNode2>();
         for (int i = 0; i < allNode.size(); i++) {
