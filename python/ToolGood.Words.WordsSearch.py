@@ -81,8 +81,6 @@ class WordsSearch():
             self._indexs.append(i)
 
         root = TrieNode()
-        allNode = []
-        allNode.append(root)
         allNodeLayer={}
 
         for i in range(len(self._keywords)): # for (i = 0; i < _keywords.length; i++) 
@@ -93,47 +91,36 @@ class WordsSearch():
                 if (nd.Layer == 0):
                     nd.Layer = j + 1
                     if nd.Layer in allNodeLayer:
-                        allNodeLayer[nd.Layer].append(nd);
+                        allNodeLayer[nd.Layer].append(nd)
                     else:
                         allNodeLayer[nd.Layer]=[]
-                        allNodeLayer[nd.Layer].append(nd);
+                        allNodeLayer[nd.Layer].append(nd)
             nd.SetResults(i)
 
+
+        allNode = []
+        allNode.append(root)
         for key in allNodeLayer.keys():
             for nd in allNodeLayer[key]:
                 allNode.append(nd)
-
-        nodes = []
-        for  key in root.m_values.keys() :
-            nd = root.m_values[key]
-            nd.Failure = root
-            for trans in nd.m_values :
-                nodes.append(nd.m_values[trans])
-            
-        while len(nodes) != 0:
-            newNodes = []
-            for nd in nodes :
-                #nd = nodes[key]
-                r = nd.Parent.Failure
-                c = nd.Char
-                while (r != None and (c in r.m_values)==False):
-                    r = r.Failure
-                if (r == None):
-                    nd.Failure = root
-                else:
-                    nd.Failure = r.m_values[c]
-                    for key2 in nd.Failure.Results :
-                        nd.SetResults(key2)
-                    
-                
-                for key2 in nd.m_values :
-                    child = nd.m_values[key2]
-                    newNodes.append(child)
-            nodes = newNodes
-        root.Failure = root
+        allNodeLayer=None
 
         for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++) 
-             allNode[i].Index = i
+            if i==0 :
+                continue
+            nd=allNode[i]
+            nd.Index = i
+            r = nd.Parent.Failure
+            c = nd.Char
+            while (r != None and (c in r.m_values)==False):
+                r = r.Failure
+            if (r == None):
+                nd.Failure = root
+            else:
+                nd.Failure = r.m_values[c]
+                for key2 in nd.Failure.Results :
+                    nd.SetResults(key2)
+        root.Failure = root
 
         allNode2 = []
         for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++) 
