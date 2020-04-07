@@ -77,10 +77,8 @@ function WordsSearch() {
     }
     function SetKeywords2() {
         var root = new TrieNode();
-        var allNode = [];
-        allNode.push(root);
-        var allNodeLayer = {};
 
+        var allNodeLayer = {};
         for (var i = 0; i < _keywords.length; i++) {
             var p = _keywords[i];
             var nd = root;
@@ -99,6 +97,8 @@ function WordsSearch() {
             nd.SetResults(i);
         }
 
+        var allNode = [];
+        allNode.push(root);
         for (var key in allNodeLayer) {
             var nds = allNodeLayer[key];
             for (var i = 0; i < nds.length; i++) {
@@ -107,48 +107,26 @@ function WordsSearch() {
         }
         allNodeLayer = null;
 
-        var nodes = [];
-        for (var key in root.m_values) {
-            if (root.m_values.hasOwnProperty(key) == false) { continue; }
-            var nd = root.m_values[key];
-            nd.Failure = root;
-            for (const trans in nd.m_values) {
-                if (nd.m_values.hasOwnProperty(trans) == false) { continue; }
-                nodes.push(nd.m_values[trans]);
-            }
-        }
-
-        // other nodes - using BFS
-        while (nodes.length != 0) {
-            var newNodes = [];
-            for (var key in nodes) {
-                if (nodes.hasOwnProperty(key) == false) { continue; }
-                var nd = nodes[key];
-                var r = nd.Parent.Failure;
-                var c = nd.Char;
-                while (r != null && !r.m_values[c])
-                    r = r.Failure;
-                if (r == null)
-                    nd.Failure = root;
-                else {
-                    nd.Failure = r.m_values[c];
-                    for (const key2 in nd.Failure.Results) {
-                        if (nd.Failure.Results.hasOwnProperty(key2) == false) { continue; }
-                        var result = nd.Failure.Results[key2];
-                        nd.SetResults(result);
-                    }
-                }
-                for (const key2 in nd.m_values) {
-                    if (nd.m_values.hasOwnProperty(key2) == false) { continue }
-                    var child = nd.m_values[key2];
-                    newNodes.push(child);
+        for (var i = 1; i < allNode.length; i++) {
+            var nd = allNode[i];
+            nd.Index = i;
+            var r = nd.Parent.Failure;
+            var c = nd.Char;
+            while (r != null && !r.m_values[c])
+                r = r.Failure;
+            if (r == null)
+                nd.Failure = root;
+            else {
+                nd.Failure = r.m_values[c];
+                for (const key2 in nd.Failure.Results) {
+                    if (nd.Failure.Results.hasOwnProperty(key2) == false) { continue; }
+                    var result = nd.Failure.Results[key2];
+                    nd.SetResults(result);
                 }
             }
-            nodes = newNodes;
         }
         root.Failure = root;
 
-        for (var i = 0; i < allNode.length; i++) { allNode[i].Index = i; }
 
         var allNode2 = [];
         for (var i = 0; i < allNode.length; i++) {
