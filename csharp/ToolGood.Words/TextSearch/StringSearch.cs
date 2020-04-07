@@ -58,37 +58,23 @@ namespace ToolGood.Words
             }
             allNodeLayers = null;
 
-            List<TrieNode> nodes = new List<TrieNode>();
-            // Find failure functions
-            // level 1 nodes - fail to root node
-            foreach (TrieNode nd in root.m_values.Values) {
-                nd.Failure = root;
-                foreach (TrieNode trans in nd.m_values.Values) nodes.Add(trans);
-            }
-            // other nodes - using BFS
-            while (nodes.Count != 0) {
-                List<TrieNode> newNodes = new List<TrieNode>();
-                foreach (TrieNode nd in nodes) {
-                    TrieNode r = nd.Parent.Failure;
-                    char c = nd.Char;
 
-                    while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
-                    if (r == null)
-                        nd.Failure = root;
-                    else {
-                        nd.Failure = r.m_values[c];
-                        foreach (var result in nd.Failure.Results)
-                            nd.SetResults(result);
-                    }
-                    // add child nodes to BFS list 
-                    foreach (TrieNode child in nd.m_values.Values)
-                        newNodes.Add(child);
+            for (int i = 1; i < allNode.Count; i++) {
+                var nd = allNode[i];
+                nd.Index = i;
+                TrieNode r = nd.Parent.Failure;
+                char c = nd.Char;
+                while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                if (r == null)
+                    nd.Failure = root;
+                else {
+                    nd.Failure = r.m_values[c];
+                    foreach (var result in nd.Failure.Results)
+                        nd.SetResults(result);
                 }
-                nodes = newNodes;
             }
             root.Failure = root;
 
-            for (int i = 0; i < allNode.Count; i++) { allNode[i].Index = i; }
 
             var allNode2 = new List<TrieNode2>();
             for (int i = 0; i < allNode.Count; i++) {
