@@ -60,11 +60,7 @@ namespace ToolGood.Words
         private void SetKeywords()
         {
             var root = new TrieNode();
-
-            List<TrieNode> allNode = new List<TrieNode>();
-            allNode.Add(root);
             Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
-
             for (int i = 0; i < _keywords.Length; i++) {
                 var p = _keywords[i];
                 var nd = root;
@@ -83,6 +79,8 @@ namespace ToolGood.Words
                 nd.SetResults(i);
             }
 
+            List<TrieNode> allNode = new List<TrieNode>();
+            allNode.Add(root);
             foreach (var trieNodes in allNodeLayers) {
                 foreach (var nd in trieNodes.Value) {
                     allNode.Add(nd);
