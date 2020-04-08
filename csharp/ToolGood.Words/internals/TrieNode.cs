@@ -15,6 +15,7 @@ namespace ToolGood.Words.internals
         public Dictionary<char, TrieNode> m_values;
         public TrieNode Failure;
         public TrieNode Parent;
+        //public bool IsWildcard;
 
 
         public TrieNode()
