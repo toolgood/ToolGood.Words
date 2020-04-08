@@ -2,88 +2,140 @@ package Words
 
 import . "./internals"
 
-
 type WordsSearch struct {
-	_first []*TrieNode2
+	_first    []*TrieNode2
+	_keywords []string
 }
 
-func NewWordsSearch() *WordsSearch  {
+func NewWordsSearch() *WordsSearch {
 	return &WordsSearch{
-		_first : make([]*TrieNode2,0),
+		_first: make([]*TrieNode2, 0),
 	}
 }
 
-func (this *WordsSearch)SetKeywords(keywords []string){
-	first := make([]*TrieNode2,0x10000)
-	root := NewTrieNode2()
-	for	i,p := range keywords {
-		length:=len(p)
-		if length>0 {
-			var nd *TrieNode2
-			for	i,ch := range p{
-				if i==0 {
-					nd = first[ch]
-					if nd==nil {
-						nd=root.Add(ch)
-						first[ch] = nd;
+func (this *WordsSearch) SetKeywords(keywords []string) {
+	this._keywords = keywords
+
+	root := NewTrieNode()
+	allNodeLayers := make(map[int]*TrieNodes, 0)
+
+	for r, p := range keywords {
+		length := len(p)
+		if length > 0 {
+			var nd *TrieNode
+			nd = root
+			for i, ch := range p {
+				nd = nd.Add(int(ch))
+				if nd.Layer == 0 {
+					nd.Layer = i + 1
+					if trieNodes, ok := allNodeLayers[nd.Layer]; ok {
+						trieNodes.Items = append(trieNodes.Items, nd)
+					} else {
+						trieNodes = NewTrieNodes()
+						allNodeLayers[nd.Layer] = trieNodes
+						trieNodes.Items = append(trieNodes.Items, nd)
 					}
-				}else{
-					nd = nd.Add(ch);
 				}
 			}
-			nd.SetResults(p,i);
+			nd.SetResults(r)
 		}
 	}
-	this._first=first
-	links:= make(map[*TrieNode2]*TrieNode2)
-	for _,val := range root.M_values {
-		this.tryLinks(val, nil, links);
+
+	allNode := make([]*TrieNode, 1)
+	allNode[0] = root
+	for i := 0; i < len(allNodeLayers); i++ {
+		nodes := allNodeLayers[i+1].Items
+		for j := 0; j < len(nodes); j++ {
+			allNode = append(allNode, nodes[j])
+		}
 	}
-	for key,val := range links {
-		key.Merge(val,links)
- 	}
-}
 
+	for i := 1; i < len(allNode); i++ {
+		var nd *TrieNode
+		var r *TrieNode
 
-func (this *WordsSearch) tryLinks(node *TrieNode2,node2 *TrieNode2,links map[*TrieNode2]*TrieNode2){
-	for key,value:=range node.M_values {
-		var tn *TrieNode2
-		if node2 == nil {
-			tn = this._first[key]
-			if tn != nil {
-				links[value]=tn
+		nd = allNode[i]
+		nd.Index = i
+		r = nd.Parent.Failure
+		c := nd.Char
+		for {
+			if r != nil {
+				if _, ok := r.M_values[c]; ok {
+					break
+				} else {
+					r = r.Failure
+				}
+			} else {
+				break
 			}
+		}
+
+		if r == nil {
+			nd.Failure = root
 		} else {
-			b,tn:= node2.TryGetValue(key)
-			if b==true{
-				links[value]=tn
+			nd.Failure = r.M_values[c]
+			for j := 0; j < len(nd.Failure.Results); j++ {
+				nd.SetResults(nd.Failure.Results[j])
 			}
 		}
-		this.tryLinks(value,tn,links)
 	}
+	root.Failure = root
+
+	allNode2 := make([]*TrieNode2, len(allNode))
+	for i := 0; i < len(allNode); i++ {
+		allNode2[i] = NewTrieNode2()
+	}
+	for i := 0; i < len(allNode); i++ {
+		oldNode := allNode[i]
+		newNode := allNode2[i]
+
+		for key, val := range oldNode.M_values {
+			var index = val.Index
+			newNode.Add(key, allNode2[index])
+		}
+		for j := 0; j < len(oldNode.Results); j++ {
+			newNode.SetResults(oldNode.Results[j])
+		}
+
+		if oldNode.Failure != root {
+			for key, val := range oldNode.Failure.M_values {
+				if newNode.HasKey(key) == false {
+					var index = val.Index
+					newNode.Add(key, allNode2[index])
+				}
+			}
+			for j := 0; j < len(oldNode.Failure.Results); j++ {
+				newNode.SetResults(oldNode.Failure.Results[j])
+			}
+		}
+	}
+
+	first := make([]*TrieNode2, 0x10000)
+	for key, val := range allNode2[0].M_values {
+		first[key] = val
+	}
+	this._first = first
 }
 
-
-func (this *WordsSearch) FindFirst(text string) *WordsSearchResult{
+func (this *WordsSearch) FindFirst(text string) *WordsSearchResult {
 	var ptr *TrieNode2
 	var i int
-	for _,t := range text {
+	for _, t := range text {
 		var tn *TrieNode2
-		if ptr==nil{
-			tn = this._first[t];
-		}else{
+		if ptr == nil {
+			tn = this._first[t]
+		} else {
 			var b bool
-			b,tn =ptr.TryGetValue(t)
-			if b==false{
-				tn = this._first[t];
+			b, tn = ptr.TryGetValue(int(int32(t)))
+			if b == false {
+				tn = this._first[t]
 			}
 		}
-		if tn!=nil {
-			if tn.End==true {
-				for k,v:= range tn.Results{
-					maxLength:=len([]rune(k))
-					return NewWordsSearchResult(k, i + 1 - maxLength, i, v);
-				}
+		if tn != nil {
+			if tn.End == true {
+				k := this._keywords[tn.Results[0]]
+				maxLength := len(k)
+				return NewWordsSearchResult(k, i+1-maxLength, i, tn.Results[0])
 			}
 		}
 		ptr = tn
@@ -92,92 +144,86 @@ func (this *WordsSearch) FindFirst(text string) *WordsSearchResult{
 	return nil
 }
 
-
-
-func (this *WordsSearch) FindAll(text string) []*WordsSearchResult{
-	list := make([]*WordsSearchResult,0) 
+func (this *WordsSearch) FindAll(text string) []*WordsSearchResult {
+	list := make([]*WordsSearchResult, 0)
 	var ptr *TrieNode2
 	var i int
-	for _,t := range text {
+	for _, t := range text {
 		var tn *TrieNode2
-		if ptr==nil{
-			tn = this._first[t];
-		}else{
+		if ptr == nil {
+			tn = this._first[t]
+		} else {
 			var b bool
-			b,tn =ptr.TryGetValue(t)
-			if b==false{
-				tn = this._first[t];
+			b, tn = ptr.TryGetValue(int(int32(t)))
+			if b == false {
+				tn = this._first[t]
 			}
 		}
-		if tn!=nil {
-			if tn.End==true {
-				for k,v:= range tn.Results{
-					maxLength:=len([]rune(k))
-					r:= NewWordsSearchResult(k, i + 1 - maxLength, i, v);
-					list=append(list,r)
+		if tn != nil {
+			if tn.End == true {
+				for i := 0; i < len(tn.Results); i++ {
+					k := this._keywords[tn.Results[i]]
+					maxLength := len(k)
+					r := NewWordsSearchResult(k, i+1-maxLength, i, tn.Results[i])
+					list = append(list, r)
 				}
 			}
 		}
-		ptr = tn;
+		ptr = tn
 		i++
 	}
 	return list
 }
 
-
-func (this *WordsSearch) ContainsAny(text string) bool{
+func (this *WordsSearch) ContainsAny(text string) bool {
 	var ptr *TrieNode2
-	for _,t := range text {
+	for _, t := range text {
 		var tn *TrieNode2
-		if ptr==nil{
-			tn = this._first[t];
-		}else{
+		if ptr == nil {
+			tn = this._first[t]
+		} else {
 			var b bool
-			b,tn =ptr.TryGetValue(t)
-			if b==false{
-				tn = this._first[t];
+			b, tn = ptr.TryGetValue(int(int32(t)))
+			if b == false {
+				tn = this._first[t]
 			}
 		}
-		if tn!=nil {
-			if tn.End==true {
+		if tn != nil {
+			if tn.End == true {
 				return true
 			}
 		}
-		ptr = tn;
+		ptr = tn
 	}
 	return false
 }
 
-
-func (this *WordsSearch) Replace(text string,replaceChar int32) string{
-	result:= []rune(text)
+func (this *WordsSearch) Replace(text string, replaceChar int32) string {
+	result := []rune(text)
 	var ptr *TrieNode2
 	var i int
-	for _,t := range text {
+	for _, t := range text {
 		var tn *TrieNode2
-		if ptr==nil{
-			tn = this._first[t];
-		}else{
+		if ptr == nil {
+			tn = this._first[t]
+		} else {
 			var b bool
-			b,tn =ptr.TryGetValue(t)
-			if b==false{
-				tn = this._first[t];
+			b, tn = ptr.TryGetValue(int(int32(t)))
+			if b == false {
+				tn = this._first[t]
 			}
 		}
-		if tn!=nil {
-			if tn.End==true {
-				for k,_:= range tn.Results{
-					maxLength:=len([]rune(k))
-					start:= i + 1 - maxLength
-					for j := start; j <= i; j++{
-						result[j]=replaceChar
-					} 
-					break
+		if tn != nil {
+			if tn.End == true {
+				maxLength := len([]rune(this._keywords[tn.Results[0]]))
+				start := i + 1 - maxLength
+				for j := start; j <= i; j++ {
+					result[j] = replaceChar
 				}
 			}
 		}
-		ptr = tn;
+		ptr = tn
 		i++
 	}
-	return string (result) 
+	return string(result)
 }
