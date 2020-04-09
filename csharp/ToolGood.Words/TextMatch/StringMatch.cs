@@ -7,7 +7,7 @@
 //namespace ToolGood.Words
 //{
 //    /// <summary>
-//    /// 文本搜索, 支持
+//    /// 文本搜索, 支持 部分 正则 如 . ? [ ] \
 //    /// </summary>
 //    public class StringMatch
 //    {
@@ -107,7 +107,6 @@
 //            var root = new TrieNode();
 
 //            Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
-
 //            #region 第一次关键字
 //            for (int i = 0; i < keywords.Count; i++) {
 //                var p = _keywords[i];
@@ -182,6 +181,7 @@
 //                    allNode.Add(nd);
 //                }
 //            }
+//            allNodeLayers.Clear();
 //            allNodeLayers = null;
 //            #endregion
 
@@ -206,9 +206,21 @@
 //            for (int i = 1; i < allNode.Count; i++) {
 //                var nd = allNode[i];
 //                if (nd.Layer == 1) { continue; }
-//                if (nd.Parent.IsWildcard || nd.Char == 0) {
+//                if (nd.m_values.ContainsKey((char)0)) {
+//                    nd.HasWildcard = true;
+//                }
+//                if (nd.Failure.m_values.ContainsKey((char)0)) {
+//                    nd.HasWildcard = true;
+//                }
+//                if (nd.Char == 0) {
 //                    nd.IsWildcard = true;
 //                    nd.Failure = root;
+//                    continue;
+//                }
+//                if (nd.Parent.IsWildcard) {
+//                    nd.IsWildcard = true;
+//                    nd.Failure = root;
+//                    continue;
 //                }
 //            }
 //            #endregion
