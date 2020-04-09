@@ -91,7 +91,7 @@ func (this *WordsSearch) SetKeywords(keywords []string) {
 
 		for key, val := range oldNode.M_values {
 			var index = val.Index
-			newNode.Add(key, allNode2[index])
+			newNode.Add(int32(key), allNode2[index])
 		}
 		for j := 0; j < len(oldNode.Results); j++ {
 			newNode.SetResults(oldNode.Results[j])
@@ -99,9 +99,9 @@ func (this *WordsSearch) SetKeywords(keywords []string) {
 
 		if oldNode.Failure != root {
 			for key, val := range oldNode.Failure.M_values {
-				if newNode.HasKey(key) == false {
+				if newNode.HasKey(int32(key)) == false {
 					var index = val.Index
-					newNode.Add(key, allNode2[index])
+					newNode.Add(int32(key), allNode2[index])
 				}
 			}
 			for j := 0; j < len(oldNode.Failure.Results); j++ {
@@ -126,7 +126,7 @@ func (this *WordsSearch) FindFirst(text string) *WordsSearchResult {
 			tn = this._first[t]
 		} else {
 			var b bool
-			b, tn = ptr.TryGetValue(int(int32(t)))
+			b, tn = ptr.TryGetValue(t)
 			if b == false {
 				tn = this._first[t]
 			}
@@ -154,7 +154,7 @@ func (this *WordsSearch) FindAll(text string) []*WordsSearchResult {
 			tn = this._first[t]
 		} else {
 			var b bool
-			b, tn = ptr.TryGetValue(int(int32(t)))
+			b, tn = ptr.TryGetValue(t)
 			if b == false {
 				tn = this._first[t]
 			}
@@ -183,7 +183,7 @@ func (this *WordsSearch) ContainsAny(text string) bool {
 			tn = this._first[t]
 		} else {
 			var b bool
-			b, tn = ptr.TryGetValue(int(int32(t)))
+			b, tn = ptr.TryGetValue(t)
 			if b == false {
 				tn = this._first[t]
 			}
@@ -208,7 +208,7 @@ func (this *WordsSearch) Replace(text string, replaceChar int32) string {
 			tn = this._first[t]
 		} else {
 			var b bool
-			b, tn = ptr.TryGetValue(int(int32(t)))
+			b, tn = ptr.TryGetValue(t)
 			if b == false {
 				tn = this._first[t]
 			}

@@ -3,22 +3,22 @@ package internals
 type TrieNode2 struct {
 	End      bool
 	Results  []int
-	M_values map[int]*TrieNode2
-	minflag  int
-	maxflag  int
+	M_values map[int32]*TrieNode2
+	minflag  int32
+	maxflag  int32
 }
 
 func NewTrieNode2() *TrieNode2 {
 	return &TrieNode2{
 		End:      false,
-		M_values: make(map[int]*TrieNode2),
+		M_values: make(map[int32]*TrieNode2),
 		Results:  make([]int, 0),
 		minflag:  0,
 		maxflag:  0xffff,
 	}
 }
 
-func (this *TrieNode2) Add(c int, node *TrieNode2) {
+func (this *TrieNode2) Add(c int32, node *TrieNode2) {
 	if this.minflag < c {
 		this.minflag = c
 	}
@@ -40,7 +40,7 @@ func (this *TrieNode2) SetResults(text int) {
 	this.Results = append(this.Results, text)
 }
 
-func (this *TrieNode2) TryGetValue(c int) (bool, *TrieNode2) {
+func (this *TrieNode2) TryGetValue(c int32) (bool, *TrieNode2) {
 	if this.minflag <= c && this.maxflag >= c {
 		if val, s := this.M_values[c]; s {
 			return true, val
@@ -49,7 +49,7 @@ func (this *TrieNode2) TryGetValue(c int) (bool, *TrieNode2) {
 	return false, nil
 }
 
-func (this *TrieNode2) HasKey(c int) bool {
+func (this *TrieNode2) HasKey(c int32) bool {
 	if this.minflag <= c && this.maxflag >= c {
 		if _, s := this.M_values[c]; s {
 			return true
