@@ -97,16 +97,18 @@ func (this *WordsSearch) SetKeywords(keywords []string) {
 			newNode.SetResults(oldNode.Results[j])
 		}
 
-		if oldNode.Failure != root {
-			for key, val := range oldNode.Failure.M_values {
+		oldNode = oldNode.Failure
+		for oldNode != root {
+			for key, val := range oldNode.M_values {
 				if newNode.HasKey(int32(key)) == false {
 					var index = val.Index
 					newNode.Add(int32(key), allNode2[index])
 				}
 			}
-			for j := 0; j < len(oldNode.Failure.Results); j++ {
+			for j := 0; j < len(oldNode.Results); j++ {
 				newNode.SetResults(oldNode.Failure.Results[j])
 			}
+			oldNode = oldNode.Failure
 		}
 	}
 

@@ -136,18 +136,20 @@ function PinYin() {
                     newNode.SetResults(item);
                 }
 
-                if (oldNode.Failure != root) {
-                    for (const key in oldNode.Failure.m_values) {
-                        if (oldNode.Failure.m_values.hasOwnProperty(key) == false) { continue; }
+                oldNode = oldNode.Failure;
+                while (oldNode != root) {
+                    for (const key in oldNode.m_values) {
+                        if (oldNode.m_values.hasOwnProperty(key) == false) { continue; }
                         if (newNode.HasKey(key) == false) {
-                            var index = oldNode.Failure.m_values[key].Index;
+                            var index = oldNode.m_values[key].Index;
                             newNode.Add(key, allNode2[index]);
                         }
                     }
-                    for (let index = 0; index < oldNode.Failure.Results.length; index++) {
-                        const item = oldNode.Failure.Results[index];
+                    for (let index = 0; index < oldNode.Results.length; index++) {
+                        const item = oldNode.Results[index];
                         newNode.SetResults(item);
                     }
+                    oldNode = oldNode.Failure;
                 }
             }
             allNode = null;

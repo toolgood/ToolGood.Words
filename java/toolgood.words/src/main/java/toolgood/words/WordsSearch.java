@@ -114,16 +114,18 @@ public class WordsSearch {
                 newNode.SetResults(item);
             });
 
-            if (oldNode.Failure != root) {
-                for (Character key : oldNode.Failure.m_values.keySet()) {
-                    TrieNode nd = oldNode.Failure.m_values.get(key);
+            oldNode = oldNode.Failure;
+            while (oldNode != root) {
+                for (Character key : oldNode.m_values.keySet()) {
+                    TrieNode nd = oldNode.m_values.get(key);
                     if (newNode.HasKey(key) == false) {
                         newNode.Add(key, allNode2.get(nd.Index));
                     }
                 }
-                oldNode.Failure.Results.forEach(item -> {
+                oldNode.Results.forEach(item -> {
                     newNode.SetResults(item);
                 });
+                oldNode = oldNode.Failure;
             }
         }
         allNode.clear();

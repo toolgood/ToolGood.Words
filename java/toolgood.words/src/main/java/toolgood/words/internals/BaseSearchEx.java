@@ -215,17 +215,18 @@ public abstract class BaseSearchEx {
             oldNode.Results.forEach(item -> {
                 newNode.SetResults(item);
             });
-
-            if (oldNode.Failure != root) {
-                for (Character key : oldNode.Failure.m_values.keySet()) {
+            oldNode = oldNode.Failure;
+            while (oldNode != root) {
+                for (Character key : oldNode.m_values.keySet()) {
                     if (newNode.HasKey(_dict[key]) == false) {
-                        TrieNode nd = oldNode.Failure.m_values.get(key);
+                        TrieNode nd = oldNode.m_values.get(key);
                         newNode.Add(_dict[key], allNode2.get(nd.Index));
                     }
                 }
-                oldNode.Failure.Results.forEach(item -> {
+                oldNode.Results.forEach(item -> {
                     newNode.SetResults(item);
                 });
+                oldNode = oldNode.Failure;
             }
         }
         allNode.clear();

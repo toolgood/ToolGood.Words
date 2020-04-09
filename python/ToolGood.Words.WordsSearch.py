@@ -136,16 +136,16 @@ class WordsSearch():
                 item = oldNode.Results[index]
                 newNode.SetResults(item)
             
-
-            if (oldNode.Failure != root):
-                for key in oldNode.Failure.m_values :
+            oldNode=oldNode.Failure
+            while oldNode != root:
+                for key in oldNode.m_values :
                     if (newNode.HasKey(key) == False):
-                        index = oldNode.Failure.m_values[key].Index
+                        index = oldNode.m_values[key].Index
                         newNode.Add(key, allNode2[index])
-                    
-                for index in range(len(oldNode.Failure.Results)): # for (index = 0; index < oldNode.Failure.Results.length; index++) 
-                    item = oldNode.Failure.Results[index]
+                for index in range(len(oldNode.Results)): 
+                    item = oldNode.Results[index]
                     newNode.SetResults(item)
+                oldNode=oldNode.Failure
         allNode = None
         root = None
 
