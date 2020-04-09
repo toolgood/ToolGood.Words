@@ -298,18 +298,33 @@ namespace ToolGood.Words.internals
                 foreach (var item in oldNode.Results) {
                     newNode.SetResults(item);
                 }
-                if (oldNode.Failure != root) {
-                    foreach (var item in oldNode.Failure.m_values) {
+                oldNode = oldNode.Failure;
+                while (oldNode != root) {
+                    foreach (var item in oldNode.m_values) {
                         var key = _dict[item.Key];
                         var index = item.Value.Index;
                         if (newNode.HasKey(key) == false) {
                             newNode.Add(key, allNode2[index]);
                         }
                     }
-                    foreach (var item in oldNode.Failure.Results) {
+                    foreach (var item in oldNode.Results) {
                         newNode.SetResults(item);
                     }
+                    oldNode = oldNode.Failure;
                 }
+
+                //if (oldNode.Failure != root) {
+                //    foreach (var item in oldNode.Failure.m_values) {
+                //        var key = _dict[item.Key];
+                //        var index = item.Value.Index;
+                //        if (newNode.HasKey(key) == false) {
+                //            newNode.Add(key, allNode2[index]);
+                //        }
+                //    }
+                //    foreach (var item in oldNode.Failure.Results) {
+                //        newNode.SetResults(item);
+                //    }
+                //}
             }
             allNode.Clear();
             allNode = null;

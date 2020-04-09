@@ -36,6 +36,14 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("我是***", str);
 
 
+            string s2 = "ABCDEFG|BCDEF|BCDEG|CDEK|CDE";
+            StringSearch stringSearch = new StringSearch();
+            stringSearch.SetKeywords(s2.Split('|'));
+            all = stringSearch.FindAll("AAAAAABCDEKDE");
+            Assert.AreEqual("CDE", all[0]);
+            Assert.AreEqual("CDEK", all[1]);
+            Assert.AreEqual(2, all.Count);
+
         }
         [Test]
         public void test2()

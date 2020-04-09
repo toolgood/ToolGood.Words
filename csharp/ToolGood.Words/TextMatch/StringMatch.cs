@@ -53,42 +53,51 @@
 //            List<TrieNode> allNode = BuildFirstLayerTrieNode(keywords);
 //            TrieNode root = allNode[0];
 
-
 //            var allNode2 = new List<TrieNode3>();
 //            for (int i = 0; i < allNode.Count; i++) {
-//                allNode2.Add(new TrieNode3());
+//                var oldNode = allNode[i];
+//                var newNode = new TrieNode3();
+//                newNode.HasWildcard = oldNode.HasWildcard;
+//                allNode2.Add(newNode);
 //            }
+
 //            for (int i = 0; i < allNode2.Count; i++) {
 //                var oldNode = allNode[i];
+//                if (oldNode.IsWildcard && oldNode.Parent.IsWildcard) { continue; }
 //                var newNode = allNode2[i];
 
 //                foreach (var item in oldNode.m_values) {
 //                    var key = item.Key;
 //                    var index = item.Value.Index;
 //                    if (key == 0) {
-//                        newNode.HasWildcard = true;
-//                        newNode.WildcardNode = allNode2[index]; //有没有两个重叠 的 通配符
-//                    } else {
-//                        newNode.Add(key, allNode2[index]);
+//                        newNode.WildcardNode = allNode2[index];
+//                        continue;
 //                    }
+//                    newNode.Add(key, allNode2[index]);
 //                }
 //                foreach (var item in oldNode.Results) {
 //                    newNode.SetResults(item);
 //                }
-//                if (oldNode.Failure != root) {
-//                    foreach (var item in oldNode.Failure.m_values) {
+
+//                oldNode = oldNode.Failure;
+//                while (oldNode != root) {
+//                    foreach (var item in oldNode.m_values) {
 //                        var key = item.Key;
 //                        var index = item.Value.Index;
 //                        if (key == 0) {
-//                            newNode.HasWildcard = true;
-//                            newNode.WildcardNode = allNode2[index];
-//                        } else if (newNode.HasKey(key) == false) {
+//                            if (newNode.WildcardNode == null) {
+//                                newNode.WildcardNode = allNode2[index];
+//                            }
+//                            continue;
+//                        }
+//                        if (newNode.HasKey(key) == false) {
 //                            newNode.Add(key, allNode2[index]);
 //                        }
 //                    }
-//                    foreach (var item in oldNode.Failure.Results) {
+//                    foreach (var item in oldNode.Results) {
 //                        newNode.SetResults(item);
 //                    }
+//                    oldNode = oldNode.Failure;
 //                }
 //            }
 //            allNode.Clear();
@@ -209,21 +218,25 @@
 //                if (nd.m_values.ContainsKey((char)0)) {
 //                    nd.HasWildcard = true;
 //                }
-//                if (nd.Failure.m_values.ContainsKey((char)0)) {
+//                if (nd.Failure.HasWildcard) {
 //                    nd.HasWildcard = true;
 //                }
 //                if (nd.Char == 0) {
 //                    nd.IsWildcard = true;
-//                    nd.Failure = root;
 //                    continue;
-//                }
-//                if (nd.Parent.IsWildcard) {
+//                } else if (nd.Parent.IsWildcard) {
 //                    nd.IsWildcard = true;
-//                    nd.Failure = root;
+//                    nd.WildcardLayer = nd.Parent.WildcardLayer + 1;
+//                    if (nd.Failure != root) {
+//                        if (nd.Failure.Layer < nd.WildcardLayer) {
+//                            nd.Failure = root;
+//                        }
+//                    }
 //                    continue;
 //                }
 //            }
 //            #endregion
+
 //            return allNode;
 //        }
 

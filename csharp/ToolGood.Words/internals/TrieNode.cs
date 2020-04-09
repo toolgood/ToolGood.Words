@@ -16,6 +16,7 @@ namespace ToolGood.Words.internals
         public TrieNode Failure;
         public TrieNode Parent;
         public bool IsWildcard;
+        public int WildcardLayer;
         public bool HasWildcard;
 
 
