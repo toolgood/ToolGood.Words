@@ -18,6 +18,7 @@ namespace ToolGood.Words.internals
         private static string[] _pyShow;
         private static ushort[] _pyIndex;
         private static ushort[] _pyData;
+        private static int[] _wordPyIndex;
         private static ushort[] _wordPy;
         private static WordsSearch _search;
         public static string[] PyShow {
@@ -38,7 +39,7 @@ namespace ToolGood.Words.internals
             foreach (var p in pos) {
                 if (p.Start > pindex) {
                     for (int i = 0; i < p.Keyword.Length; i++) {
-                        list[i + p.Start] = _pyShow[_wordPy[i + p.Index] + tone];
+                        list[i + p.Start] = _pyShow[_wordPy[_wordPyIndex[p.Index] + i] + tone];
                     }
                     pindex = p.End;
                 }
@@ -259,17 +260,22 @@ namespace ToolGood.Words.internals
 
                 var lines = tStr.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 var wordPy = new List<ushort>();
-                Dictionary<string, int> keywords = new Dictionary<string, int>();
+                List<string> keywords = new List<string>();
+                List<int> wordPyIndex = new List<int>();
+                wordPyIndex.Add(0);
+
                 foreach (var line in lines) {
                     var sp = line.Split(',');
-                    keywords.Add(sp[0], wordPy.Count);
+                    keywords.Add(sp[0]);
                     for (int i = 1; i < sp.Length; i++) {
                         var idx = sp[i];
                         wordPy.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
                     }
+                    wordPyIndex.Add(wordPy.Count);
                 }
                 var search = new WordsSearch();
                 search.SetKeywords(keywords);
+                _wordPyIndex = wordPyIndex.ToArray();
                 _wordPy = wordPy.ToArray();
                 _search = search;
             }

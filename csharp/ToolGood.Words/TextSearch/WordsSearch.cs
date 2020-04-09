@@ -15,7 +15,6 @@ namespace ToolGood.Words
         private TrieNode2[] _first = new TrieNode2[char.MaxValue + 1];
         internal string[] _keywords;
         internal string[] _others;
-        internal int[] _indexs;
         #endregion
 
         #region 设置关键字
@@ -26,34 +25,6 @@ namespace ToolGood.Words
         public void SetKeywords(ICollection<string> keywords)
         {
             _keywords = keywords.ToArray();
-            List<int> indexs = new List<int>();
-            for (int i = 0; i < keywords.Count; i++) {
-                indexs.Add(i);
-            }
-            _indexs = indexs.ToArray();
-            SetKeywords();
-        }
-        /// <summary>
-        /// 设置关键字
-        /// </summary>
-        /// <param name="keywords">关键字列表</param>
-        /// <param name="indexs">关键字索引列表</param>
-        public void SetKeywords(ICollection<string> keywords, ICollection<int> indexs)
-        {
-            if (keywords.Count != indexs.Count) { throw new Exception("数量不一样"); }
-            _keywords = keywords.ToArray();
-            _indexs = indexs.ToArray();
-            SetKeywords();
-        }
-
-        /// <summary>
-        /// 设置关键字
-        /// </summary>
-        /// <param name="keywords">关键字列表</param>
-        public void SetKeywords(IDictionary<string, int> keywords)
-        {
-            _keywords = keywords.Keys.ToArray();
-            _indexs = keywords.Values.ToArray();
             SetKeywords();
         }
 
@@ -86,6 +57,7 @@ namespace ToolGood.Words
                     allNode.Add(nd);
                 }
             }
+            allNodeLayers.Clear();
             allNodeLayers = null;
 
             for (int i = 1; i < allNode.Count; i++) {
@@ -194,7 +166,8 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         var item = tn.Results[0];
-                        return new WordsSearchResult(_keywords[item], i + 1 - _keywords[item].Length, i, _indexs[item]);
+                        var keyword = _keywords[item];
+                        return new WordsSearchResult(keyword, i + 1 - keyword.Length, i, item);
                     }
                 }
                 ptr = tn;
@@ -223,7 +196,8 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            list.Add(new WordsSearchResult(_keywords[item], i + 1 - _keywords[item].Length, i, _indexs[item]));
+                            var keyword = _keywords[item];
+                            list.Add(new WordsSearchResult(keyword, i + 1 - keyword.Length, i, item));
                         }
                     }
                 }
