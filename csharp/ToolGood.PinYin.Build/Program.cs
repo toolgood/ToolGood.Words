@@ -183,13 +183,33 @@ namespace ToolGood.PinYin.Build
                 }
             }
 
+
+            HashSet<string> starts = new HashSet<string>();
+            HashSet<string> ends = new HashSet<string>();
+            foreach (var item in tempClearKeys) {
+                for (int i = 1; i < item.Length; i++) {
+                    var start = item.Substring(0, item.Length - i);
+                    var end = item.Substring(i);
+
+                    ends.Add(start);
+                    starts.Add(end);
+                }
+            }
+
+
             List<string> AddKeys2 = new List<string>();
             List<string> keys2 = new List<string>();
             foreach (var item in pyWords2) {
                 var py = Words.WordsHelper.GetPinYinFast(item.Key, true).ToLower();
                 if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
-                    for (int i = 0; i < item.Key.Length - 1; i++) {
-                        keys2.Add(item.Key.Substring(0, i + 1));
+                    for (int i = 1; i < item.Key.Length; i++) {
+                        var start = item.Key.Substring(0, item.Key.Length - i);
+                        if (keys2.Contains(start)) { continue; }
+                        var end = item.Key.Substring(i);
+
+                        if (starts.Contains(start) && ends.Contains(end)) {
+                            keys2.Add(start);
+                        }
                     }
                 }
             }
@@ -203,6 +223,7 @@ namespace ToolGood.PinYin.Build
                     AddKeys2.Add(item);
                 }
             }
+
 
             AddKeys.AddRange(AddKeys2);
             AddKeys.AddRange(keys);
@@ -224,7 +245,7 @@ namespace ToolGood.PinYin.Build
             ls = ls.OrderBy(q => q).ToList();
             File.WriteAllText("pyWords.txt", string.Join("\n", ls));
             Compression("pyWords.txt");
-            File.WriteAllText("pyWords.js.txt", string.Join("|", ls));
+            //File.WriteAllText("pyWords.js.txt", string.Join("|", ls));
 
             File.WriteAllText("_pyWordsKey.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(AddKeys));
 
@@ -262,6 +283,19 @@ namespace ToolGood.PinYin.Build
         static string AddTone(string pinyin)
         {
             pinyin = pinyin.ToLower();
+            if (pinyin.Contains("j") || pinyin.Contains("q") || pinyin.Contains("x")) {
+                pinyin = pinyin.Replace("v", "u");
+            }
+            if (pinyin.Contains("iou")) {
+                pinyin = pinyin.Replace("iou", "iu");
+            }
+            if (pinyin.Contains("uei")) {
+                pinyin = pinyin.Replace("uei", "ui");
+            }
+            if (pinyin.Contains("uen")) {
+                pinyin = pinyin.Replace("uen", "un");
+            }
+
             if (pinyin.EndsWith("1")) {
                 if (pinyin.Contains("a")) {
                     pinyin = pinyin.Replace("a", "ā");
@@ -269,10 +303,16 @@ namespace ToolGood.PinYin.Build
                     pinyin = pinyin.Replace("o", "ō");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "ē");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ū");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ī");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ū");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ī");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǖ");
                 } else {
@@ -285,10 +325,17 @@ namespace ToolGood.PinYin.Build
                     pinyin = pinyin.Replace("o", "ó");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "é");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ú");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "í");
+
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ú");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "í");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǘ");
                 } else {
@@ -301,10 +348,16 @@ namespace ToolGood.PinYin.Build
                     pinyin = pinyin.Replace("o", "ǒ");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "ě");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ǔ");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ǐ");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ǔ");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ǐ");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǚ");
                 } else {
@@ -317,10 +370,16 @@ namespace ToolGood.PinYin.Build
                     pinyin = pinyin.Replace("o", "ò");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "è");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ù");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ì");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ù");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ì");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǜ");
                 } else {
@@ -344,6 +403,7 @@ namespace ToolGood.PinYin.Build
 
             return pinyin;
         }
+
 
 
         private static void Compression(string file)

@@ -3,8 +3,6 @@
 # ToolGood.Words.WordsSearch.py
 # 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 # Licensed under the Apache License 2.0
-import sys
-sys.setrecursionlimit(1000000)
 
 __all__ = ['WordsSearch']
 __author__ = 'Lin Zhijun'

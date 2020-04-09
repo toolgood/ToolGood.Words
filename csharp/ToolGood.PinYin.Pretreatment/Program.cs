@@ -908,7 +908,15 @@ namespace ToolGood.PinYin.Pretreatment
             if (pinyin.Contains("j") || pinyin.Contains("q") || pinyin.Contains("x")) {
                 pinyin = pinyin.Replace("v", "u");
             }
-
+            if (pinyin.Contains("iou")) {
+                pinyin = pinyin.Replace("iou", "iu");
+            }
+            if (pinyin.Contains("uei")) {
+                pinyin = pinyin.Replace("uei", "ui");
+            }
+            if (pinyin.Contains("uen")) {
+                pinyin = pinyin.Replace("uen", "un");
+            }
 
             if (pinyin.EndsWith("1")) {
                 if (pinyin.Contains("a")) {
@@ -917,10 +925,16 @@ namespace ToolGood.PinYin.Pretreatment
                     pinyin = pinyin.Replace("o", "ō");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "ē");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ū");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ī");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ū");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ī");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǖ");
                 } else {
@@ -933,10 +947,17 @@ namespace ToolGood.PinYin.Pretreatment
                     pinyin = pinyin.Replace("o", "ó");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "é");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ú");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "í");
+
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ú");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "í");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǘ");
                 } else {
@@ -949,10 +970,16 @@ namespace ToolGood.PinYin.Pretreatment
                     pinyin = pinyin.Replace("o", "ǒ");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "ě");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ǔ");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ǐ");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ǔ");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ǐ");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǚ");
                 } else {
@@ -965,10 +992,16 @@ namespace ToolGood.PinYin.Pretreatment
                     pinyin = pinyin.Replace("o", "ò");
                 } else if (pinyin.Contains("e")) {
                     pinyin = pinyin.Replace("e", "è");
-                } else if (pinyin.Contains("i")) {
+
+                } else if (pinyin.Contains("iu")) {
+                    pinyin = pinyin.Replace("u", "ù");
+                } else if (pinyin.Contains("ui")) {
                     pinyin = pinyin.Replace("i", "ì");
+
                 } else if (pinyin.Contains("u")) {
                     pinyin = pinyin.Replace("u", "ù");
+                } else if (pinyin.Contains("i")) {
+                    pinyin = pinyin.Replace("i", "ì");
                 } else if (pinyin.Contains("v")) {
                     pinyin = pinyin.Replace("v", "ǜ");
                 } else {
