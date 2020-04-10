@@ -252,14 +252,12 @@ namespace ToolGood.Words.internals
             foreach (var dict in _nextIndex) {
                 var keys = dict.Keys.ToArray();
                 var values = dict.Values.ToArray();
-                bw.Write(keys.Length);
 
                 bs = IntArrToByteArr(keys);
                 bw.Write(bs.Length);
                 bw.Write(bs);
 
                 bs = IntArrToByteArr(values);
-                bw.Write(bs.Length);
                 bw.Write(bs);
             }
         }
@@ -341,7 +339,7 @@ namespace ToolGood.Words.internals
                 var values = ByteArrToIntArr(bs);
 
                 var dict = new Dictionary<int, int>();
-                for (int j = 0; j < length; j++) {
+                for (int j = 0; j < keys.Length; j++) {
                     dict[keys[j]] = values[j];
                 }
                 _nextIndex.Add(dict);
@@ -350,12 +348,12 @@ namespace ToolGood.Words.internals
 
         protected Int32[] ByteArrToIntArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(Int32);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(Int32));
             Int32[] intArr = new Int32[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }
- 
+
         #endregion
     }
 }

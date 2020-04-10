@@ -7,7 +7,7 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索（指针版，速度更快）
+    /// 文本搜索（指针版，速度更快） ，如果关键字太多，建议使用 BigStringSearchEx
     /// </summary>
     public class StringSearchEx2 : BaseSearchEx
     {

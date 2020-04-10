@@ -15,8 +15,12 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
+            BigStringSearchEx iwords2 = new BigStringSearchEx();
+            iwords2.SetKeywords(s.Split('|'));
+            iwords2.Save("BigStringSearchEx.dat");
+
             BigStringSearchEx iwords = new BigStringSearchEx();
-            iwords.SetKeywords(s.Split('|'));
+            iwords.Load("BigStringSearchEx.dat");
 
             var b = iwords.ContainsAny(test);
             Assert.AreEqual(true, b);

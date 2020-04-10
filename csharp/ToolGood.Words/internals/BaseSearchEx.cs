@@ -174,7 +174,7 @@ namespace ToolGood.Words.internals
 
         protected char[] ByteArrToCharArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(char);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(char));
             char[] intArr = new char[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
@@ -182,7 +182,8 @@ namespace ToolGood.Words.internals
 
         protected Int32[] ByteArrToIntArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(Int32);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(Int32));
+
             Int32[] intArr = new Int32[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
@@ -190,7 +191,7 @@ namespace ToolGood.Words.internals
 
         protected bool[] ByteArrToBoolArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(bool);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(bool));
             bool[] intArr = new bool[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
