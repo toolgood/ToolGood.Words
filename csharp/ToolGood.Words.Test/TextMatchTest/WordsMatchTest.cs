@@ -88,6 +88,7 @@ namespace ToolGood.Words.Test
 
             var alls = wordsSearch.FindAll(test);
             Assert.AreEqual("是中国", alls[0].Keyword);
+            Assert.AreEqual(".中国", alls[0].MatchKeyword);
             Assert.AreEqual(1, alls[0].Start);
             Assert.AreEqual(3, alls[0].End);
             Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
