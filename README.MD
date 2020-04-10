@@ -51,8 +51,8 @@ ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
 ## 非法词(敏感词)检测（字符串搜索）
 非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
 
-* `StringSearch`、`StringSearchEx`、`StringSearchEx2`: 搜索`FindFirst`方法返回结果为`string`类型。
-* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
+* `StringSearch`、`StringSearchEx`、`StringSearchEx2`、`BigStringSearchEx`: 搜索`FindFirst`方法返回结果为`string`类型。
+* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`BigWordsSearchEx`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
@@ -85,11 +85,43 @@ ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
     var str = iwords.Replace(test, '*');
     Assert.AreEqual("我是***", str);
 ``` 
+## 非法词(敏感词)检测（字符串搜索）（支持通配符）
+非法词(敏感词)检测类：`StringMatch`、`WordsMatch`。
+支持部分正则表达式类型：`.`（点）`?`(问号) `[]`(方括号) `(|)`(括号与竖线)
+
+``` csharp
+            string s = ".[中美]国|国人|zg人";
+            string test = "我是中国人";
+
+            WordsMatch wordsSearch = new WordsMatch();
+            wordsSearch.SetKeywords(s.Split('|'));
+
+            var b = wordsSearch.ContainsAny(test);
+            Assert.AreEqual(true, b);
+
+            var f = wordsSearch.FindFirst(test);
+            Assert.AreEqual("是中国", f.Keyword);
+
+            var alls = wordsSearch.FindAll(test);
+            Assert.AreEqual("是中国", alls[0].Keyword);
+            Assert.AreEqual(".[中美]国", alls[0].MatchKeyword);
+            Assert.AreEqual(1, alls[0].Start);
+            Assert.AreEqual(3, alls[0].End);
+            Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
+            Assert.AreEqual("国人", alls[1].Keyword);
+            Assert.AreEqual(2, alls.Count);
+
+            var t = wordsSearch.Replace(test, '*');
+            Assert.AreEqual("我****", t);
+             
+```
+
+
 
 ##### 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20191014).png)
+![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20200410).png)
 
 注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
 

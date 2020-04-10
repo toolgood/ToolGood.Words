@@ -32,13 +32,8 @@ namespace ToolGood.Words.internals
             var fs = File.Open(filePath, FileMode.Create);
             BinaryWriter bw = new BinaryWriter(fs);
             Save(bw);
-#if NETSTANDARD1_3
-            bw.Dispose();
-            fs.Dispose();
-#else
             bw.Close();
             fs.Close();
-#endif
         }
 
         /// <summary>
@@ -49,11 +44,7 @@ namespace ToolGood.Words.internals
         {
             BinaryWriter bw = new BinaryWriter(stream);
             Save(bw);
-#if NETSTANDARD1_3
-            bw.Dispose();
-#else
             bw.Close();
-#endif
         }
 
         protected internal virtual void Save(BinaryWriter bw)
@@ -127,13 +118,8 @@ namespace ToolGood.Words.internals
             var fs = File.OpenRead(filePath);
             BinaryReader br = new BinaryReader(fs);
             Load(br);
-#if NETSTANDARD1_3
-            br.Dispose();
-            fs.Dispose();
-#else
             br.Close();
             fs.Close();
-#endif
         }
         /// <summary>
         /// 加载Stream
@@ -143,11 +129,7 @@ namespace ToolGood.Words.internals
         {
             BinaryReader br = new BinaryReader(stream);
             Load(br);
-#if NETSTANDARD1_3
-            br.Dispose();
-#else
             br.Close();
-#endif
         }
 
         protected internal virtual void Load(BinaryReader br)
@@ -192,7 +174,7 @@ namespace ToolGood.Words.internals
 
         protected char[] ByteArrToCharArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(char);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(char));
             char[] intArr = new char[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
@@ -200,7 +182,8 @@ namespace ToolGood.Words.internals
 
         protected Int32[] ByteArrToIntArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(Int32);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(Int32));
+
             Int32[] intArr = new Int32[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
@@ -208,7 +191,7 @@ namespace ToolGood.Words.internals
 
         protected bool[] ByteArrToBoolArr(byte[] btArr)
         {
-            Int32 intSize = btArr.Length / sizeof(bool);
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(bool));
             bool[] intArr = new bool[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;

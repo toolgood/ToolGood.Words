@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using System.Text;
 using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索（增强版，速度更快）
+    /// 文本搜索（增强版，速度更快），如果关键字太多(5W以上)，建议使用 BigStringSearchEx
     /// </summary>
     public class StringSearchEx : BaseSearchEx
     {
