@@ -465,7 +465,7 @@ namespace ToolGood.Words
                         var kIndex = _keywordIndex[r];
                         var matchKeyword = _matchKeywords[kIndex];
                         var keyword = text.Substring(i - length + 1, length);
-                        return new WordsSearchResult(keyword, i - length + 1, length, kIndex, matchKeyword);
+                        return new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
                     }
                 }
                 ptr = tn;
@@ -531,7 +531,7 @@ namespace ToolGood.Words
                             var kIndex = _keywordIndex[r];
                             var matchKeyword = _matchKeywords[kIndex];
                             var keyword = text.Substring(i - length + 1, length);
-                            var result = new WordsSearchResult(keyword, i - length + 1, length, kIndex, matchKeyword);
+                            var result = new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
                             list.Add(result);
                         }
                     }
@@ -557,7 +557,7 @@ namespace ToolGood.Words
                         var kIndex = _keywordIndex[r];
                         var matchKeyword = _matchKeywords[kIndex];
                         var keyword = text.Substring(i - length + 1, length);
-                        var result = new WordsSearchResult(keyword, i - length + 1, length, kIndex, matchKeyword);
+                        var result = new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
                         list.Add(result);
                     }
                 }

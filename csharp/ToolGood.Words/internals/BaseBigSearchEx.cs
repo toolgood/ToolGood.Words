@@ -13,7 +13,7 @@ namespace ToolGood.Words.internals
         protected int[] _min;
         protected int[] _max;
 
-        protected List<Dictionary<int, int>> _nextIndex;
+        protected Dictionary<int, int>[] _nextIndex;
         protected int[] _end;
         protected int[] _resultIndex;
         protected string[] _keywords;
@@ -151,10 +151,12 @@ namespace ToolGood.Words.internals
             _first = first;
             _min = min.ToArray();
             _max = max.ToArray();
-            _nextIndex = nextIndexs;
+            _nextIndex = nextIndexs.ToArray();
             _end = end.ToArray();
             _resultIndex = resultIndex.ToArray();
 
+            allNode2.Clear();
+            allNode2 = null;
         }
 
         #endregion
@@ -248,7 +250,7 @@ namespace ToolGood.Words.internals
             bw.Write(bs.Length);
             bw.Write(bs);
 
-            bw.Write(_nextIndex.Count);
+            bw.Write(_nextIndex.Length);
             foreach (var dict in _nextIndex) {
                 var keys = dict.Keys.ToArray();
                 var values = dict.Values.ToArray();
@@ -329,7 +331,7 @@ namespace ToolGood.Words.internals
             _resultIndex = ByteArrToIntArr(bs);
 
             var dictLength = br.ReadInt32();
-            _nextIndex = new List<Dictionary<int, int>>();
+            _nextIndex = new Dictionary<int, int>[dictLength];
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
                 bs = br.ReadBytes(length);
@@ -342,7 +344,7 @@ namespace ToolGood.Words.internals
                 for (int j = 0; j < keys.Length; j++) {
                     dict[keys[j]] = values[j];
                 }
-                _nextIndex.Add(dict);
+                _nextIndex[i] = dict;
             }
         }
 
