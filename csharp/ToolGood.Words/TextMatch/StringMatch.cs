@@ -7,7 +7,7 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索匹配, 支持 部分 正则 如 . ? [ ] \ ( |
+    /// 文本搜索匹配, ,支持 部分 正则 如 . ? [ ] \ ( | ) ,不支持( )内再嵌套( )
     /// </summary>
     public class StringMatch
     {
@@ -264,7 +264,7 @@ namespace ToolGood.Words
         {
             for (int i = 0; i < keyword.Length; i++) {
                 char c = keyword[i];
-                if (c == '.' || c == '?' || c == '\\' || c == '[') {
+                if (c == '.' || c == '?' || c == '\\' || c == '[' || c=='(') {
                     return true;
                 }
             }
