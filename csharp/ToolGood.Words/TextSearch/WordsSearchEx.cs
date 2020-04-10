@@ -5,7 +5,7 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索（增强版，速度更快），带返回位置及索引号  ，如果关键字太多，建议使用 BigWordsSearchEx
+    /// 文本搜索（增强版，速度更快），带返回位置及索引号  ，如果关键字太多(5W以上)，建议使用 BigWordsSearchEx
     /// </summary>
     public class WordsSearchEx : BaseSearchEx
     {
