@@ -29,7 +29,6 @@ namespace ToolGood.Words.Test
 
 
             var f = iwords.FindFirst(test);
-            Assert.AreEqual(true, f.Success);
             Assert.AreEqual("中国", f.MatchKeyword);
             Assert.AreEqual(2, f.Start);
             Assert.AreEqual(3, f.End);
