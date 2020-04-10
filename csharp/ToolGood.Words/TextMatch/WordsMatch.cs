@@ -7,6 +7,9 @@
 
 //namespace ToolGood.Words
 //{
+//    /// <summary>
+//    /// 文本搜索匹配, 支持 部分 正则 如 . ? [ ] \ ( |
+//    /// </summary>
 //    public class WordsMatch
 //    {
 //        private TrieNode3[] _first = new TrieNode3[char.MaxValue + 1];
@@ -399,6 +402,59 @@
 //                    if (c != ']')
 //                    {
 //                        throw new Exception($"【{keyword}】出错了，最后一位不为]");
+//                    }
+//                    if (index + 1 < keyword.Length && keyword[index + 1] == '?')
+//                    {
+//                        ps.Insert(0, "");
+//                        parameterDict[parameterIndex] = ps;
+//                        stringBuilder.Append("{" + parameterIndex + "}");
+//                        parameterIndex++;
+//                        index += 2;
+//                    }
+//                    else
+//                    {
+//                        parameterDict[parameterIndex] = ps;
+//                        stringBuilder.Append("{" + parameterIndex + "}");
+//                        parameterIndex++;
+//                        index++;
+//                    }
+//                }
+//                else if (c == '(')
+//                {
+//                    index++;
+//                    var ps = new List<string>();
+//                    var words = "";
+//                    while (index < keyword.Length)
+//                    {
+//                        c = keyword[index];
+//                        if (c == ')')
+//                        {
+//                            break;
+//                        }
+//                        else if (c == '|')
+//                        {
+//                            ps.Add(words);
+//                            words = "";
+//                            index++;
+//                        }
+//                        else if (c == '\\')
+//                        {
+//                            if (index + 1 < keyword.Length)
+//                            {
+//                                words += keyword[index + 1];
+//                                index += 2;
+//                            }
+//                        }
+//                        else
+//                        {
+//                            words += c;
+//                            index++;
+//                        }
+//                    }
+//                    ps.Add(words);
+//                    if (c != ')')
+//                    {
+//                        throw new Exception($"【{keyword}】出错了，最后一位不为)");
 //                    }
 //                    if (index + 1 < keyword.Length && keyword[index + 1] == '?')
 //                    {
