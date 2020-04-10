@@ -5,7 +5,7 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索，内存版，保存快，速度小于StringSearch
+    /// 文本搜索，内存版，保存快，速度大于StringSearch  速度小于StringSearchEx
     /// </summary>
     public class BigStringSearchEx : BaseBigSearchEx
     {

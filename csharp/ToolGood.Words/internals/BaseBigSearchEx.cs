@@ -13,7 +13,7 @@ namespace ToolGood.Words.internals
         protected int[] _min;
         protected int[] _max;
 
-        protected Dictionary<int, int>[] _nextIndex;
+        protected MyDictionary[] _nextIndex;
         protected int[] _end;
         protected int[] _resultIndex;
         protected string[] _keywords;
@@ -151,7 +151,12 @@ namespace ToolGood.Words.internals
             _first = first;
             _min = min.ToArray();
             _max = max.ToArray();
-            _nextIndex = nextIndexs.ToArray();
+            _nextIndex = new MyDictionary[nextIndexs.Count];
+            for (int i = 0; i < nextIndexs.Count; i++) {
+                MyDictionary dictionary = new MyDictionary();
+                dictionary.SetDictionary(nextIndexs[i]);
+                _nextIndex[i] = dictionary;
+            }
             _end = end.ToArray();
             _resultIndex = resultIndex.ToArray();
 
@@ -252,8 +257,8 @@ namespace ToolGood.Words.internals
 
             bw.Write(_nextIndex.Length);
             foreach (var dict in _nextIndex) {
-                var keys = dict.Keys.ToArray();
-                var values = dict.Values.ToArray();
+                var keys = dict.Keys;
+                var values = dict.Values;
 
                 bs = IntArrToByteArr(keys);
                 bw.Write(bs.Length);
@@ -331,7 +336,7 @@ namespace ToolGood.Words.internals
             _resultIndex = ByteArrToIntArr(bs);
 
             var dictLength = br.ReadInt32();
-            _nextIndex = new Dictionary<int, int>[dictLength];
+            _nextIndex = new MyDictionary[dictLength];
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
                 bs = br.ReadBytes(length);
@@ -344,7 +349,9 @@ namespace ToolGood.Words.internals
                 for (int j = 0; j < keys.Length; j++) {
                     dict[keys[j]] = values[j];
                 }
-                _nextIndex[i] = dict;
+                MyDictionary dictionary = new MyDictionary();
+                dictionary.SetDictionary(dict);
+                _nextIndex[i] = dictionary;
             }
         }
 
