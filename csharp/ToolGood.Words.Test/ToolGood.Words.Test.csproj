@@ -50,9 +50,13 @@
     <Compile Include="PinYin\PinYinTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchText\SearchTextTest.cs" />
+    <Compile Include="StringSearchTest\BigStringSearchExTest.cs" />
+    <Compile Include="StringSearchTest\StringSearchEx2Test.cs" />
+    <Compile Include="StringSearchTest\StringSearchExTest.cs" />
+    <Compile Include="StringSearchTest\StringSearchTest.cs" />
     <Compile Include="WordHelper\WordHelperTest.cs" />
-    <Compile Include="WordsSearch\WordsSearchTest.cs" />
+    <Compile Include="WordsSearchTest\WordsSearchExTest.cs" />
+    <Compile Include="WordsSearchTest\WordsSearchTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="_Illegal\IllegalKeywords.txt">
