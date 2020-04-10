@@ -462,10 +462,13 @@ namespace ToolGood.Words
                     if (tn.End) {
                         var r = tn.Results[0];
                         var length = _keywordLength[r];
-                        var kIndex = _keywordIndex[r];
-                        var matchKeyword = _matchKeywords[kIndex];
-                        var keyword = text.Substring(i - length + 1, length);
-                        return new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
+                        var start = i - length + 1;
+                        if (start>=0) {
+                            var kIndex = _keywordIndex[r];
+                            var matchKeyword = _matchKeywords[kIndex];
+                            var keyword = text.Substring(start, length);
+                            return new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                        }
                     }
                 }
                 ptr = tn;
@@ -489,10 +492,13 @@ namespace ToolGood.Words
                 if (tn.End) {
                     var r = tn.Results[0];
                     var length = _keywordLength[r];
-                    var kIndex = _keywordIndex[r];
-                    var matchKeyword = _matchKeywords[kIndex];
-                    var keyword = text.Substring(i - length + 1, length);
-                    return new WordsSearchResult(keyword, i - length + 1, length, kIndex, matchKeyword);
+                    var start = i - length + 1;
+                    if (start >= 0) {
+                        var kIndex = _keywordIndex[r];
+                        var matchKeyword = _matchKeywords[kIndex];
+                        var keyword = text.Substring(start, length);
+                        return new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                    }
                 }
                 ptr = tn;
             }
@@ -528,11 +534,14 @@ namespace ToolGood.Words
                     if (tn.End) {
                         foreach (var r in tn.Results) {
                             var length = _keywordLength[r];
-                            var kIndex = _keywordIndex[r];
-                            var matchKeyword = _matchKeywords[kIndex];
-                            var keyword = text.Substring(i - length + 1, length);
-                            var result = new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
-                            list.Add(result);
+                            var start = i - length + 1;
+                            if (start >= 0) {
+                                var kIndex = _keywordIndex[r];
+                                var matchKeyword = _matchKeywords[kIndex];
+                                var keyword = text.Substring(start, length);
+                                var result = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                                list.Add(result);
+                            }
                         }
                     }
                 }
@@ -554,11 +563,14 @@ namespace ToolGood.Words
                 if (tn.End) {
                     foreach (var r in tn.Results) {
                         var length = _keywordLength[r];
-                        var kIndex = _keywordIndex[r];
-                        var matchKeyword = _matchKeywords[kIndex];
-                        var keyword = text.Substring(i - length + 1, length);
-                        var result = new WordsSearchResult(keyword, i - length + 1, i, kIndex, matchKeyword);
-                        list.Add(result);
+                        var start = i - length + 1;
+                        if (start >= 0) {
+                            var kIndex = _keywordIndex[r];
+                            var matchKeyword = _matchKeywords[kIndex];
+                            var keyword = text.Substring(start, length);
+                            var result = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                            list.Add(result);
+                        }
                     }
                 }
                 ptr = tn;
@@ -593,7 +605,11 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        return true;
+                        var length = _keywordLength[tn.Results[0]];
+                        var s = i - length + 1;
+                        if (s >= 0) {
+                            return true;
+                        }
                     }
                 }
                 ptr = tn;
@@ -612,7 +628,11 @@ namespace ToolGood.Words
                     return false;
                 }
                 if (tn.End) {
-                    return true;
+                    var length = _keywordLength[tn.Results[0]];
+                    var s = i - length + 1;
+                    if (s >= 0) {
+                        return true;
+                    }
                 }
                 ptr = tn;
             }
@@ -649,8 +669,10 @@ namespace ToolGood.Words
                     if (tn.End) {
                         var maxLength = _keywordLength[tn.Results[0]];
                         var start = i + 1 - maxLength;
-                        for (int j = start; j <= i; j++) {
-                            result[j] = replaceChar;
+                        if (start >= 0) {
+                            for (int j = start; j <= i; j++) {
+                                result[j] = replaceChar;
+                            }
                         }
                     }
                 }
@@ -673,8 +695,10 @@ namespace ToolGood.Words
                 if (tn.End) {
                     var maxLength = _keywordLength[tn.Results[0]];
                     var start = i + 1 - maxLength;
-                    for (int j = start; j <= i; j++) {
-                        result[j] = replaceChar;
+                    if (start >= 0) {
+                        for (int j = start; j <= i; j++) {
+                            result[j] = replaceChar;
+                        }
                     }
                 }
                 ptr = tn;

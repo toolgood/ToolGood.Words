@@ -461,8 +461,10 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         var length = _keywordLength[tn.Results[0]];
-                        return text.Substring(i - length + 1, length);
-                        //return _keywords[tn.Results[0]];
+                        var s = i - length + 1;
+                        if (s>=0) {
+                            return text.Substring(s, length);
+                        }
                     }
                 }
                 ptr = tn;
@@ -485,8 +487,10 @@ namespace ToolGood.Words
                 }
                 if (tn.End) {
                     var length = _keywordLength[tn.Results[0]];
-                    return text.Substring(i - length + 1, length);
-                    //return _keywords[tn.Results[0]];
+                    var s = i - length + 1;
+                    if (s >= 0) {
+                        return text.Substring(s, length);
+                    }
                 }
                 ptr = tn;
             }
@@ -523,8 +527,12 @@ namespace ToolGood.Words
                     if (tn.End) {
                         foreach (var item in tn.Results) {
                             var length = _keywordLength[tn.Results[0]];
-                            var key = text.Substring(i - length + 1, length);
-                            list.Add(key);
+                            var s = i - length + 1;
+                            if (s >= 0) {
+                                var key = text.Substring(s, length);
+                                list.Add(key);
+
+                            }
                         }
                     }
                 }
@@ -546,8 +554,11 @@ namespace ToolGood.Words
                 if (tn.End) {
                     foreach (var item in tn.Results) {
                         var length = _keywordLength[tn.Results[0]];
-                        var key = text.Substring(i - length + 1, length);
-                        list.Add(key);
+                        var s = i - length + 1;
+                        if (s >= 0) {
+                            var key = text.Substring(s, length);
+                            list.Add(key);
+                        }
                     }
                 }
                 ptr = tn;
@@ -583,7 +594,11 @@ namespace ToolGood.Words
                 }
                 if (tn != null) {
                     if (tn.End) {
-                        return true;
+                        var length = _keywordLength[tn.Results[0]];
+                        var s = i - length + 1;
+                        if (s >= 0) {
+                            return true;
+                        }
                     }
                 }
                 ptr = tn;
@@ -602,7 +617,11 @@ namespace ToolGood.Words
                     return false;
                 }
                 if (tn.End) {
-                    return true;
+                    var length = _keywordLength[tn.Results[0]];
+                    var s = i - length + 1;
+                    if (s >= 0) {
+                        return true;
+                    }
                 }
                 ptr = tn;
             }
@@ -639,8 +658,10 @@ namespace ToolGood.Words
                     if (tn.End) {
                         var maxLength = _keywordLength[tn.Results[0]];
                         var start = i + 1 - maxLength;
-                        for (int j = start; j <= i; j++) {
-                            result[j] = replaceChar;
+                        if (start>=0) {
+                            for (int j = start; j <= i; j++) {
+                                result[j] = replaceChar;
+                            }
                         }
                     }
                 }
@@ -663,8 +684,10 @@ namespace ToolGood.Words
                 if (tn.End) {
                     var maxLength = _keywordLength[tn.Results[0]];
                     var start = i + 1 - maxLength;
-                    for (int j = start; j <= i; j++) {
-                        result[j] = replaceChar;
+                    if (start>=0) {
+                        for (int j = start; j <= i; j++) {
+                            result[j] = replaceChar;
+                        }
                     }
                 }
                 ptr = tn;
