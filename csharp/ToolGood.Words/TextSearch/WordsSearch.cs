@@ -174,7 +174,7 @@ namespace ToolGood.Words
                 }
                 ptr = tn;
             }
-            return WordsSearchResult.Empty;
+            return null;
         }
         /// <summary>
         /// 在文本中查找所有的关键字
