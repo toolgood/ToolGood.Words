@@ -85,13 +85,24 @@
 //                }
 //                foreach (var item in oldNode.Results)
 //                {
-//                    newNode.SetResults(item);
+//                    if (oldNode.IsWildcard)
+//                    {
+//                        if (_keywordLength[item] > oldNode.WildcardLayer)
+//                        {
+//                            newNode.SetResults(item);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        newNode.SetResults(item);
+//                    }
+//                    //newNode.SetResults(item);
 //                }
 
 //                var failure = oldNode.Failure;
 //                while (failure != root)
 //                {
-//                    if (oldNode.IsWildcard && failure.Layer < oldNode.WildcardLayer)
+//                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer)
 //                    {
 //                        break;
 //                    }
@@ -115,7 +126,17 @@
 //                    }
 //                    foreach (var item in failure.Results)
 //                    {
-//                        newNode.SetResults(item);
+//                        if (oldNode.IsWildcard)
+//                        {
+//                            if (_keywordLength[item] > oldNode.WildcardLayer)
+//                            {
+//                                newNode.SetResults(item);
+//                            }
+//                        }
+//                        else
+//                        {
+//                            newNode.SetResults(item);
+//                        }
 //                    }
 //                    failure = failure.Failure;
 //                }
@@ -279,7 +300,7 @@
 //                    nd.WildcardLayer = nd.Parent.WildcardLayer + 1;
 //                    if (nd.Failure != root)
 //                    {
-//                        if (nd.Failure.Layer < nd.WildcardLayer)
+//                        if (nd.Failure.Layer <= nd.WildcardLayer)
 //                        {
 //                            nd.Failure = root;
 //                        }
