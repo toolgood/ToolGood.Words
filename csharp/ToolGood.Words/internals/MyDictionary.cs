@@ -29,8 +29,11 @@ namespace ToolGood.Words.internals
 
         public void SetDictionary(Dictionary<int, int> dict)
         {
-            _keys = dict.Select(q => q.Key).ToArray();
-            _values = dict.Select(q => q.Value).ToArray();
+            _keys = dict.Select(q => q.Key).OrderBy(q => q).ToArray();
+            _values = new int[_keys.Length];
+            for (int i = 0; i < _keys.Length; i++) {
+                _values[i] = dict[_keys[i]];
+            }
             last = _keys.Length - 1;
         }
 
@@ -49,6 +52,7 @@ namespace ToolGood.Words.internals
                 value = _values[last];
                 return true;
             }
+
             var left = 0;
             var right = last;
             while (left + 1 < right) {
