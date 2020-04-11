@@ -15,7 +15,7 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            StringSearchEx iwords = new StringSearchEx();
+            StringSearchEx2 iwords = new StringSearchEx2();
             iwords.SetKeywords(s.Split('|').ToList());
 
             var b = iwords.ContainsAny(test);
@@ -43,7 +43,7 @@ namespace ToolGood.Words.Test
             string s = "中国人|中国|国人|zg人|我是中国人|我是中国|是中国人";
             string test = "我是中国人";
 
-            StringSearchEx iwords = new StringSearchEx();
+            StringSearchEx2 iwords = new StringSearchEx2();
             iwords.SetKeywords(s.Split('|').ToList());
 
 

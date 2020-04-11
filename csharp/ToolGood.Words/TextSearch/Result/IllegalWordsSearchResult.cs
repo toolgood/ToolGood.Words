@@ -18,7 +18,7 @@
             Keyword = srcText.Substring(Start, end - Start + 1);
             BlacklistType = type;
         }
- 
+
         /// <summary>
         /// 开始位置
         /// </summary>
@@ -44,7 +44,7 @@
 
         public override string ToString()
         {
-            if (Keyword!= MatchKeyword) {
+            if (Keyword != MatchKeyword) {
                 return Start.ToString() + "|" + Keyword + "|" + MatchKeyword;
             }
             return Start.ToString() + "|" + Keyword;

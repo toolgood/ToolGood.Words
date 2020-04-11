@@ -5,9 +5,10 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 文本搜索（增强版，速度更快），带返回位置及索引号  ，如果关键字太多(5W以上)，建议使用 BigWordsSearchEx
+    /// 文本搜索，带返回位置及索引号，内存版，保存快，
+    /// 性能从小到大  WordsSearch &lt; WordsSearchEx &lt; WordsSearchEx2 &lt; WordsSearchEx3
     /// </summary>
-    public class WordsSearchEx : BaseSearchEx
+    public class WordsSearchEx : BaseBigSearchEx
     {
         #region 查找 替换 查找第一个关键字 判断是否包含关键字
         /// <summary>
@@ -17,35 +18,30 @@ namespace ToolGood.Words
         /// <returns></returns>
         public List<WordsSearchResult> FindAll(string text)
         {
-            List<WordsSearchResult> root = new List<WordsSearchResult>();
+            List<WordsSearchResult> result = new List<WordsSearchResult>();
             var p = 0;
 
             for (int i = 0; i < text.Length; i++) {
-                var t = (char)_dict[text[i]];
+                var t = _dict[text[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
-                var next = _next[p] + t;
-                bool find = _key[next] == t;
-                if (find == false && p != 0) {
-                    p = 0;
-                    next = _next[0] + t;
-                    find = _key[next] == t;
+                int next;
+                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    next = _first[t];
                 }
-                if (find) {
-                    var index = _check[next];
-                    if (index > 0) {
-                        foreach (var item in _guides[index]) {
-                            var key = _keywords[item];
-                            var r = new WordsSearchResult(key, i + 1 - key.Length, i, item);
-                            root.Add(r);
-                        }
+                if (next != 0) {
+                    for (int j = _end[next]; j < _end[next + 1]; j++) {
+                        var index = _resultIndex[j];
+                        var key = _keywords[index];
+                        var r = new WordsSearchResult(key, i + 1 - key.Length, i, index);
+                        result.Add(r);
                     }
-                    p = next;
                 }
+                p = next;
             }
-            return root;
+            return result;
         }
 
         /// <summary>
@@ -58,31 +54,24 @@ namespace ToolGood.Words
             var p = 0;
             var length = text.Length;
             for (int i = 0; i < length; i++) {
-                var t = (char)_dict[text[i]];
+                var t = _dict[text[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
-                var next = _next[p] + t;
-                if (_key[next] == t) {
-                    var index = _check[next];
-                    if (index > 0) {
-                        var item = _keywords[_guides[index][0]];
-                        return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
-                    }
-                    p = next;
-                } else {
-                    p = 0;
-                    next = _next[p] + t;
-                    if (_key[next] == t) {
-                        var index = _check[next];
-                        if (index > 0) {
-                            var item = _keywords[_guides[index][0]];
-                            return new WordsSearchResult(item, i + 1 - item.Length, i, _guides[index][0]);
-                        }
-                        p = next;
+                int next;
+                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    next = _first[t];
+                }
+                if (next != 0) {
+                    var start = _end[next];
+                    if (start < _end[next + 1]) {
+                        var index = _resultIndex[start];
+                        var key = _keywords[index];
+                        return new WordsSearchResult(key, i + 1 - key.Length, i, index);
                     }
                 }
+                p = next;
             }
             return null;
         }
@@ -96,23 +85,21 @@ namespace ToolGood.Words
         {
             var p = 0;
             foreach (char t1 in text) {
-                var t = (char)_dict[t1];
+                var t = _dict[t1];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
-                var next = _next[p] + t;
-                if (_key[next] == t) {
-                    if (_check[next] > 0) { return true; }
-                    p = next;
-                } else {
-                    p = 0;
-                    next = _next[p] + t;
-                    if (_key[next] == t) {
-                        if (_check[next] > 0) { return true; }
-                        p = next;
+                int next;
+                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    next = _first[t];
+                }
+                if (next > 0) {
+                    if (_end[next] < _end[next + 1]) {
+                        return true;
                     }
                 }
+                p = next;
             }
             return false;
         }
@@ -130,35 +117,31 @@ namespace ToolGood.Words
             var p = 0;
 
             for (int i = 0; i < text.Length; i++) {
-                var t = (char)_dict[text[i]];
+                var t = _dict[text[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
-                var next = _next[p] + t;
-                bool find = _key[next] == t;
-                if (find == false && p != 0) {
-                    p = 0;
-                    next = _next[p] + t;
-                    find = _key[next] == t;
+                int next;
+                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    next = _first[t];
                 }
-                if (find) {
-                    var index = _check[next];
-                    if (index > 0) {
-                        var maxLength = _keywords[_guides[index][0]].Length;
-                        var start = i + 1 - maxLength;
-                        for (int j = start; j <= i; j++) {
+                if (next != 0) {
+                    var start = _end[next];
+                    if (start < _end[next + 1]) {
+                        var maxLength = _keywords[_resultIndex[start]].Length;
+                        for (int j = i + 1 - maxLength; j <= i; j++) {
                             result[j] = replaceChar;
                         }
                     }
-                    p = next;
                 }
+                p = next;
             }
             return result.ToString();
         }
         #endregion
 
- 
+
 
     }
 }

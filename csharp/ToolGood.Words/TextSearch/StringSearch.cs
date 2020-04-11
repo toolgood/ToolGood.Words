@@ -8,6 +8,7 @@ namespace ToolGood.Words
 {
     /// <summary>
     /// 文本搜索
+    /// 性能从小到大  StringSearch &lt; StringSearchEx &lt; StringSearchEx2 &lt; StringSearchEx3
     /// </summary>
     public class StringSearch
     {

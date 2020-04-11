@@ -15,7 +15,7 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            WordsSearchEx2 wordsSearch = new WordsSearchEx2();
+            WordsSearchEx3 wordsSearch = new WordsSearchEx3();
             wordsSearch.SetKeywords(s.Split('|').ToList());
 
             var b = wordsSearch.ContainsAny(test);

@@ -15,11 +15,11 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            BigStringSearchEx iwords2 = new BigStringSearchEx();
+            StringSearchEx iwords2 = new StringSearchEx();
             iwords2.SetKeywords(s.Split('|'));
             iwords2.Save("BigStringSearchEx.dat");
 
-            BigStringSearchEx iwords = new BigStringSearchEx();
+            StringSearchEx iwords = new StringSearchEx();
             iwords.Load("BigStringSearchEx.dat");
 
             var b = iwords.ContainsAny(test);
@@ -55,7 +55,7 @@ namespace ToolGood.Words.Test
             string s = "中国人|中国|国人|zg人|我是中国人|我是中国|是中国人";
             string test = "我是中国人";
 
-            BigStringSearchEx iwords = new BigStringSearchEx();
+            StringSearchEx iwords = new StringSearchEx();
             iwords.SetKeywords(s.Split('|'));
 
 

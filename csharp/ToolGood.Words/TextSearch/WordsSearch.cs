@@ -7,6 +7,7 @@ namespace ToolGood.Words
 {
     /// <summary>
     /// 文本搜索，带返回位置及索引号
+    /// 性能从小到大  WordsSearch &lt; WordsSearchEx &lt; WordsSearchEx2 &lt; WordsSearchEx3
     /// </summary>
     public class WordsSearch
     {

@@ -151,7 +151,7 @@ namespace ToolGood.PinYin.Build
             }
 
 
-            Words.BigStringSearchEx stringSearch = new Words.BigStringSearchEx();
+            Words.StringSearchEx stringSearch = new Words.StringSearchEx();
             stringSearch.SetKeywords(pyWords.Keys.ToList());
 
             Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();

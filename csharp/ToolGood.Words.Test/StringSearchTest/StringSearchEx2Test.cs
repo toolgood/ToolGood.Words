@@ -15,11 +15,11 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            StringSearchEx2 iwords2 = new StringSearchEx2();
+            StringSearchEx3 iwords2 = new StringSearchEx3();
             iwords2.SetKeywords(s.Split('|'));
             iwords2.Save("StringSearchEx2Test.dat");
 
-            StringSearchEx2 iwords = new StringSearchEx2();
+            StringSearchEx3 iwords = new StringSearchEx3();
             iwords.Load("StringSearchEx2Test.dat");
 
 

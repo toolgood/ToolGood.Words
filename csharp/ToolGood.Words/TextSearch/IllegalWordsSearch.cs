@@ -355,7 +355,7 @@ namespace ToolGood.Words
                 if ((b | flag) != b) { return null; }
             }
             var keyword = _keywords[index];
-            if (keyword.Length==1) {
+            if (keyword.Length == 1) {
                 if (ToSenseWord(srcText[end]) != ToSenseWord(keyword[0])) { return null; }
                 return new IllegalWordsSearchResult(keyword, end, end, srcText);
             }
@@ -367,7 +367,7 @@ namespace ToolGood.Words
             }
             return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
- 
+
         private char ToSenseWord(char c)
         {
             if (UseIgnoreCase) {

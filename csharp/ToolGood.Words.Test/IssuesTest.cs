@@ -34,7 +34,7 @@ namespace ToolGood.Words.Test
             var keywords = new string[] { "1", "A", "2", "0", "吃" };
             var iws = new IllegalWordsSearch();
             var ss = new StringSearch();
-            var sse = new StringSearchEx();
+            var sse = new StringSearchEx2();
 
             iws.SetKeywords(keywords);
             iws.UseIgnoreCase = true;
