@@ -59,23 +59,6 @@ namespace ToolGood.Words.internals
             return list.ToArray();
         }
 
-        public static string GetPinYin(string text, int tone = 0)
-        {
-            InitPyIndex();
-
-            string[] list = GetPinYinList(text, tone);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < list.Length; i++) {
-                var s = list[i];
-                if (s != null) {
-                    sb.Append(list[i]);
-                } else {
-                    sb.Append(text[i]);
-                }
-            }
-            return sb.ToString();
-        }
-
         public static string GetFirstPinYin(string text, int tone = 0)
         {
             InitPyIndex();

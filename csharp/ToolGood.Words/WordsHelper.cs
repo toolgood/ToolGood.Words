@@ -6,6 +6,7 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
+ 
     public static class WordsHelper
     {
         #region 拼音 操作
@@ -44,7 +45,18 @@ namespace ToolGood.Words
         /// <returns></returns>
         public static string GetPinYin(string text, bool tone = false)
         {
-            return PinYinDict.GetPinYin(text, tone ? 1 : 0);
+            return string.Join("", PinYinDict.GetPinYinList(text, tone ? 1 : 0));
+        }
+
+        /// <summary>
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+        /// </summary>
+        /// <param name="text">原文本</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns></returns>
+        public static string[] GetPinYinList(string text, bool tone = false)
+        {
+            return PinYinDict.GetPinYinList(text, tone ? 1 : 0);
         }
 
         /// <summary>
@@ -260,7 +272,7 @@ namespace ToolGood.Words
         {
             return Translate.ToSimplifiedChinese(text, srcType);
         }
- 
+
 
         #endregion
 
@@ -289,7 +301,7 @@ namespace ToolGood.Words
         }
         #endregion
 
- 
+
 
     }
 }
