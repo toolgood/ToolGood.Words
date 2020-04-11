@@ -30,13 +30,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
- 
-
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1'">
     <EmbeddedResource Include="dict\s2t.dat.z" />
     <EmbeddedResource Include="dict\t2hk.dat.z" />
@@ -66,8 +59,6 @@
     </None>
   </ItemGroup>
 
-
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
@@ -75,32 +66,9 @@
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
-    <DocumentationFile>bin\Release\net40\ToolGood.Words.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ToolGood.Words.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-    <DocumentationFile>bin\Release\net45\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.1\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-    <DocumentationFile>bin\Debug\net40\ToolGood.Words.xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-    <DocumentationFile>bin\Debug\net45\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\ToolGood.Words.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.1\ToolGood.Words.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
