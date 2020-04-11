@@ -6,7 +6,7 @@
     <AssemblyTitle>ToolGood.Words</AssemblyTitle>
     <VersionPrefix>2.0.0</VersionPrefix>
     <Authors>ToolGood</Authors>
-    <TargetFrameworks>net40;net45;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard2.0;netstandard2.1</TargetFrameworks>
     <AssemblyName>ToolGood.Words</AssemblyName>
     <AssemblyOriginatorKeyFile>Properties\ToolGood.Words.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
