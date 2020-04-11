@@ -7,6 +7,9 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
+    /// <summary>
+    /// 拼音匹配
+    /// </summary>
     public class PinyinMatch
     {
         private string[] _keywords;
@@ -15,6 +18,10 @@ namespace ToolGood.Words
         private int[] _indexs;
 
         #region SetKeywords
+        /// <summary>
+        /// 设置关键字，注：索引会被清空
+        /// </summary>
+        /// <param name="keywords"></param>
         public void SetKeywords(ICollection<string> keywords)
         {
             _keywords = keywords.ToArray();
@@ -31,8 +38,15 @@ namespace ToolGood.Words
                 _keywordsPinyin[i] = pys;
                 _keywordsFirstPinyin[i] = fpy;
             }
+            _indexs = null;
         }
 
+        /// <summary>
+        /// 设置关键字，注：索引会被清空
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="pinyin"></param>
+        /// <param name="splitChar"></param>
         public void SetKeywords(IList<string> keywords, IList<string> pinyin, char splitChar = ',')
         {
             _keywords = keywords.ToArray();
@@ -40,21 +54,43 @@ namespace ToolGood.Words
             _keywordsPinyin = new string[_keywords.Length][];
             for (int i = 0; i < _keywords.Length; i++) {
                 var text = pinyin[i];
-                _keywordsPinyin[i] = text.Split(splitChar);
+                var pys = text.Split(splitChar);
                 string fpy = "";
-                for (int j = 0; j < _keywordsPinyin[i].Length; j++) {
-                    fpy += _keywordsPinyin[i][0];
+                for (int j = 0; j < pys.Length; j++) {
+                    pys[j] = pys[j].ToUpper();
+                    fpy += pys[j][0];
                 }
+                _keywordsPinyin[i] = pys;
                 _keywordsFirstPinyin[i] = fpy;
             }
+            _indexs = null;
         }
 
+        #endregion
+
+        #region SetIndexs
+        /// <summary>
+        /// 设置索引
+        /// </summary>
+        /// <param name="indexs"></param>
         public void SetIndexs(ICollection<int> indexs)
         {
+            if (_keywords == null) {
+                throw new Exception("请先使用 SetKeywords 方法");
+            }
+            if (indexs.Count < _keywords.Length) {
+                throw new Exception("indexs 数组长度大于 keywords");
+            }
             _indexs = indexs.ToArray();
         }
         #endregion
 
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public List<string> Find(string key)
         {
             if (string.IsNullOrEmpty(key)) {
@@ -103,6 +139,11 @@ namespace ToolGood.Words
             return result;
         }
 
+        /// <summary>
+        /// 查询索引号
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public List<int> FindIndex(string key)
         {
             if (string.IsNullOrEmpty(key)) {
@@ -347,7 +388,6 @@ namespace ToolGood.Words
 
         #endregion
 
-
         #region SplitKeywords
         /// <summary>
         /// 初步分割
@@ -402,6 +442,7 @@ namespace ToolGood.Words
         }
 
         #endregion
+
         #region InitPinyinSearch
         private static WordsSearch _wordsSearch;
         private void InitPinyinSearch()
@@ -410,7 +451,7 @@ namespace ToolGood.Words
                 HashSet<string> allPinYins = new HashSet<string>();
                 var pys = PinYinDict.PyShow;
                 for (int i = 1; i < pys.Length; i++) {
-                    allPinYins.Add(pys[i]);
+                    allPinYins.Add(pys[i].ToUpper());
                 }
                 var wordsSearch = new WordsSearch();
                 wordsSearch.SetKeywords(allPinYins.ToList());

@@ -33,7 +33,7 @@ namespace ToolGood.Words
                             return r;
                         }
                     }
-                    next = _first[t];
+                    next = _firstIndex[t];
                 }
                 if (next != 0) {
                     var start = _end[next];
@@ -110,7 +110,7 @@ namespace ToolGood.Words
                     if (_wildcard[p] > 0) {
                         FindAll(text, i + 1, _wildcard[p], result);
                     }
-                    next = _first[t];
+                    next = _firstIndex[t];
                 }
                 if (next != 0) {
 
@@ -193,7 +193,7 @@ namespace ToolGood.Words
                             return true;
                         }
                     }
-                    next = _first[t];
+                    next = _firstIndex[t];
                 }
                 if (next != 0) {
                     if (_end[next] < _end[next + 1]) {
@@ -259,7 +259,7 @@ namespace ToolGood.Words
                 }
                 int next;
                 if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
-                    next = _first[t];
+                    next = _firstIndex[t];
                 }
                 if (next != 0) {
                     var start = _end[next];

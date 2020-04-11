@@ -9,7 +9,7 @@ namespace ToolGood.Words.internals
     public abstract class BaseMatchEx : BaseMatch
     {
         protected int[] _dict;
-        protected int[] _first;
+        protected int[] _firstIndex;
         protected int[] _min;
         protected int[] _max;
 
@@ -133,7 +133,7 @@ namespace ToolGood.Words.internals
                 first[item.Key] = item.Value.Index;
             }
 
-            _first = first;
+            _firstIndex = first;
             _min = min.ToArray();
             _max = max.ToArray();
             _nextIndex = new IntDictionary[nextIndexs.Count];
@@ -228,7 +228,7 @@ namespace ToolGood.Words.internals
             bw.Write(bs.Length);
             bw.Write(bs);
 
-            bs = IntArrToByteArr(_first);
+            bs = IntArrToByteArr(_firstIndex);
             bw.Write(bs.Length);
             bw.Write(bs);
 
@@ -313,7 +313,7 @@ namespace ToolGood.Words.internals
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
-            _first = ByteArrToIntArr(bs);
+            _firstIndex = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);

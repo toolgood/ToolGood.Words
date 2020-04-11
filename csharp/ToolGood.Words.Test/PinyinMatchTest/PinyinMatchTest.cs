@@ -25,9 +25,19 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("北京", all[0]);
             Assert.AreEqual(1, all.Count);
 
+            all = match.Find("北Ji");
+            Assert.AreEqual("北京", all[0]);
+            Assert.AreEqual(1, all.Count);
+
             all = match.Find("S");
             Assert.AreEqual("山东", all[0]);
             Assert.AreEqual("江苏", all[1]);
+
+            all = match.Find("Su");
+            Assert.AreEqual("江苏", all[0]);
+
+            all = match.Find("Sdong");
+            Assert.AreEqual("山东", all[0]);
 
             all = match.Find("S东");
             Assert.AreEqual("山东", all[0]);
@@ -35,6 +45,10 @@ namespace ToolGood.Words.Test
             var all2 = match.FindIndex("BJ");
             Assert.AreEqual(0, all2[0]);
             Assert.AreEqual(1, all.Count);
+
+
+            all = match.Find("m");
+ 
         }
     }
 }
