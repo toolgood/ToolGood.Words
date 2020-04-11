@@ -148,7 +148,7 @@ ToolGood.Words:                 本项目源代码
 ## 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20200411).png)
+![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比_20200411.png)
 
 注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
 
