@@ -8,5 +8,8 @@ namespace ToolGood.Words
 {
     public class StringMatchEx : BaseMatchEx
     {
+         
+
+
     }
 }

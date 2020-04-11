@@ -7,6 +7,10 @@ namespace ToolGood.Words.internals
 {
     public abstract class BaseMatch
     {
+        protected TrieNode3[] _first;
+        protected internal int[] _keywordLength;
+        protected internal int[] _keywordIndex;
+        protected internal string[] _matchKeywords;
 
         #region BuildFirstLayerTrieNode
         protected List<TrieNode> BuildFirstLayerTrieNode(List<string> keywords)
@@ -152,7 +156,6 @@ namespace ToolGood.Words.internals
             return false;
         }
         #endregion
-
 
         #region MatchKeywordBuild
         protected List<string> MatchKeywordBuild(string keyword)
@@ -310,5 +313,124 @@ namespace ToolGood.Words.internals
         }
 
         #endregion
+
+        #region SetKeywords
+        /// <summary>
+        /// 设置关键字
+        /// </summary>
+        /// <param name="keywords">关键字列表</param>
+        public virtual void SetKeywords(ICollection<string> keywords)
+        {
+            _matchKeywords = keywords.ToArray();
+            List<string> newKeyword = new List<string>();
+            List<int> newKeywordLength = new List<int>();
+            List<int> newKeywordIndex = new List<int>();
+            var index = 0;
+            foreach (var keyword in keywords) {
+                if (HasMatch(keyword) == false) {
+                    newKeyword.Add(keyword);
+                    newKeywordLength.Add(keyword.Length);
+                    newKeywordIndex.Add(index);
+                } else {
+                    var list = MatchKeywordBuild(keyword);
+                    foreach (var item in list) {
+                        newKeyword.Add(item);
+                        newKeywordLength.Add(item.Length);
+                        newKeywordIndex.Add(index);
+                    }
+                }
+                index++;
+            }
+            _keywordLength = newKeywordLength.ToArray();
+            _keywordIndex = newKeywordIndex.ToArray();
+
+            SetKeywords2(newKeyword);
+        }
+
+        #endregion
+
+        #region SetKeywords2
+
+        protected virtual void SetKeywords2(List<string> keywords)
+        {
+            List<TrieNode> allNode = BuildFirstLayerTrieNode(keywords);
+            TrieNode root = allNode[0];
+
+            var allNode2 = new List<TrieNode3>();
+            for (int i = 0; i < allNode.Count; i++) {
+                allNode2.Add(new TrieNode3());
+            }
+
+            for (int i = 0; i < allNode2.Count; i++) {
+                var oldNode = allNode[i];
+                var newNode = allNode2[i];
+
+                foreach (var item in oldNode.m_values) {
+                    var key = item.Key;
+                    var index = item.Value.Index;
+                    if (key == 0) {
+                        newNode.HasWildcard = true;
+                        newNode.WildcardNode = allNode2[index];
+                        continue;
+                    }
+                    newNode.Add(key, allNode2[index]);
+                }
+                foreach (var item in oldNode.Results) {
+                    if (oldNode.IsWildcard) {
+                        if (keywords[item].Length > oldNode.WildcardLayer) {
+                            newNode.SetResults(item);
+                        }
+                    } else {
+                        newNode.SetResults(item);
+                    }
+                    //newNode.SetResults(item);
+                }
+
+                var failure = oldNode.Failure;
+                while (failure != root) {
+                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                        break;
+                    }
+                    foreach (var item in failure.m_values) {
+                        var key = item.Key;
+                        var index = item.Value.Index;
+                        if (key == 0) {
+                            newNode.HasWildcard = true;
+                            if (newNode.WildcardNode == null) {
+                                newNode.WildcardNode = allNode2[index];
+                            }
+                            continue;
+                        }
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2[index]);
+                        }
+                    }
+                    foreach (var item in failure.Results) {
+                        if (oldNode.IsWildcard) {
+                            if (keywords[item].Length > oldNode.WildcardLayer) {
+                                newNode.SetResults(item);
+                            }
+                        } else {
+                            newNode.SetResults(item);
+                        }
+                    }
+                    failure = failure.Failure;
+                }
+            }
+            allNode.Clear();
+            allNode = null;
+            root = null;
+
+            //var root2 = allNode2[0];
+            TrieNode3[] first = new TrieNode3[char.MaxValue + 1];
+            foreach (var item in allNode2[0].m_values) {
+                first[item.Key] = item.Value;
+            }
+            _first = first;
+        } 
+        #endregion
+
+
+
     }
 }
