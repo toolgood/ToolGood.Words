@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public class MyDictionary
+    public class IntDictionary
     {
         private int[] _keys;
         private int[] _values;
         private int last;
-        public MyDictionary()
+        public IntDictionary()
         {
             last = -1;
         }

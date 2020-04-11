@@ -6,7 +6,7 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
-    public class IllegalWordsSearch : BaseSearchEx
+    public class IllegalWordsSearch : BaseSearchEx2
     {
         #region 私有变量
 
@@ -25,19 +25,17 @@ namespace ToolGood.Words
         /// </summary>
         public bool UseBlacklistFilter = false;
         private int[] _blacklist;
+
         /// <summary>
         /// 使用半角转化器
         /// </summary>
         public bool UseDBCcaseConverter = true;
-        /// <summary>
-        /// 使用简体中文转化器
-        /// </summary>
-        public bool UseSimplifiedChineseConverter = true;
 
         /// <summary>
         /// 使用忽略大小写
         /// </summary>
         public bool UseIgnoreCase = true;
+
         #endregion
 
         public IllegalWordsSearch()
@@ -355,7 +353,7 @@ namespace ToolGood.Words
                 if ((b | flag) != b) { return null; }
             }
             var keyword = _keywords[index];
-            if (keyword.Length==1) {
+            if (keyword.Length == 1) {
                 if (ToSenseWord(srcText[end]) != ToSenseWord(keyword[0])) { return null; }
                 return new IllegalWordsSearchResult(keyword, end, end, srcText);
             }
@@ -367,7 +365,7 @@ namespace ToolGood.Words
             }
             return new IllegalWordsSearchResult(keyword, start, end, srcText);
         }
- 
+
         private char ToSenseWord(char c)
         {
             if (UseIgnoreCase) {
@@ -383,11 +381,6 @@ namespace ToolGood.Words
                         }
                     }
                     return (char)k;
-                }
-            }
-            if (UseSimplifiedChineseConverter) {
-                if (c >= 0x4e00 && c <= 0x9fa5) {
-                    return Dict.Simplified[c - 0x4e00];
                 }
             }
             return c;
@@ -422,7 +415,6 @@ namespace ToolGood.Words
             bw.Write(bs);
 
             bw.Write(UseDBCcaseConverter);
-            bw.Write(UseSimplifiedChineseConverter);
             bw.Write(UseIgnoreCase);
         }
 
@@ -444,10 +436,7 @@ namespace ToolGood.Words
             _blacklist = ByteArrToIntArr(br.ReadBytes(length));
 
             UseDBCcaseConverter = br.ReadBoolean();
-            UseSimplifiedChineseConverter = br.ReadBoolean();
-            try {
-                UseIgnoreCase = br.ReadBoolean();
-            } catch (Exception) { }
+            UseIgnoreCase = br.ReadBoolean();
         }
         #endregion
 

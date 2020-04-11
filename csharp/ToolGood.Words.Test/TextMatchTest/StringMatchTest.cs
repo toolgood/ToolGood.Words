@@ -12,7 +12,7 @@ namespace ToolGood.Words.Test
         [Test]
         public void test()
         {
-            string s = "中国|国人|zg人";
+            string s = "aaaaa|BBBB|CCCC|中国|国人|zg人";
             string test = "我是中国人";
 
             StringMatch iwords = new StringMatch();

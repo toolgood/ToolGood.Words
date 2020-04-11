@@ -59,21 +59,6 @@ namespace ToolGood.Words.internals
             return text;
         }
 
-
-        /// <summary>
-        /// 清理 简繁转换 缓存
-        /// </summary>
-        public static void ClearTranslate()
-        {
-            s2tSearch = null;
-            t2sSearch = null;
-            t2twSearch = null;
-            tw2tSearch = null;
-            t2hkSearch = null;
-            hk2tSearch = null;
-            Dict._Simplified = null;
-        }
-
         private static string TransformationReplace(string text, WordsSearch wordsSearch)
         {
             var ts = wordsSearch.FindAll(text);
@@ -152,21 +137,21 @@ namespace ToolGood.Words.internals
             var dir = Path.GetDirectoryName(ass.Location);
             var file = Path.Combine(dir, fileName);
             string tStr;
-            if (File.Exists(file)) {
-                tStr = File.ReadAllText(file);
-            } else {
+            //if (File.Exists(file)) {
+            //    tStr = File.ReadAllText(file);
+            //} else {
 #if NETSTANDARD2_1
                 var resourceName = "ToolGood.Words.dict." + fileName + ".br";
 #else
-                var resourceName = "ToolGood.Words.dict." + fileName + ".z";
+            var resourceName = "ToolGood.Words.dict." + fileName + ".z";
 #endif
-                Stream sm = ass.GetManifestResourceStream(resourceName);
-                byte[] bs = new byte[sm.Length];
-                sm.Read(bs, 0, (int)sm.Length);
-                sm.Close();
-                var bytes = Decompress(bs);
-                tStr = Encoding.UTF8.GetString(bytes);
-            }
+            Stream sm = ass.GetManifestResourceStream(resourceName);
+            byte[] bs = new byte[sm.Length];
+            sm.Read(bs, 0, (int)sm.Length);
+            sm.Close();
+            var bytes = Decompress(bs);
+            tStr = Encoding.UTF8.GetString(bytes);
+            //}
             Dictionary<string, string> dict = new Dictionary<string, string>();
             var sp = tStr.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var s in sp) {

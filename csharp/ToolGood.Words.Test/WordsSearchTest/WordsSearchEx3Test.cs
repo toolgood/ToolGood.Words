@@ -1,22 +1,22 @@
-﻿using System;
+﻿using PetaTest;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PetaTest;
 
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    class WordsSearchTest
+    public class WordsSearchEx3Test
     {
         [Test]
-        public void test()
+        public void test3()
         {
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            WordsSearch wordsSearch = new WordsSearch();
-            wordsSearch.SetKeywords(s.Split('|'));
+            WordsSearchEx3 wordsSearch = new WordsSearchEx3();
+            wordsSearch.SetKeywords(s.Split('|').ToList());
 
             var b = wordsSearch.ContainsAny(test);
             Assert.AreEqual(true, b);
@@ -33,15 +33,10 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("国人", alls[1].Keyword);
             Assert.AreEqual(2, alls.Count);
 
-            var t = wordsSearch.Replace (test,'*');
-            Assert.AreEqual("我是***",t);
+            var t = wordsSearch.Replace(test, '*');
+            Assert.AreEqual("我是***", t);
 
 
         }
-
-
-
-       
-
     }
 }

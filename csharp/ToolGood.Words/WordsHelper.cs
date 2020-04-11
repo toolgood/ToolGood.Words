@@ -82,64 +82,64 @@ namespace ToolGood.Words
 
         #endregion
 
-        #region 字符串 转成 脏词检测字符串
-        /// <summary>
-        /// 转成 侦测字符串
-        /// 1、转小写;2、全角转半角; 3、相似文字修改；4、繁体转简体
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string ToSenseIllegalWords(string s)
-        {
-            StringBuilder ts = new StringBuilder(s);
-            for (int i = 0; i < s.Length; i++) {
-                var c = s[i];
-                if (c < 'A') { } else if (c <= 'Z') {
-                    ts[i] = (char)(c | 0x20);
-                } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-                    var index = Dict.nums1.IndexOf(c);
-                    if (index > -1) { ts[i] = Dict.nums2[index]; }
-                } else if (c == 12288) {
-                    ts[i] = ' ';
-                } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-                    var k = Dict.Simplified[c - 0x4e00];
-                    if (k != c) {
-                        ts[i] = k;
-                    }
-                } else if (c < 65280) { } else if (c < 65375) {
-                    var k = (c - 65248);
-                    if ('A' <= k && k <= 'Z') { k = k | 0x20; }
-                    ts[i] = (char)k;
-                }
-            }
-            return ts.ToString();
-        }
+        //#region 字符串 转成 脏词检测字符串
+        ///// <summary>
+        ///// 转成 侦测字符串
+        ///// 1、转小写;2、全角转半角; 3、相似文字修改；4、繁体转简体
+        ///// </summary>
+        ///// <param name="s"></param>
+        ///// <returns></returns>
+        //public static string ToSenseIllegalWords(string s)
+        //{
+        //    StringBuilder ts = new StringBuilder(s);
+        //    for (int i = 0; i < s.Length; i++) {
+        //        var c = s[i];
+        //        if (c < 'A') { } else if (c <= 'Z') {
+        //            ts[i] = (char)(c | 0x20);
+        //        } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
+        //            var index = Dict.nums1.IndexOf(c);
+        //            if (index > -1) { ts[i] = Dict.nums2[index]; }
+        //        } else if (c == 12288) {
+        //            ts[i] = ' ';
+        //        } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+        //            var k = Dict.Simplified[c - 0x4e00];
+        //            if (k != c) {
+        //                ts[i] = k;
+        //            }
+        //        } else if (c < 65280) { } else if (c < 65375) {
+        //            var k = (c - 65248);
+        //            if ('A' <= k && k <= 'Z') { k = k | 0x20; }
+        //            ts[i] = (char)k;
+        //        }
+        //    }
+        //    return ts.ToString();
+        //}
 
-        internal static string RemoveNontext(string text)
-        {
-            StringBuilder sb = new StringBuilder(text);
-            for (int i = 0; i < text.Length; i++) {
-                var c = text[i];
-                bool remove = true;
+        //internal static string RemoveNontext(string text)
+        //{
+        //    StringBuilder sb = new StringBuilder(text);
+        //    for (int i = 0; i < text.Length; i++) {
+        //        var c = text[i];
+        //        bool remove = true;
 
-                if (c == ' ') {
-                    remove = false;
-                } else if (c < 2) {
-                    remove = false;
-                } else if (c < '0') { } else if (c <= '9') {
-                    remove = false;
-                } else if (c < 'a') { } else if (c <= 'z') {
-                    remove = false;
-                } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-                    remove = false;
-                }
-                if (remove) {
-                    sb[i] = (char)1;
-                }
-            }
-            return sb.ToString();
-        }
-        #endregion
+        //        if (c == ' ') {
+        //            remove = false;
+        //        } else if (c < 2) {
+        //            remove = false;
+        //        } else if (c < '0') { } else if (c <= '9') {
+        //            remove = false;
+        //        } else if (c < 'a') { } else if (c <= 'z') {
+        //            remove = false;
+        //        } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+        //            remove = false;
+        //        }
+        //        if (remove) {
+        //            sb[i] = (char)1;
+        //        }
+        //    }
+        //    return sb.ToString();
+        //}
+        //#endregion
 
         #region 判断输入是否为中文
         /// <summary>
@@ -260,14 +260,7 @@ namespace ToolGood.Words
         {
             return Translate.ToSimplifiedChinese(text, srcType);
         }
-        /// <summary>
-        /// 清理 简繁转换 缓存
-        /// </summary>
-        public static void ClearTranslate()
-        {
-            Translate.ClearTranslate();
-        }
-
+ 
 
         #endregion
 
@@ -296,33 +289,7 @@ namespace ToolGood.Words
         }
         #endregion
 
-        #region 转成数字
-        /// <summary>
-        /// 【中文】、【符号】，转成【数字】字符串
-        /// </summary>
-        /// <param name="chineseString"></param>
-        /// <returns></returns>
-        public static string TransitionToNumberString(string chineseString)
-        {
-            var str = new StringBuilder();
-            Dictionary<char, char> dictionary = new Dictionary<char, char>();
-            for (int i = 0; i < Dict.nums1.Length; i++) {
-                dictionary[Dict.nums1[i]] = Dict.nums2[i];
-            }
-
-            for (int i = 0; i < chineseString.Length; i++) {
-                var c = chineseString[i];
-                char outc;
-                if (dictionary.TryGetValue(c, out outc)) {
-                    str.Append(outc);
-                } else {
-                    str.Append(c);
-                }
-            }
-            return str.ToString();
-        }
-
-        #endregion
+ 
 
     }
 }

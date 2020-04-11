@@ -7,16 +7,21 @@ using System.Text;
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    public class StringSearchEx2Test
+    public class StringSearchEx3Test
     {
         [Test]
-        public void test3()
+        public void test5()
         {
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            StringSearchEx2 iwords = new StringSearchEx2();
-            iwords.SetKeywords(s.Split('|').ToList());
+            StringSearchEx3 iwords2 = new StringSearchEx3();
+            iwords2.SetKeywords(s.Split('|'));
+            iwords2.Save("StringSearchEx2Test.dat");
+
+            StringSearchEx3 iwords = new StringSearchEx3();
+            iwords.Load("StringSearchEx2Test.dat");
+
 
             var b = iwords.ContainsAny(test);
             Assert.AreEqual(true, b);
@@ -34,26 +39,6 @@ namespace ToolGood.Words.Test
 
             var str = iwords.Replace(test, '*');
             Assert.AreEqual("我是***", str);
-
-
-        }
-        [Test]
-        public void test4()
-        {
-            string s = "中国人|中国|国人|zg人|我是中国人|我是中国|是中国人";
-            string test = "我是中国人";
-
-            StringSearchEx2 iwords = new StringSearchEx2();
-            iwords.SetKeywords(s.Split('|').ToList());
-
-
-
-            var all = iwords.FindAll(test);
-
-            Assert.AreEqual(6, all.Count);
-
-            var str = iwords.Replace(test, '*');
-            Assert.AreEqual("*****", str);
 
 
         }

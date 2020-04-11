@@ -6,77 +6,24 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public abstract class BaseBigSearchEx
+    public abstract class BaseMatchEx : BaseMatch
     {
         protected int[] _dict;
-        protected int[] _first;
+        protected int[] _firstIndex;
         protected int[] _min;
         protected int[] _max;
 
-        protected MyDictionary[] _nextIndex;
+        protected IntDictionary[] _nextIndex;
+        protected int[] _wildcard;
         protected int[] _end;
         protected int[] _resultIndex;
-        protected string[] _keywords;
 
 
-        #region 设置关键字
-
-        /// <summary>
-        /// 设置关键字
-        /// </summary>
-        /// <param name="keywords">关键字列表</param>
-        public virtual void SetKeywords(ICollection<string> keywords)
+        #region SetKeywords2
+        protected override void SetKeywords2(List<string> keywords)
         {
-            _keywords = keywords.ToArray();
-            SetKeywords();
-        }
-        private void SetKeywords()
-        {
-            var root = new TrieNode();
-            Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
-            for (int i = 0; i < _keywords.Length; i++) {
-                var p = _keywords[i];
-                var nd = root;
-                for (int j = 0; j < p.Length; j++) {
-                    nd = nd.Add((char)p[j]);
-                    if (nd.Layer == 0) {
-                        nd.Layer = j + 1;
-                        List<TrieNode> trieNodes;
-                        if (allNodeLayers.TryGetValue(nd.Layer, out trieNodes) == false) {
-                            trieNodes = new List<TrieNode>();
-                            allNodeLayers[nd.Layer] = trieNodes;
-                        }
-                        trieNodes.Add(nd);
-                    }
-                }
-                nd.SetResults(i);
-            }
-
-            List<TrieNode> allNode = new List<TrieNode>();
-            allNode.Add(root);
-            foreach (var trieNodes in allNodeLayers) {
-                foreach (var nd in trieNodes.Value) {
-                    allNode.Add(nd);
-                }
-            }
-            allNodeLayers = null;
-
-
-            for (int i = 1; i < allNode.Count; i++) {
-                var nd = allNode[i];
-                nd.Index = i;
-                TrieNode r = nd.Parent.Failure;
-                char c = nd.Char;
-                while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
-                if (r == null)
-                    nd.Failure = root;
-                else {
-                    nd.Failure = r.m_values[c];
-                    foreach (var result in nd.Failure.Results)
-                        nd.SetResults(result);
-                }
-            }
-            root.Failure = root;
+            List<TrieNode> allNode = BuildFirstLayerTrieNode(keywords);
+            TrieNode root = allNode[0];
 
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 1; i < allNode.Count; i++) {
@@ -86,43 +33,75 @@ namespace ToolGood.Words.internals
             stringBuilder = null;
 
 
-            var allNode2 = new List<TrieNode2Ex>();
+            var allNode2 = new List<TrieNode3Ex>();
             for (int i = 0; i < allNode.Count; i++) {
-                allNode2.Add(new TrieNode2Ex() { Index = i });
+                allNode2.Add(new TrieNode3Ex() { Index = i }); ;
             }
+
             for (int i = 0; i < allNode2.Count; i++) {
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
                 foreach (var item in oldNode.m_values) {
-                    var key = (char)_dict[item.Key];
+                    var key = _dict[item.Key];
                     var index = item.Value.Index;
-                    newNode.Add(key, allNode2[index]);
+                    if (key == 0) {
+                        newNode.HasWildcard = true;
+                        newNode.WildcardNode = allNode2[index];
+                        continue;
+                    }
+                    newNode.Add((char)key, allNode2[index]);
                 }
                 foreach (var item in oldNode.Results) {
-                    newNode.SetResults(item);
-                }
-                oldNode = oldNode.Failure;
-                while (oldNode != root) {
-                    foreach (var item in oldNode.m_values) {
-                        var key = (char)_dict[item.Key];
-                        var index = item.Value.Index;
-                        if (newNode.HasKey(key) == false) {
-                            newNode.Add(key, allNode2[index]);
+                    if (oldNode.IsWildcard) {
+                        if (keywords[item].Length > oldNode.WildcardLayer) {
+                            newNode.SetResults(item);
                         }
-                    }
-                    foreach (var item in oldNode.Results) {
+                    } else {
                         newNode.SetResults(item);
                     }
-                    oldNode = oldNode.Failure;
+                    //newNode.SetResults(item);
+                }
+
+                var failure = oldNode.Failure;
+                while (failure != root) {
+                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                        break;
+                    }
+                    foreach (var item in failure.m_values) {
+                        var key = _dict[item.Key];
+                        var index = item.Value.Index;
+                        if (key == 0) {
+                            newNode.HasWildcard = true;
+                            if (newNode.WildcardNode == null) {
+                                newNode.WildcardNode = allNode2[index];
+                            }
+                            continue;
+                        }
+                        if (newNode.HasKey((char)key) == false) {
+                            newNode.Add((char)key, allNode2[index]);
+                        }
+                    }
+                    foreach (var item in failure.Results) {
+                        if (oldNode.IsWildcard) {
+                            if (keywords[item].Length > oldNode.WildcardLayer) {
+                                newNode.SetResults(item);
+                            }
+                        } else {
+                            newNode.SetResults(item);
+                        }
+                    }
+                    failure = failure.Failure;
                 }
             }
             allNode.Clear();
             allNode = null;
             root = null;
 
+
             var min = new List<int>();
             var max = new List<int>();
+            var wildcard = new List<int>();
             var nextIndexs = new List<Dictionary<int, int>>();
             var end = new List<int>() { 0 };
             var resultIndex = new List<int>();
@@ -131,6 +110,12 @@ namespace ToolGood.Words.internals
                 var node = allNode2[i];
                 min.Add(node.minflag);
                 max.Add(node.maxflag);
+
+                if (node.HasWildcard) {
+                    wildcard.Add(node.WildcardNode.Index);
+                } else {
+                    wildcard.Add(0);
+                }
 
                 if (i > 0) {
                     foreach (var item in node.m_values) {
@@ -148,22 +133,23 @@ namespace ToolGood.Words.internals
                 first[item.Key] = item.Value.Index;
             }
 
-            _first = first;
+            _firstIndex = first;
             _min = min.ToArray();
             _max = max.ToArray();
-            _nextIndex = new MyDictionary[nextIndexs.Count];
+            _nextIndex = new IntDictionary[nextIndexs.Count];
             for (int i = 0; i < nextIndexs.Count; i++) {
-                MyDictionary dictionary = new MyDictionary();
+                IntDictionary dictionary = new IntDictionary();
                 dictionary.SetDictionary(nextIndexs[i]);
                 _nextIndex[i] = dictionary;
             }
+            _wildcard = wildcard.ToArray();
             _end = end.ToArray();
             _resultIndex = resultIndex.ToArray();
 
             allNode2.Clear();
             allNode2 = null;
-        }
 
+        }
         #endregion
 
         #region 生成映射字典
@@ -226,26 +212,29 @@ namespace ToolGood.Words.internals
 
         protected internal virtual void Save(BinaryWriter bw)
         {
-            bw.Write(_keywords.Length);
-            foreach (var item in _keywords) {
+            bw.Write(_matchKeywords.Length);
+            foreach (var item in _matchKeywords) {
                 bw.Write(item);
             }
-            var bs = IntArrToByteArr(_dict);
+            var bs = IntArrToByteArr(_keywordLength);
             bw.Write(bs.Length);
             bw.Write(bs);
 
-            bs = IntArrToByteArr(_first);
+            bs = IntArrToByteArr(_keywordIndex);
             bw.Write(bs.Length);
             bw.Write(bs);
 
-            bs = IntArrToByteArr(_min);
+            bs = IntArrToByteArr(_dict);
             bw.Write(bs.Length);
             bw.Write(bs);
 
-            bs = IntArrToByteArr(_max);
+            bs = IntArrToByteArr(_firstIndex);
             bw.Write(bs.Length);
             bw.Write(bs);
 
+            bs = IntArrToByteArr(_wildcard);
+            bw.Write(bs.Length);
+            bw.Write(bs);
 
             bs = IntArrToByteArr(_end);
             bw.Write(bs.Length);
@@ -306,26 +295,29 @@ namespace ToolGood.Words.internals
         protected internal virtual void Load(BinaryReader br)
         {
             var length = br.ReadInt32();
-            _keywords = new string[length];
+            _matchKeywords = new string[length];
             for (int i = 0; i < length; i++) {
-                _keywords[i] = br.ReadString();
+                _matchKeywords[i] = br.ReadString();
             }
-
             length = br.ReadInt32();
             var bs = br.ReadBytes(length);
+            _keywordLength = ByteArrToIntArr(bs);
+
+            length = br.ReadInt32();
+            bs = br.ReadBytes(length);
+            _keywordIndex = ByteArrToIntArr(bs);
+
+            length = br.ReadInt32();
+            bs = br.ReadBytes(length);
             _dict = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
-            _first = ByteArrToIntArr(bs);
+            _firstIndex = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
-            _min = ByteArrToIntArr(bs);
-
-            length = br.ReadInt32();
-            bs = br.ReadBytes(length);
-            _max = ByteArrToIntArr(bs);
+            _wildcard = ByteArrToIntArr(bs);
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
@@ -336,9 +328,14 @@ namespace ToolGood.Words.internals
             _resultIndex = ByteArrToIntArr(bs);
 
             var dictLength = br.ReadInt32();
-            _nextIndex = new MyDictionary[dictLength];
+            _nextIndex = new IntDictionary[dictLength];
+            List<int> max = new List<int>();
+            List<int> min = new List<int>();
+
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
+
+
                 bs = br.ReadBytes(length);
                 var keys = ByteArrToIntArr(bs);
 
@@ -349,10 +346,19 @@ namespace ToolGood.Words.internals
                 for (int j = 0; j < keys.Length; j++) {
                     dict[keys[j]] = values[j];
                 }
-                MyDictionary dictionary = new MyDictionary();
+                IntDictionary dictionary = new IntDictionary();
                 dictionary.SetDictionary(dict);
                 _nextIndex[i] = dictionary;
+                if (length == 0) {
+                    max.Add(0);
+                    min.Add(int.MaxValue);
+                } else {
+                    max.Add(keys.Last());
+                    min.Add(keys[0]);
+                }
             }
+            _max = max.ToArray();
+            _min = min.ToArray();
         }
 
         protected Int32[] ByteArrToIntArr(byte[] btArr)

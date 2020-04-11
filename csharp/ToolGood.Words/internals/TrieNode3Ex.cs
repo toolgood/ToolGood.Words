@@ -5,22 +5,25 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    class TrieNode2Ex 
+    public class TrieNode3Ex
     {
         public int Index;
         public bool End;
         public List<int> Results;
-        public Dictionary<char, TrieNode2Ex> m_values;
+        public Dictionary<char, TrieNode3Ex> m_values;
         public ushort minflag = ushort.MaxValue;
         public ushort maxflag = ushort.MinValue;
+        public bool HasWildcard;
+        public TrieNode3Ex WildcardNode;
 
-        public TrieNode2Ex()
+
+        public TrieNode3Ex()
         {
             Results = new List<int>();
-            m_values = new Dictionary<char, TrieNode2Ex>();
+            m_values = new Dictionary<char, TrieNode3Ex>();
         }
 
-        public void Add(char c, TrieNode2Ex node3)
+        public void Add(char c, TrieNode3Ex node3)
         {
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
@@ -41,14 +44,7 @@ namespace ToolGood.Words.internals
         {
             return m_values.ContainsKey(c);
         }
+ 
 
-        //public bool TryGetValue(char c, out TrieNode2Ex node)
-        //{
-        //    if (minflag <= (uint)c && maxflag >= (uint)c) {
-        //        return m_values.TryGetValue(c, out node);
-        //    }
-        //    node = null;
-        //    return false;
-        //}
     }
 }
