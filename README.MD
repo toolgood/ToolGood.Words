@@ -13,9 +13,72 @@ ToolGood.Transformation.Build： 生成简体繁体转换文档，更新时文�
 ToolGood.Words.Contrast:        字符串搜索对比
 ToolGood.Words.Test:            单元测试
 ToolGood.Words:                 本项目源代码
-ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
 ```
 
+## 非法词(敏感词)检测（字符串搜索）
+非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
+
+* `StringSearch`、`StringSearchEx`、`StringSearchEx2`、`StringSearchEx3`: 搜索`FindFirst`方法返回结果为`string`类型。
+* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`WordsSearchEx3`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
+`WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
+* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
+搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
+* `IllegalWordsSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearchEx`、`WordsSearchEx2` 使用`Save`、`Load`方法，可以加快初始化。
+* 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
+* `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
+* `IllegalWordsSearch`字段`UseIgnoreCase`：设置是忽略否大小写,必须在`SetKeywords`方法之前，注：使用`Load`方法则该字段无效。
+* `StringSearchEx3`、`WordsSearchEx3`为指针版优化版，实测时发现性能浮动比较大。
+
+``` csharp
+    string s = "中国|国人|zg人";
+    string test = "我是中国人";
+
+    StringSearch iwords = new StringSearch();
+    iwords.SetKeywords(s.Split('|'));
+    
+    var b = iwords.ContainsAny(test);
+    Assert.AreEqual(true, b);
+
+    var f = iwords.FindFirst(test);
+    Assert.AreEqual("中国", f);
+
+    var all = iwords.FindAll(test);
+    Assert.AreEqual("中国", all[0]);
+    Assert.AreEqual("国人", all[1]);
+    Assert.AreEqual(2, all.Count);
+
+    var str = iwords.Replace(test, '*');
+    Assert.AreEqual("我是***", str);
+``` 
+## 非法词(敏感词)检测（字符串搜索）（支持通配符）
+非法词(敏感词)检测类：`StringMatch`、`StringMatchEx`、`WordsMatch`、`WordsMatchEx`。
+支持部分正则表达式类型：`.`（点）`?`(问号) `[]`(方括号) `(|)`(括号与竖线)
+
+``` csharp
+    string s = ".[中美]国|国人|zg人";
+    string test = "我是中国人";
+
+    WordsMatch wordsSearch = new WordsMatch();
+    wordsSearch.SetKeywords(s.Split('|'));
+
+    var b = wordsSearch.ContainsAny(test);
+    Assert.AreEqual(true, b);
+
+    var f = wordsSearch.FindFirst(test);
+    Assert.AreEqual("是中国", f.Keyword);
+
+    var alls = wordsSearch.FindAll(test);
+    Assert.AreEqual("是中国", alls[0].Keyword);
+    Assert.AreEqual(".[中美]国", alls[0].MatchKeyword);
+    Assert.AreEqual(1, alls[0].Start);
+    Assert.AreEqual(3, alls[0].End);
+    Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
+    Assert.AreEqual("国人", alls[1].Keyword);
+    Assert.AreEqual(2, alls.Count);
+
+    var t = wordsSearch.Replace(test, '*');
+    Assert.AreEqual("我****", t);
+```
 
 ## 繁体简体互换、全角半角互换、数字转成中文大写、拼音操作
 
@@ -48,80 +111,44 @@ ToolGood.Words.PinYinSearch:    拼音搜索项目源代码
     WordsHelper.GetPinYinForName("单一一",true)//ShànYīYī
 ``` 
  
-## 非法词(敏感词)检测（字符串搜索）
-非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
+##  拼音匹配
+新版拼音匹配类：`PinyinMatch`
 
-* `StringSearch`、`StringSearchEx`、`StringSearchEx2`、`BigStringSearchEx`: 搜索`FindFirst`方法返回结果为`string`类型。
-* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`BigWordsSearchEx`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
-`WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
-* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
-搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
-* `IllegalWordsSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearchEx`、`WordsSearchEx2` 使用`Save`、`Load`方法，可以加快初始化。
-* 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
-* `IllegalWordsSearch`独有方法：`SetSkipWords`（设置跳词）、`SetBlacklist`（设置黑名单）。
-* `IllegalWordsSearch`字段`UseIgnoreCase`：设置是忽略否大小写,必须在`SetKeywords`方法之前，注：使用`Load`方法则该字段无效。
-* `StringTypoSearch` 错字搜索,英文数字搜索,不包含中文转数字,主要检测网址，推广账号。
-* `NumberTypoSearch` 数字错字搜索，先使用静态方法ReplaceNumberSymbol对❿这些符号进行转化 ，然后使用本类
-* `StringSearchEx2`、`WordsSearchEx2`为指针版优化版，实测时发现性能浮动比较大。
+主要方法：`SetKeywords`、`SetIndexs`、`Find`、`FindIndex`。
 
 ``` csharp
-    string s = "中国|国人|zg人";
-    string test = "我是中国人";
+    string s = "北京|天津|河北|辽宁|吉林|黑龙江|山东|江苏|上海|浙江|安徽|福建|江西|广东|广西|海南|河南|湖南|湖北|山西|内蒙古|宁夏|青海|陕西|甘肃|新疆|四川|贵州|云南|重庆|西藏|香港|澳门|台湾";
 
-    StringSearch iwords = new StringSearch();
-    iwords.SetKeywords(s.Split('|'));
-    
-    var b = iwords.ContainsAny(test);
-    Assert.AreEqual(true, b);
+    PinyinMatch match = new PinyinMatch();
+    match.SetKeywords(s.Split('|').ToList());
 
-    var f = iwords.FindFirst(test);
-    Assert.AreEqual("中国", f);
+    var all = match.Find("BJ");
+    Assert.AreEqual("北京", all[0]);
+    Assert.AreEqual(1, all.Count);
 
-    var all = iwords.FindAll(test);
-    Assert.AreEqual("中国", all[0]);
-    Assert.AreEqual("国人", all[1]);
-    Assert.AreEqual(2, all.Count);
+    all = match.Find("北J");
+    Assert.AreEqual("北京", all[0]);
+    Assert.AreEqual(1, all.Count);
 
-    var str = iwords.Replace(test, '*');
-    Assert.AreEqual("我是***", str);
+    all = match.Find("北Ji");
+    Assert.AreEqual("北京", all[0]);
+    Assert.AreEqual(1, all.Count);
+
+    all = match.Find("S");
+    Assert.AreEqual("山东", all[0]);
+    Assert.AreEqual("江苏", all[1]);
+
+    var all2 = match.FindIndex("BJ");
+    Assert.AreEqual(0, all2[0]);
+    Assert.AreEqual(1, all.Count);
 ``` 
-## 非法词(敏感词)检测（字符串搜索）（支持通配符）
-非法词(敏感词)检测类：`StringMatch`、`WordsMatch`。
-支持部分正则表达式类型：`.`（点）`?`(问号) `[]`(方括号) `(|)`(括号与竖线)
-
-``` csharp
-            string s = ".[中美]国|国人|zg人";
-            string test = "我是中国人";
-
-            WordsMatch wordsSearch = new WordsMatch();
-            wordsSearch.SetKeywords(s.Split('|'));
-
-            var b = wordsSearch.ContainsAny(test);
-            Assert.AreEqual(true, b);
-
-            var f = wordsSearch.FindFirst(test);
-            Assert.AreEqual("是中国", f.Keyword);
-
-            var alls = wordsSearch.FindAll(test);
-            Assert.AreEqual("是中国", alls[0].Keyword);
-            Assert.AreEqual(".[中美]国", alls[0].MatchKeyword);
-            Assert.AreEqual(1, alls[0].Start);
-            Assert.AreEqual(3, alls[0].End);
-            Assert.AreEqual(0, alls[0].Index);//返回索引Index,默认从0开始
-            Assert.AreEqual("国人", alls[1].Keyword);
-            Assert.AreEqual(2, alls.Count);
-
-            var t = wordsSearch.Replace(test, '*');
-            Assert.AreEqual("我****", t);
-             
-```
 
 
 
-##### 性能对比
+## 性能对比
 执行10万次性能对比，结果如下：
 
-![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20200410).png)
+![10W次性能对比](https://toolgood.github.io/ToolGood.Words/10W次性能对比(20200411).png)
 
 注:C#自带正则很慢，`StringSearchEx2.ContainsAny`是`Regex.IsMatch`效率的8.8万倍多，跟关键字数量有关。
 
