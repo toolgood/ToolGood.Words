@@ -44,9 +44,6 @@
     <Compile Include="IllegalWords\IllegalWordsTest.cs" />
     <Compile Include="IssuesTest.cs" />
     <Compile Include="PetaTest.cs" />
-    <Compile Include="PinYinSearch\PinYinSearchEx3Test.cs" />
-    <Compile Include="PinYinSearch\PinYinSearchExTest.cs" />
-    <Compile Include="PinYinSearch\PinYinSearchTest.cs" />
     <Compile Include="PinYin\PinYinTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
