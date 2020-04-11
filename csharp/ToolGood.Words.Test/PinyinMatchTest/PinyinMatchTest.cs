@@ -32,6 +32,9 @@ namespace ToolGood.Words.Test
             all = match.Find("S东");
             Assert.AreEqual("山东", all[0]);
 
+            var all2 = match.FindIndex("BJ");
+            Assert.AreEqual(0, all2[0]);
+            Assert.AreEqual(1, all.Count);
         }
     }
 }

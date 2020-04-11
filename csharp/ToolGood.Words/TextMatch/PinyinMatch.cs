@@ -12,6 +12,7 @@ namespace ToolGood.Words
         private string[] _keywords;
         private string[] _keywordsFirstPinyin;
         private string[][] _keywordsPinyin;
+        private int[] _indexs;
 
         #region SetKeywords
         public void SetKeywords(ICollection<string> keywords)
@@ -47,9 +48,12 @@ namespace ToolGood.Words
                 _keywordsFirstPinyin[i] = fpy;
             }
         }
+
+        public void SetIndexs(ICollection<int> indexs)
+        {
+            _indexs = indexs.ToArray();
+        }
         #endregion
-
-
 
         public List<string> Find(string key)
         {
@@ -99,6 +103,59 @@ namespace ToolGood.Words
             return result;
         }
 
+        public List<int> FindIndex(string key)
+        {
+            if (string.IsNullOrEmpty(key)) {
+                return null;
+            }
+            key = key.ToUpper();
+            var hasPinyin = Regex.IsMatch(key, "[a-zA-Z]");
+            if (hasPinyin == false) {
+                List<int> rs = new List<int>();
+                for (int i = 0; i < _keywords.Length; i++) {
+                    var keyword = _keywords[i];
+                    if (keyword.Contains(key)) {
+                        if (_indexs == null) {
+                            rs.Add(i);
+                        } else {
+                            rs.Add(_indexs[i]);
+                        }
+                    }
+                }
+                return rs;
+            }
+
+            var pykeys = SplitKeywords(key);
+            var minLength = int.MaxValue;
+            List<Tuple<string, string[]>> list = new List<Tuple<string, string[]>>();
+            foreach (var pykey in pykeys) {
+                var keys = pykey.Split((char)0);
+                if (minLength > keys.Length) {
+                    minLength = keys.Length;
+                }
+                MergeKeywords(keys, 0, "", list);
+            }
+
+            PinyinSearch search = new PinyinSearch();
+            search.SetKeywords(list);
+            List<int> result = new List<int>();
+            for (int i = 0; i < _keywords.Length; i++) {
+                var keywords = _keywords[i];
+                if (keywords.Length < minLength) {
+                    continue;
+                }
+                var fpy = _keywordsFirstPinyin[i];
+                var pylist = _keywordsPinyin[i];
+                if (search.Find(fpy, keywords, pylist)) {
+                    if (_indexs == null) {
+                        result.Add(i);
+                    } else {
+                        result.Add(_indexs[i]);
+                    }
+                }
+            }
+            return result;
+        }
 
         #region pinyinSearch
         class PinyinSearch
