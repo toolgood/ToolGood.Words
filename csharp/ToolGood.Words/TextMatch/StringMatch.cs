@@ -88,7 +88,7 @@ namespace ToolGood.Words
         public List<string> FindAll(string text)
         {
             TrieNode3 ptr = null;
-            List<string> list = new List<string>();
+            List<string> result = new List<string>();
 
             for (int i = 0; i < text.Length; i++) {
                 var t = text[i];
@@ -98,7 +98,7 @@ namespace ToolGood.Words
                 } else {
                     if (ptr.TryGetValue(t, out tn) == false) {
                         if (ptr.HasWildcard) {
-                            FindAll(text, i + 1, ptr.WildcardNode, list);
+                            FindAll(text, i + 1, ptr.WildcardNode, result);
                         }
                         tn = _first[t];
                     }
@@ -106,11 +106,11 @@ namespace ToolGood.Words
                 if (tn != null) {
                     if (tn.End) {
                         foreach (var item in tn.Results) {
-                            var length = _keywordLength[tn.Results[0]];
+                            var length = _keywordLength[item];
                             var s = i - length + 1;
                             if (s >= 0) {
                                 var key = text.Substring(s, length);
-                                list.Add(key);
+                                result.Add(key);
 
                             }
                         }
@@ -118,26 +118,26 @@ namespace ToolGood.Words
                 }
                 ptr = tn;
             }
-            return list;
+            return result;
         }
-        private void FindAll(string text, int index, TrieNode3 ptr, List<string> list)
+        private void FindAll(string text, int index, TrieNode3 ptr, List<string> result)
         {
             for (int i = index; i < text.Length; i++) {
                 var t = text[i];
                 TrieNode3 tn;
                 if (ptr.TryGetValue(t, out tn) == false) {
                     if (ptr.HasWildcard) {
-                        FindAll(text, i + 1, ptr.WildcardNode, list);
+                        FindAll(text, i + 1, ptr.WildcardNode, result);
                     }
                     return;
                 }
                 if (tn.End) {
                     foreach (var item in tn.Results) {
-                        var length = _keywordLength[tn.Results[0]];
+                        var length = _keywordLength[item];
                         var s = i - length + 1;
                         if (s >= 0) {
                             var key = text.Substring(s, length);
-                            list.Add(key);
+                            result.Add(key);
                         }
                     }
                 }
