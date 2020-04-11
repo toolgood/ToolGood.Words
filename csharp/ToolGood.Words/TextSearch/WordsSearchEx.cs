@@ -8,7 +8,7 @@ namespace ToolGood.Words
     /// 文本搜索，带返回位置及索引号，内存版，保存快，
     /// 性能从小到大  WordsSearch &lt; WordsSearchEx &lt; WordsSearchEx2 &lt; WordsSearchEx3
     /// </summary>
-    public class WordsSearchEx : BaseBigSearchEx
+    public class WordsSearchEx : BaseSearchEx
     {
         #region 查找 替换 查找第一个关键字 判断是否包含关键字
         /// <summary>

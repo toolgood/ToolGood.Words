@@ -10,7 +10,7 @@ namespace ToolGood.Words
     /// 文本搜索（指针版，速度更快） ，如果关键字太多(5W以上)，建议使用 StringSearchEx
     /// 性能从小到大  StringSearch &lt; StringSearchEx &lt; StringSearchEx2 &lt; StringSearchEx3
     /// </summary>
-    public class StringSearchEx3 : BaseSearchEx
+    public class StringSearchEx3 : BaseSearchEx2
     {
         protected Int32[] _guides2;
         protected Int32[] _guidesLength;

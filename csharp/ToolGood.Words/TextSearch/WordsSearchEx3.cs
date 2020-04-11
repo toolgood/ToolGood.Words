@@ -10,7 +10,7 @@ namespace ToolGood.Words
     /// 文本搜索（指针版，速度更快），带返回位置及索引号 ，如果关键字太多(5W以上)，建议使用 BigWordsSearchEx
     /// 性能从小到大  WordsSearch &lt; WordsSearchEx &lt; WordsSearchEx2 &lt; WordsSearchEx3
     /// </summary>
-    public class WordsSearchEx3 : BaseSearchEx
+    public class WordsSearchEx3 : BaseSearchEx2
     {
         protected Int32[] _guides2;
         protected Int32[] _guidesLength;
