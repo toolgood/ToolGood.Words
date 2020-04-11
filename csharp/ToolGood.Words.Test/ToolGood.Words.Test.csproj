@@ -51,7 +51,9 @@
     <Compile Include="StringSearchTest\StringSearchEx3Test.cs" />
     <Compile Include="StringSearchTest\StringSearchEx2Test.cs" />
     <Compile Include="StringSearchTest\StringSearchTest.cs" />
+    <Compile Include="TextMatchTest\StringMatchExTest.cs" />
     <Compile Include="TextMatchTest\StringMatchTest.cs" />
+    <Compile Include="TextMatchTest\WordsMatchExTest.cs" />
     <Compile Include="TextMatchTest\WordsMatchTest.cs" />
     <Compile Include="WordHelper\WordHelperTest.cs" />
     <Compile Include="WordsSearchTest\WordsSearchEx2Test.cs" />

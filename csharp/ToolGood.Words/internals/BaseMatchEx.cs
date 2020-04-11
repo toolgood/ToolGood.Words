@@ -35,7 +35,7 @@ namespace ToolGood.Words.internals
 
             var allNode2 = new List<TrieNode3Ex>();
             for (int i = 0; i < allNode.Count; i++) {
-                allNode2.Add(new TrieNode3Ex());
+                allNode2.Add(new TrieNode3Ex() { Index = i }); ;
             }
 
             for (int i = 0; i < allNode2.Count; i++) {

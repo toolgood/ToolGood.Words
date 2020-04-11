@@ -7,7 +7,7 @@ using System.Text;
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    public class WordsMatchTest
+    public class WordsMatchExTest
     {
         [Test]
         public void test()
@@ -15,7 +15,7 @@ namespace ToolGood.Words.Test
             string s = "aaaaa|BBBB|CCCC|中国|国人|zg人";
             string test = "我是中国人";
 
-            WordsMatch wordsSearch = new WordsMatch();
+            WordsMatchEx wordsSearch = new WordsMatchEx();
             wordsSearch.SetKeywords(s.Split('|'));
 
             var b = wordsSearch.ContainsAny(test);
@@ -46,7 +46,7 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人";
             string test = "我是中国人";
 
-            WordsMatch wordsSearch = new WordsMatch();
+            WordsMatchEx wordsSearch = new WordsMatchEx();
             wordsSearch.SetKeywords(s.Split('|').ToList());
 
             var b = wordsSearch.ContainsAny(test);
@@ -75,7 +75,7 @@ namespace ToolGood.Words.Test
             string s = ".[中美]国|国人|zg人";
             string test = "我是中国人";
 
-            WordsMatch wordsSearch = new WordsMatch();
+            WordsMatchEx wordsSearch = new WordsMatchEx();
             wordsSearch.SetKeywords(s.Split('|'));
 
             var b = wordsSearch.ContainsAny(test);

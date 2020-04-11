@@ -38,10 +38,11 @@ namespace ToolGood.Words
                 if (next != 0) {
                     var start = _end[next];
                     if (start < _end[next + 1]) {
-                        var length = _keywordLength[start];
+                        var idx = _resultIndex[start];
+                        var length = _keywordLength[idx];
                         var start2 = i - length + 1;
                         if (start2 >= 0) {
-                            var kIndex = _keywordIndex[start];
+                            var kIndex = _keywordIndex[idx];
                             var matchKeyword = _matchKeywords[kIndex];
                             var keyword = text.Substring(start2, length);
                             return new WordsSearchResult(keyword, start2, i, kIndex, matchKeyword);
@@ -70,10 +71,11 @@ namespace ToolGood.Words
                 }
                 var start = _end[next];
                 if (start < _end[next + 1]) {
-                    var length = _keywordLength[start];
+                    var idx = _resultIndex[start];
+                    var length = _keywordLength[idx];
                     var start2 = i - length + 1;
                     if (start2 >= 0) {
-                        var kIndex = _keywordIndex[start];
+                        var kIndex = _keywordIndex[idx];
                         var matchKeyword = _matchKeywords[kIndex];
                         var keyword = text.Substring(start2, length);
                         return new WordsSearchResult(keyword, start2, i, kIndex, matchKeyword);
@@ -113,11 +115,11 @@ namespace ToolGood.Words
                 if (next != 0) {
 
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
-
-                        var length = _keywordLength[j];
+                        var idx = _resultIndex[j];
+                        var length = _keywordLength[idx];
                         var start = i - length + 1;
                         if (start >= 0) {
-                            var kIndex = _keywordIndex[j];
+                            var kIndex = _keywordIndex[idx];
                             var matchKeyword = _matchKeywords[kIndex];
                             var keyword = text.Substring(start, length);
                             var r = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
@@ -147,10 +149,11 @@ namespace ToolGood.Words
                     return;
                 }
                 for (int j = _end[next]; j < _end[next + 1]; j++) {
-                    var length = _keywordLength[j];
+                    var idx = _resultIndex[j];
+                    var length = _keywordLength[idx];
                     var start = i - length + 1;
                     if (start >= 0) {
-                        var kIndex = _keywordIndex[j];
+                        var kIndex = _keywordIndex[idx];
                         var matchKeyword = _matchKeywords[kIndex];
                         var keyword = text.Substring(start, length);
                         var r = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
@@ -219,7 +222,7 @@ namespace ToolGood.Words
                 }
                 var start = _end[next];
                 if (start < _end[next + 1]) {
-                    var length = _keywordLength[start];
+                    var length = _keywordLength[_resultIndex[start]];
                     var s = i - length + 1;
                     if (s >= 0) {
                         return true;
@@ -261,7 +264,7 @@ namespace ToolGood.Words
                 if (next != 0) {
                     var start = _end[next];
                     if (start < _end[next + 1]) {
-                        var maxLength = _keywordLength[start];
+                        var maxLength = _keywordLength[_resultIndex[start]];
                         var start2 = i + 1 - maxLength;
                         if (start2 >= 0) {
                             for (int j = start2; j <= i; j++) {
@@ -292,7 +295,7 @@ namespace ToolGood.Words
                 }
                 var start = _end[next];
                 if (start < _end[next + 1]) {
-                    var maxLength = _keywordLength[start];
+                    var maxLength = _keywordLength[_resultIndex[start]];
                     var start2 = i + 1 - maxLength;
                     if (start2 >= 0) {
                         for (int j = start2; j <= i; j++) {
