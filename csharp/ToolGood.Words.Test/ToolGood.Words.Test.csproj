@@ -281,10 +281,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ToolGood.Words.PinYinSearch\ToolGood.Words.PinYinSearch.csproj">
-      <Project>{b3d989c2-a05e-436f-9e0d-72fd9616039a}</Project>
-      <Name>ToolGood.Words.PinYinSearch</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ToolGood.Words\ToolGood.Words.csproj">
       <Project>{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}</Project>
       <Name>ToolGood.Words</Name>
