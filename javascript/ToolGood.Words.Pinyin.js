@@ -1,7 +1,7 @@
-// ToolGood.Words.PinYin.js
+// ToolGood.Words.Pinyin.js
 // 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 // Licensed under the Apache License 2.0
-function PinYin() {
+function Pinyin() {
     function WordsSearch() {
         function TrieNode() {
             this.Index = 0;
@@ -217,7 +217,7 @@ function PinYin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinYinList = function (text, tone = 0) {
+    this.GetPinyinList = function (text, tone = 0) {
         InitPyWords();
         if (tone) { tone = 1; }
         var list = [];
@@ -257,10 +257,10 @@ function PinYin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinYin = function (text, tone = 0) {
+    this.GetPinyin = function (text, tone = 0) {
         if (tone) { tone = 1; }
 
-        var list = this.GetPinYinList(text, tone);
+        var list = this.GetPinyinList(text, tone);
         var sb = "";
         for (var i = 0; i < list.length; i++) {
             var s = list[i];
@@ -277,10 +277,10 @@ function PinYin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetFirstPinYin = function (text, tone = 0) {
+    this.GetFirstPinyin = function (text, tone = 0) {
         if (tone) { tone = 1; }
 
-        var list = this.GetPinYinList(text, tone);
+        var list = this.GetPinyinList(text, tone);
         var sb = "";
         for (var i = 0; i < list.length; i++) {
             var c = list[i];
@@ -296,7 +296,7 @@ function PinYin() {
     * @param {any} text
     * @param {any} tone 是否带声调 1 是 0否
     */
-    this.GetAllPinYin = function (c, tone = 0) {
+    this.GetAllPinyin = function (c, tone = 0) {
         if (tone) { tone = 1; }
 
         var idx = c.charCodeAt(0);
@@ -324,7 +324,7 @@ function PinYin() {
      * @param {any} name
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinYinListForName = function (name, tone = 0) {
+    this.GetPinyinListForName = function (name, tone = 0) {
         if (tone) { tone = 1; }
 
         var list = [];
@@ -341,7 +341,7 @@ function PinYin() {
                 }
                 if (name.length > 2) {
                     ming = name.substring(2);
-                    var pys = this.GetPinYinList(ming, tone);
+                    var pys = this.GetPinyinList(ming, tone);
                     for (var i = 0; i < pys.length; i++) {
                         var py = pys[i];
                         list.push(py);
@@ -359,7 +359,7 @@ function PinYin() {
             }
             if (name.length > 1) {
                 ming = name.substring(1);
-                var pys = this.GetPinYinList(ming, tone);
+                var pys = this.GetPinyinList(ming, tone);
                 for (var i = 0; i < pys.length; i++) {
                     var py = pys[i];
                     list.push(py);
@@ -367,7 +367,7 @@ function PinYin() {
             }
             return list;
         }
-        return this.GetPinYinList(name, tone);
+        return this.GetPinyinList(name, tone);
     }
 
     /**
@@ -375,9 +375,9 @@ function PinYin() {
      * @param {any} name
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinYinForName = function (name, tone = 0) {
+    this.GetPinyinForName = function (name, tone = 0) {
         if (tone) { tone = 1; }
-        return this.GetPinYinListForName(name, tone).join("");
+        return this.GetPinyinListForName(name, tone).join("");
     }
 
     function InitPyWords() {
