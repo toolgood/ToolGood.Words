@@ -5,21 +5,21 @@ using System.Text;
 using PetaTest;
 using ToolGood.Words;
 
-namespace ToolGood.Words.Test.PinYin
+namespace ToolGood.Words.Test.Pinyin
 {
     [TestFixture]
-    public class PinYinTest
+    public class PinyinTest
     {
         [Test]
-        public void GetPinYin()
+        public void GetPinyin()
         {
-            var list = WordsHelper.GetAllPinYin('㘄');
-            list = WordsHelper.GetAllPinYin('䉄');
-            list = WordsHelper.GetAllPinYin('䬋');
-            list = WordsHelper.GetAllPinYin('䮚');
-            list = WordsHelper.GetAllPinYin('䚏');
-            list = WordsHelper.GetAllPinYin('㭁');
-            list = WordsHelper.GetAllPinYin('䖆');
+            var list = WordsHelper.GetAllPinyin('㘄');
+            list = WordsHelper.GetAllPinyin('䉄');
+            list = WordsHelper.GetAllPinyin('䬋');
+            list = WordsHelper.GetAllPinyin('䮚');
+            list = WordsHelper.GetAllPinyin('䚏');
+            list = WordsHelper.GetAllPinyin('㭁');
+            list = WordsHelper.GetAllPinyin('䖆');
 
 
         }

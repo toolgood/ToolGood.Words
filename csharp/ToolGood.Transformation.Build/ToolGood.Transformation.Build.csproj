@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\ToolGood.PinYin.WordsBuild\Scel\*.scel"></None>
+    <None Include="..\ToolGood.Pinyin.WordsBuild\Scel\*.scel"></None>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,193 +67,193 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\147种水果的名字.scel" Link="Scel\147种水果的名字.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\147种水果的名字.scel" Link="Scel\147种水果的名字.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\765个世界主要城市.scel" Link="Scel\765个世界主要城市.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\765个世界主要城市.scel" Link="Scel\765个世界主要城市.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\世界所有国家及其首都.scel" Link="Scel\世界所有国家及其首都.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\世界所有国家及其首都.scel" Link="Scel\世界所有国家及其首都.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\中医中药大全【官方推荐】.scel" Link="Scel\中医中药大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\中医中药大全【官方推荐】.scel" Link="Scel\中医中药大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\书法词汇大全【官方推荐】.scel" Link="Scel\书法词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\书法词汇大全【官方推荐】.scel" Link="Scel\书法词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\二人转词汇大全【官方推荐】.scel" Link="Scel\二人转词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\二人转词汇大全【官方推荐】.scel" Link="Scel\二人转词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\亲戚称呼.scel" Link="Scel\亲戚称呼.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\亲戚称呼.scel" Link="Scel\亲戚称呼.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\保险词汇【官方推荐】.scel" Link="Scel\保险词汇【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\保险词汇【官方推荐】.scel" Link="Scel\保险词汇【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\全国省市区县地名.scel" Link="Scel\全国省市区县地名.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\全国省市区县地名.scel" Link="Scel\全国省市区县地名.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\农业词汇大全【官方推荐】.scel" Link="Scel\农业词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\农业词汇大全【官方推荐】.scel" Link="Scel\农业词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\冰雪名词.scel" Link="Scel\冰雪名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\冰雪名词.scel" Link="Scel\冰雪名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\冶金词汇大全【官方推荐】.scel" Link="Scel\冶金词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\冶金词汇大全【官方推荐】.scel" Link="Scel\冶金词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\动物词汇大全【官方推荐】.scel" Link="Scel\动物词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\动物词汇大全【官方推荐】.scel" Link="Scel\动物词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\化学化工词汇大全【官方推荐】.scel" Link="Scel\化学化工词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\化学化工词汇大全【官方推荐】.scel" Link="Scel\化学化工词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\化学品名.scel" Link="Scel\化学品名.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\化学品名.scel" Link="Scel\化学品名.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\医学词汇大全.scel" Link="Scel\医学词汇大全.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\医学词汇大全.scel" Link="Scel\医学词汇大全.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\医疗器械大全【官方推荐】.scel" Link="Scel\医疗器械大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\医疗器械大全【官方推荐】.scel" Link="Scel\医疗器械大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\园林花草名称词库.scel" Link="Scel\园林花草名称词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\园林花草名称词库.scel" Link="Scel\园林花草名称词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\国家和地区词库.scel" Link="Scel\国家和地区词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\国家和地区词库.scel" Link="Scel\国家和地区词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\地名词库.scel" Link="Scel\地名词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\地名词库.scel" Link="Scel\地名词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\地理名词.scel" Link="Scel\地理名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\地理名词.scel" Link="Scel\地理名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\地理地质词汇大全【官方推荐】.scel" Link="Scel\地理地质词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\地理地质词汇大全【官方推荐】.scel" Link="Scel\地理地质词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\地表水文词库.scel" Link="Scel\地表水文词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\地表水文词库.scel" Link="Scel\地表水文词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\基础数学用词.scel" Link="Scel\基础数学用词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\基础数学用词.scel" Link="Scel\基础数学用词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\天文学天体类词库.scel" Link="Scel\天文学天体类词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\天文学天体类词库.scel" Link="Scel\天文学天体类词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\天文词汇大全【官方推荐】.scel" Link="Scel\天文词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\天文词汇大全【官方推荐】.scel" Link="Scel\天文词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\家居装修词汇大全【官方推荐】.scel" Link="Scel\家居装修词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\家居装修词汇大全【官方推荐】.scel" Link="Scel\家居装修词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\建筑词汇大全【官方推荐】.scel" Link="Scel\建筑词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\建筑词汇大全【官方推荐】.scel" Link="Scel\建筑词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\恒星、银河系词库.scel" Link="Scel\恒星、银河系词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\恒星、银河系词库.scel" Link="Scel\恒星、银河系词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\搜狗标准词库.scel" Link="Scel\搜狗标准词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\搜狗标准词库.scel" Link="Scel\搜狗标准词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\数学词库EXTEND版.scel" Link="Scel\数学词库EXTEND版.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\数学词库EXTEND版.scel" Link="Scel\数学词库EXTEND版.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\数学词汇大全【官方推荐】.scel" Link="Scel\数学词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\数学词汇大全【官方推荐】.scel" Link="Scel\数学词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\时空类词汇总库.scel" Link="Scel\时空类词汇总库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\时空类词汇总库.scel" Link="Scel\时空类词汇总库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\最新车型大全【官方推荐】.scel" Link="Scel\最新车型大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\最新车型大全【官方推荐】.scel" Link="Scel\最新车型大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\最详细的全国地名大全.scel" Link="Scel\最详细的全国地名大全.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\最详细的全国地名大全.scel" Link="Scel\最详细的全国地名大全.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\机械词汇大全【官方推荐】.scel" Link="Scel\机械词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\机械词汇大全【官方推荐】.scel" Link="Scel\机械词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\植物名词大全.scel" Link="Scel\植物名词大全.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\植物名词大全.scel" Link="Scel\植物名词大全.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\植物学名词术语.scel" Link="Scel\植物学名词术语.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\植物学名词术语.scel" Link="Scel\植物学名词术语.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\植物词汇大全【官方推荐】.scel" Link="Scel\植物词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\植物词汇大全【官方推荐】.scel" Link="Scel\植物词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\气象与降水名词.scel" Link="Scel\气象与降水名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\气象与降水名词.scel" Link="Scel\气象与降水名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\气象词汇大全【官方推荐】.scel" Link="Scel\气象词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\气象词汇大全【官方推荐】.scel" Link="Scel\气象词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\水利词汇大全【官方推荐】.scel" Link="Scel\水利词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\水利词汇大全【官方推荐】.scel" Link="Scel\水利词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\法律词汇大全【官方推荐】.scel" Link="Scel\法律词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\法律词汇大全【官方推荐】.scel" Link="Scel\法律词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\测绘词汇大全【官方推荐】.scel" Link="Scel\测绘词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\测绘词汇大全【官方推荐】.scel" Link="Scel\测绘词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\物流词汇大全【官方推荐】.scel" Link="Scel\物流词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\物流词汇大全【官方推荐】.scel" Link="Scel\物流词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\物理词汇大全【官方推荐】.scel" Link="Scel\物理词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\物理词汇大全【官方推荐】.scel" Link="Scel\物理词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\生物词汇大全【官方推荐】.scel" Link="Scel\生物词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\生物词汇大全【官方推荐】.scel" Link="Scel\生物词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\电力词汇大全【官方推荐】.scel" Link="Scel\电力词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\电力词汇大全【官方推荐】.scel" Link="Scel\电力词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\电子商务专用词库【官方推荐】.scel" Link="Scel\电子商务专用词库【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\电子商务专用词库【官方推荐】.scel" Link="Scel\电子商务专用词库【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\电子词汇大全【官方推荐】.scel" Link="Scel\电子词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\电子词汇大全【官方推荐】.scel" Link="Scel\电子词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\真菌类名词.scel" Link="Scel\真菌类名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\真菌类名词.scel" Link="Scel\真菌类名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\经济生活词汇.scel" Link="Scel\经济生活词汇.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\经济生活词汇.scel" Link="Scel\经济生活词汇.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\美容词汇大全【官方推荐】.scel" Link="Scel\美容词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\美容词汇大全【官方推荐】.scel" Link="Scel\美容词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\联合国成员国名单.scel" Link="Scel\联合国成员国名单.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\联合国成员国名单.scel" Link="Scel\联合国成员国名单.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\艺术专用词汇.scel" Link="Scel\艺术专用词汇.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\艺术专用词汇.scel" Link="Scel\艺术专用词汇.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\花卉名词.scel" Link="Scel\花卉名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\花卉名词.scel" Link="Scel\花卉名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\花木名称大全.scel" Link="Scel\花木名称大全.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\花木名称大全.scel" Link="Scel\花木名称大全.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\虫蛇类名词.scel" Link="Scel\虫蛇类名词.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\虫蛇类名词.scel" Link="Scel\虫蛇类名词.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\计算机词汇大全【官方推荐】.scel" Link="Scel\计算机词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\计算机词汇大全【官方推荐】.scel" Link="Scel\计算机词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\财经金融词汇大全【官方推荐】.scel" Link="Scel\财经金融词汇大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\财经金融词汇大全【官方推荐】.scel" Link="Scel\财经金融词汇大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\颜色名称.scel" Link="Scel\颜色名称.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\颜色名称.scel" Link="Scel\颜色名称.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\风云雨雪雾雷虹词库.scel" Link="Scel\风云雨雪雾雷虹词库.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\风云雨雪雾雷虹词库.scel" Link="Scel\风云雨雪雾雷虹词库.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="..\ToolGood.PinYin.WordsBuild\Scel\饮食大全【官方推荐】.scel" Link="Scel\饮食大全【官方推荐】.scel">
+    <None Update="..\ToolGood.Pinyin.WordsBuild\Scel\饮食大全【官方推荐】.scel" Link="Scel\饮食大全【官方推荐】.scel">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

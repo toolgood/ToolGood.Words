@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToolGood.PinYin.Pretreatment
+namespace ToolGood.Pinyin.Pretreatment
 {
     partial class Program
     {
@@ -10,7 +10,7 @@ namespace ToolGood.PinYin.Pretreatment
             public int End { get; set; }
             public string Keyword { get; set; }
 
-            public List<string> PinYin { get; set; }
+            public List<string> Pinyin { get; set; }
 
             public TextNode Next { get; set; }
 

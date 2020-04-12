@@ -1,4 +1,4 @@
-﻿using Microsoft.International.Converters.PinYinConverter;
+﻿using Microsoft.International.Converters.PinyinConverter;
 using Studyzy.IMEWLConverter.IME;
 using System;
 using System.Collections.Generic;
@@ -11,24 +11,24 @@ using System.Web;
 using ToolGood.Words;
 using ToolGood.Words.internals;
 
-namespace ToolGood.PinYin.Pretreatment
+namespace ToolGood.Pinyin.Pretreatment
 {
     partial class Program
     {
         static void Main(string[] args)
         {
-            var t = WordsHelper.GetAllPinYin('芃');
+            var t = WordsHelper.GetAllPinyin('芃');
 
-            var a = WordsHelper.GetPinYinFast("阿");
-
-
+            var a = WordsHelper.GetPinyinFast("阿");
 
 
 
-            var py222 = WordsHelper.GetPinYinFast("我爱中国");
 
 
-            var tpy = WordsHelper.GetAllPinYin('堃');
+            var py222 = WordsHelper.GetPinyinFast("我爱中国");
+
+
+            var tpy = WordsHelper.GetAllPinyin('堃');
 
             // 预处理
             // 第一步 处理搜狗词库
@@ -198,7 +198,7 @@ namespace ToolGood.PinYin.Pretreatment
                         if (all.Count > 1) {
                             // Console.WriteLine(key);
                             //进行拼音测试，相同则删除
-                            var py = ReplaceForPinYin(key, all, dict);
+                            var py = ReplaceForPinyin(key, all, dict);
                             if (py != null) {
                                 py = py.ToLower();
                                 if (dict[key].ToLower().Trim() == py) {
@@ -215,7 +215,7 @@ namespace ToolGood.PinYin.Pretreatment
                 for (int i = keys.Count - 1; i >= 0; i--) {
                     var item = keys[i];
                     if (item.Length < 5) break;
-                    var pyf = WordsHelper.GetPinYinFast(item).ToLower();
+                    var pyf = WordsHelper.GetPinyinFast(item).ToLower();
 
                     if (dict[item].ToLower().Replace(",", "") == pyf) {
                         keys.RemoveAt(i);
@@ -264,7 +264,7 @@ namespace ToolGood.PinYin.Pretreatment
             // 第四步 获取网上的拼音
             Console.WriteLine("第四步 获取网上的拼音");
             if (File.Exists("pinyin_1.txt") == false) {
-                var pinyin_1 = GetPinYin();
+                var pinyin_1 = GetPinyin();
                 File.WriteAllText("pinyin_1.txt", string.Join("\n", pinyin_1));
                 pinyin_1.Clear();
             }
@@ -359,7 +359,7 @@ namespace ToolGood.PinYin.Pretreatment
                 for (int i = 0x3400; i <= 0x9FFF; i++) {
                     var c = (char)i;
                     if (pysDict.ContainsKey(c) == false) {
-                        var pys = WordsHelper.GetAllPinYin(c);
+                        var pys = WordsHelper.GetAllPinyin(c);
                         pysDict[c] = pys;
                         nopysDict[c] = pys;
                     }
@@ -484,7 +484,7 @@ namespace ToolGood.PinYin.Pretreatment
 
             //    List<string> ls = new List<string>();
             //    foreach (var line in lines) {
-            //        GetBuildPinYin(line, ls);
+            //        GetBuildPinyin(line, ls);
             //    }
 
             //    File.WriteAllText("pinyin_7_pys.txt", string.Join("\n", ls));
@@ -538,7 +538,7 @@ namespace ToolGood.PinYin.Pretreatment
                             oks.Add(line);
                         } else {
 
-                            //var py3 = WordsHelper.GetAllPinYin(sp[0], true);
+                            //var py3 = WordsHelper.GetAllPinyin(sp[0], true);
                             errors.Add(line + " | " + py);
                         }
                     } else {
@@ -568,7 +568,7 @@ namespace ToolGood.PinYin.Pretreatment
                         var tpy2 = tarPy[i - 1];
                         if (py != tpy2 && py2 != tpy2) {
                             var c = sp[0][i - 1];
-                            var pys = WordsHelper.GetAllPinYin(c, true);
+                            var pys = WordsHelper.GetAllPinyin(c, true);
                             var count = 0; //读音为1种，则成功
                             var trypy = "";// 读音
                             foreach (var item in pys) {
@@ -649,7 +649,7 @@ namespace ToolGood.PinYin.Pretreatment
 
                     List<string> pys = new List<string>();
                     for (int i = 0; i < key.Length; i++) {
-                        var ps = WordsHelper.GetAllPinYin(key[i], true);
+                        var ps = WordsHelper.GetAllPinyin(key[i], true);
                         var count = 0; //读音为1种，则成功
                         var count2 = 0; //读音为1种，则成功
                         var trypy = "";// 读音
@@ -783,7 +783,7 @@ namespace ToolGood.PinYin.Pretreatment
                 var lines = txt.Split('\n').ToList();
 
                 Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
-                var pdict = PinYinDict.PyShow;
+                var pdict = PinyinDict.PyShow;
                 for (int j = 0; j < pdict.Length; j++) {
                     pdict[j] = pdict[j].ToLower();
                 }
@@ -796,7 +796,7 @@ namespace ToolGood.PinYin.Pretreatment
                     for (int i = 0; i < sp.Count; i++) {
                         var py = sp[i];
                         if (pdict.Contains(py) == false) {
-                            var pys = WordsHelper.GetAllPinYin(key[i], true);
+                            var pys = WordsHelper.GetAllPinyin(key[i], true);
                             for (int j = 0; j < pys.Count; j++) {
                                 pys[j] = pys[j].ToLower();
                             }
@@ -857,7 +857,7 @@ namespace ToolGood.PinYin.Pretreatment
         }
 
 
-        static void GetBuildPinYin(string c, List<string> ls)
+        static void GetBuildPinyin(string c, List<string> ls)
         {
             var url = "https://www.baidu.com/baidu?wd={0}&ie=utf-8";
             var ch = HttpUtility.UrlEncode(c).ToUpper();
@@ -1036,7 +1036,7 @@ namespace ToolGood.PinYin.Pretreatment
             return pinyin;
         }
 
-        static string ReplaceForPinYin(string key, List<WordsSearchResult> all, Dictionary<string, string> dict)
+        static string ReplaceForPinyin(string key, List<WordsSearchResult> all, Dictionary<string, string> dict)
         {
             LineNode[] lineNodes = new LineNode[key.Length + 1];
             for (int i = 0; i < lineNodes.Length; i++) { lineNodes[i] = new LineNode(); }
@@ -1047,21 +1047,21 @@ namespace ToolGood.PinYin.Pretreatment
                     Start = item.Start,
                     End = item.End,
                     Words = item.Keyword,
-                    PinYin = dict[item.Keyword],
+                    Pinyin = dict[item.Keyword],
                     NextNode = lineNodes[item.End + 1]
                 };
                 lineNodes[item.Start].Children.Add(lineText);
             }
-            return GetPinYin(lineNodes[0], "");
+            return GetPinyin(lineNodes[0], "");
         }
-        static string GetPinYin(LineNode node, string pinyin)
+        static string GetPinyin(LineNode node, string pinyin)
         {
             if (node.IsEnd) {
                 return string.Join(",", pinyin.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
             }
             foreach (var item in node.Children) {
-                var py = pinyin + "," + item.PinYin;
-                var s = GetPinYin(item.NextNode, py);
+                var py = pinyin + "," + item.Pinyin;
+                var s = GetPinyin(item.NextNode, py);
                 if (s != null) {
                     return s;
                 }
@@ -1087,24 +1087,24 @@ namespace ToolGood.PinYin.Pretreatment
 
             foreach (var item in t) {
                 var w = item.Word.Trim();
-                var py = string.Join(",", item.PinYin);
+                var py = string.Join(",", item.Pinyin);
 
                 list.Add($"{w} {py}");
             }
         }
 
-        static List<string> GetPinYin()
+        static List<string> GetPinyin()
         {
             var files = Directory.GetFiles("dict", "*.txt");
             HashSet<string> list = new HashSet<string>();
 
             foreach (var file in files) {
-                GetPinYin(file, list);
+                GetPinyin(file, list);
             }
             return list.OrderBy(q => q).ToList();
         }
 
-        static void GetPinYin(string file, HashSet<string> list)
+        static void GetPinyin(string file, HashSet<string> list)
         {
             var text = File.ReadAllText(file);
             var line = text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1141,7 +1141,7 @@ namespace ToolGood.PinYin.Pretreatment
             public int Start;
             public int End;
             public string Words;
-            public string PinYin;
+            public string Pinyin;
             public LineNode NextNode;
         }
 

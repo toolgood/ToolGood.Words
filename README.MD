@@ -7,8 +7,8 @@ ToolGood.Words
 
 csharp 文件夹说明：
 ```
-ToolGood.PinYin.Build:          生成词的拼音
-ToolGood.PinYin.Pretreatment:   生成拼音预处理，核对拼音，词组最小化
+ToolGood.Pinyin.Build:          生成词的拼音
+ToolGood.Pinyin.Pretreatment:   生成拼音预处理，核对拼音，词组最小化
 ToolGood.Transformation.Build： 生成简体繁体转换文档，更新时文档放在同一目录下，词库参考 https://github.com/BYVoid/OpenCC
 ToolGood.Words.Contrast:        字符串搜索对比
 ToolGood.Words.Test:            单元测试
@@ -21,7 +21,7 @@ ToolGood.Words:                 本项目源代码
 * `StringSearch`、`StringSearchEx`、`StringSearchEx2`、`StringSearchEx3`: 搜索`FindFirst`方法返回结果为`string`类型。
 * `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`WordsSearchEx3`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
-* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**繁体转简体，全角转半角，忽略大小写，跳词，重复词，黑名单**，
+* `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**全角转半角，忽略大小写，跳词，重复词，黑名单**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
 * `IllegalWordsSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearchEx`、`WordsSearchEx2` 使用`Save`、`Load`方法，可以加快初始化。
 * 共同方法有：`SetKeywords`、`ContainsAny`、`FindFirst`、`FindAll`、`Replace`
@@ -52,6 +52,7 @@ ToolGood.Words:                 本项目源代码
 ``` 
 ## 非法词(敏感词)检测（字符串搜索）（支持通配符）
 非法词(敏感词)检测类：`StringMatch`、`StringMatchEx`、`WordsMatch`、`WordsMatchEx`。
+
 支持部分正则表达式类型：`.`（点）`?`(问号) `[]`(方括号) `(|)`(括号与竖线)
 
 ``` csharp
@@ -100,15 +101,18 @@ ToolGood.Words:                 本项目源代码
     // 中文转成数字
     WordsHelper.ToNumber("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
     // 获取全拼
-    WordsHelper.GetPinYin("我爱中国");//WoAiZhongGuo
-    WordsHelper.GetPinYin("我爱中国",true);//WǒÀiZhōngGuó
+    WordsHelper.GetPinyin("我爱中国");//WoAiZhongGuo   
+    WordsHelper.GetPinyin("我爱中国",",");//Wo,Ai,Zhong,Guo   
+    WordsHelper.GetPinyin("我爱中国",true);//WǒÀiZhōngGuó
+
     // 获取首字母
-    WordsHelper.GetFirstPinYin("我爱中国");//WAZG
+    WordsHelper.GetFirstPinyin("我爱中国");//WAZG
     // 获取全部拼音
-    WordsHelper.GetAllPinYin('传');//Chuan,Zhuan
+    WordsHelper.GetAllPinyin('传');//Chuan,Zhuan
     // 获取姓名
-    WordsHelper.GetPinYinForName("单一一")//ShanYiYi
-    WordsHelper.GetPinYinForName("单一一",true)//ShànYīYī
+    WordsHelper.GetPinyinForName("单一一")//ShanYiYi
+    WordsHelper.GetPinyinForName("单一一",",")//Shan,Yi,Yi
+    WordsHelper.GetPinyinForName("单一一",true)//ShànYīYī
 ``` 
  
 ##  拼音匹配
@@ -155,8 +159,6 @@ ToolGood.Words:                 本项目源代码
 
 `Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 
-`TrieFilter`,`FastFilter`来源: http://www.cnblogs.com/yeerh/archive/2011/10/20/2219035.html
-
  在 Find All测试中,
 
 `FastFilter`只能检测出7个:
@@ -200,8 +202,6 @@ ToolGood.Words:                 本项目源代码
     [12]: {323|倒台}
     [13]: {324|台}
     [14]: {364|黑社会}
-
-`IllegalWordsSearch`比`StringSearch`多一个`台`，原因：关键字繁体转简体
 
 插曲：在细查`Regex.Matches`神奇3ms，我发现`Regex.Matches`有一个小问题，
 

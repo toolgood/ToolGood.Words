@@ -16,9 +16,9 @@ namespace ToolGood.Words
         /// <param name="c">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetAllPinYin(char c, bool tone = false)
+        public static List<string> GetAllPinyin(char c, bool tone = false)
         {
-            return PinYinDict.GetAllPinYin(c, tone ? 1 : 0);
+            return PinyinDict.GetAllPinyin(c, tone ? 1 : 0);
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">原文本</param>
         /// <returns></returns>
-        public static string GetFirstPinYin(string text)
+        public static string GetFirstPinyin(string text)
         {
-            return PinYinDict.GetFirstPinYin(text, 0);
+            return PinyinDict.GetFirstPinyin(text, 0);
         }
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace ToolGood.Words
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        [Obsolete("请使用GetPinYin方法，此方法不支持多音")]
-        public static string GetPinYinFast(string text, bool tone = false)
+        [Obsolete("请使用GetPinyin方法，此方法不支持多音")]
+        public static string GetPinyinFast(string text, bool tone = false)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
                 var c = text[i];
-                sb.Append(PinYinDict.GetPinYinFast(c, tone ? 1 : 0));
+                sb.Append(PinyinDict.GetPinyinFast(c, tone ? 1 : 0));
             }
             return sb.ToString();
         }
@@ -54,9 +54,9 @@ namespace ToolGood.Words
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYin(string text, bool tone = false)
+        public static string GetPinyin(string text, bool tone = false)
         {
-            return string.Join("", PinYinDict.GetPinYinList(text, tone ? 1 : 0));
+            return string.Join("", PinyinDict.GetPinyinList(text, tone ? 1 : 0));
         }
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace ToolGood.Words
         /// <param name="splitSpan">分隔符</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYin(string text,string splitSpan, bool tone = false)
+        public static string GetPinyin(string text,string splitSpan, bool tone = false)
         {
-            return string.Join(splitSpan, PinYinDict.GetPinYinList(text, tone ? 1 : 0));
+            return string.Join(splitSpan, PinyinDict.GetPinyinList(text, tone ? 1 : 0));
         }
 
 
@@ -78,9 +78,9 @@ namespace ToolGood.Words
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string[] GetPinYinList(string text, bool tone = false)
+        public static string[] GetPinyinList(string text, bool tone = false)
         {
-            return PinYinDict.GetPinYinList(text, tone ? 1 : 0);
+            return PinyinDict.GetPinyinList(text, tone ? 1 : 0);
         }
 
 
@@ -91,9 +91,9 @@ namespace ToolGood.Words
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYinForName(string name, bool tone = false)
+        public static string GetPinyinForName(string name, bool tone = false)
         {
-            return string.Join("", PinYinDict.GetPinYinForName(name, tone ? 1 : 0));
+            return string.Join("", PinyinDict.GetPinyinForName(name, tone ? 1 : 0));
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace ToolGood.Words
         /// <param name="splitSpan">分隔符</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYinForName(string name, string splitSpan, bool tone = false)
+        public static string GetPinyinForName(string name, string splitSpan, bool tone = false)
         {
-            return string.Join(splitSpan, PinYinDict.GetPinYinForName(name, tone ? 1 : 0));
+            return string.Join(splitSpan, PinyinDict.GetPinyinForName(name, tone ? 1 : 0));
         }
 
         /// <summary>
@@ -114,9 +114,9 @@ namespace ToolGood.Words
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetPinYinListForName(string name, bool tone = false)
+        public static List<string> GetPinyinListForName(string name, bool tone = false)
         {
-            return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
+            return PinyinDict.GetPinyinForName(name, tone ? 1 : 0);
         }
 
         #endregion

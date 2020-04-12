@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToolGood.Bedrock;
 
-namespace ToolGood.PinYin.Build
+namespace ToolGood.Pinyin.Build
 {
     class Program
     {
@@ -158,7 +158,7 @@ namespace ToolGood.PinYin.Build
             List<string> tempClearKeys = new List<string>();
 
             foreach (var item in pyWords) {
-                var py = Words.WordsHelper.GetPinYinFast(item.Key, true).ToLower();
+                var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
                 if (py == string.Join("", item.Value)) {
                     tempClearWords[item.Key] = item.Value;
                     tempClearKeys.Add(item.Key);
@@ -200,7 +200,7 @@ namespace ToolGood.PinYin.Build
             List<string> AddKeys2 = new List<string>();
             List<string> keys2 = new List<string>();
             foreach (var item in pyWords2) {
-                var py = Words.WordsHelper.GetPinYinFast(item.Key, true).ToLower();
+                var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
                 if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
                     for (int i = 1; i < item.Key.Length; i++) {
                         var start = item.Key.Substring(0, item.Key.Length - i);

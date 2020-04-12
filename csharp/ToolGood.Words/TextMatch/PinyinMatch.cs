@@ -29,7 +29,7 @@ namespace ToolGood.Words
             _keywordsPinyin = new string[_keywords.Length][];
             for (int i = 0; i < _keywords.Length; i++) {
                 var text = _keywords[i];
-                var pys = PinYinDict.GetPinYinList(text);
+                var pys = PinyinDict.GetPinyinList(text);
                 string fpy = "";
                 for (int j = 0; j < pys.Length; j++) {
                     pys[j] = pys[j].ToUpper();
@@ -373,7 +373,7 @@ namespace ToolGood.Words
             }
             var key = keys[id];
             if (key[0] >= 0x3400 && key[0] <= 0x9fd5) {
-                var all = PinYinDict.GetAllPinYin(key[0]);
+                var all = PinyinDict.GetAllPinyin(key[0]);
                 var fpy = new HashSet<char>();
                 foreach (var item in all) {
                     fpy.Add(item[0]);
@@ -448,13 +448,17 @@ namespace ToolGood.Words
         private void InitPinyinSearch()
         {
             if (_wordsSearch == null) {
-                HashSet<string> allPinYins = new HashSet<string>();
-                var pys = PinYinDict.PyShow;
-                for (int i = 1; i < pys.Length; i++) {
-                    allPinYins.Add(pys[i].ToUpper());
+                HashSet<string> allPinyins = new HashSet<string>();
+                var pys = PinyinDict.PyShow;
+                for (int i = 1; i < pys.Length; i += 2) {
+                    var py = pys[i].ToUpper();
+                    for (int j = 1; j <= py.Length; j++) {
+                        var key = py.Substring(0, j);
+                        allPinyins.Add(key);
+                    }
                 }
                 var wordsSearch = new WordsSearch();
-                wordsSearch.SetKeywords(allPinYins.ToList());
+                wordsSearch.SetKeywords(allPinyins.ToList());
                 _wordsSearch = wordsSearch;
             }
         }

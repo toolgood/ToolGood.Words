@@ -59,7 +59,7 @@ namespace Studyzy.IMEWLConverter.IME
             //    var wl = new WordLibrary();
             //    wl.Word = word;
             //    wl.Count = 1;
-            //    wl.PinYin = py.Split(new[] {'\''}, StringSplitOptions.RemoveEmptyEntries);
+            //    wl.Pinyin = py.Split(new[] {'\''}, StringSplitOptions.RemoveEmptyEntries);
             //    var wll = new WordLibraryList();
             //    wll.Add(wl);
             //    return wll;
@@ -165,7 +165,7 @@ namespace Studyzy.IMEWLConverter.IME
             //var sb = new StringBuilder();
             //foreach (WordLibrary w in pyAndWord)
             //{
-            //    sb.AppendLine("'" + w.PinYinString + " " + w.Word); //以搜狗文本词库的方式返回
+            //    sb.AppendLine("'" + w.PinyinString + " " + w.Word); //以搜狗文本词库的方式返回
             //}
             //return sb.ToString();
         }
@@ -201,7 +201,7 @@ namespace Studyzy.IMEWLConverter.IME
                 string word = Encoding.Unicode.GetString(str);
                 short unknown1 = BinFileHelper.ReadInt16(fs); //全部是10,肯定不是词频，具体是什么不知道
                 int unknown2 = BinFileHelper.ReadInt32(fs); //每个字对应的数字不一样，不知道是不是词频
-                pyAndWord.Add(new WordLibrary {Word = word, PinYin = wordPY.ToArray(), Rank = DefaultRank});
+                pyAndWord.Add(new WordLibrary {Word = word, Pinyin = wordPY.ToArray(), Rank = DefaultRank});
                 CurrentStatus++;
                 //接下来10个字节什么意思呢？暂时先忽略了
                 var temp = new byte[6];

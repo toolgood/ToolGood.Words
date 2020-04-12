@@ -88,7 +88,7 @@ namespace Studyzy.IMEWLConverter.Entities
         /// <summary>
         ///     词中每个字的拼音(已消除多音字)
         /// </summary>
-        public string[] PinYin
+        public string[] Pinyin
         {
             get
             {
@@ -120,15 +120,15 @@ namespace Studyzy.IMEWLConverter.Entities
         }
 
         /// <summary>
-        ///     词的拼音字符串，可以单独设置的一个属性，如果没有设置该属性，而获取该属性，则返回PinYin属性和“'”组合的字符串
+        ///     词的拼音字符串，可以单独设置的一个属性，如果没有设置该属性，而获取该属性，则返回Pinyin属性和“'”组合的字符串
         /// </summary>
-        public string PinYinString
+        public string PinyinString
         {
             get
             {
                 if (pinYinString == "" && !isEnglish)
                 {
-                    pinYinString = string.Join("'", PinYin);
+                    pinYinString = string.Join("'", Pinyin);
                 }
                 return pinYinString;
             }
@@ -192,9 +192,9 @@ namespace Studyzy.IMEWLConverter.Entities
         /// <param name="split">每个拼音之间的分隔符</param>
         /// <param name="buildType">组装拼音字符串的方式</param>
         /// <returns></returns>
-        public string GetPinYinString(string split, BuildType buildType)
+        public string GetPinyinString(string split, BuildType buildType)
         {
-            return CollectionHelper.GetString(PinYin, split, buildType);
+            return CollectionHelper.GetString(Pinyin, split, buildType);
         }
 
         public IList<string> GetCodeString(string split, BuildType buildType)

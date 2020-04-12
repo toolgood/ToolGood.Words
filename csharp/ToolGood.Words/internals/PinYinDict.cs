@@ -12,7 +12,7 @@ using ZIPStream = System.IO.Compression.GZipStream;
 
 namespace ToolGood.Words.internals
 {
-    public class PinYinDict
+    public class PinyinDict
     {
         private static Dictionary<string, ushort[]> _pyName;
         private static string[] _pyShow;
@@ -28,7 +28,7 @@ namespace ToolGood.Words.internals
             }
         }
 
-        public static string[] GetPinYinList(string text, int tone = 0)
+        public static string[] GetPinyinList(string text, int tone = 0)
         {
             InitPyIndex();
             InitPyWords();
@@ -54,16 +54,18 @@ namespace ToolGood.Words.internals
                     if (end > start) {
                         list[i] = _pyShow[_pyData[start] + tone];
                     }
+                } else {
+                    list[i] = text[i].ToString();
                 }
             }
             return list.ToArray();
         }
 
-        public static string GetFirstPinYin(string text, int tone = 0)
+        public static string GetFirstPinyin(string text, int tone = 0)
         {
             InitPyIndex();
 
-            string[] list = GetPinYinList(text, tone);
+            string[] list = GetPinyinList(text, tone);
             StringBuilder sb = new StringBuilder(text);
             for (int i = 0; i < list.Length; i++) {
                 var c = list[i];
@@ -74,7 +76,7 @@ namespace ToolGood.Words.internals
             return sb.ToString();
         }
 
-        public static List<string> GetAllPinYin(char c, int tone = 0)
+        public static List<string> GetAllPinyin(char c, int tone = 0)
         {
             InitPyIndex();
             if (c >= 0x3400 && c <= 0x9fd5) {
@@ -92,7 +94,7 @@ namespace ToolGood.Words.internals
             return new List<string>();
         }
 
-        public static string GetPinYinFast(char c, int tone = 0)
+        public static string GetPinyinFast(char c, int tone = 0)
         {
             InitPyIndex();
 
@@ -107,7 +109,7 @@ namespace ToolGood.Words.internals
             return c.ToString();
         }
 
-        public static List<string> GetPinYinForName(string name, int tone = 0)
+        public static List<string> GetPinyinForName(string name, int tone = 0)
         {
             InitPyName();
             InitPyIndex();
@@ -124,7 +126,7 @@ namespace ToolGood.Words.internals
                     }
                     if (name.Length > 2) {
                         ming = name.Substring(2);
-                        list.AddRange(GetPinYinList(ming, tone));
+                        list.AddRange(GetPinyinList(ming, tone));
                     }
                     return list;
                 }
@@ -136,12 +138,12 @@ namespace ToolGood.Words.internals
                 }
                 if (name.Length > 1) {
                     ming = name.Substring(1);
-                    list.AddRange(GetPinYinList(ming, tone));
+                    list.AddRange(GetPinyinList(ming, tone));
                 }
                 return list;
             }
 
-            return GetPinYinList(name, tone).ToList();
+            return GetPinyinList(name, tone).ToList();
         }
 
 

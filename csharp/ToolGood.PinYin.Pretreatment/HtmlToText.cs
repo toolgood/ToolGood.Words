@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 
-namespace ToolGood.PinYin.Pretreatment
+namespace ToolGood.Pinyin.Pretreatment
 {
     //代码
     /// <summary>
