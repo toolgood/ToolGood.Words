@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class StringSearchEx extends BaseSearchEx2 {
+public class StringSearchEx2 extends BaseSearchEx2 {
 
     /**
      * 在文本中查找所有的关键字
