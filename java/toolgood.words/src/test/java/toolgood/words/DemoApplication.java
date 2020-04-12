@@ -31,7 +31,7 @@ public class DemoApplication {
 		test_WordsSearchEx();
 		test_IllegalWordsSearch();
 
-		test_pinyin();
+		test_Pinyin();
 		test_words();
 
 		// try {
@@ -355,73 +355,73 @@ public class DemoApplication {
 		search.Save("IllegalWordsSearch.dat");
 	}
 
-	private static void test_pinyin() throws NumberFormatException, IOException {
-		System.out.println("text_pinyin run Test.");
-		List<String> t = WordsHelper.GetAllPinYin('芃');
+	private static void test_Pinyin() throws NumberFormatException, IOException {
+		System.out.println("text_Pinyin run Test.");
+		List<String> t = WordsHelper.GetAllPinyin('芃');
 		if (t.get(0).equals("Peng") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
-		String a = WordsHelper.GetPinYinFast("阿");
+		String a = WordsHelper.GetPinyinFast("阿");
 		if (a.equals("A") == false) {
-			System.out.println("GetPinYinFast is Error.");
+			System.out.println("GetPinyinFast is Error.");
 		}
 
-		String b = WordsHelper.GetPinYin("摩擦棒");
+		String b = WordsHelper.GetPinyin("摩擦棒");
 		if (b.equals("MoCaBang") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
-		b = WordsHelper.GetPinYin("秘鲁");
+		b = WordsHelper.GetPinyin("秘鲁");
 		if (b.equals("BiLu") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		String py = WordsHelper.GetPinYinFast("我爱中国");
+		String py = WordsHelper.GetPinyinFast("我爱中国");
 		if (py.equals("WoAiZhongGuo") == false) {
-			System.out.println("GetPinYinFast is Error.");
+			System.out.println("GetPinyinFast is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("快乐，乐清");
+		py = WordsHelper.GetPinyin("快乐，乐清");
 		if (py.equals("KuaiLe，YueQing") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("快乐清理");
+		py = WordsHelper.GetPinyin("快乐清理");
 		if (py.equals("KuaiLeQingLi") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("我爱中国", true);
+		py = WordsHelper.GetPinyin("我爱中国", true);
 		if (py.equals("WǒÀiZhōngGuó") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetFirstPinYin("我爱中国");
+		py = WordsHelper.GetFirstPinyin("我爱中国");
 		if (py.equals("WAZG") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		List<String> pys = WordsHelper.GetAllPinYin('传');
+		List<String> pys = WordsHelper.GetAllPinyin('传');
 		if (pys.get(0).equals("Chuan") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 		if (pys.get(1).equals("Zhuan") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYinForName("单一一");
+		py = WordsHelper.GetPinyinForName("单一一");
 		if (py.equals("ShanYiYi") == false) {
-			System.out.println("GetPinYinForName is Error.");
+			System.out.println("GetPinyinForName is Error.");
 		}
 
-		py = WordsHelper.GetPinYinForName("单一一", true);
+		py = WordsHelper.GetPinyinForName("单一一", true);
 		if (py.equals("ShànYīYī") == false) {
-			System.out.println("GetPinYinForName is Error.");
+			System.out.println("GetPinyinForName is Error.");
 		}
 
-		List<String> all = WordsHelper.GetAllPinYin('石');
+		List<String> all = WordsHelper.GetAllPinyin('石');
 		if (all.size() == 0) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
 	}

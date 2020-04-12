@@ -1,7 +1,7 @@
 package toolgood.words;
 
 import toolgood.words.internals.Dict;
-import toolgood.words.internals.PinYinDict;
+import toolgood.words.internals.PinyinDict;
 import toolgood.words.internals.Translate;
 
 import java.io.IOException;
@@ -18,12 +18,12 @@ public class WordsHelper {
      * @throws IOException
      * @throws NumberFormatException
      */
-    public static String GetFirstPinYin(String text) throws NumberFormatException, IOException {
-        return PinYinDict.GetFirstPinYin(text, 0);
+    public static String GetFirstPinyin(String text) throws NumberFormatException, IOException {
+        return PinyinDict.GetFirstPinyin(text, 0);
     }
 
     /**
-     * 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证 请使用GetPinYin方法，此方法不支持多音
+     * 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证 请使用GetPinyin方法，此方法不支持多音
      * 
      * @param text 原文本
      * @param tone 是否带声调
@@ -31,28 +31,28 @@ public class WordsHelper {
      * @throws IOException
      * @throws NumberFormatException
      */
-    public static String GetPinYinFast(String text, Boolean tone) throws NumberFormatException, IOException {
+    public static String GetPinyinFast(String text, Boolean tone) throws NumberFormatException, IOException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             Character c = text.charAt(i);
-            sb.append(PinYinDict.GetPinYinFast(c, tone ? 1 : 0));
+            sb.append(PinyinDict.GetPinyinFast(c, tone ? 1 : 0));
         }
         return sb.toString();
     }
 
     /**
-     * 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证 请使用GetPinYin方法，此方法不支持多音
+     * 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证 请使用GetPinyin方法，此方法不支持多音
      * 
      * @param text
      * @return
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static String GetPinYinFast(String text) throws NumberFormatException, IOException {
+    public static String GetPinyinFast(String text) throws NumberFormatException, IOException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             Character c = text.charAt(i);
-            sb.append(PinYinDict.GetPinYinFast(c, 0));
+            sb.append(PinyinDict.GetPinyinFast(c, 0));
         }
         return sb.toString();
     }
@@ -66,8 +66,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static String GetPinYin(String text, Boolean tone) throws NumberFormatException, IOException {
-        return PinYinDict.GetPinYin(text, tone ? 1 : 0);
+    public static String GetPinyin(String text, Boolean tone) throws NumberFormatException, IOException {
+        return PinyinDict.GetPinyin(text, tone ? 1 : 0);
     }
 
     /**
@@ -78,8 +78,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static String GetPinYin(String text) throws NumberFormatException, IOException {
-        return PinYinDict.GetPinYin(text, 0);
+    public static String GetPinyin(String text) throws NumberFormatException, IOException {
+        return PinyinDict.GetPinyin(text, 0);
     }
 
     /**
@@ -91,8 +91,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static List<String> GetAllPinYin(char c, Boolean tone) throws NumberFormatException, IOException {
-        return PinYinDict.GetAllPinYin(c, tone ? 1 : 0);
+    public static List<String> GetAllPinyin(char c, Boolean tone) throws NumberFormatException, IOException {
+        return PinyinDict.GetAllPinyin(c, tone ? 1 : 0);
     }
 
     /**
@@ -103,8 +103,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static List<String> GetAllPinYin(char c) throws NumberFormatException, IOException {
-        return PinYinDict.GetAllPinYin(c, 0);
+    public static List<String> GetAllPinyin(char c) throws NumberFormatException, IOException {
+        return PinyinDict.GetAllPinyin(c, 0);
     }
 
     /**
@@ -116,8 +116,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static String GetPinYinForName(String name, Boolean tone) throws NumberFormatException, IOException {
-        return String.join("", PinYinDict.GetPinYinForName(name, tone ? 1 : 0));
+    public static String GetPinyinForName(String name, Boolean tone) throws NumberFormatException, IOException {
+        return String.join("", PinyinDict.GetPinyinForName(name, tone ? 1 : 0));
     }
 
     /**
@@ -128,8 +128,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static String GetPinYinForName(String name) throws NumberFormatException, IOException {
-        return String.join("", PinYinDict.GetPinYinForName(name, 0));
+    public static String GetPinyinForName(String name) throws NumberFormatException, IOException {
+        return String.join("", PinyinDict.GetPinyinForName(name, 0));
     }
 
     /**
@@ -141,9 +141,9 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static List<String> GetPinYinListForName(String name, Boolean tone)
+    public static List<String> GetPinyinListForName(String name, Boolean tone)
             throws NumberFormatException, IOException {
-        return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
+        return PinyinDict.GetPinyinForName(name, tone ? 1 : 0);
     }
 
     /**
@@ -153,8 +153,8 @@ public class WordsHelper {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public static List<String> GetPinYinListForName(String name) throws NumberFormatException, IOException {
-        return PinYinDict.GetPinYinForName(name, 0);
+    public static List<String> GetPinyinListForName(String name) throws NumberFormatException, IOException {
+        return PinyinDict.GetPinyinForName(name, 0);
     }
 
     /**

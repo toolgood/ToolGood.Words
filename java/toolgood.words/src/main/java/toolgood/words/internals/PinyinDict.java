@@ -12,7 +12,7 @@ import java.util.Map;
 import toolgood.words.WordsSearch;
 import toolgood.words.WordsSearchResult;
 
-public class PinYinDict {
+public class PinyinDict {
     private static Map<String, Integer[]> _pyName;
     private static String[] _pyShow;
     private static Integer[] _pyIndex;
@@ -25,7 +25,7 @@ public class PinYinDict {
         return _pyShow;
     }
 
-    public static String[] GetPinYinList(String text, int tone) throws NumberFormatException, IOException {
+    public static String[] GetPinyinList(String text, int tone) throws NumberFormatException, IOException {
         InitPyIndex();
         InitPyWords();
 
@@ -58,10 +58,10 @@ public class PinYinDict {
         return list;
     }
 
-    public static String GetPinYin(String text, int tone) throws NumberFormatException, IOException {
+    public static String GetPinyin(String text, int tone) throws NumberFormatException, IOException {
         InitPyIndex();
 
-        String[] list = GetPinYinList(text, tone);
+        String[] list = GetPinyinList(text, tone);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
@@ -74,10 +74,10 @@ public class PinYinDict {
         return sb.toString();
     }
 
-    public static String GetFirstPinYin(String text, int tone) throws NumberFormatException, IOException {
+    public static String GetFirstPinyin(String text, int tone) throws NumberFormatException, IOException {
         InitPyIndex();
 
-        String[] list = GetPinYinList(text, tone);
+        String[] list = GetPinyinList(text, tone);
         StringBuilder sb = new StringBuilder(text);
         for (int i = 0; i < list.length; i++) {
             String c = list[i];
@@ -88,7 +88,7 @@ public class PinYinDict {
         return sb.toString();
     }
 
-    public static List<String> GetAllPinYin(Character c, int tone) throws NumberFormatException, IOException {
+    public static List<String> GetAllPinyin(Character c, int tone) throws NumberFormatException, IOException {
         InitPyIndex();
         if (c >= 0x3400 && c <= 0x9fd5) {
             int index = c - 0x3400;
@@ -108,7 +108,7 @@ public class PinYinDict {
         return new ArrayList<String>();
     }
 
-    public static String GetPinYinFast(Character c, int tone) throws NumberFormatException, IOException {
+    public static String GetPinyinFast(Character c, int tone) throws NumberFormatException, IOException {
         InitPyIndex();
 
         if (c >= 0x3400 && c <= 0x9fd5) {
@@ -122,7 +122,7 @@ public class PinYinDict {
         return c.toString();
     }
 
-    public static List<String> GetPinYinForName(String name, int tone  ) throws NumberFormatException, IOException
+    public static List<String> GetPinyinForName(String name, int tone  ) throws NumberFormatException, IOException
     {
         InitPyName();
         InitPyIndex();
@@ -140,7 +140,7 @@ public class PinYinDict {
                 }
                 if (name.length() > 2) {
                     ming = name.substring(2);
-                    String[] pys=GetPinYinList(ming, tone);
+                    String[] pys=GetPinyinList(ming, tone);
                     for (String py : pys) {
                         list.add(py);
                     }
@@ -156,14 +156,14 @@ public class PinYinDict {
             }
             if (name.length() > 1) {
                 ming = name.substring(1);
-                String[] pys=GetPinYinList(ming, tone);
+                String[] pys=GetPinyinList(ming, tone);
                 for (String py : pys) {
                     list.add(py);
                 }
             } 
             return list;
         }
-        String[] pys=GetPinYinList(name, tone);
+        String[] pys=GetPinyinList(name, tone);
         for (String py : pys) {
             list.add(py);
         }
