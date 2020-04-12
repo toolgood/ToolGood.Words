@@ -1,12 +1,12 @@
 package toolgood.words;
 
-import toolgood.words.internals.BaseSearchEx;
+import toolgood.words.internals.BaseSearchEx2;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class StringSearchEx extends BaseSearchEx {
+public class StringSearchEx extends BaseSearchEx2 {
 
     /**
      * 在文本中查找所有的关键字

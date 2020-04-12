@@ -1,6 +1,5 @@
 package toolgood.words;
 
-import toolgood.words.internals.Dict;
 import toolgood.words.internals.PinyinDict;
 import toolgood.words.internals.Translate;
 
@@ -156,45 +155,7 @@ public class WordsHelper {
     public static List<String> GetPinyinListForName(String name) throws NumberFormatException, IOException {
         return PinyinDict.GetPinyinForName(name, 0);
     }
-
-    /**
-     * 转成 侦测字符串 1、转小写;2、全角转半角; 3、相似文字修改；4、繁体转简体
-     * 
-     * @param s
-     * @return
-     */
-    public static String ToSenseIllegalWords(String s) {
-        StringBuilder ts = new StringBuilder(s);
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c < 'A') {
-            } else if (c <= 'Z') {
-                ts.setCharAt(i, (char) (c | 0x20));
-            } else if (c < 9450) {
-            } else if (c <= 12840) {// 处理数字
-                int index = Dict.nums1.indexOf(c);
-                if (index > -1) {
-                    ts.setCharAt(i, Dict.nums2.charAt(index));
-                }
-            } else if (c == 12288) {
-                ts.setCharAt(i, ' ');
-            } else if (c < 0x4e00) {
-            } else if (c <= 0x9fa5) {
-                char k = Dict.Simplified.charAt(c - 0x4e00);
-                if (k != c) {
-                    ts.setCharAt(i, k);
-                }
-            } else if (c < 65280) {
-            } else if (c < 65375) {
-                char k = (char) (c - 65248);
-                if ('A' <= k && k <= 'Z') {
-                    k = (char) (k | 0x20);
-                }
-                ts.setCharAt(i, k);
-            }
-        }
-        return ts.toString();
-    }
+ 
 
     /**
      * 判断输入是否为中文 ,中文字符集为[0x4E00,0x9FA5]
