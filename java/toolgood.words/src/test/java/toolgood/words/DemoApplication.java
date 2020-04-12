@@ -16,9 +16,9 @@ import org.springframework.util.StopWatch;
 import toolgood.words.IllegalWordsSearch;
 import toolgood.words.IllegalWordsSearchResult;
 import toolgood.words.StringSearch;
-import toolgood.words.StringSearchEx;
+import toolgood.words.StringSearchEx2;
 import toolgood.words.WordsSearch;
-import toolgood.words.WordsSearchEx;
+import toolgood.words.WordsSearchEx2;
 import toolgood.words.WordsSearchResult;
 
 public class DemoApplication {
@@ -89,7 +89,7 @@ public class DemoApplication {
 		list.add("zg人");
 		System.out.println("StringSearchEx run Test.");
 
-		StringSearchEx iwords = new StringSearchEx();
+		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.SetKeywords(list);
 
 		boolean b = iwords.ContainsAny(test);
@@ -165,7 +165,7 @@ public class DemoApplication {
 		list.add("zg人");
 		System.out.println("WordsSearchEx run Test.");
 
-		WordsSearchEx iwords = new WordsSearchEx();
+		WordsSearchEx2 iwords = new WordsSearchEx2();
 		iwords.SetKeywords(list);
 
 		boolean b = iwords.ContainsAny(test);
@@ -241,11 +241,11 @@ public class DemoApplication {
 		list.add("zg人");
 		System.out.println("test_save_load run Test.");
 
-		StringSearchEx search = new StringSearchEx();
+		StringSearchEx2 search = new StringSearchEx2();
 		search.SetKeywords(list);
 		search.Save("1.dat");
 
-		StringSearchEx iwords = new StringSearchEx();
+		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.Load("1.dat");
 
 		boolean b = iwords.ContainsAny(test);
@@ -284,7 +284,7 @@ public class DemoApplication {
 		}
 		String words = readLineByLineJava8("Talk.txt");
 
-		StringSearchEx iwords = new StringSearchEx();
+		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.SetKeywords(list);
 
 		StopWatch sw = new StopWatch();
