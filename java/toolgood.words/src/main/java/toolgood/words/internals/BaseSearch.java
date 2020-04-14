@@ -22,7 +22,6 @@ public class BaseSearch {
     }
 
     private void SetKeywords() {
-        
         TrieNode root = new TrieNode();
         Map<Integer, List<TrieNode>> allNodeLayers = new Hashtable<Integer, List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
@@ -115,5 +114,6 @@ public class BaseSearch {
         }
         _first = first;
     }
+
 
 }
