@@ -36,6 +36,13 @@ public class IntDictionary {
         }
         last = _keys.length - 1;
     }
+    public void SetDictionary(int[] keys,int[] values) {
+        _keys=keys;
+        _values=values;
+        last = _keys.length - 1;
+    }
+
+
 
     public boolean TryGetValue(Integer key, Integer value) {
         if (last == -1) {
