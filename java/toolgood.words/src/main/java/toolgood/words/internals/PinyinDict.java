@@ -17,6 +17,7 @@ public class PinyinDict {
     private static String[] _pyShow;
     private static Integer[] _pyIndex;
     private static Integer[] _pyData;
+    private static Integer[] _wordPyIndex;
     private static Integer[] _wordPy;
     private static WordsSearch _search;
 
@@ -36,11 +37,11 @@ public class PinyinDict {
         for (WordsSearchResult p : pos) {
             if (p.Start > pindex) {
                 for (int i = 0; i < p.Keyword.length(); i++) {
-                    list[i + p.Start] = _pyShow[_wordPy[i + p.Index] + tone];
+                    list[i + p.Start] = _pyShow[_wordPy[i + _wordPyIndex[p.Index]] + tone];
                 }
                 pindex = p.End;
             }
-        } 
+        }
 
         for (int i = 0; i < text.length(); i++) {
             if (list[i] != null)
@@ -122,8 +123,7 @@ public class PinyinDict {
         return c.toString();
     }
 
-    public static List<String> GetPinyinForName(String name, int tone  ) throws NumberFormatException, IOException
-    {
+    public static List<String> GetPinyinForName(String name, int tone) throws NumberFormatException, IOException {
         InitPyName();
         InitPyIndex();
 
@@ -133,37 +133,37 @@ public class PinyinDict {
         Integer[] indexs;
         if (name.length() > 1) { // 检查复姓
             xing = name.substring(0, 2);
-            if(_pyName.containsKey(xing)){
-                indexs=_pyName.get(xing);
+            if (_pyName.containsKey(xing)) {
+                indexs = _pyName.get(xing);
                 for (Integer index : indexs) {
                     list.add(_pyShow[index + tone]);
                 }
                 if (name.length() > 2) {
                     ming = name.substring(2);
-                    String[] pys=GetPinyinList(ming, tone);
+                    String[] pys = GetPinyinList(ming, tone);
                     for (String py : pys) {
                         list.add(py);
                     }
-                } 
+                }
                 return list;
             }
         }
         xing = name.substring(0, 1);
-        if(_pyName.containsKey(xing)){
-            indexs=_pyName.get(xing);
+        if (_pyName.containsKey(xing)) {
+            indexs = _pyName.get(xing);
             for (Integer index : indexs) {
                 list.add(_pyShow[index + tone]);
             }
             if (name.length() > 1) {
                 ming = name.substring(1);
-                String[] pys=GetPinyinList(ming, tone);
+                String[] pys = GetPinyinList(ming, tone);
                 for (String py : pys) {
                     list.add(py);
                 }
-            } 
+            }
             return list;
         }
-        String[] pys=GetPinyinList(name, tone);
+        String[] pys = GetPinyinList(name, tone);
         for (String py : pys) {
             list.add(py);
         }
@@ -204,8 +204,7 @@ public class PinyinDict {
         }
     }
 
-    private static void InitPyName() throws NumberFormatException, IOException
-    {
+    private static void InitPyName() throws NumberFormatException, IOException {
         if (_pyName == null) {
             String resourceName = "pyName.txt";
             InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
@@ -221,29 +220,30 @@ public class PinyinDict {
                     int in = Integer.valueOf(idx, 16);
                     index.add(in);
                 }
-                Integer[] temp=new  Integer[index.size()];
+                Integer[] temp = new Integer[index.size()];
                 pyName.put(sp[0], index.toArray(temp));
             }
             br.close();
- 
+
             _pyName = pyName;
         }
     }
 
-    private static void InitPyWords() throws NumberFormatException, IOException
-    {
+    private static void InitPyWords() throws NumberFormatException, IOException {
         if (_search == null) {
             String resourceName = "pyWords.txt";
             InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
             BufferedReader br = new BufferedReader(new InputStreamReader(u1));
 
-            Map<String, Integer> keywords = new HashMap<String, Integer>();
+            List<String> keywords = new ArrayList<String>();
+            List<Integer> wordPyIndex = new ArrayList<Integer>();
             List<Integer> wordPy = new ArrayList<Integer>();
 
             String tStr = "";
             while ((tStr = br.readLine()) != null) {
                 String[] sp = tStr.split(",");
-                keywords.put(sp[0], wordPy.size());
+                keywords.add(sp[0]);
+                wordPyIndex.add(wordPy.size());
                 for (int i = 1; i < sp.length; i++) {
                     String idx = sp[i];
                     int in = Integer.valueOf(idx, 16);
@@ -253,8 +253,10 @@ public class PinyinDict {
             br.close();
             WordsSearch search = new WordsSearch();
             search.SetKeywords(keywords);
-            Integer[] wp=new Integer[wordPy.size()];
+            Integer[] wp = new Integer[wordPy.size()];
             _wordPy = wordPy.toArray(wp);
+            Integer[] wpi = new Integer[wordPyIndex.size()];
+            _wordPyIndex = wordPyIndex.toArray(wpi);
             _search = search;
         }
 
