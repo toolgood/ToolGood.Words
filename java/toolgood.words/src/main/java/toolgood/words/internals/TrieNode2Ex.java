@@ -8,17 +8,17 @@ public class TrieNode2Ex {
     public int Index;
     public boolean End;
     public List<Integer> Results;
-    public HashMap<Character, TrieNode2Ex> m_values;
-    private int minflag = Integer.MAX_VALUE;
-    private int maxflag = Integer.MIN_VALUE;
+    public HashMap<Integer, TrieNode2Ex> m_values;
+    public int minflag = Integer.MAX_VALUE;
+    public int maxflag = Integer.MIN_VALUE;
 
     public TrieNode2Ex()
     {
         Results = new ArrayList<Integer>();
-        m_values = new HashMap<Character, TrieNode2Ex>();
+        m_values = new HashMap<Integer, TrieNode2Ex>();
     }
 
-    public void Add(char c, TrieNode2Ex node3)
+    public void Add(int c, TrieNode2Ex node3)
     {
         if (minflag > c) { minflag = c; }
         if (maxflag < c) { maxflag = c; }
