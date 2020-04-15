@@ -5,7 +5,7 @@ ToolGood.Words(Java版)
 `C#`版的`ToolGood.Words` 是已知最快的非法词(敏感词)检测组件， 使用`StringSearchEx2.Replace`过滤，在48k敏感词库上的过滤速度超过3亿字符每秒。（cpu i7 8750h，2019年） 
 
 
-目前java版本已移植了`StringSearch`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx2`、`IllegalWordsSearch`及部分`WordsHelper`
+目前java版本已移植了`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`及部分`WordsHelper`
 
 
 ## 繁体简体互换、全角半角互换、拼音操作
@@ -36,10 +36,10 @@ ToolGood.Words(Java版)
 ```
 
 ## 非法词(敏感词)检测（字符串搜索）
-非法词(敏感词)检测类：`StringSearch`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx2`、`IllegalWordsSearch`;
+非法词(敏感词)检测类：`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`;
 
-* `StringSearch`、`StringSearchEx2`: 搜索`FindFirst`方法返回结果为`string`类型。
-* `WordsSearch`、`WordsSearchEx2`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
+* `StringSearch`、`StringSearchEx`、`StringSearchEx2`: 搜索`FindFirst`方法返回结果为`string`类型。
+* `WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`: 搜索`FindFirst`方法返回结果为`WordsSearchResult`类型,
 `WordsSearchResult`不仅仅有关键字，还有关键字的开始位置、结束位置，关键字序号等。
 * `IllegalWordsSearch`: 过滤非法词（敏感词）专用类，可设置跳字长度，默认**全角转半角，忽略大小写，跳词，重复词，黑名单**，
 搜索`FindFirst`方法返回为`IllegalWordsSearchResult`,有关键字，对应原文，开始、位置，黑名单类型。
@@ -53,8 +53,10 @@ ToolGood.Words(Java版)
 	import toolgood.words.IllegalWordsSearch;
 	import toolgood.words.IllegalWordsSearchResult;
 	import toolgood.words.StringSearch;
+	import toolgood.words.StringSearchEx;
 	import toolgood.words.StringSearchEx2;
 	import toolgood.words.WordsSearch;
+	import toolgood.words.WordsSearchEx;
 	import toolgood.words.WordsSearchEx2;
 	import toolgood.words.WordsSearchResult;
 
