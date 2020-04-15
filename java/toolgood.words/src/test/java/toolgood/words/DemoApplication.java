@@ -29,6 +29,9 @@ public class DemoApplication {
 
 		test_StringSearchEx();
 		test_WordsSearchEx();
+
+		test_StringSearchEx2();
+		test_WordsSearchEx2();
 		test_IllegalWordsSearch();
 
 		test_Pinyin();
@@ -88,6 +91,44 @@ public class DemoApplication {
 		list.add("国人");
 		list.add("zg人");
 		System.out.println("StringSearchEx run Test.");
+
+		StringSearchEx iwords = new StringSearchEx();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		String f = iwords.FindFirst(test);
+		if (f != "中国") {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<String> all = iwords.FindAll(test);
+		if (all.get(0) != "中国") {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1) != "国人") {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
+	private static void test_StringSearchEx2() {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("中国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("StringSearchEx2 run Test.");
 
 		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.SetKeywords(list);
@@ -157,13 +198,55 @@ public class DemoApplication {
 		}
 	}
 
-	private static void test_WordsSearchEx() {
+	private static void test_WordsSearchEx() throws IOException {
 		String test = "我是中国人";
 		List<String> list = new ArrayList<String>();
 		list.add("中国");
 		list.add("国人");
 		list.add("zg人");
 		System.out.println("WordsSearchEx run Test.");
+
+		WordsSearchEx iwords2 = new WordsSearchEx();
+		iwords2.SetKeywords(list);
+		iwords2.Save("WordsSearchEx.dat");
+
+		WordsSearchEx iwords = new WordsSearchEx();
+		iwords.Load("WordsSearchEx.dat");
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		WordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("中国") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<WordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("中国") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("国人") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
+	private static void test_WordsSearchEx2() {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("中国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("WordsSearchEx2 run Test.");
 
 		WordsSearchEx2 iwords = new WordsSearchEx2();
 		iwords.SetKeywords(list);
@@ -447,12 +530,11 @@ public class DemoApplication {
 		if (tw3.equals("反反覆覆") == false) {
 			System.out.println("ToTraditionalChinese is Error.");
 		}
- 
+
 		String tw4 = WordsHelper.ToTraditionalChinese("这人考虑事情总是反反复复的", 2);
 		if (tw4.equals("這人考慮事情總是反反覆覆的") == false) {
 			System.out.println("ToTraditionalChinese is Error.");
 		}
-
 
 	}
 }

@@ -10,7 +10,7 @@ public class TrieNode2{
     public List<Integer> Results;
     public HashMap<Character, TrieNode2> m_values;
     private int minflag = Integer.MAX_VALUE;
-    private int maxflag = Integer.MIN_VALUE;
+    private int maxflag = 0;
 
     public TrieNode2()
     {
