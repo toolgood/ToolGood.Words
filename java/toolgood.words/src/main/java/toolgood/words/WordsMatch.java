@@ -6,6 +6,9 @@ import java.util.List;
 import toolgood.words.internals.BaseMatch;
 import toolgood.words.internals.TrieNode3;
 
+/**
+ * 文本搜索匹配, ,支持 部分 正则 如 . ? [ ] \ ( | ) ,不支持( )内再嵌套( )
+ */
 public class WordsMatch extends BaseMatch {
 
     /**
