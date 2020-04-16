@@ -147,7 +147,12 @@ public class StringMatch extends BaseMatch {
             ptr = tn;
         }
     }
-
+    /**
+     * 判断文本是否包含关键字
+     * 
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
@@ -206,6 +211,23 @@ public class StringMatch extends BaseMatch {
         return false;
     }
 
+    /**
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * 
+     * @param text 文本
+     * @return
+     */
+    public String Replace(String text) {
+        return Replace(text, '*');
+    }
+
+    /**
+     * 在文本中替换所有的关键字
+     * 
+     * @param text        文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text, char replaceChar) {
         StringBuilder result = new StringBuilder(text);
 

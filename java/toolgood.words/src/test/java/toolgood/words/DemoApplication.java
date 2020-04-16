@@ -13,13 +13,6 @@ import java.util.stream.Stream;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StopWatch;
 
-import toolgood.words.IllegalWordsSearch;
-import toolgood.words.IllegalWordsSearchResult;
-import toolgood.words.StringSearch;
-import toolgood.words.StringSearchEx2;
-import toolgood.words.WordsSearch;
-import toolgood.words.WordsSearchEx2;
-import toolgood.words.WordsSearchResult;
 
 public class DemoApplication {
 

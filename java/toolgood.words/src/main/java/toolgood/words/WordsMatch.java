@@ -37,7 +37,7 @@ public class WordsMatch extends BaseMatch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    Integer r = tn.Results.get(0) ;
+                    Integer r = tn.Results.get(0);
                     int length = _keywordLength[r];
                     int start = i - length + 1;
                     if (start >= 0) {
@@ -69,7 +69,7 @@ public class WordsMatch extends BaseMatch {
             tn = ptr.GetValue(t);
 
             if (tn.End) {
-                Integer r = tn.Results.get(0) ;
+                Integer r = tn.Results.get(0);
                 int length = _keywordLength[r];
                 int start = i - length + 1;
                 if (start >= 0) {
@@ -117,7 +117,7 @@ public class WordsMatch extends BaseMatch {
                         if (start >= 0) {
                             int kIndex = _keywordIndex[r];
                             String matchKeyword = _matchKeywords[kIndex];
-                            String keyword = text.substring(start, i+1);
+                            String keyword = text.substring(start, i + 1);
                             WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                             result.add(wr);
                         }
@@ -148,7 +148,7 @@ public class WordsMatch extends BaseMatch {
                     if (start >= 0) {
                         int kIndex = _keywordIndex[r];
                         String matchKeyword = _matchKeywords[kIndex];
-                        String keyword = text.substring(start, i+1);
+                        String keyword = text.substring(start, i + 1);
                         WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                         result.add(wr);
                     }
@@ -158,6 +158,12 @@ public class WordsMatch extends BaseMatch {
         }
     }
 
+    /**
+     * 判断文本是否包含关键字
+     * 
+     * @param text 文本
+     * @return
+     */
     public boolean ContainsAny(String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
@@ -216,6 +222,23 @@ public class WordsMatch extends BaseMatch {
         return false;
     }
 
+    /**
+     * 在文本中替换所有的关键字, 替换符默认为 *
+     * 
+     * @param text 文本
+     * @return
+     */
+    public String Replace(String text) {
+        return Replace(text, '*');
+    }
+
+    /**
+     * 在文本中替换所有的关键字
+     * 
+     * @param text        文本
+     * @param replaceChar 替换符
+     * @return
+     */
     public String Replace(String text, char replaceChar) {
         StringBuilder result = new StringBuilder(text);
 
