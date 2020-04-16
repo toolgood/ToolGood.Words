@@ -97,3 +97,49 @@ ToolGood.Words(Java版)
 	}
 ``` 
  
+## 非法词(敏感词)检测（字符串搜索）（支持通配符）
+非法词(敏感词)检测类：`StringMatch`、`WordsMatch`。
+
+支持部分正则表达式类型：`.`（点）`?`(问号) `[]`(方括号) `(|)`(括号与竖线)
+ 
+``` java
+	import toolgood.words.StringMatch;
+	import toolgood.words.WordsMatch;
+ 
+	String test = "我是中国人";
+	List<String> list = new ArrayList<String>();
+	list.add("[中美]国");
+	list.add("国人");
+	list.add("zg人");
+	System.out.println("StringMatch run Test.");
+
+	WordsMatch iwords = new WordsMatch();
+	iwords.SetKeywords(list);
+
+	boolean b = iwords.ContainsAny(test);
+	if (b == false) {
+		System.out.println("ContainsAny is Error.");
+	}
+
+	WordsSearchResult f = iwords.FindFirst(test);
+	if (f.Keyword.equals("中国") == false) {
+		System.out.println("FindFirst is Error.");
+	}
+
+	List<WordsSearchResult> all = iwords.FindAll(test);
+	if (all.get(0).Keyword.equals("中国") == false) {
+		System.out.println("FindAll is Error.");
+	}
+	if (all.get(1).Keyword.equals("国人") == false) {
+		System.out.println("FindAll is Error.");
+	}
+	if (all.size() != 2) {
+		System.out.println("FindAll is Error.");
+	}
+
+	String str = iwords.Replace(test, '*');
+	if (str.equals("我是***") == false) {
+		System.out.println("Replace is Error.");
+	}
+``` 
+ 
