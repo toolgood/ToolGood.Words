@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="Scel\" />
-    <Folder Include="dict\" />
   </ItemGroup>
 
 
@@ -275,9 +274,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="phrase-pinyin-data\zdic_cybs.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="pinyin-data\GBK_PUA.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="pinyin-data\kanji.txt">

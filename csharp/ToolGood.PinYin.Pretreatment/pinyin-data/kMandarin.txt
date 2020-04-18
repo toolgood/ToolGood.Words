@@ -41223,3 +41223,4 @@ U+2C62D: chēn  # 𬘭
 U+2C925: zhuàn  # 𬤥
 U+2CBCE: tuí  # 𬯎
 U+2CE23: xiān  # 𬸣
+

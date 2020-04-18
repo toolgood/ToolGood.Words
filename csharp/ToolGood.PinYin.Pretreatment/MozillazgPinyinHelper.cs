@@ -22,7 +22,8 @@ namespace ToolGood.PinYin.Pretreatment
                         foreach (var line in lines) {
                             var t = Regex.Replace(line, "#.*", "").Replace("U+", "").Trim();
                             if (string.IsNullOrEmpty(t)) { continue; }
-                            var sp = line.Replace("U+", "").Split(" ,:#\r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                            var sp = Regex.Replace(line, "(->|=>).*", "").Replace("U+", "").Split(" ,:#\r\n\t?".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                             List<string> pys = new List<string>();
                             for (int i = 1; i < sp.Length - 1; i++) {
@@ -39,7 +40,7 @@ namespace ToolGood.PinYin.Pretreatment
                     foreach (var line in lines) {
                         var t = Regex.Replace(line, "#.*", "").Replace("U+", "").Trim();
                         if (string.IsNullOrEmpty(t)) { continue; }
-                        var sp = line.Replace("U+", "").Split(" ,:#\r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        var sp = Regex.Replace(line, "(->|=>).*", "").Replace("U+", "").Split(" ,:#\r\n\t?".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                         List<string> pys = new List<string>();
                         for (int i = 1; i < sp.Length - 1; i++) {

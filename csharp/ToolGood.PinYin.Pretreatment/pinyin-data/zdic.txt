@@ -3314,7 +3314,7 @@ U+3F4F: gàn  # 㽏
 # U+3F50: ""  # 㽐
 U+3F51: tán  # 㽑
 # U+3F52: ""  # 㽒
-U+3F53: sān  # 㽓   Cantonese?
+U+3F53: sān  # 㽓  
 # U+3F54: ""  # 㽔
 U+3F55: yóu  # 㽕
 U+3F56: nán  # 㽖
@@ -5928,7 +5928,7 @@ U+4985: shàn,zhǎn  # 䦅
 U+4986: jué  # 䦆
 U+4987: jì  # 䦇
 U+4988: fǎng,hǎn,jí,mǒu,zá,zuǒ  # 䦈
-U+4989: sì  # 䦉   Cantonese?
+U+4989: sì  # 䦉    
 U+498A: niǎo  # 䦊
 U+498B: áo  # 䦋
 U+498C: chù,pò,ruì  # 䦌

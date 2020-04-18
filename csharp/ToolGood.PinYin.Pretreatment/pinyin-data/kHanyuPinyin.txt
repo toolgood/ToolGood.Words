@@ -34128,3 +34128,4 @@ U+2A6C8: líng  # 𪛈
 U+2A6CA: yín  # 𪛊
 U+2A6CE: pì  # 𪛎
 U+2A6D2: lián  # 𪛒
+
