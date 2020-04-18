@@ -1,4 +1,4 @@
-﻿using Microsoft.International.Converters.PinyinConverter;
+﻿using Microsoft.International.Converters.PinYinConverter;
 using Studyzy.IMEWLConverter.IME;
 using System;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using ToolGood.PinYin.Pretreatment;
 using ToolGood.Words;
 using ToolGood.Words.internals;
 
@@ -24,6 +25,7 @@ namespace ToolGood.Pinyin.Pretreatment
             // https://github.com/mozillazg/pinyin-data
             // https://github.com/mozillazg/phrase-pinyin-data
 
+            MozillazgPinyinHelper.ToStandardization();
 
             // 预处理
             // 第一步 处理搜狗词库
