@@ -17,18 +17,13 @@ namespace ToolGood.Pinyin.Pretreatment
     {
         static void Main(string[] args)
         {
-            var t = WordsHelper.GetAllPinyin('芃');
+            // 感谢 hotoo 大佬 整理的拼音 拼音范围 0x4e00-0x9fa5
+            // https://github.com/hotoo/pinyin
+            // 感谢  mozillazg 大佬 整理的拼音 并指出 拼音来源
+            // 拼音来源
+            // https://github.com/mozillazg/pinyin-data
+            // https://github.com/mozillazg/phrase-pinyin-data
 
-            var a = WordsHelper.GetPinyinFast("阿");
-
-
-
-
-
-            var py222 = WordsHelper.GetPinyinFast("我爱中国");
-
-
-            var tpy = WordsHelper.GetAllPinyin('堃');
 
             // 预处理
             // 第一步 处理搜狗词库

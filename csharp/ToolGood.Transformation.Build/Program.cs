@@ -29,6 +29,7 @@ namespace ToolGood.Transformation.Build
 
 
         /// <summary>
+        /// 感谢 BYVoid 大佬
         /// dict 来源于  https://github.com/BYVoid/OpenCC
         /// </summary>
         /// <param name="args"></param>
