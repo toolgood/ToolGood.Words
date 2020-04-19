@@ -27,6 +27,14 @@ namespace ToolGood.Pinyin.Pretreatment
 
             MozillazgPinyinHelper.ToStandardization();
 
+            var start = "𠀀";// '\ud840' '\udc00' - '\udfff'  
+            var end = "𫠝";// '\ud86e' '\udc1d'
+            var mid = "𬺓";
+            mid = "𬀩";
+            StringBuilder stringBuilder = new StringBuilder(start);
+            stringBuilder[0] = (char)0xd840;
+            stringBuilder[1] = (char)0xdfff;
+
             // 预处理
             // 第一步 处理搜狗词库
             Console.WriteLine("第一步 处理搜狗词库");
@@ -35,6 +43,7 @@ namespace ToolGood.Pinyin.Pretreatment
                 File.WriteAllText("scel_1.txt", string.Join("\n", scel_1));
                 scel_1.Clear();
             }
+
             // 第二步 精简词库              
             Console.WriteLine("第二步 精简词库");
             if (File.Exists("scel_2.txt") == false) {
@@ -390,6 +399,7 @@ namespace ToolGood.Pinyin.Pretreatment
                 var pyText = File.ReadAllText("pinyin_5_one.txt");
                 var pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+
                 foreach (var line in pyLines) {
                     var sp = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                     List<string> pys = new List<string>();
@@ -428,6 +438,55 @@ namespace ToolGood.Pinyin.Pretreatment
                     ls2.Add($"{item.Key} {string.Join(",", item.Value)}");
                 }
                 File.WriteAllText("pinyin_5_1_one.txt", string.Join("\n", ls2));
+
+                Dictionary<string, List<string>> pysDict = new Dictionary<string, List<string>>();
+                var txt = File.ReadAllText("pinyin_3_one.txt");
+                var lines = txt.Split('\n').ToList();
+                for (int i = lines.Count - 1; i >= 0; i--) {
+                    var line = lines[i];
+                    line = Regex.Replace(line, "//.*[\r\n]?", "");
+                    if (string.IsNullOrWhiteSpace(line)) { continue; }
+                    var sps = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var key = sps[0];
+                    sps.RemoveAt(0);
+                    pysDict[key] = sps;
+                }
+                txt = File.ReadAllText("dict/dict-pinyin.txt");
+                lines = txt.Split('\n').ToList();
+                for (int i = lines.Count - 1; i >= 0; i--) {
+                    var line = lines[i];
+                    line = Regex.Replace(line, "//.*[\r\n]?", "");
+                    if (string.IsNullOrWhiteSpace(line)) { continue; }
+                    var sps = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var key = sps[0];
+                    sps.RemoveAt(0);
+                    pysDict[key] = sps;
+                }
+                txt = File.ReadAllText("dict/mozillazg_pinyin.txt");
+                lines = txt.Split('\n').ToList();
+                for (int i = lines.Count - 1; i >= 0; i--) {
+                    var line = lines[i];
+                    line = Regex.Replace(line, "//.*[\r\n]?", "");
+                    if (string.IsNullOrWhiteSpace(line)) { continue; }
+                    var sps = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var key = sps[0];
+                    sps.RemoveAt(0);
+                    pysDict[key] = sps;
+                }
+
+                List<string> ls3 = new List<string>();
+                foreach (var item in pysDict) {
+                    if (item.Key.Length == 1) {
+                        continue;
+                    }
+                    if (item.Key[0] >= 0xd840 && item.Key[0] <= 0xd86e) {
+                        if (item.Key[1] >= 0xdc00 && item.Key[1] <= 0xdfff) {
+                            ls3.Add($"{item.Key} {string.Join(",", item.Value)}");
+                        }
+                    }
+                }
+
+                File.WriteAllText("pinyin_5_2_one.txt", string.Join("\n", ls3));
             }
 
 

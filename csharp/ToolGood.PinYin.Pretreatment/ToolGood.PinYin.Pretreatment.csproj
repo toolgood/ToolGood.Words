@@ -48,6 +48,9 @@
     <None Update="..\lib\PinyinData\dict-zi-infrequent.txt" Link="dict\dict-zi-infrequent.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="..\lib\PinyinData\mozillazg_pinyin.txt" Link="dict\mozillazg_pinyin.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="..\lib\PinyinData\words_0.txt" Link="dict\words_0.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
