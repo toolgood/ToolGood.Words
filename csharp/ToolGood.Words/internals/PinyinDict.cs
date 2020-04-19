@@ -18,6 +18,8 @@ namespace ToolGood.Words.internals
         private static string[] _pyShow;
         private static ushort[] _pyIndex;
         private static ushort[] _pyData;
+        private static ushort[][] _pyIndex2;
+        private static ushort[][] _pyData2;
         private static int[] _wordPyIndex;
         private static ushort[] _wordPy;
         private static WordsSearch _search;
@@ -33,31 +35,51 @@ namespace ToolGood.Words.internals
             InitPyIndex();
             InitPyWords();
 
-            string[] list = new string[text.Length];
+            List<string> list = new List<string>();
+            for (int j = 0; j < text.Length; j++) { list.Add(null); }
+
             var pos = _search.FindAll(text);
             var pindex = -1;
             foreach (var p in pos) {
                 if (p.Start > pindex) {
-                    for (int i = 0; i < p.Keyword.Length; i++) {
-                        list[i + p.Start] = _pyShow[_wordPy[_wordPyIndex[p.Index] + i] + tone];
+                    for (int j = 0; j < p.Keyword.Length; j++) {
+                        list[j + p.Start] = _pyShow[_wordPy[_wordPyIndex[p.Index] + j] + tone];
                     }
                     pindex = p.End;
                 }
             }
-            for (int i = 0; i < text.Length; i++) {
-                if (list[i] != null) continue;
-                var c = text[i];
-                if (c >= 0x3400 && c <= 0x9fd5) {
-                    var index = c - 0x3400;
-                    var start = _pyIndex[index];
-                    var end = _pyIndex[index + 1];
-                    if (end > start) {
-                        list[i] = _pyShow[_pyData[start] + tone];
+            var i = 0;
+            while (i < text.Length) {
+                if (list[i] == null) {
+                    var c = text[i];
+                    if (c >= 0x3400 && c <= 0x9fd5) {
+                        var index = c - 0x3400;
+                        var start = _pyIndex[index];
+                        var end = _pyIndex[index + 1];
+                        if (end > start) {
+                            list[i] = _pyShow[_pyData[start] + tone];
+                        }
+                    } else if (c >= 0xd840 && c <= 0xd86e && i + 1 < text.Length) {
+                        var ct = text[i + 1];
+                        if (ct >= 0xdc00 && ct <= 0xdfff) {
+                            var index = _pyIndex2[c - 0xd840][ct - 0xdc00];
+                            var index2 = _pyIndex2[c - 0xd840][ct - 0xdc00 + 1];
+                            if (index < index2) {
+                                i++;
+                                list[i] = _pyShow[_pyData2[c - 0xd840][index] + tone];
+                            } else {
+                                list[i] = text[i].ToString();
+                            }
+                        } else {
+                            list[i] = text[i].ToString();
+                        }
+                    } else {
+                        list[i] = text[i].ToString();
                     }
-                } else {
-                    list[i] = text[i].ToString();
                 }
+                i++;
             }
+            list.RemoveAll(q => q == null);
             return list.ToArray();
         }
 
@@ -66,11 +88,13 @@ namespace ToolGood.Words.internals
             InitPyIndex();
 
             string[] list = GetPinyinList(text, tone);
-            StringBuilder sb = new StringBuilder(text);
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < list.Length; i++) {
                 var c = list[i];
-                if (c != null) {
-                    sb[i] = c[0];
+                if (c[0] <= 128) {
+                    sb.Append(c[0]);
+                } else {
+                    sb.Append(c);
                 }
             }
             return sb.ToString();
@@ -93,6 +117,25 @@ namespace ToolGood.Words.internals
             }
             return new List<string>();
         }
+        public static List<string> GetAllPinyin(char c,char ct, int tone = 0)
+        {
+            InitPyIndex();
+            if (c >= 0xd840 && c <= 0xd86e  ) {
+                if (ct >= 0xdc00 && ct <= 0xdfff) {
+                    List<string> list = new List<string>();
+
+                    var start = _pyIndex2[c - 0xd840][ct - 0xdc00];
+                    var end = _pyIndex2[c - 0xd840][ct - 0xdc00 + 1];
+                    if (start < end) {
+                        for (int i = start; i < end; i++) {
+                            list.Add(_pyShow[_pyData2[c - 0xd840][i] + tone]);
+                        }
+                    }
+                }
+            }
+            return new List<string>();
+        }
+
 
         public static string GetPinyinFast(char c, int tone = 0)
         {
@@ -154,45 +197,75 @@ namespace ToolGood.Words.internals
         {
             if (_pyIndex == null) {
                 var ass = typeof(WordsHelper).Assembly;
+                {
 #if NETSTANDARD2_1
-                var resourceName = "ToolGood.Words.dict.pyIndex.txt.br";
+                    var resourceName = "ToolGood.Words.dict.pyIndex.txt.br";
 #else
-                var resourceName = "ToolGood.Words.dict.pyIndex.txt.z";
+                    var resourceName = "ToolGood.Words.dict.pyIndex.txt.z";
 #endif
-                Stream sm = ass.GetManifestResourceStream(resourceName);
-                byte[] bs = new byte[sm.Length];
-                sm.Read(bs, 0, (int)sm.Length);
-                sm.Close();
-                var bytes = Decompress(bs);
-                var tStr = Encoding.UTF8.GetString(bytes);
+                    Stream sm = ass.GetManifestResourceStream(resourceName);
+                    byte[] bs = new byte[sm.Length];
+                    sm.Read(bs, 0, (int)sm.Length);
+                    sm.Close();
+                    var bytes = Decompress(bs);
+                    var tStr = Encoding.UTF8.GetString(bytes);
 
-                var sp = tStr.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    var sp = tStr.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-                List<ushort> pyIndex = new List<ushort>() { 0 };
-                List<ushort> pyData = new List<ushort>();
-                for (int i = 0; i < sp.Length; i++) {
-                    var idxs = sp[i];
-                    if (i == 0) {
-                        _pyShow = idxs.Split(',');
-                    } else {
-                        if (idxs != "0") {
-                            foreach (var idx in idxs.Split(',')) {
-                                pyData.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
+                    List<ushort> pyIndex = new List<ushort>() { 0 };
+                    List<ushort> pyData = new List<ushort>();
+                    for (int i = 0; i < sp.Length; i++) {
+                        var idxs = sp[i];
+                        if (i == 0) {
+                            _pyShow = idxs.Split(',');
+                        } else {
+                            if (idxs != "0") {
+                                foreach (var idx in idxs.Split(',')) {
+                                    pyData.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
+                                }
                             }
+                            pyIndex.Add((ushort)pyData.Count);
                         }
-                        pyIndex.Add((ushort)pyData.Count);
                     }
+                    _pyData = pyData.ToArray();
+                    _pyIndex = pyIndex.ToArray();
                 }
-                //foreach (var idxs in sp) {
-                //    if (idxs != "0") {
-                //        foreach (var idx in idxs.Split(',')) {
-                //            pyData.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
-                //        }
-                //    }
-                //    pyIndex.Add((ushort)pyData.Count);
-                //}
-                _pyData = pyData.ToArray();
-                _pyIndex = pyIndex.ToArray();
+                {
+#if NETSTANDARD2_1
+                    var resourceName = "ToolGood.Words.dict.pyIndex2.txt.br";
+#else
+                    var resourceName = "ToolGood.Words.dict.pyIndex2.txt.z";
+#endif
+                    Stream sm = ass.GetManifestResourceStream(resourceName);
+                    byte[] bs = new byte[sm.Length];
+                    sm.Read(bs, 0, (int)sm.Length);
+                    sm.Close();
+                    var bytes = Decompress(bs);
+                    var tStr = Encoding.UTF8.GetString(bytes);
+
+                    List<ushort[]> pyIndex2 = new List<ushort[]>();
+                    List<ushort[]> pyData2 = new List<ushort[]>();
+
+                    var ts = tStr.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var t in ts) {
+                        var sp = t.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                        List<ushort> pyIndex = new List<ushort>() { 0 };
+                        List<ushort> pyData = new List<ushort>();
+                        for (int i = 0; i < sp.Length; i++) {
+                            var idxs = sp[i];
+                            if (idxs != "0") {
+                                foreach (var idx in idxs.Split(',')) {
+                                    pyData.Add(ushort.Parse(idx, System.Globalization.NumberStyles.HexNumber));
+                                }
+                            }
+                            pyIndex.Add((ushort)pyData.Count);
+                        }
+                        pyIndex2.Add(pyIndex.ToArray());
+                        pyData2.Add(pyData.ToArray());
+                    }
+                    _pyIndex2 = pyIndex2.ToArray();
+                    _pyData2 = pyData2.ToArray();
+                }
             }
         }
 

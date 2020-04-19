@@ -8,7 +8,7 @@ using ToolGood.Words.internals;
 namespace ToolGood.Words
 {
     /// <summary>
-    /// 拼音匹配
+    /// 拼音匹配, 不支持[0x20000-0x2B81D]
     /// </summary>
     public class PinyinMatch : BasePinyinMatch
     {

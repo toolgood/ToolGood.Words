@@ -21,7 +21,10 @@ namespace ToolGood.Words.Test.Pinyin
             list = WordsHelper.GetAllPinyin('㭁');
             list = WordsHelper.GetAllPinyin('䖆');
 
-
+            var list2 = WordsHelper.GetPinyin("𠀀");
+            var list3 = WordsHelper.GetPinyin("𫠝");
+            //var start = "𠀀";// '\ud840' '\udc00' - '\udfff'  
+            //var end = "𫠝";// '\ud86e' '\udc1d'
         }
 
 

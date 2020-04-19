@@ -22,16 +22,6 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取首字母，中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
-        /// </summary>
-        /// <param name="text">原文本</param>
-        /// <returns></returns>
-        public static string GetFirstPinyin(string text)
-        {
-            return PinyinDict.GetFirstPinyin(text, 0);
-        }
-
-        /// <summary>
         /// 获取拼音全拼, 不支持多音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
@@ -49,7 +39,18 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+        /// 获取首字母，中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="text">原文本</param>
+        /// <returns></returns>
+        public static string GetFirstPinyin(string text)
+        {
+            return PinyinDict.GetFirstPinyin(text, 0);
+        }
+
+
+        /// <summary>
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
@@ -60,7 +61,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
         /// <param name="splitSpan">分隔符</param>
@@ -73,7 +74,7 @@ namespace ToolGood.Words
 
 
         /// <summary>
-        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
@@ -86,7 +87,7 @@ namespace ToolGood.Words
 
 
         /// <summary>
-        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
@@ -97,7 +98,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="name">姓名</param>
         /// <param name="splitSpan">分隔符</param>
@@ -109,7 +110,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
