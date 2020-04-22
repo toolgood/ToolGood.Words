@@ -31,7 +31,7 @@ public class DemoApplication {
 		test_WordsMatch();
 
 		test_StringMatchEx();
-
+		test_WordsMatchEx();
 
 		test_Pinyin();
 		test_words();
@@ -427,6 +427,45 @@ public class DemoApplication {
 			System.out.println("Replace is Error.");
 		}
 	}
+
+	private static void test_WordsMatchEx() throws Exception {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("[中美]国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("WordsMatchEx run Test.");
+
+		WordsMatchEx iwords = new WordsMatchEx();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		WordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("中国") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<WordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("中国") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("国人") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
 
 	private static void test_save_load() throws IOException {
 		String test = "我是中国人";
