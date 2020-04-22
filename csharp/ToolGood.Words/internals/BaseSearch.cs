@@ -20,7 +20,7 @@ namespace ToolGood.Words.internals
             SetKeywords();
         }
 
-        private void SetKeywords()
+        protected void SetKeywords()
         {
             var root = new TrieNode();
             Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
