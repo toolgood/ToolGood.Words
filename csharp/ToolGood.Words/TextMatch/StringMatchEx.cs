@@ -239,6 +239,9 @@ namespace ToolGood.Words
                 }
                 int next;
                 if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    if (_wildcard[p] > 0) {
+                        Replace(text, i + 1, _wildcard[p], replaceChar, result);
+                    }
                     next = _firstIndex[t];
                 }
                 if (next != 0) {

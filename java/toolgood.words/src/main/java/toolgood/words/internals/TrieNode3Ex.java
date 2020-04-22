@@ -10,9 +10,9 @@ public class TrieNode3Ex {
     public boolean HasWildcard;
     public List<Integer> Results;
     public HashMap<Character, TrieNode3Ex> m_values;
-    private int minflag = Integer.MAX_VALUE;
-    private int maxflag = 0;
-    public TrieNode3 WildcardNode;
+    public int minflag = Integer.MAX_VALUE;
+    public int maxflag = 0;
+    public TrieNode3Ex WildcardNode;
 
 
     public TrieNode3Ex()
