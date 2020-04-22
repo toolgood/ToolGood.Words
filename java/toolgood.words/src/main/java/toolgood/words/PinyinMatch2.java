@@ -15,6 +15,10 @@ public class PinyinMatch2<T> extends BasePinyinMatch {
     private Function<T, String> _pinyinFunc;
     private char _splitChar = ',';
 
+    /**
+     * 拼音匹配, 不支持[0x20000-0x2B81D]
+     * @param list
+     */
     public PinyinMatch2(List<T> list) {
         _list = list;
         _keywordsFunc = new Function<T, String>() {
@@ -30,19 +34,34 @@ public class PinyinMatch2<T> extends BasePinyinMatch {
             }
         };
     }
-
+/**
+ * 设置获取关键字的方法
+ * @param keywordsFunc
+ */
     public void SetKeywordsFunc(Function<T, String> keywordsFunc) {
         _keywordsFunc = keywordsFunc;
     }
-
+/**
+ * 设置获取拼音的方法
+ * @param pinyinFunc
+ */
     public void SetPinyinFunc(Function<T, String> pinyinFunc) {
         _pinyinFunc = pinyinFunc;
     }
-
+/**
+ * 设置拼音分隔符
+ * @param splitChar
+ */
     public void SetPinyinSplitChar(char splitChar) {
         _splitChar = splitChar;
     }
 
+    /**
+     * 查询
+     * @param keywords
+     * @return
+     * @throws Exception
+     */
     public List<T> Find(String keywords) throws Exception {
         if (_keywordsFunc == null) {
             throw new Exception("请先使用SetKeywordsFunc方法。");
@@ -99,6 +118,12 @@ public class PinyinMatch2<T> extends BasePinyinMatch {
         return result;
     }
 
+    /**
+     * 查询，空格为通配符
+     * @param keywords
+     * @return
+     * @throws Exception
+     */
     public List<T> FindWithSpace(String keywords) throws Exception {
         if (_keywordsFunc == null) {
             throw new Exception("请先使用SetKeywordsFunc方法。");

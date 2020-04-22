@@ -74,26 +74,40 @@ public class PinyinMatch extends BasePinyinMatch {
         }
         _indexs = null;
     }
-    public void SetIndexs(List<Integer> indexs) throws Exception
-    {
+
+    /**
+     * 设置索引
+     * 
+     * @param indexs
+     * @throws Exception
+     */
+    public void SetIndexs(List<Integer> indexs) throws Exception {
         if (_keywords == null) {
             throw new Exception("请先使用 SetKeywords 方法");
         }
         if (indexs.size() < _keywords.length) {
             throw new Exception("indexs 数组长度大于 keywords");
         }
-        _indexs=new int[indexs.size()];
+        _indexs = new int[indexs.size()];
         for (int i = 0; i < indexs.size(); i++) {
-            _indexs[i]=indexs.get(i);
+            _indexs[i] = indexs.get(i);
         }
     }
-    public List<String> Find(String key) throws NumberFormatException, IOException
-    {
+
+    /**
+     * 查询
+     * 
+     * @param key
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public List<String> Find(String key) throws NumberFormatException, IOException {
         key = key.toUpperCase().trim();
-        if(key==null || key.equals("")){
+        if (key == null || key.equals("")) {
             return null;
         }
- 
+
         boolean hasPinyin = Pattern.matches(key, "[a-zA-Z]");
         if (hasPinyin == false) {
             List<String> rs = new ArrayList<String>();
@@ -110,7 +124,7 @@ public class PinyinMatch extends BasePinyinMatch {
         int minLength = Integer.MAX_VALUE;
         List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
         for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character)(char)0).toString());
+            String[] keys = pykey.split(((Character) (char) 0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
@@ -128,17 +142,24 @@ public class PinyinMatch extends BasePinyinMatch {
             String fpy = _keywordsFirstPinyin[i];
             String[] pylist = _keywordsPinyin[i];
 
-
             if (search.Find(fpy, keywords, pylist)) {
                 result.add(keywords);
             }
         }
         return result;
     }
-    public List<Integer> FindIndex(String key) throws NumberFormatException, IOException
-    {
+
+    /**
+     * 查询索引
+     * 
+     * @param key
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public List<Integer> FindIndex(String key) throws NumberFormatException, IOException {
         key = key.toUpperCase().trim();
-        if(key==null || key.equals("")){
+        if (key == null || key.equals("")) {
             return null;
         }
         boolean hasPinyin = Pattern.matches(key, "[a-zA-Z]");
@@ -161,7 +182,7 @@ public class PinyinMatch extends BasePinyinMatch {
         int minLength = Integer.MAX_VALUE;
         List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
         for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character)(char)0).toString());
+            String[] keys = pykey.split(((Character) (char) 0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
@@ -188,10 +209,18 @@ public class PinyinMatch extends BasePinyinMatch {
         }
         return result;
     }
-    public List<String> FindWithSpace(String keywords) throws NumberFormatException, IOException
-    {
+
+    /**
+     * 查询，空格为通配符
+     * 
+     * @param keywords
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public List<String> FindWithSpace(String keywords) throws NumberFormatException, IOException {
         keywords = keywords.toUpperCase().trim();
-        if(keywords==null || keywords.equals("")){
+        if (keywords == null || keywords.equals("")) {
             return null;
         }
         if (keywords.contains(" ") == false) {
@@ -210,7 +239,7 @@ public class PinyinMatch extends BasePinyinMatch {
                 List<String> pykeys = SplitKeywords(key);
                 int min = Integer.MAX_VALUE;
                 for (String pykey : pykeys) {
-                    String[] keys2 = pykey.split(((Character)(char)0).toString());
+                    String[] keys2 = pykey.split(((Character) (char) 0).toString());
                     if (min > keys2.length) {
                         min = keys2.length;
                     }
@@ -233,65 +262,72 @@ public class PinyinMatch extends BasePinyinMatch {
             String fpy = _keywordsFirstPinyin[i];
             String[] pylist = _keywordsPinyin[i];
 
-
             if (search.Find2(fpy, keywords2, pylist, keysCount)) {
                 result.add(keywords2);
             }
         }
         return result;
     }
-    public List<Integer> FindIndexWithSpace(String keywords) throws NumberFormatException, IOException
-        {
-            keywords = keywords.toUpperCase().trim();
-            if(keywords==null || keywords.equals("")){
-                return null;
-            }
-            if (keywords.contains(" ") == false) {
-                return FindIndex(keywords);
-            }
 
-            List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
-            List<Integer> indexs = new ArrayList<Integer>();
-            int minLength = 0;
-            int keysCount;
-            {
-                String[] keys = keywords.split(" ");
-                keysCount = keys.length;
-                for (int i = 0; i < keys.length; i++) {
-                    String key = keys[i];
-                    List<String> pykeys = SplitKeywords(key);
-                    int min = Integer.MAX_VALUE;
-                    for (String pykey : pykeys) {
-                        String[] keys2 = pykey.split(((Character)(char)0).toString());
-                        if (min > keys2.length) {
-                            min = keys2.length;
-                        }
-                        MergeKeywords(keys2, 0, "", list, i, indexs);
-                    }
-                    minLength += min;
-                }
-            }
-
-            PinyinSearch search = new PinyinSearch();
-            search.SetKeywords2(list);
-            search.SetIndexs(indexs);
-
-            List<Integer> result = new ArrayList<Integer>();
-            for (int i = 0; i < _keywords.length; i++) {
-                String keywords2 = _keywords[i];
-                if (keywords2.length() < minLength) {
-                    continue;
-                }
-                String fpy = _keywordsFirstPinyin[i];
-                String[] pylist = _keywordsPinyin[i];
-                if (search.Find2(fpy, keywords2, pylist, keysCount)) {
-                    if (_indexs == null) {
-                        result.add(i);
-                    } else {
-                        result.add(_indexs[i]);
-                    }
-                }
-            }
-            return result;
+    /**
+     * 查询索引号，空格为通配符
+     * 
+     * @param keywords
+     * @return
+     * @throws NumberFormatException
+     * @throws IOException
+     */
+    public List<Integer> FindIndexWithSpace(String keywords) throws NumberFormatException, IOException {
+        keywords = keywords.toUpperCase().trim();
+        if (keywords == null || keywords.equals("")) {
+            return null;
         }
+        if (keywords.contains(" ") == false) {
+            return FindIndex(keywords);
+        }
+
+        List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
+        List<Integer> indexs = new ArrayList<Integer>();
+        int minLength = 0;
+        int keysCount;
+        {
+            String[] keys = keywords.split(" ");
+            keysCount = keys.length;
+            for (int i = 0; i < keys.length; i++) {
+                String key = keys[i];
+                List<String> pykeys = SplitKeywords(key);
+                int min = Integer.MAX_VALUE;
+                for (String pykey : pykeys) {
+                    String[] keys2 = pykey.split(((Character) (char) 0).toString());
+                    if (min > keys2.length) {
+                        min = keys2.length;
+                    }
+                    MergeKeywords(keys2, 0, "", list, i, indexs);
+                }
+                minLength += min;
+            }
+        }
+
+        PinyinSearch search = new PinyinSearch();
+        search.SetKeywords2(list);
+        search.SetIndexs(indexs);
+
+        List<Integer> result = new ArrayList<Integer>();
+        for (int i = 0; i < _keywords.length; i++) {
+            String keywords2 = _keywords[i];
+            if (keywords2.length() < minLength) {
+                continue;
+            }
+            String fpy = _keywordsFirstPinyin[i];
+            String[] pylist = _keywordsPinyin[i];
+            if (search.Find2(fpy, keywords2, pylist, keysCount)) {
+                if (_indexs == null) {
+                    result.add(i);
+                } else {
+                    result.add(_indexs[i]);
+                }
+            }
+        }
+        return result;
+    }
 }
