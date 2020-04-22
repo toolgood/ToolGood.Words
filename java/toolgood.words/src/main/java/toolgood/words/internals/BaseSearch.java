@@ -21,7 +21,7 @@ public class BaseSearch {
         SetKeywords();
     }
 
-    private void SetKeywords() {
+    protected void SetKeywords() {
         TrieNode root = new TrieNode();
         Map<Integer, List<TrieNode>> allNodeLayers = new Hashtable<Integer, List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
