@@ -18,6 +18,12 @@ public class BasePinyinMatch {
         public void SetIndexs(final int[] indexs) {
             _indexs = indexs;
         }
+        public void SetIndexs(List<Integer> indexs) {
+            _indexs=new int[indexs.size()];
+            for (int i = 0; i < indexs.size(); i++) {
+                _indexs[i]=indexs.get(i);
+            }
+        }
 
         public void SetKeywords2(List<TwoTuple<String, String[]>> keywords) {
             _keywords = new String[keywords.size()];
