@@ -3,7 +3,6 @@ package toolgood.words;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 import toolgood.words.internals.BasePinyinMatch;
 import toolgood.words.internals.PinyinDict;
@@ -21,18 +20,8 @@ public class PinyinMatch2<T> extends BasePinyinMatch {
      */
     public PinyinMatch2(List<T> list) {
         _list = list;
-        _keywordsFunc = new Function<T, String>() {
-            @Override
-            public String apply(T in) {
-                return (String) "";
-            }
-        };
-        _pinyinFunc = new Function<T, String>() {
-            @Override
-            public String apply(T in) {
-                return (String) "";
-            }
-        };
+        _keywordsFunc = null;
+        _pinyinFunc =null;
     }
 /**
  * 设置获取关键字的方法
@@ -71,7 +60,7 @@ public class PinyinMatch2<T> extends BasePinyinMatch {
             return null;
         }
         List<T> result = new ArrayList<T>();
-        boolean hasPinyin = Pattern.matches(keywords, "[a-zA-Z]");
+        boolean hasPinyin =keywords.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
         if (hasPinyin == false) {
             for (T item : _list) {
                 String keyword = _keywordsFunc.apply(item);

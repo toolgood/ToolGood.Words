@@ -3,7 +3,6 @@ package toolgood.words;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import toolgood.words.internals.BasePinyinMatch;
 import toolgood.words.internals.PinyinDict;
@@ -108,7 +107,7 @@ public class PinyinMatch extends BasePinyinMatch {
             return null;
         }
 
-        boolean hasPinyin = Pattern.matches(key, "[a-zA-Z]");
+        boolean hasPinyin =key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
         if (hasPinyin == false) {
             List<String> rs = new ArrayList<String>();
             for (int i = 0; i < _keywords.length; i++) {
@@ -124,7 +123,7 @@ public class PinyinMatch extends BasePinyinMatch {
         int minLength = Integer.MAX_VALUE;
         List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
         for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character) (char) 0).toString());
+            String[] keys = pykey.split(((Character)(char)0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
@@ -162,7 +161,7 @@ public class PinyinMatch extends BasePinyinMatch {
         if (key == null || key.equals("")) {
             return null;
         }
-        boolean hasPinyin = Pattern.matches(key, "[a-zA-Z]");
+        boolean hasPinyin =key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
         if (hasPinyin == false) {
             List<Integer> rs = new ArrayList<Integer>();
             for (int i = 0; i < _keywords.length; i++) {
@@ -182,7 +181,7 @@ public class PinyinMatch extends BasePinyinMatch {
         int minLength = Integer.MAX_VALUE;
         List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
         for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character) (char) 0).toString());
+            String[] keys = pykey.split(((Character)(char)0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
@@ -239,7 +238,7 @@ public class PinyinMatch extends BasePinyinMatch {
                 List<String> pykeys = SplitKeywords(key);
                 int min = Integer.MAX_VALUE;
                 for (String pykey : pykeys) {
-                    String[] keys2 = pykey.split(((Character) (char) 0).toString());
+                    String[] keys2 = pykey.split(((Character)(char)0).toString());
                     if (min > keys2.length) {
                         min = keys2.length;
                     }
@@ -298,7 +297,7 @@ public class PinyinMatch extends BasePinyinMatch {
                 List<String> pykeys = SplitKeywords(key);
                 int min = Integer.MAX_VALUE;
                 for (String pykey : pykeys) {
-                    String[] keys2 = pykey.split(((Character) (char) 0).toString());
+                    String[] keys2 = pykey.split(((Character)(char)0).toString());
                     if (min > keys2.length) {
                         min = keys2.length;
                     }
