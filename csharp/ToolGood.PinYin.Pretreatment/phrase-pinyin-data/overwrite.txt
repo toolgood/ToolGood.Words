@@ -1,0 +1,240 @@
+# 新增或纠正的拼音数据
+# 升级版本的时候会合并回 pinyin.txt
+# 示例
+便宜: pián yí
+所长: suǒ zhǎng
+斯事体大: sī shì tǐ dà
+还钱: huán qián
+还贷: huán dài
+物美价廉: wù měi jià lián
+这些: zhè xiē
+为什么: wèi shén me
+乜斜: miē xié
+仔肩: zī jiān
+传风搧火: chuán fēng shān huǒ
+侦查: zhēn chá
+便人: biàn rén
+俏成俏败: xiào chéng xiào bài
+假期: jià qī
+储备: chǔ bèi
+储存: chǔ cún
+储蓄: chǔ xù
+儿媳妇儿: ér xí fù ér
+关塞: guān sài
+冒顿: mò dú
+分际: fèn jì
+利用: lì yòng
+功亏一篑: gōng kuī yī kuì
+动弹: dòng tan
+十一月: shí yī yuè
+古道热肠: gǔ dào rè cháng
+鸮鸣鼠暴: xiāo míng shǔ bào
+鸟事: niǎo shì
+鸟乱: niǎo luàn
+骰子: tóu zǐ
+驱虫剂: qū chóng jì
+超市: chāo shì
+马入华山: mǎ rù huà shān
+间不容瞚: jiān bù róng shùn
+降服: xiáng fú
+降龙: xiáng lóng
+陀螺: tuó luó
+长物: cháng wù
+遗书: yí shū
+瘦骨嶙峋: shòu gǔ lín xún
+调温: tiáo wēn
+谎言: huǎng yán
+婚龄: hūn líng
+风姿绰约: fēng zī chuò yuē
+雪耻: xuě chǐ
+露骨: lù gǔ
+雅鲁藏布江: yǎ lǔ zàng bù jiāng
+靓衣: jìng yī
+靓饰: jìng shì
+霹雷: pī léi
+钓钩: diào gōu
+醇厚: chún hòu
+迷迷糊糊: mí mi hū hū
+过屠门而大嚼: guò tú mén ér dà jué
+贞观: zhēn guàn
+贞观之治: zhēn guàn zhī zhì
+发上冲冠: fà shàng chōng guān
+发上指冠: fà shàng zhǐ guān
+发怒冲冠: fà nù chōng guān
+古道热肠: gǔ dào rè cháng
+呆板: dāi bǎn
+大雨滂沱: dà yǔ pāng tuó
+巴结: bā jie
+各有所长: gè yǒu suǒ cháng
+详情度理: xiáng qíng duó lǐ
+谦受益: qiān shòu yì
+禁脔: jìn luán
+经纶济世: jīng lún jì shì
+负债累累: fù zhài lěi lěi
+不破不立: bú pò bú lì
+偏听偏信: piān tīng piān xìn
+帝王将相: dì wáng jiàng xiàng
+成家立业: chéng jiā lì yè
+枝附叶着: zhī fù yè zhuó
+枝附叶著: zhī fù yè zhuó
+畏首畏尾: wèi shǒu wèi wěi
+风云变幻: fēng yún biàn huàn
+走为上计: zǒu wéi shàng jì
+赭衣塞路: zhě yī sè lù
+待贾而沽: dài jià ér gū
+诘屈謷牙: jí qū áo yá
+诘屈磝碻: jí qū áo qiāo
+聱牙诘屈: áo yá jí qū
+謷牙诘屈: áo yá jí qū
+诘屈聱牙: jí qū áo yá
+讹误: é wù
+计量: jì liàng
+衰少: shuāi shǎo
+衰乏: shuāi fá
+行款: háng kuǎn
+一语中的: yī yǔ zhòng dì
+一语中人: yī yǔ zhòng rén
+称雨道晴: chēng yǔ dào qíng
+偎干就湿: wēi gān jiù shī
+口干舌焦: kǒu gān shé jiāo
+干么: gàn me
+干净利索: gān jìng lì suǒ
+干啼湿哭: gān tí shī kū
+干干净净: gān gān jìng jìng
+干性油: gān xìng yóu
+干戈载戢: gān gē zǎi jí
+干打垒: gān dǎ lěi
+干政: gān zhèng
+干松: gān sōng
+干点: gān diǎn
+干电池: gān diàn chí
+干瞪眼: gān dèng yǎn
+干硬: gān yìng
+干粉: gān fěn
+干结: gān jié
+干脆利索: gān cuì lì suǒ
+干酵母: gān jiào mǔ
+干预: gān yù
+手脚干净: shǒu jiǎo gān jìng
+推干就湿: tuī gān jiù shī
+更待干罢: gèng dài gān bà
+木干鸟栖: mù gān niǎo qī
+栏干: lán gān
+比干: bǐ gān
+油干灯尽: yóu gān dēng jìn
+灯尽油干: dēng jìn yóu gān
+焦唇干舌: jiāo chún gān shé
+煨干就湿: wēi gān jiù shī
+煨干避湿: wēi gān bì shī
+豆腐干: dòu fǔ gān
+阴干: yīn gān
+干名犯义: gān míng fàn yì
+时长: shí cháng
+有一只: yǒu yī zhī
+步履蹒跚: bù lǚ pán shān
+朝阳: zhāo yáng
+朝阳_2: cháo yáng
+腌臢: ā zā
+土地: tǔ dì
+领地: lǐng dì
+基地: jī dì
+虮虱相吊: jǐ shī xiāng diào
+别鹤离鸾: bié hè lí luán
+年华垂暮: nián huá chuí mù
+本枝百世: běn zhī bǎi shì
+操戈同室: cāo gē tóng shì
+丢魂丧胆: diū hún sàng dǎn
+丢三拉四: diū sān lā sì
+餐松啖柏: cān sōng dàn bǎi
+人生何处不相逢: rén shēng hé chù bù xiāng féng
+城北徐公: chéng běi xú gōng
+用地: yòng dì
+亲为: qīn wéi
+东三省: dōng sān shěng
+龙游曲沼: lóng yóu qū zhǎo
+鼎鼐调和: dǐng nài tiáo hé
+鬼怕恶人: guǐ pà è rén
+香培玉琢: xiāng péi yù zhuó
+食不重肉: shí bù chóng ròu
+飞将数奇: fēi jiàng shù jī
+难进易退: nán jìn yì tuì
+隐占身体: yǐn zhàn shēn tǐ
+钉头磷磷: dīng tóu lín lín
+万贯家私: wàn guàn jiā sī
+不分青白: bù fēn qīng bái
+不随以止: bù suí yǐ zhǐ
+东方将白: dōng fāng jiāng bái
+兔角龟毛: tù jiǎo guī máo
+不奈之何: bù nài zhī hé
+竿头日上: gān tóu rì shàng
+汹涌彭湃: xiōng yǒng péng pài
+绳愆纠缪: shéng qiān jiū miù
+邯郸重步: hán dān chóng bù
+货而不售: huò ér bù shòu
+裂裳衣疮: liè shang yī chuāng
+落魄不偶: luò pò bù ǒu
+芫荽: yán suī
+红澄澄: hóng chéng chéng
+糠豆不赡: kāng dòu bù shàn
+失败为成功之母: shī bài wéi chéng gōng zhī mǔ
+水中捉月: shuǐ zhōng zhuō yuè
+矫矫不群: jiǎo jiǎo bù qún
+挨家挨户: āi jiā āi hù
+天宝当年: tiān bǎo dāng nián
+沙鸥翔集: shā ōu xiáng jí
+汝成人耶: rǔ chéng rén yé
+曾不惨然: zēng bù cǎn rán
+汹涌淜湃: xiōng yǒng péng pài
+无寇暴死: wú kòu bào sǐ
+数黄道黑: shǔ huáng dào hēi
+支分族解: zhī fēn zú jiě
+拱肩缩背: gǒng jiān suō bèi
+愁红惨绿: chóu hóng cǎn lǜ
+恩不放债: ēn bù fàng zhài
+思所逐之: sī suǒ zhú zhī
+当务始终: dāng wù shǐ zhōng
+角立杰出: jiǎo lì jié chū
+拾掇无遗: shí duō wú yí
+折而族之: zhé ér zú zhī
+吾自有处: wú zì yǒu chǔ
+名我固当: míng wǒ gù dāng
+不贪为宝: bù tān wéi bǎo
+蒙尘: méng chén
+头会箕敛: tóu kuài jī liǎn
+大明法度: dà míng fǎ dù
+惨绿愁红: cǎn lǜ chóu hóng
+攒眉蹙额: cuán méi cù é
+如之奈何: rú zhī nài hé
+头儿: tóu er
+逻辑: luó jí
+同源异派: tóng yuán yì pài
+宽绰: kuān chuò
+哭丧棒: kū sāng bàng
+哭丧: kū sāng
+积蓄: jī xù
+豆豉: dòu chǐ
+挨时间: ái shí jiān
+未曾: wèi céng
+刨花: bào huā
+刨花板: bào huā bǎn
+弹琴: tán qín
+弹力: tán lì
+弹劾: tán hé
+讥弹: jī tán
+弹簧: tán huáng
+肚丝: dǔ sī
+发蜡: fà là
+发癣: fà xuǎn
+分地: fēn dì
+将进酒: qiāng jìn jiǔ
+将才: jiàng cái
+解池: xiè chí
+姓解: xìng xiè
+姓冠: xìng guàn
+姓干: xìng gān
+降顺: xiáng shùn
+答讪: dā shàn
+受不了: shòu bù liǎo
+存储: cún chǔ
+脆弱: cuì ruò
+蕃茄: fān qié

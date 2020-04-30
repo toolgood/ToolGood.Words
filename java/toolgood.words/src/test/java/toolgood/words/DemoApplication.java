@@ -8,18 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StopWatch;
 
-import toolgood.words.IllegalWordsSearch;
-import toolgood.words.IllegalWordsSearchResult;
-import toolgood.words.StringSearch;
-import toolgood.words.StringSearchEx;
-import toolgood.words.WordsSearch;
-import toolgood.words.WordsSearchEx;
-import toolgood.words.WordsSearchResult;
 
 public class DemoApplication {
 
@@ -29,9 +23,21 @@ public class DemoApplication {
 
 		test_StringSearchEx();
 		test_WordsSearchEx();
+
+		test_StringSearchEx2();
+		test_WordsSearchEx2();
 		test_IllegalWordsSearch();
 
-		test_pinyin();
+		test_StringMatch();
+		test_WordsMatch();
+
+		test_StringMatchEx();
+		test_WordsMatchEx();
+
+		test_PinyinMatch();
+		test_PinyinMatch2();
+
+		test_Pinyin();
 		test_words();
 
 		// try {
@@ -119,6 +125,44 @@ public class DemoApplication {
 		}
 	}
 
+	private static void test_StringSearchEx2() {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("中国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("StringSearchEx2 run Test.");
+
+		StringSearchEx2 iwords = new StringSearchEx2();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		String f = iwords.FindFirst(test);
+		if (f != "中国") {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<String> all = iwords.FindAll(test);
+		if (all.get(0) != "中国") {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1) != "国人") {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
 	private static void test_WordsSearch() {
 		String test = "我是中国人";
 		List<String> list = new ArrayList<String>();
@@ -157,7 +201,7 @@ public class DemoApplication {
 		}
 	}
 
-	private static void test_WordsSearchEx() {
+	private static void test_WordsSearchEx() throws IOException {
 		String test = "我是中国人";
 		List<String> list = new ArrayList<String>();
 		list.add("中国");
@@ -165,7 +209,49 @@ public class DemoApplication {
 		list.add("zg人");
 		System.out.println("WordsSearchEx run Test.");
 
+		WordsSearchEx iwords2 = new WordsSearchEx();
+		iwords2.SetKeywords(list);
+		iwords2.Save("WordsSearchEx.dat");
+
 		WordsSearchEx iwords = new WordsSearchEx();
+		iwords.Load("WordsSearchEx.dat");
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		WordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("中国") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<WordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("中国") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("国人") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
+	private static void test_WordsSearchEx2() {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("中国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("WordsSearchEx2 run Test.");
+
+		WordsSearchEx2 iwords = new WordsSearchEx2();
 		iwords.SetKeywords(list);
 
 		boolean b = iwords.ContainsAny(test);
@@ -233,6 +319,360 @@ public class DemoApplication {
 		}
 	}
 
+	private static void test_StringMatch() throws Exception {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("[中美]国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("StringMatch run Test.");
+
+		StringMatch iwords = new StringMatch();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		String f = iwords.FindFirst(test);
+		if (!f.equals("中国")  ) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<String> all = iwords.FindAll(test);
+		if (!all.get(0).equals("中国")) {
+			System.out.println("FindAll is Error.");
+		}
+		if (!all.get(1).equals("国人")) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+	
+	private static void test_StringMatchEx() throws Exception {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("[中美]国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("StringMatchEx run Test.");
+
+		StringMatchEx iwords = new StringMatchEx();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		String f = iwords.FindFirst(test);
+		if (!f.equals("中国")  ) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<String> all = iwords.FindAll(test);
+		if (!all.get(0).equals("中国")) {
+			System.out.println("FindAll is Error.");
+		}
+		if (!all.get(1).equals("国人")) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+	
+	private static void test_WordsMatch() throws Exception {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("[中美]国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("WordsMatch run Test.");
+
+		WordsMatch iwords = new WordsMatch();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		WordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("中国") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<WordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("中国") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("国人") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
+	private static void test_WordsMatchEx() throws Exception {
+		String test = "我是中国人";
+		List<String> list = new ArrayList<String>();
+		list.add("[中美]国");
+		list.add("国人");
+		list.add("zg人");
+		System.out.println("WordsMatchEx run Test.");
+
+		WordsMatchEx iwords = new WordsMatchEx();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		WordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("中国") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<WordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("中国") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("国人") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.size() != 2) {
+			System.out.println("FindAll is Error.");
+		}
+
+		String str = iwords.Replace(test, '*');
+		if (str.equals("我是***") == false) {
+			System.out.println("Replace is Error.");
+		}
+	}
+
+	private static void test_PinyinMatch() throws NumberFormatException, IOException {
+		String s = "北京|天津|河北|辽宁|吉林|黑龙江|山东|江苏|上海|浙江|安徽|福建|江西|广东|广西|海南|河南|湖南|湖北|山西|内蒙古|宁夏|青海|陕西|甘肃|新疆|四川|贵州|云南|重庆|西藏|香港|澳门|台湾";
+		List<String> list=new ArrayList<String>();
+		String[] ss=s.split("\\|");
+		for (String st : ss) {
+			list.add(st);
+		}
+		PinyinMatch match = new PinyinMatch();
+		match.SetKeywords(list);
+		System.out.println("PinyinMatch run Test.");
+
+
+		List<String> all = match.Find("BJ");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+
+		  all = match.Find("北J");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+
+		all = match.Find("北Ji");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+		all = match.Find("Su");
+		if(all.get(0).equals("江苏")==false){
+			System.out.println("Find is Error.");
+		}
+ 
+		all = match.Find("Sdon");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+		all = match.Find("S东");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+  
+
+		List<Integer> all2 = match.FindIndex("BJ");
+		if(all2.get(0)!=0){
+			System.out.println("FindIndex is Error.");
+		}
+		if(all2.size() != 1){
+			System.out.println("FindIndex is Error.");
+		}
+ 
+		all = match.FindWithSpace("S 东");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("FindWithSpace is Error.");
+		}
+
+		all = match.FindWithSpace("h 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+
+		all2 = match.FindIndexWithSpace("B J");
+		if(all2.get(0)!=0){
+			System.out.println("FindIndexWithSpace is Error.");
+		}
+		if(all2.size() != 1){
+			System.out.println("FindIndexWithSpace is Error.");
+		}
+
+		all = match.FindWithSpace("京 北");
+		if(all.size() != 0){
+			System.out.println("FindWithSpace is Error.");
+		}
+   
+		all = match.FindWithSpace("黑龙 龙江");
+		if(all.size() != 0){
+			System.out.println("FindWithSpace is Error.");
+		}
+
+		all = match.FindWithSpace("黑龙 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+		all = match.FindWithSpace("黑 龙 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}	
+	}
+
+	
+	private static void test_PinyinMatch2() throws Exception {
+		String s = "北京|天津|河北|辽宁|吉林|黑龙江|山东|江苏|上海|浙江|安徽|福建|江西|广东|广西|海南|河南|湖南|湖北|山西|内蒙古|宁夏|青海|陕西|甘肃|新疆|四川|贵州|云南|重庆|西藏|香港|澳门|台湾";
+		List<String> list=new ArrayList<String>();
+		String[] ss=s.split("\\|");
+		for (String st : ss) {
+			list.add(st);
+		}
+		PinyinMatch2<String> match = new PinyinMatch2<String>(list);
+		match.SetKeywordsFunc(new Function<String,String>(){
+			@Override
+			public String apply(String t) {
+				return t;
+			}
+		});
+
+		System.out.println("PinyinMatch2 run Test.");
+
+
+		List<String> all = match.Find("BJ");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+
+		all = match.Find("北J");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+
+		all = match.Find("北Ji");
+		if(all.get(0).equals("北京")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+		all = match.Find("Su");
+		if(all.get(0).equals("江苏")==false){
+			System.out.println("Find is Error.");
+		}
+ 
+		all = match.Find("Sdon");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+		all = match.Find("S东");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("Find is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("Find is Error.");
+		}
+ 
+		all = match.FindWithSpace("S 东");
+		if(all.get(0).equals("山东")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+		if(all.size() != 1){
+			System.out.println("FindWithSpace is Error.");
+		}
+
+		all = match.FindWithSpace("h 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+ 
+
+		all = match.FindWithSpace("京 北");
+		if(all.size() != 0){
+			System.out.println("FindWithSpace is Error.");
+		}
+   
+		all = match.FindWithSpace("黑龙 龙江");
+		if(all.size() != 0){
+			System.out.println("FindWithSpace is Error.");
+		}
+
+		all = match.FindWithSpace("黑龙 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}
+		all = match.FindWithSpace("黑 龙 江");
+		if(all.get(0).equals("黑龙江")==false){
+			System.out.println("FindWithSpace is Error.");
+		}	
+	}
+
+
 	private static void test_save_load() throws IOException {
 		String test = "我是中国人";
 		List<String> list = new ArrayList<String>();
@@ -241,11 +681,11 @@ public class DemoApplication {
 		list.add("zg人");
 		System.out.println("test_save_load run Test.");
 
-		StringSearchEx search = new StringSearchEx();
+		StringSearchEx2 search = new StringSearchEx2();
 		search.SetKeywords(list);
 		search.Save("1.dat");
 
-		StringSearchEx iwords = new StringSearchEx();
+		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.Load("1.dat");
 
 		boolean b = iwords.ContainsAny(test);
@@ -284,7 +724,7 @@ public class DemoApplication {
 		}
 		String words = readLineByLineJava8("Talk.txt");
 
-		StringSearchEx iwords = new StringSearchEx();
+		StringSearchEx2 iwords = new StringSearchEx2();
 		iwords.SetKeywords(list);
 
 		StopWatch sw = new StopWatch();
@@ -355,73 +795,73 @@ public class DemoApplication {
 		search.Save("IllegalWordsSearch.dat");
 	}
 
-	private static void test_pinyin() throws NumberFormatException, IOException {
-		System.out.println("text_pinyin run Test.");
-		List<String> t = WordsHelper.GetAllPinYin('芃');
+	private static void test_Pinyin() throws NumberFormatException, IOException {
+		System.out.println("text_Pinyin run Test.");
+		List<String> t = WordsHelper.GetAllPinyin('芃');
 		if (t.get(0).equals("Peng") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
-		String a = WordsHelper.GetPinYinFast("阿");
+		String a = WordsHelper.GetPinyinFast("阿");
 		if (a.equals("A") == false) {
-			System.out.println("GetPinYinFast is Error.");
+			System.out.println("GetPinyinFast is Error.");
 		}
 
-		String b = WordsHelper.GetPinYin("摩擦棒");
+		String b = WordsHelper.GetPinyin("摩擦棒");
 		if (b.equals("MoCaBang") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
-		b = WordsHelper.GetPinYin("秘鲁");
+		b = WordsHelper.GetPinyin("秘鲁");
 		if (b.equals("BiLu") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		String py = WordsHelper.GetPinYinFast("我爱中国");
+		String py = WordsHelper.GetPinyinFast("我爱中国");
 		if (py.equals("WoAiZhongGuo") == false) {
-			System.out.println("GetPinYinFast is Error.");
+			System.out.println("GetPinyinFast is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("快乐，乐清");
+		py = WordsHelper.GetPinyin("快乐，乐清");
 		if (py.equals("KuaiLe，YueQing") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("快乐清理");
+		py = WordsHelper.GetPinyin("快乐清理");
 		if (py.equals("KuaiLeQingLi") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYin("我爱中国", true);
+		py = WordsHelper.GetPinyin("我爱中国", true);
 		if (py.equals("WǒÀiZhōngGuó") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		py = WordsHelper.GetFirstPinYin("我爱中国");
+		py = WordsHelper.GetFirstPinyin("我爱中国");
 		if (py.equals("WAZG") == false) {
-			System.out.println("GetPinYin is Error.");
+			System.out.println("GetPinyin is Error.");
 		}
 
-		List<String> pys = WordsHelper.GetAllPinYin('传');
+		List<String> pys = WordsHelper.GetAllPinyin('传');
 		if (pys.get(0).equals("Chuan") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 		if (pys.get(1).equals("Zhuan") == false) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
-		py = WordsHelper.GetPinYinForName("单一一");
+		py = WordsHelper.GetPinyinForName("单一一");
 		if (py.equals("ShanYiYi") == false) {
-			System.out.println("GetPinYinForName is Error.");
+			System.out.println("GetPinyinForName is Error.");
 		}
 
-		py = WordsHelper.GetPinYinForName("单一一", true);
+		py = WordsHelper.GetPinyinForName("单一一", true);
 		if (py.equals("ShànYīYī") == false) {
-			System.out.println("GetPinYinForName is Error.");
+			System.out.println("GetPinyinForName is Error.");
 		}
 
-		List<String> all = WordsHelper.GetAllPinYin('石');
+		List<String> all = WordsHelper.GetAllPinyin('石');
 		if (all.size() == 0) {
-			System.out.println("GetAllPinYin is Error.");
+			System.out.println("GetAllPinyin is Error.");
 		}
 
 	}
@@ -447,12 +887,11 @@ public class DemoApplication {
 		if (tw3.equals("反反覆覆") == false) {
 			System.out.println("ToTraditionalChinese is Error.");
 		}
- 
+
 		String tw4 = WordsHelper.ToTraditionalChinese("这人考虑事情总是反反复复的", 2);
 		if (tw4.equals("這人考慮事情總是反反覆覆的") == false) {
 			System.out.println("ToTraditionalChinese is Error.");
 		}
-
 
 	}
 }

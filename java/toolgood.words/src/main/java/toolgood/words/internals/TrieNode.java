@@ -14,6 +14,10 @@ public class TrieNode implements Comparable<TrieNode> {
     public HashMap<Character, TrieNode> m_values;
     public TrieNode Failure;
     public TrieNode Parent;
+    public boolean IsWildcard;
+    public int WildcardLayer;
+    public boolean HasWildcard;
+
 
     public TrieNode() {
         m_values = new HashMap<Character, TrieNode>();

@@ -8,7 +8,7 @@
 䶽 
 䶾 
 䶿 
-鿎 
+鿎 tǎ 
 鿓 
 鿖 
 鿘 
@@ -1748,7 +1748,7 @@
 肞 chāi,chā,cha
 䒲 chà
 臿 chā,cha
-䑡 chā,chà,chǎ,chá
+䑡 chā
 挿 chā,cha
 㭦 zhái
 訍 chài,chā,cha,chai
@@ -4081,7 +4081,7 @@
 䍶 dōng
 㲇 dōng,tóng
 鮗 dōng,dong
-䳉 dàn
+䳉 dōng,dàn
 䰤 dōng
 鼕 dōng,dong
 鶇 dōng,dong
@@ -5452,7 +5452,7 @@
 腹 fù
 鲋 fù
 缚 fù
-䭸 bǎo
+䭸 fù,bǎo
 䞯 fù
 赙 fù
 褔 fù,fú
@@ -7785,7 +7785,7 @@
 䎚 guàn
 顪 huì
 譿 huì
-䵻 gǔ
+䵻 huì,gǔ
 昏 hūn
 荤 hūn,xūn
 昬 hūn
@@ -10072,7 +10072,7 @@
 槺 kāng,kang
 㱂 kāng
 穅 kāng,kang
-㢜 kàng
+㢜 kāng,kàng
 䆲 kāng
 䗧 kāng
 糠 kāng,kang
@@ -21342,7 +21342,7 @@
 鴵 xiāo
 謞 hè,xiāo
 鵁 jiāo,xiāo
-䟁 xiáo
+䟁 xiāo,chāo
 䴛 xiāo
 嚣 xiāo,áo,ao
 䨭 xiāo
@@ -24999,7 +24999,7 @@
 喒 zá,zǎ,za,zán,zan
 赃 zāng,zang
 䍧 zāng
-脏 zàng,zāng,zang
+脏 zāng,zàng,zang
 羘 zāng,zang
 牂 zāng,zang
 䍭 zāng
@@ -27190,7 +27190,7 @@
 㐂 xǐ
 㐃 mā
 㐇 jiǔ
-㐈 dòu
+㐈 rù,dòu
 㐉 dīng
 㐊 shì
 㐋 tǔ
@@ -27646,3 +27646,4 @@
 䳥 líng
 䴨 yuán
 䶭 wāng
+〇 líng,yuán,xīng

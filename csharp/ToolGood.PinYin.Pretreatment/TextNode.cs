@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToolGood.PinYin.Pretreatment
+namespace ToolGood.Pinyin.Pretreatment
 {
     partial class Program
     {

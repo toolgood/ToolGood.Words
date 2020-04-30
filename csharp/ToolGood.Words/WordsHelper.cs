@@ -6,17 +6,19 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
+ 
     public static class WordsHelper
     {
         #region 拼音 操作
         /// <summary>
-        /// 获取首字母，中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取所有拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
         /// </summary>
-        /// <param name="text">原文本</param>
+        /// <param name="c">原文本</param>
+        /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetFirstPinYin(string text)
+        public static List<string> GetAllPinyin(char c, bool tone = false)
         {
-            return PinYinDict.GetFirstPinYin(text, 0);
+            return PinyinDict.GetAllPinyin(c, tone ? 1 : 0);
         }
 
         /// <summary>
@@ -25,121 +27,100 @@ namespace ToolGood.Words
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        [Obsolete("请使用GetPinYin方法，此方法不支持多音")]
-        public static string GetPinYinFast(string text, bool tone = false)
+        [Obsolete("请使用GetPinyin方法，此方法不支持多音")]
+        public static string GetPinyinFast(string text, bool tone = false)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++) {
                 var c = text[i];
-                sb.Append(PinYinDict.GetPinYinFast(c, tone ? 1 : 0));
+                sb.Append(PinyinDict.GetPinyinFast(c, tone ? 1 : 0));
             }
             return sb.ToString();
         }
 
         /// <summary>
-        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5]
+        /// 获取首字母，中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="text">原文本</param>
+        /// <returns></returns>
+        public static string GetFirstPinyin(string text)
+        {
+            return PinyinDict.GetFirstPinyin(text, 0);
+        }
+
+
+        /// <summary>
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="text">原文本</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYin(string text, bool tone = false)
+        public static string GetPinyin(string text, bool tone = false)
         {
-            return PinYinDict.GetPinYin(text, tone ? 1 : 0);
+            return string.Join("", PinyinDict.GetPinyinList(text, tone ? 1 : 0));
         }
 
         /// <summary>
-        /// 获取所有拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
-        /// <param name="c">原文本</param>
+        /// <param name="text">原文本</param>
+        /// <param name="splitSpan">分隔符</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetAllPinYin(char c, bool tone = false)
+        public static string GetPinyin(string text,string splitSpan, bool tone = false)
         {
-            return PinYinDict.GetAllPinYin(c, tone ? 1 : 0);
+            return string.Join(splitSpan, PinyinDict.GetPinyinList(text, tone ? 1 : 0));
         }
 
+
         /// <summary>
-        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取拼音全拼,支持多音,中文字符集为[0x4E00,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="text">原文本</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns></returns>
+        public static string[] GetPinyinList(string text, bool tone = false)
+        {
+            return PinyinDict.GetPinyinList(text, tone ? 1 : 0);
+        }
+
+
+
+        /// <summary>
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static string GetPinYinForName(string name, bool tone = false)
+        public static string GetPinyinForName(string name, bool tone = false)
         {
-            return string.Join("", PinYinDict.GetPinYinForName(name, tone ? 1 : 0));
+            return string.Join("", PinyinDict.GetPinyinForName(name, tone ? 1 : 0));
         }
 
         /// <summary>
-        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5]，注：偏僻汉字很多未验证
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
+        /// </summary>
+        /// <param name="name">姓名</param>
+        /// <param name="splitSpan">分隔符</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns></returns>
+        public static string GetPinyinForName(string name, string splitSpan, bool tone = false)
+        {
+            return string.Join(splitSpan, PinyinDict.GetPinyinForName(name, tone ? 1 : 0));
+        }
+
+        /// <summary>
+        /// 获取姓名拼音,中文字符集为[0x3400,0x9FD5],[0x20000-0x2B81D]，注：偏僻汉字很多未验证
         /// </summary>
         /// <param name="name">姓名</param>
         /// <param name="tone">是否带声调</param>
         /// <returns></returns>
-        public static List<string> GetPinYinListForName(string name, bool tone = false)
+        public static List<string> GetPinyinListForName(string name, bool tone = false)
         {
-            return PinYinDict.GetPinYinForName(name, tone ? 1 : 0);
+            return PinyinDict.GetPinyinForName(name, tone ? 1 : 0);
         }
 
         #endregion
-
-        //#region 字符串 转成 脏词检测字符串
-        ///// <summary>
-        ///// 转成 侦测字符串
-        ///// 1、转小写;2、全角转半角; 3、相似文字修改；4、繁体转简体
-        ///// </summary>
-        ///// <param name="s"></param>
-        ///// <returns></returns>
-        //public static string ToSenseIllegalWords(string s)
-        //{
-        //    StringBuilder ts = new StringBuilder(s);
-        //    for (int i = 0; i < s.Length; i++) {
-        //        var c = s[i];
-        //        if (c < 'A') { } else if (c <= 'Z') {
-        //            ts[i] = (char)(c | 0x20);
-        //        } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
-        //            var index = Dict.nums1.IndexOf(c);
-        //            if (index > -1) { ts[i] = Dict.nums2[index]; }
-        //        } else if (c == 12288) {
-        //            ts[i] = ' ';
-        //        } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-        //            var k = Dict.Simplified[c - 0x4e00];
-        //            if (k != c) {
-        //                ts[i] = k;
-        //            }
-        //        } else if (c < 65280) { } else if (c < 65375) {
-        //            var k = (c - 65248);
-        //            if ('A' <= k && k <= 'Z') { k = k | 0x20; }
-        //            ts[i] = (char)k;
-        //        }
-        //    }
-        //    return ts.ToString();
-        //}
-
-        //internal static string RemoveNontext(string text)
-        //{
-        //    StringBuilder sb = new StringBuilder(text);
-        //    for (int i = 0; i < text.Length; i++) {
-        //        var c = text[i];
-        //        bool remove = true;
-
-        //        if (c == ' ') {
-        //            remove = false;
-        //        } else if (c < 2) {
-        //            remove = false;
-        //        } else if (c < '0') { } else if (c <= '9') {
-        //            remove = false;
-        //        } else if (c < 'a') { } else if (c <= 'z') {
-        //            remove = false;
-        //        } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
-        //            remove = false;
-        //        }
-        //        if (remove) {
-        //            sb[i] = (char)1;
-        //        }
-        //    }
-        //    return sb.ToString();
-        //}
-        //#endregion
 
         #region 判断输入是否为中文
         /// <summary>
@@ -260,7 +241,7 @@ namespace ToolGood.Words
         {
             return Translate.ToSimplifiedChinese(text, srcType);
         }
- 
+
 
         #endregion
 
@@ -289,7 +270,7 @@ namespace ToolGood.Words
         }
         #endregion
 
- 
+
 
     }
 }

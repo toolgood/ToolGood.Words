@@ -5,7 +5,7 @@ ToolGood.Words（Python版本）
 
 文件说明：
 ```
-ToolGood.Words.PinYin.py        拼音转化
+ToolGood.Words.Pinyin.py        拼音转化
 ToolGood.Words.Translate.py     繁体简体转化
 ToolGood.Words.StringSearch.py  字符串检索
 ToolGood.Words.WordsSearch.py   字符串检索，包含位置信息、索引
@@ -14,17 +14,17 @@ ToolGood.Words.WordsSearch.py   字符串检索，包含位置信息、索引
 ### 拼音操作
 ``` python
 if __name__ == "__main__":
-    pinyin = PinYin()
+    pinyin = Pinyin()
     # 获取全拼
-    pinyin.GetPinYin("我爱中国") # WoAiZhongGuo
-    pinyin.GetPinYin("我爱中国",1) # WǒÀiZhōngGuó
+    pinyin.GetPinyin("我爱中国") # WoAiZhongGuo
+    pinyin.GetPinyin("我爱中国",1) # WǒÀiZhōngGuó
     # 获取首字母
-    pinyin.GetFirstPinYin("我爱中国") # WAZG
+    pinyin.GetFirstPinyin("我爱中国") # WAZG
     # 获取全部拼音
-    pinyin.GetAllPinYin('传') # Chuan,Zhuan
+    pinyin.GetAllPinyin('传') # Chuan,Zhuan
     # 获取姓名
-    pinyin.GetPinYinForName("单一一") # ShanYiYi
-    pinyin.GetPinYinForName("单一一",1) # ShànYīYī
+    pinyin.GetPinyinForName("单一一") # ShanYiYi
+    pinyin.GetPinyinForName("单一一",1) # ShànYīYī
 ```
 
 ### 繁体简体互换

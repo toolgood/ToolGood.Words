@@ -8,13 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import toolgood.words.internals.BaseSearchEx;
-import toolgood.words.internals.Dict;
+import toolgood.words.internals.BaseSearchEx2;
 
 /**
  *
  */
-public class IllegalWordsSearch extends BaseSearchEx {
+public class IllegalWordsSearch extends BaseSearchEx2 {
     /**
      * 使用跳词过滤器
      */
@@ -35,10 +34,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
      * 使用半角转化器
      */
     public boolean UseDBCcaseConverter = true;
-    /**
-     * 使用简体中文转化器
-     */
-    public boolean UseSimplifiedChineseConverter = true;
     /**
      * 使用忽略大小写
      */
@@ -457,7 +452,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
         }
 
         bw.write(UseDBCcaseConverter ? 1 : 0);
-        bw.write(UseSimplifiedChineseConverter ? 1 : 0);
         bw.write(UseIgnoreCase ? 1 : 0);
     }
 
@@ -480,7 +474,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
         }
 
         UseDBCcaseConverter = br.read() > 0;
-        UseSimplifiedChineseConverter = br.read() > 0;
         UseIgnoreCase = br.read() > 0;
     }
 
@@ -561,11 +554,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
                     }
                 }
                 return (char) k;
-            }
-        }
-        if (UseSimplifiedChineseConverter) {
-            if (c >= 0x4e00 && c <= 0x9fa5) {
-                return Dict.Simplified.charAt(c - 0x4e00);
             }
         }
         return c;

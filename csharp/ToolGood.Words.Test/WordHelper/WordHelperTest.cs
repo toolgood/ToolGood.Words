@@ -11,52 +11,58 @@ namespace ToolGood.Words.Test
     class WordHelperTest
     {
         [Test]
-        public void GetPinYin()
+        public void GetPinyin()
         {
-            var t = WordsHelper.GetAllPinYin('芃');
+            var t = WordsHelper.GetAllPinyin('芃');
             Assert.AreEqual("Peng", t[0]);
 
-            var a = WordsHelper.GetPinYinFast("阿");
+            var a = WordsHelper.GetPinyinFast("阿");
             Assert.AreEqual("A", a);
 
 
-            var b = WordsHelper.GetPinYin("摩擦棒");
+            var b = WordsHelper.GetPinyin("摩擦棒");
             Assert.AreEqual("MoCaBang", b);
 
-            b = WordsHelper.GetPinYin("秘鲁");
+            b = WordsHelper.GetPinyin("秘鲁");
             Assert.AreEqual("BiLu", b);
 
 
 
-            var py = WordsHelper.GetPinYinFast("我爱中国");
+            var py = WordsHelper.GetPinyinFast("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
 
 
 
-            py = WordsHelper.GetPinYin("快乐，乐清");
+            py = WordsHelper.GetPinyin("快乐，乐清");
             Assert.AreEqual("KuaiLe，YueQing", py);
 
-            py = WordsHelper.GetPinYin("快乐清理");
+            py = WordsHelper.GetPinyin("快乐清理");
             Assert.AreEqual("KuaiLeQingLi", py);
 
 
-            py = WordsHelper.GetPinYin("我爱中国");
+            py = WordsHelper.GetPinyin("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
 
-            py = WordsHelper.GetPinYin("我爱中国",true);
+            py = WordsHelper.GetPinyin("我爱中国",",");
+            Assert.AreEqual("Wo,Ai,Zhong,Guo", py);
+
+            py = WordsHelper.GetPinyin("我爱中国",true);
             Assert.AreEqual("WǒÀiZhōngGuó", py);
 
-            py = WordsHelper.GetFirstPinYin("我爱中国");
+            py = WordsHelper.GetFirstPinyin("我爱中国");
             Assert.AreEqual("WAZG", py);
 
-            var pys = WordsHelper.GetAllPinYin('传');
+            var pys = WordsHelper.GetAllPinyin('传');
             Assert.AreEqual("Chuan", pys[0]);
             Assert.AreEqual("Zhuan", pys[1]);
 
-            py = WordsHelper.GetPinYinForName("单一一");
+            py = WordsHelper.GetPinyinForName("单一一");
             Assert.AreEqual("ShanYiYi", py);
 
-            py = WordsHelper.GetPinYinForName("单一一",true);
+            py = WordsHelper.GetPinyinForName("单一一",",");
+            Assert.AreEqual("Shan,Yi,Yi", py);
+
+            py = WordsHelper.GetPinyinForName("单一一",true);
             Assert.AreEqual("ShànYīYī", py);
 
         }
