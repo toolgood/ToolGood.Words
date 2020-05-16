@@ -3,10 +3,13 @@
 # ToolGood.Words.Translate.py
 # 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 # Licensed under the Apache License 2.0
+# 更新日志
+# 2020.04.06 第一次提交
+# 2020.05.16 修改，支持大于0xffff的字符
 
 __all__ = ['Translate']
 __author__ = 'Lin Zhijun'
-__date__ = '2020.04.06'
+__date__ = '2020.05.16'
 
  
 
@@ -70,7 +73,7 @@ class TrieNode2():
 
 class WordsSearch():
     def __init__(self):
-        self._first = []
+        self._first = {}
         self._keywords = []
         self._indexs=[]
 
@@ -150,15 +153,15 @@ class WordsSearch():
         allNode = None
         root = None
 
-        first = []
-        for index in range(65536):# for (index = 0; index < 0xffff; index++) 
-            first.append(None)
+        # first = []
+        # for index in range(65536):# for (index = 0; index < 0xffff; index++) 
+        #     first.append(None)
         
-        for key in allNode2[0].m_values.keys() :
-            if key < 65536 :
-                first[key] = allNode2[0].m_values[key]
+        # for key in allNode2[0].m_values.keys() :
+        #     if key < 65536 :
+        #         first[key] = allNode2[0].m_values[key]
         
-        self._first = first
+        self._first = allNode2[0]
 
     def FindAll(self,text):
         ptr = None
@@ -168,11 +171,11 @@ class WordsSearch():
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
-                tn = self._first[t]
+                tn = self._first.TryGetValue(t)
             else:
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
-                    tn = self._first[t]
+                    tn = self._first.TryGetValue(t)
                 
             
             if (tn != None):

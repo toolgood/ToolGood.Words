@@ -3,10 +3,13 @@
 # ToolGood.Words.WordsSearch.py
 # 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 # Licensed under the Apache License 2.0
+# 更新日志
+# 2020.04.06 第一次提交
+# 2020.05.16 修改，支持大于0xffff的字符
 
 __all__ = ['WordsSearch']
 __author__ = 'Lin Zhijun'
-__date__ = '2020.04.06'
+__date__ = '2020.05.16'
 
 class TrieNode():
     def __init__(self):
@@ -68,7 +71,7 @@ class TrieNode2():
 
 class WordsSearch():
     def __init__(self):
-        self._first = []
+        self._first = {}
         self._keywords = []
         self._indexs=[]
     
@@ -149,14 +152,14 @@ class WordsSearch():
         allNode = None
         root = None
 
-        first = []
-        for index in range(65535):# for (index = 0; index < 0xffff; index++) 
-            first.append(None)
+        # first = []
+        # for index in range(65535):# for (index = 0; index < 0xffff; index++) 
+        #     first.append(None)
         
-        for key in allNode2[0].m_values :
-            first[key] = allNode2[0].m_values[key]
+        # for key in allNode2[0].m_values :
+        #     first[key] = allNode2[0].m_values[key]
         
-        self._first = first
+        self._first = allNode2[0]
     
 
     def FindFirst(self,text):
@@ -165,11 +168,11 @@ class WordsSearch():
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
-                tn = self._first[t]
+                tn = self._first.TryGetValue(t)
             else:
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
-                    tn = self._first[t]
+                    tn = self._first.TryGetValue(t)
                 
             
             if (tn != None):
@@ -188,11 +191,11 @@ class WordsSearch():
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
-                tn = self._first[t]
+                tn = self._first.TryGetValue(t)
             else:
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
-                    tn = self._first[t]
+                    tn = self._first.TryGetValue(t)
                 
             
             if (tn != None):
@@ -211,11 +214,11 @@ class WordsSearch():
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
-                tn = self._first[t]
+                tn = self._first.TryGetValue(t)
             else:
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
-                    tn = self._first[t]
+                    tn = self._first.TryGetValue(t)
             
             if (tn != None):
                 if (tn.End):
@@ -231,11 +234,11 @@ class WordsSearch():
             t =ord(text[i]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
-                tn = self._first[t]
+                tn = self._first.TryGetValue(t)
             else:
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
-                    tn = self._first[t]
+                    tn = self._first.TryGetValue(t)
             
             if (tn != None):
                 if (tn.End):
@@ -247,9 +250,8 @@ class WordsSearch():
         return ''.join(result) 
 
 if __name__ == "__main__":
-    s = "中国|国人|zg人"
+    s = "中国|国人|zg人|乾清宫"
     test = "我是中国人"
-
 
     search = WordsSearch()
     search.SetKeywords(s.split('|'))
@@ -259,6 +261,11 @@ if __name__ == "__main__":
     print("WordsSearch FindFirst is run.")
     f = search.FindFirst(test)
     if f["Keyword"]!="中国" :
+        print("WordsSearch FindFirst is error.............................")
+
+    print("WordsSearch FindFirst is run.")
+    all = search.FindAll("乾清宫")
+    if all[0]["Keyword"]!="乾清宫" :
         print("WordsSearch FindFirst is error.............................")
  
     print("WordsSearch FindAll is run.")
