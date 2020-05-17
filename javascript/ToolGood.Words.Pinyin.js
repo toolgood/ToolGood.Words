@@ -1,6 +1,9 @@
 // ToolGood.Words.Pinyin.js
 // 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 // Licensed under the Apache License 2.0
+// 更新日志
+// 2020.05.17 修改，支持大于0xffff的字符
+
 function Pinyin() {
     function WordsSearch() {
         function TrieNode() {
@@ -39,6 +42,9 @@ function Pinyin() {
             this.maxflag = 0;
 
             this.Add = function (c, node3) {
+                if (typeof c !== 'number') {
+                    c = parseInt(c);
+                }
                 if (this.minflag > c) { this.minflag = c; }
                 if (this.maxflag < c) { this.maxflag = c; }
                 this.m_values[c] = node3;
@@ -109,7 +115,7 @@ function Pinyin() {
                     nd.Failure = root;
                 else {
                     nd.Failure = r.m_values[c];
-                    for (const key2 in nd.Failure.Results) {
+                    for (var key2 in nd.Failure.Results) {
                         if (nd.Failure.Results.hasOwnProperty(key2) == false) { continue; }
                         var result = nd.Failure.Results[key2];
                         nd.SetResults(result);
@@ -126,19 +132,19 @@ function Pinyin() {
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
-                for (const key in oldNode.m_values) {
+                for (var key in oldNode.m_values) {
                     if (oldNode.m_values.hasOwnProperty(key) == false) { continue; }
                     var index = oldNode.m_values[key].Index;
                     newNode.Add(key, allNode2[index]);
                 }
                 for (let index = 0; index < oldNode.Results.length; index++) {
-                    const item = oldNode.Results[index];
+                    var item = oldNode.Results[index];
                     newNode.SetResults(item);
                 }
 
                 oldNode = oldNode.Failure;
                 while (oldNode != root) {
-                    for (const key in oldNode.m_values) {
+                    for (var key in oldNode.m_values) {
                         if (oldNode.m_values.hasOwnProperty(key) == false) { continue; }
                         if (newNode.HasKey(key) == false) {
                             var index = oldNode.m_values[key].Index;
@@ -146,7 +152,7 @@ function Pinyin() {
                         }
                     }
                     for (let index = 0; index < oldNode.Results.length; index++) {
-                        const item = oldNode.Results[index];
+                        var item = oldNode.Results[index];
                         newNode.SetResults(item);
                     }
                     oldNode = oldNode.Failure;
@@ -155,15 +161,15 @@ function Pinyin() {
             allNode = null;
             root = null;
 
-            var first = [];
-            for (let index = 0; index < 0xffff; index++) {
-                first.push(null);
-            }
-            for (const key in allNode2[0].m_values) {
-                if (allNode2[0].m_values.hasOwnProperty(key) == false) { continue; }
-                first[key] = allNode2[0].m_values[key];
-            }
-            _first = first;
+            // var first = [];
+            // for (let index = 0; index < 0xffff; index++) {
+            //     first.push(null);
+            // }
+            // for (var key in allNode2[0].m_values) {
+            //     if (allNode2[0].m_values.hasOwnProperty(key) == false) { continue; }
+            //     first[key] = allNode2[0].m_values[key];
+            // }
+            _first = allNode2[0];
         }
 
         this.FindAll = function (text) {
@@ -171,20 +177,20 @@ function Pinyin() {
             var list = [];
 
             for (let i = 0; i < text.length; i++) {
-                const t = text.charCodeAt(i);
+                var t = text.charCodeAt(i);
                 var tn = null;
                 if (ptr == null) {
-                    tn = _first[t];
+                    tn = _first.TryGetValue(t);
                 } else {
                     tn = ptr.TryGetValue(t);
                     if (!tn) {
-                        tn = _first[t];
+                        tn = _first.TryGetValue(t);
                     }
                 }
                 if (tn != null) {
                     if (tn.End) {
                         for (let j = 0; j < tn.Results.length; j++) {
-                            const item = tn.Results[j];
+                            var item = tn.Results[j];
                             var keyword = _keywords[item];
                             list.push({
                                 Keyword: keyword,
@@ -217,9 +223,10 @@ function Pinyin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinyinList = function (text, tone = 0) {
+    this.GetPinyinList = function (text, tone) {
         InitPyWords();
-        if (tone) { tone = 1; }
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
         var list = [];
         for (var i = 0; i < text.length; i++) {
             list.push(null);
@@ -257,8 +264,9 @@ function Pinyin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinyin = function (text, tone = 0) {
-        if (tone) { tone = 1; }
+    this.GetPinyin = function (text, tone) {
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
 
         var list = this.GetPinyinList(text, tone);
         var sb = "";
@@ -277,8 +285,9 @@ function Pinyin() {
      * @param {any} text
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetFirstPinyin = function (text, tone = 0) {
-        if (tone) { tone = 1; }
+    this.GetFirstPinyin = function (text, tone) {
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
 
         var list = this.GetPinyinList(text, tone);
         var sb = "";
@@ -296,8 +305,9 @@ function Pinyin() {
     * @param {any} text
     * @param {any} tone 是否带声调 1 是 0否
     */
-    this.GetAllPinyin = function (c, tone = 0) {
-        if (tone) { tone = 1; }
+    this.GetAllPinyin = function (c, tone) {
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
 
         var idx = c.charCodeAt(0);
         if (idx >= 0x3400 && idx <= 0x9fd5) {
@@ -324,8 +334,9 @@ function Pinyin() {
      * @param {any} name
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinyinListForName = function (name, tone = 0) {
-        if (tone) { tone = 1; }
+    this.GetPinyinListForName = function (name, tone) {
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
 
         var list = [];
         var xing;
@@ -375,8 +386,9 @@ function Pinyin() {
      * @param {any} name
      * @param {any} tone 是否带声调 1 是 0否
      */
-    this.GetPinyinForName = function (name, tone = 0) {
-        if (tone) { tone = 1; }
+    this.GetPinyinForName = function (name, tone) {
+        if (tone == undefined) { tone = 0; }
+        else if (tone) { tone = 1; }
         return this.GetPinyinListForName(name, tone).join("");
     }
 
