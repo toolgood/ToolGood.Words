@@ -1,6 +1,9 @@
 // ToolGood.Words.WordsSearch.js
 // 2020, Lin Zhijun, https://github.com/toolgood/ToolGood.Words
 // Licensed under the Apache License 2.0
+// 更新日志
+// 2020.05.17 修改，支持大于0xffff的字符
+
 function WordsSearch() {
     function TrieNode() {
         this.Index = 0;
@@ -38,6 +41,9 @@ function WordsSearch() {
         this.maxflag = 0;
 
         this.Add = function (c, node3) {
+            if (typeof c !== 'number') {
+                c = parseInt(c);
+            }
             if (this.minflag > c) { this.minflag = c; }
             if (this.maxflag < c) { this.maxflag = c; }
             this.m_values[c] = node3;
@@ -61,7 +67,7 @@ function WordsSearch() {
         }
     }
 
-    var _first = [];
+    var _first = {};
     var _keywords = [];
     var _indexs = [];
     /**
@@ -118,7 +124,7 @@ function WordsSearch() {
                 nd.Failure = root;
             else {
                 nd.Failure = r.m_values[c];
-                for (const key2 in nd.Failure.Results) {
+                for (var key2 in nd.Failure.Results) {
                     if (nd.Failure.Results.hasOwnProperty(key2) == false) { continue; }
                     var result = nd.Failure.Results[key2];
                     nd.SetResults(result);
@@ -136,19 +142,19 @@ function WordsSearch() {
             var oldNode = allNode[i];
             var newNode = allNode2[i];
 
-            for (const key in oldNode.m_values) {
+            for (var key in oldNode.m_values) {
                 if (oldNode.m_values.hasOwnProperty(key) == false) { continue; }
                 var index = oldNode.m_values[key].Index;
                 newNode.Add(key, allNode2[index]);
             }
             for (let index = 0; index < oldNode.Results.length; index++) {
-                const item = oldNode.Results[index];
+                var item = oldNode.Results[index];
                 newNode.SetResults(item);
             }
 
             oldNode = oldNode.Failure;
             while (oldNode != root) {
-                for (const key in oldNode.m_values) {
+                for (var key in oldNode.m_values) {
                     if (oldNode.m_values.hasOwnProperty(key) == false) { continue; }
                     if (newNode.HasKey(key) == false) {
                         var index = oldNode.m_values[key].Index;
@@ -156,7 +162,7 @@ function WordsSearch() {
                     }
                 }
                 for (let index = 0; index < oldNode.Results.length; index++) {
-                    const item = oldNode.Results[index];
+                    var item = oldNode.Results[index];
                     newNode.SetResults(item);
                 }
                 oldNode = oldNode.Failure;
@@ -165,15 +171,15 @@ function WordsSearch() {
         allNode = null;
         root = null;
 
-        var first = [];
-        for (let index = 0; index < 0xffff; index++) {
-            first.push(null);
-        }
-        for (const key in allNode2[0].m_values) {
-            if (allNode2[0].m_values.hasOwnProperty(key) == false) { continue; }
-            first[key] = allNode2[0].m_values[key];
-        }
-        _first = first;
+        // var first = [];
+        // for (let index = 0; index < 0xffff; index++) {
+        //     first.push(null);
+        // }
+        // for (var key in allNode2[0].m_values) {
+        //     if (allNode2[0].m_values.hasOwnProperty(key) == false) { continue; }
+        //     first[key] = allNode2[0].m_values[key];
+        // }
+        _first = allNode2[0];
     }
 
     /**
@@ -183,14 +189,14 @@ function WordsSearch() {
     this.FindFirst = function (text) {
         var ptr = null;
         for (let i = 0; i < text.length; i++) {
-            const t = text.charCodeAt(i);
+            var t = text.charCodeAt(i);
             var tn = null;
             if (ptr == null) {
-                tn = _first[t];
+                tn = _first.TryGetValue(t);
             } else {
                 tn = ptr.TryGetValue(t);
                 if (!tn) {
-                    tn = _first[t];
+                    tn = _first.TryGetValue(t);
                 }
             }
             if (tn != null) {
@@ -220,20 +226,20 @@ function WordsSearch() {
         var list = [];
 
         for (let i = 0; i < text.length; i++) {
-            const t = text.charCodeAt(i);
+            var t = text.charCodeAt(i);
             var tn = null;
             if (ptr == null) {
-                tn = _first[t];
+                tn = _first.TryGetValue(t);
             } else {
                 tn = ptr.TryGetValue(t);
                 if (!tn) {
-                    tn = _first[t];
+                    tn = _first.TryGetValue(t);
                 }
             }
             if (tn != null) {
                 if (tn.End) {
                     for (let j = 0; j < tn.Results.length; j++) {
-                        const item = tn.Results[j];
+                        var item = tn.Results[j];
                         var keyword = _keywords[item];
                         list.push({
                             Keyword: keyword,
@@ -257,14 +263,14 @@ function WordsSearch() {
     this.ContainsAny = function (text) {
         var ptr = null;
         for (let index = 0; index < text.length; index++) {
-            const t = text.charCodeAt(index);
+            var t = text.charCodeAt(index);
             var tn = null;
             if (ptr == null) {
-                tn = _first[t];
+                tn = _first.TryGetValue(t);
             } else {
                 tn = ptr.TryGetValue(t);
                 if (!tn) {
-                    tn = _first[t];
+                    tn = _first.TryGetValue(t);
                 }
             }
             if (tn != null) {
@@ -282,20 +288,23 @@ function WordsSearch() {
      * @param {any} text
      * @param {any} replaceChar
      */
-    this.Replace = function (text, replaceChar = '*') {
+    this.Replace = function (text, replaceChar) {
+        if (replaceChar == undefined) {
+            replaceChar = '*'
+        }
         var result = text.split('');
 
         var ptr = null;
         for (var i = 0; i < text.length; i++) {
-            const t = text.charCodeAt(i);
+            var t = text.charCodeAt(i);
 
             var tn = null;
             if (ptr == null) {
-                tn = _first[t];
+                tn = _first.TryGetValue(t);
             } else {
                 tn = ptr.TryGetValue(t);
                 if (!tn) {
-                    tn = _first[t];
+                    tn = _first.TryGetValue(t);
                 }
             }
             if (tn != null) {

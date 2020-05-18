@@ -26,6 +26,7 @@ namespace ToolGood.Transformation.Build
 
         // 
         const string STPhrases_Ext = "dict\\STPhrases_Ext.txt";
+        const string TSPhrases_Ext = "dict\\TSPhrases_Ext.txt";
 
 
         /// <summary>
@@ -54,6 +55,7 @@ namespace ToolGood.Transformation.Build
         {
             var tsc = ReadTexts(TSCharacters);
             var tsp = ReadTexts(TSPhrases);
+            tsp.AddRange(ReadTexts(TSPhrases_Ext));
             Dictionary<string, string> dict = new Dictionary<string, string>();
             foreach (var st in tsc) {
                 if (st.Count == 2 && st[1] == st[0]) { continue; }
