@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>一款高性能汉字转拼音类库，从ToolGood.Words独立出来，专注性能效率。</Description>
+    <Copyright>Copyright 2017-2020 ToolGood</Copyright>
+    <AssemblyTitle>ToolGood.Words.Pinyin</AssemblyTitle>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Authors>ToolGood</Authors>
+    <TargetFrameworks>net40;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <AssemblyName>ToolGood.Words.Pinyin</AssemblyName>
+    <AssemblyOriginatorKeyFile>Properties\ToolGood.Words.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PackageId>ToolGood.Words.Pinyin</PackageId>
+    <PackageTags>pinyin</PackageTags>
+    <PackageProjectUrl>https://github.com/toolgood/ToolGood.Words</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/toolgood/ToolGood.Words</RepositoryUrl>
+    <RootNamespace>ToolGood.Words.Pinyin</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>3.0.1.2</Version>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="dict\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

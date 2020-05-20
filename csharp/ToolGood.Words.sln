@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.PinYin.Build", "To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.PinYin.Pretreatment", "ToolGood.PinYin.Pretreatment\ToolGood.PinYin.Pretreatment.csproj", "{68C3BBE4-BA05-42C0-A495-3E1A183274C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Pinyin", "ToolGood.Words.Pinyin\ToolGood.Words.Pinyin.csproj", "{6F4AADE3-274C-4328-901E-F07AEF30CDBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68C3BBE4-BA05-42C0-A495-3E1A183274C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4AADE3-274C-4328-901E-F07AEF30CDBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4AADE3-274C-4328-901E-F07AEF30CDBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4AADE3-274C-4328-901E-F07AEF30CDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4AADE3-274C-4328-901E-F07AEF30CDBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
