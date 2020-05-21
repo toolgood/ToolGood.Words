@@ -7,7 +7,7 @@ namespace ToolGood.Words.internals
 {
     public class IntDictionary
     {
-        private int[] _keys;
+        private ushort[] _keys;
         private int[] _values;
         private int last;
         public IntDictionary()
@@ -15,7 +15,7 @@ namespace ToolGood.Words.internals
             last = -1;
         }
 
-        public int[] Keys {
+        public ushort[] Keys {
             get {
                 return _keys;
             }
@@ -27,7 +27,7 @@ namespace ToolGood.Words.internals
             }
         }
 
-        public void SetDictionary(Dictionary<int, int> dict)
+        public void SetDictionary(Dictionary<ushort, int> dict)
         {
             _keys = dict.Select(q => q.Key).OrderBy(q => q).ToArray();
             _values = new int[_keys.Length];
@@ -38,7 +38,7 @@ namespace ToolGood.Words.internals
         }
 
 
-        public bool TryGetValue(int key, out int value)
+        public bool TryGetValue(ushort key, out int value)
         {
             if (last == -1) {
                 value = 0;

@@ -8,10 +8,10 @@ namespace ToolGood.Words.internals
 {
     public abstract class BaseMatchEx : BaseMatch
     {
-        protected int[] _dict;
+        protected ushort[] _dict;
         protected int[] _firstIndex;
-        protected int[] _min;
-        protected int[] _max;
+        protected ushort[] _min;
+        protected ushort[] _max;
 
         protected IntDictionary[] _nextIndex;
         protected int[] _wildcard;
@@ -99,14 +99,14 @@ namespace ToolGood.Words.internals
             root = null;
 
 
-            var min = new List<int>();
-            var max = new List<int>();
+            var min = new List<ushort>();
+            var max = new List<ushort>();
             var wildcard = new List<int>();
-            var nextIndexs = new List<Dictionary<int, int>>();
+            var nextIndexs = new List<Dictionary<ushort, int>>();
             var end = new List<int>() { 0 };
             var resultIndex = new List<int>();
             for (int i = 0; i < allNode2.Count; i++) {
-                var dict = new Dictionary<int, int>();
+                var dict = new Dictionary<ushort, int>();
                 var node = allNode2[i];
                 min.Add(node.minflag);
                 max.Add(node.maxflag);
@@ -175,9 +175,9 @@ namespace ToolGood.Words.internals
                 }
                 sh = !sh;
             }
-            _dict = new int[char.MaxValue + 1];
+            _dict = new ushort[char.MaxValue + 1];
             for (Int32 i = 0; i < list2.Count; i++) {
-                _dict[list2[i]] = (int)(i + 1);
+                _dict[list2[i]] = (ushort)(i + 1);
             }
             return dictionary.Count;
         }
@@ -254,6 +254,7 @@ namespace ToolGood.Words.internals
                 bw.Write(bs);
 
                 bs = IntArrToByteArr(values);
+                bw.Write(bs.Length);
                 bw.Write(bs);
             }
         }
@@ -261,6 +262,13 @@ namespace ToolGood.Words.internals
         protected byte[] IntArrToByteArr(Int32[] intArr)
         {
             Int32 intSize = sizeof(Int32) * intArr.Length;
+            byte[] bytArr = new byte[intSize];
+            Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
+            return bytArr;
+        }
+        protected byte[] IntArrToByteArr(ushort[] intArr)
+        {
+            Int32 intSize = sizeof(ushort) * intArr.Length;
             byte[] bytArr = new byte[intSize];
             Buffer.BlockCopy(intArr, 0, bytArr, 0, intSize);
             return bytArr;
@@ -309,7 +317,7 @@ namespace ToolGood.Words.internals
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
-            _dict = ByteArrToIntArr(bs);
+            _dict = ByteArrToUshortArr(bs);
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
@@ -329,20 +337,19 @@ namespace ToolGood.Words.internals
 
             var dictLength = br.ReadInt32();
             _nextIndex = new IntDictionary[dictLength];
-            List<int> max = new List<int>();
-            List<int> min = new List<int>();
+            List<ushort> max = new List<ushort>();
+            List<ushort> min = new List<ushort>();
 
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
-
-
                 bs = br.ReadBytes(length);
-                var keys = ByteArrToIntArr(bs);
+                var keys = ByteArrToUshortArr(bs);
 
+                length = br.ReadInt32();
                 bs = br.ReadBytes(length);
                 var values = ByteArrToIntArr(bs);
 
-                var dict = new Dictionary<int, int>();
+                var dict = new Dictionary<ushort, int>();
                 for (int j = 0; j < keys.Length; j++) {
                     dict[keys[j]] = values[j];
                 }
@@ -351,7 +358,7 @@ namespace ToolGood.Words.internals
                 _nextIndex[i] = dictionary;
                 if (length == 0) {
                     max.Add(0);
-                    min.Add(int.MaxValue);
+                    min.Add(ushort.MaxValue);
                 } else {
                     max.Add(keys.Last());
                     min.Add(keys[0]);
@@ -365,6 +372,13 @@ namespace ToolGood.Words.internals
         {
             Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(Int32));
             Int32[] intArr = new Int32[intSize];
+            Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
+            return intArr;
+        }
+        protected ushort[] ByteArrToUshortArr(byte[] btArr)
+        {
+            Int32 intSize = (int)Math.Ceiling(btArr.Length / (double)sizeof(ushort));
+            ushort[] intArr = new ushort[intSize];
             Buffer.BlockCopy(btArr, 0, intArr, 0, btArr.Length);
             return intArr;
         }

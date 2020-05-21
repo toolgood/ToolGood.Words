@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using ToolGood.Bedrock;
 using System.Text;
+using ToolGood.PinYin.Build.Pinyin;
 
 namespace ToolGood.Pinyin.Build
 {
@@ -347,6 +348,15 @@ namespace ToolGood.Pinyin.Build
             File.WriteAllText("_pyWordsIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
             File.WriteAllText("_pyWordsData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
 
+
+
+            PinyinDictBuild.InitPy();
+            PinyinDictBuild.WritePinyinDat();
+            PinyinDictBuild.WritePinyinBigDat();
+            PinyinDictBuild.WritePinyinWordDat();
+            Compression("Pinyin.dat");
+            Compression("PinyinBig.dat");
+            Compression("PinyinWord.dat");
 
         }
 
