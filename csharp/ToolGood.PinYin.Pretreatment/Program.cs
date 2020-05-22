@@ -420,7 +420,11 @@ namespace ToolGood.Pinyin.Pretreatment
                         ChineseChar chineseChar = new ChineseChar(c);
                         foreach (string value in chineseChar.Pinyins) {
                             if (string.IsNullOrEmpty(value)) { continue; }
-                            pys2.Add(AddTone(value));
+                            if (value.EndsWith("5")==false && value.EndsWith("0")==false) {
+                                pys2.Add(AddTone(value));
+                            } else {
+
+                            }
                         }
                         List<string> pys;
                         if (dict.TryGetValue(cStr, out pys) == false) {
