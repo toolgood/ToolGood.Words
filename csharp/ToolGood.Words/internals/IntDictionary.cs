@@ -36,6 +36,12 @@ namespace ToolGood.Words.internals
             }
             last = _keys.Length - 1;
         }
+        public void SetDictionary(ushort[] keys, int[] values)
+        {
+            _keys = keys;
+            _values = values;
+            last = _keys.Length - 1;
+        }
 
 
         public bool TryGetValue(ushort key, out int value)

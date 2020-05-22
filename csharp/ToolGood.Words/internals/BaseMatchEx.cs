@@ -337,8 +337,8 @@ namespace ToolGood.Words.internals
 
             var dictLength = br.ReadInt32();
             _nextIndex = new IntDictionary[dictLength];
-            List<ushort> max = new List<ushort>();
-            List<ushort> min = new List<ushort>();
+            _max = new ushort[dictLength];
+            _min = new ushort[dictLength];
 
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
@@ -349,23 +349,16 @@ namespace ToolGood.Words.internals
                 bs = br.ReadBytes(length);
                 var values = ByteArrToIntArr(bs);
 
-                var dict = new Dictionary<ushort, int>();
-                for (int j = 0; j < keys.Length; j++) {
-                    dict[keys[j]] = values[j];
-                }
                 IntDictionary dictionary = new IntDictionary();
-                dictionary.SetDictionary(dict);
+                dictionary.SetDictionary(keys, values);
                 _nextIndex[i] = dictionary;
                 if (length == 0) {
-                    max.Add(0);
-                    min.Add(ushort.MaxValue);
+                    _min[i] = ushort.MaxValue;
                 } else {
-                    max.Add(keys.Last());
-                    min.Add(keys[0]);
+                    _max[i] = keys[keys.Length - 1];
+                    _min[i] = keys[0];
                 }
             }
-            _max = max.ToArray();
-            _min = min.ToArray();
         }
 
         protected Int32[] ByteArrToIntArr(byte[] btArr)
