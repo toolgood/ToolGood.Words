@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using ToolGood.Words;
 using ZIPStream = System.IO.Compression.BrotliStream;
 
 
@@ -61,6 +62,8 @@ namespace ToolGood.PinYin.Build.Pinyin
             bw.Write(bt.Length);
             bw.Write(bt);
 
+            _search.SaveFile(bw);
+
             bw.Close();
             fs.Close();
         }
@@ -113,6 +116,7 @@ namespace ToolGood.PinYin.Build.Pinyin
             bw.Write(bt.Length);
             bw.Write(bt);
 
+            _search.SaveFile(bw);
 
             bw.Close();
             fs.Close();
@@ -120,7 +124,7 @@ namespace ToolGood.PinYin.Build.Pinyin
 
         public static void WritePinyinWordDat()
         {
-            _search.SaveFile("PinyinWord.dat");
+            //_search.SaveFile("PinyinWord.dat");
         }
 
         private static byte[] IntArrToByteArr(Int32[] intArr)

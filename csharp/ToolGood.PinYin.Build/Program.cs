@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using ToolGood.Bedrock;
 using System.Text;
 using ToolGood.PinYin.Build.Pinyin;
+using System.Diagnostics;
 
 namespace ToolGood.Pinyin.Build
 {
@@ -16,16 +17,21 @@ namespace ToolGood.Pinyin.Build
             // 生成单字拼音
             var pyShow = new List<string>() { "" };
             var upyShow = new List<string>();
+            var singleWord = new List<string>();
+
+            #region 生成全部拼音
 
             var pyText = File.ReadAllText("dict\\_py.txt");
             var pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in pyLines) {
                 var sp = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+                //Debug.WriteLine(line);
                 for (int i = 1; i < sp.Length; i++) {
                     var py = sp[i];
                     if (CanRemoveTone(py)) {
                         py = py.ToLower();
                         var index = GetToneIndex(py);
+
                         py = AddTone(RemoveTone(py) + index.ToString());
                     }
 
@@ -46,6 +52,22 @@ namespace ToolGood.Pinyin.Build
                     upyShow.Add(py.ToLower());
                 }
             }
+            pyText = File.ReadAllText("dict\\_word.txt");
+            pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in pyLines) {
+                var sp = line.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                var key = sp[0];
+                if (key.Length == 1) { continue; }
+                for (int i = 1; i < sp.Count; i++) {
+                    var py = sp[i];
+                    if (CanRemoveTone(py)) {
+                        py = py.ToLower();
+                        var index = GetToneIndex(py);
+                        py = AddTone(RemoveTone(py) + index.ToString());
+                    }
+                    upyShow.Add(py.ToLower());
+                }
+            }
 
             upyShow = upyShow.Distinct().OrderBy(q => q).ToList();
             foreach (var item in upyShow) {
@@ -53,8 +75,8 @@ namespace ToolGood.Pinyin.Build
                 pyShow.Add(py.ToUpper()[0] + py.Substring(1));
                 pyShow.Add(item.ToUpper()[0] + item.Substring(1));
             }
-
-
+            #endregion
+            #region 生成单字拼音1 
 
             Dictionary<string, List<int>> dict = new Dictionary<string, List<int>>();
             pyText = File.ReadAllText("dict\\_py.txt");
@@ -65,7 +87,7 @@ namespace ToolGood.Pinyin.Build
                     var key = sp[0];
                     List<int> indexs = new List<int>();
                     for (int i = 1; i < sp.Length; i++) {
-                        var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ǹg", "èng");
+                        var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
                         var idx = upyShow.IndexOf(py) * 2 + 1;
                         if (idx == -1) {
                             throw new Exception("");
@@ -87,7 +109,9 @@ namespace ToolGood.Pinyin.Build
                     if (idxs[0] == "FFFFFFFF") {
                         throw new Exception("");
                     }
-
+                    if (indexs.Count == 1) {
+                        singleWord.Add(c);
+                    }
                     pyData.Add(string.Join(",", idxs));
                 } else {
                     pyData.Add("0");
@@ -113,8 +137,10 @@ namespace ToolGood.Pinyin.Build
             }
             File.WriteAllText("_pyIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
             File.WriteAllText("_pyData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
+            #endregion
 
             // 生成单字拼音 \U20000以上
+            #region 生成单字拼音 \U20000以上
             Dictionary<string, List<int>> py20000 = new Dictionary<string, List<int>>();
             pyText = File.ReadAllText("dict\\_py2.txt");
             pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -125,7 +151,7 @@ namespace ToolGood.Pinyin.Build
 
                     List<int> indexs = new List<int>();
                     for (int i = 1; i < sp.Length; i++) {
-                        var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ǹg", "èng");
+                        var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
                         py = AddTone(py);
                         var idx = upyShow.IndexOf(py) * 2 + 1;
                         if (idx == -1) {
@@ -166,11 +192,10 @@ namespace ToolGood.Pinyin.Build
             }
             File.WriteAllText("pyIndex2.txt", outText);
             Compression("pyIndex2.txt");
-
-
-
+            #endregion
 
             // 获取 姓名拼音
+            #region 姓名拼音
             Dictionary<string, List<int>> pyName = new Dictionary<string, List<int>>();
             pyText = File.ReadAllText("dict\\_pyName.txt");
             pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -178,9 +203,6 @@ namespace ToolGood.Pinyin.Build
                 var sp = line.Split("\t,:| '\"=>-[]，　?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (sp.Length > 1) {
                     var key = sp[0];
-                    if (key == "单") {
-
-                    }
                     List<int> indexs = new List<int>();
                     for (int i = 1; i < sp.Length; i++) {
                         var py = sp[i];
@@ -207,8 +229,10 @@ namespace ToolGood.Pinyin.Build
             Compression("pyName.txt");
 
             File.WriteAllText("_pyName.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyName));
+            #endregion
 
             //生成多字拼音
+            #region 加载词组
             Dictionary<string, List<string>> pyWords = new Dictionary<string, List<string>>();
             pyText = File.ReadAllText("dict\\_word.txt");
             pyLines = pyText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -229,6 +253,7 @@ namespace ToolGood.Pinyin.Build
                 sp.RemoveAt(0);
                 pyWords[key] = sp;
             }
+            #endregion
 
 
             Words.StringSearchEx stringSearch = new Words.StringSearchEx();
@@ -252,9 +277,34 @@ namespace ToolGood.Pinyin.Build
             foreach (var item in tempClearWords) {
                 pyWords2.Remove(item.Key);
             }
+            var keys = pyWords2.Select(q => q.Key).OrderBy(q => q).ToList();
+
+            var index_remove = 1;
+            var oldkey = keys[0];
+            while (index_remove< keys.Count) {
+                var key = keys[index_remove];
+                if (key.StartsWith(oldkey)) {
+                    bool remove = true;
+                    for (int j = oldkey.Length; j < key.Length; j++) {
+                        if (singleWord.Contains(key[j].ToString()) == false) {
+                            remove = false;
+                            break;
+                        }
+                    }
+                    if (remove) {
+                        keys.RemoveAt(index_remove);
+                        pyWords2.Remove(key);
+                    } else {
+                        index_remove++;
+                        oldkey = key;
+                    }
+                } else {
+                    index_remove++;
+                    oldkey = key;
+                }
+            }
 
             List<string> AddKeys = new List<string>();
-            var keys = pyWords2.Select(q => q.Key).ToList();
             Words.WordsSearch wordsSearch = new Words.WordsSearch();
             wordsSearch.SetKeywords(keys);
             foreach (var item in tempClearKeys) {
@@ -279,6 +329,7 @@ namespace ToolGood.Pinyin.Build
 
             List<string> AddKeys2 = new List<string>();
             List<string> keys2 = new List<string>();
+            List<string> splitWords = new List<string>();
             foreach (var item in pyWords2) {
                 var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
                 if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
@@ -289,6 +340,7 @@ namespace ToolGood.Pinyin.Build
 
                         if (starts.Contains(start) && ends.Contains(end)) {
                             keys2.Add(start);
+                            splitWords.Add(start + "|" + end);
                         }
                     }
                 }
@@ -308,13 +360,20 @@ namespace ToolGood.Pinyin.Build
             AddKeys.AddRange(AddKeys2);
             AddKeys.AddRange(keys);
             AddKeys = AddKeys.Distinct().ToList();
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("县"));
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("市"));
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("州"));
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("人"));
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("盟"));
+            //AddKeys.RemoveAll(q => q.Length >= 3 && q.EndsWith("党"));
+
 
             ls = new List<string>();
             foreach (var item in AddKeys) {
                 var str = item;
                 List<string> pys = pyWords[str];
                 foreach (var py in pys) {
-                    var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ǹg", "èng");
+                    var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
                     var idx = upyShow.IndexOf(py2) * 2 + 1;
                     if (idx == -1) {
                         throw new Exception("");
@@ -336,7 +395,7 @@ namespace ToolGood.Pinyin.Build
                 var str = item;
                 List<string> pys = pyWords[str];
                 foreach (var py in pys) {
-                    var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ǹg", "èng");
+                    var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
                     var idx = upyShow.IndexOf(py2) * 2 + 1;
                     if (idx == -1) {
                         throw new Exception("");
@@ -353,10 +412,8 @@ namespace ToolGood.Pinyin.Build
             PinyinDictBuild.InitPy();
             PinyinDictBuild.WritePinyinDat();
             PinyinDictBuild.WritePinyinBigDat();
-            PinyinDictBuild.WritePinyinWordDat();
             Compression("Pinyin.dat");
             Compression("PinyinBig.dat");
-            Compression("PinyinWord.dat");
 
         }
 
@@ -366,6 +423,12 @@ namespace ToolGood.Pinyin.Build
                 return "en";
             }
             if (pinyin == "ǹg") {
+                return "eng";
+            }
+            if (pinyin == "ň") {
+                return "en";
+            }
+            if (pinyin == "ňg") {
                 return "eng";
             }
             string s = "āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜüńň";
@@ -523,7 +586,12 @@ namespace ToolGood.Pinyin.Build
             if (text == "ǹg") {
                 return 4;
             }
-
+            if (text == "ň") {
+                return 3;
+            }
+            if (text == "ňg") {
+                return 3;
+            }
             var tone = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü"
                     .Replace("a", " ").Replace("o", " ").Replace("i", " ")
                     .Replace("u", " ").Replace("v", " ")

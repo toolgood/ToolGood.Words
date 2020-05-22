@@ -281,7 +281,7 @@
 莘=shen1
 沈=shen3
 慎=shen4
-盛=sheng
+盛=sheng4
 师=shi1
 施=shi1
 时=shi2
