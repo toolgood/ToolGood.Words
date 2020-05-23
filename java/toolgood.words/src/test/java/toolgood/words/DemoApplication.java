@@ -56,7 +56,7 @@ public class DemoApplication {
 		list.add("国人");
 		list.add("zg人");
 		System.out.println("StringSearch run Test.");
-
+		 
 		StringSearch iwords = new StringSearch();
 		iwords.SetKeywords(list);
 

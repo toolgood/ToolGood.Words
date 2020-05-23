@@ -169,97 +169,109 @@ public class PinyinDict {
         }
         return list;
     }
-
+    private final static Object lockObj = new Object();  
     private static void InitPyIndex() throws NumberFormatException, IOException {
         if (_pyIndex == null) {
-            String resourceName = "pyIndex.txt";
-            InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
-            BufferedReader br = new BufferedReader(new InputStreamReader(u1));
-
-            String tStr = "";
-            List<Integer> pyIndex = new ArrayList<Integer>();
-            pyIndex.add(0);
-            List<Integer> pyData = new ArrayList<Integer>();
-
-            while ((tStr = br.readLine()) != null) {
-                if (_pyShow == null) {
-                    String[] ss = tStr.split(",");
-                    _pyShow = ss;
-                } else {
-                    if (tStr != "0") {
-                        for (String idx : tStr.split(",")) {
-                            int in = Integer.valueOf(idx, 16);
-                            pyData.add(in);
+            synchronized(lockObj){
+                if (_pyIndex == null) {
+                    String resourceName = "pyIndex.txt";
+                    InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(u1));
+        
+                    String tStr = "";
+                    List<Integer> pyIndex = new ArrayList<Integer>();
+                    pyIndex.add(0);
+                    List<Integer> pyData = new ArrayList<Integer>();
+        
+                    while ((tStr = br.readLine()) != null) {
+                        if (_pyShow == null) {
+                            String[] ss = tStr.split(",");
+                            _pyShow = ss;
+                        } else {
+                            if (tStr != "0") {
+                                for (String idx : tStr.split(",")) {
+                                    int in = Integer.valueOf(idx, 16);
+                                    pyData.add(in);
+                                }
+                            }
+                            pyIndex.add((int) pyData.size());
                         }
                     }
-                    pyIndex.add((int) pyData.size());
+                    br.close();
+        
+                    Integer[] pd = new Integer[pyData.size()];
+                    _pyData = pyData.toArray(pd);
+                    Integer[] pi = new Integer[pyIndex.size()];
+                    _pyIndex = pyIndex.toArray(pi);
                 }
             }
-            br.close();
-
-            Integer[] pd = new Integer[pyData.size()];
-            _pyData = pyData.toArray(pd);
-            Integer[] pi = new Integer[pyIndex.size()];
-            _pyIndex = pyIndex.toArray(pi);
         }
     }
 
     private static void InitPyName() throws NumberFormatException, IOException {
         if (_pyName == null) {
-            String resourceName = "pyName.txt";
-            InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
-            BufferedReader br = new BufferedReader(new InputStreamReader(u1));
+            synchronized(lockObj){
+                if (_pyName == null) {
+                    String resourceName = "pyName.txt";
+                    InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(u1));
+        
+                    Map<String, Integer[]> pyName = new HashMap<String, Integer[]>();
+                    String tStr = "";
+                    while ((tStr = br.readLine()) != null) {
+                        String[] sp = tStr.split(",");
+                        List<Integer> index = new ArrayList<Integer>();
+                        for (int i = 1; i < sp.length; i++) {
+                            String idx = sp[i];
+                            int in = Integer.valueOf(idx, 16);
+                            index.add(in);
+                        }
+                        Integer[] temp = new Integer[index.size()];
+                        pyName.put(sp[0], index.toArray(temp));
+                    }
+                    br.close();
+        
+                    _pyName = pyName;
 
-            Map<String, Integer[]> pyName = new HashMap<String, Integer[]>();
-            String tStr = "";
-            while ((tStr = br.readLine()) != null) {
-                String[] sp = tStr.split(",");
-                List<Integer> index = new ArrayList<Integer>();
-                for (int i = 1; i < sp.length; i++) {
-                    String idx = sp[i];
-                    int in = Integer.valueOf(idx, 16);
-                    index.add(in);
                 }
-                Integer[] temp = new Integer[index.size()];
-                pyName.put(sp[0], index.toArray(temp));
             }
-            br.close();
-
-            _pyName = pyName;
         }
     }
 
     private static void InitPyWords() throws NumberFormatException, IOException {
         if (_search == null) {
-            String resourceName = "pyWords.txt";
-            InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
-            BufferedReader br = new BufferedReader(new InputStreamReader(u1));
-
-            List<String> keywords = new ArrayList<String>();
-            List<Integer> wordPyIndex = new ArrayList<Integer>();
-            List<Integer> wordPy = new ArrayList<Integer>();
-
-            String tStr = "";
-            while ((tStr = br.readLine()) != null) {
-                String[] sp = tStr.split(",");
-                keywords.add(sp[0]);
-                wordPyIndex.add(wordPy.size());
-                for (int i = 1; i < sp.length; i++) {
-                    String idx = sp[i];
-                    int in = Integer.valueOf(idx, 16);
-                    wordPy.add(in);
+            synchronized(lockObj){
+                if (_search == null) {
+                    String resourceName = "pyWords.txt";
+                    InputStream u1 = WordsSearch.class.getClassLoader().getResourceAsStream(resourceName);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(u1));
+        
+                    List<String> keywords = new ArrayList<String>();
+                    List<Integer> wordPyIndex = new ArrayList<Integer>();
+                    List<Integer> wordPy = new ArrayList<Integer>();
+        
+                    String tStr = "";
+                    while ((tStr = br.readLine()) != null) {
+                        String[] sp = tStr.split(",");
+                        keywords.add(sp[0]);
+                        wordPyIndex.add(wordPy.size());
+                        for (int i = 1; i < sp.length; i++) {
+                            String idx = sp[i];
+                            int in = Integer.valueOf(idx, 16);
+                            wordPy.add(in);
+                        }
+                    }
+                    br.close();
+                    WordsSearch search = new WordsSearch();
+                    search.SetKeywords(keywords);
+                    Integer[] wp = new Integer[wordPy.size()];
+                    _wordPy = wordPy.toArray(wp);
+                    Integer[] wpi = new Integer[wordPyIndex.size()];
+                    _wordPyIndex = wordPyIndex.toArray(wpi);
+                    _search = search;
                 }
             }
-            br.close();
-            WordsSearch search = new WordsSearch();
-            search.SetKeywords(keywords);
-            Integer[] wp = new Integer[wordPy.size()];
-            _wordPy = wordPy.toArray(wp);
-            Integer[] wpi = new Integer[wordPyIndex.size()];
-            _wordPyIndex = wordPyIndex.toArray(wpi);
-            _search = search;
         }
-
     }
 
 }
