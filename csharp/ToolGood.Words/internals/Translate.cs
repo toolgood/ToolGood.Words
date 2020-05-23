@@ -76,40 +76,64 @@ namespace ToolGood.Words.internals
             }
             return sb.ToString();
         }
-
+        private static object lockObj = new object();
         private static WordsSearch GetWordsSearch(bool s2t, int srcType)
         {
             if (s2t) {
                 if (srcType == 0) {
                     if (s2tSearch == null) {
-                        s2tSearch = BuildWordsSearch("s2t.dat", false);
+                        lock (lockObj) {
+                            if (s2tSearch == null) {
+                                s2tSearch = BuildWordsSearch("s2t.dat", false);
+                            }
+                        }
                     }
                     return s2tSearch;
                 } else if (srcType == 1) {
                     if (t2hkSearch == null) {
-                        t2hkSearch = BuildWordsSearch("t2hk.dat", false);
+                        lock (lockObj) {
+                            if (t2hkSearch == null) {
+                                t2hkSearch = BuildWordsSearch("t2hk.dat", false);
+                            }
+                        }
                     }
                     return t2hkSearch;
                 } else if (srcType == 2) {
                     if (t2twSearch == null) {
-                        t2twSearch = BuildWordsSearch("t2tw.dat", false);
+                        lock (lockObj) {
+                            if (t2twSearch == null) {
+                                t2twSearch = BuildWordsSearch("t2tw.dat", false);
+                            }
+                        }
                     }
                     return t2twSearch;
                 }
             } else {
                 if (srcType == 0) {
                     if (t2sSearch == null) {
-                        t2sSearch = BuildWordsSearch("t2s.dat", false);
+                        lock (lockObj) {
+                            if (t2sSearch == null) {
+                                t2sSearch = BuildWordsSearch("t2s.dat", false);
+                            }
+                        }
                     }
                     return t2sSearch;
                 } else if (srcType == 1) {
                     if (hk2tSearch == null) {
-                        hk2tSearch = BuildWordsSearch("t2hk.dat", true);
+                        lock (lockObj) {
+                            if (hk2tSearch == null) {
+                                hk2tSearch = BuildWordsSearch("t2hk.dat", true);
+                            }
+                        }
                     }
                     return hk2tSearch;
                 } else if (srcType == 2) {
                     if (tw2tSearch == null) {
-                        tw2tSearch = BuildWordsSearch("t2tw.dat", true);
+                        lock (lockObj) {
+                            if (tw2tSearch == null) {
+                                tw2tSearch = BuildWordsSearch("t2tw.dat", true);
+                            }
+                        }
                     }
                     return tw2tSearch;
                 }
