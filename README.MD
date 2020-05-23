@@ -114,7 +114,10 @@ ToolGood.Words:                 本项目源代码
     WordsHelper.GetPinyinForName("单一一",",")//Shan,Yi,Yi
     WordsHelper.GetPinyinForName("单一一",true)//ShànYīYī
 ``` 
- 
+##### 拼音分支
+[ToolGood.Words.Pinyin](https://github.com/toolgood/ToolGood.Words.Pinyin)
+追求更快的加载速度（目前只有C#代码）。
+
 ##  拼音匹配
 `PinyinMatch`：方法有`SetKeywords`、`SetIndexs`、`Find`、`FindIndex`。
 
@@ -145,6 +148,7 @@ ToolGood.Words:                 本项目源代码
     Assert.AreEqual(0, all2[0]);
     Assert.AreEqual(1, all.Count);
 ``` 
+
 
 
 
