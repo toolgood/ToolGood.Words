@@ -2,20 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using ToolGood.Bedrock;
-using System.Text;
-using ToolGood.PinYin.Build.Pinyin;
-using System.Diagnostics;
-using ToolGood.PinYin.Build.FirstPinyin;
 
-namespace ToolGood.Pinyin.Build
+namespace ToolGood.PinYin.Build.FirstPinyin
 {
-    class Program
+    public class Program2
     {
-        static void Main(string[] args)
+        public static void Main2(string[] args)
         {
-            Program2.Main2(args);
             // 生成单字拼音
             var pyShow = new List<string>() { "" };
             var upyShow = new List<string>();
@@ -30,13 +26,8 @@ namespace ToolGood.Pinyin.Build
                 //Debug.WriteLine(line);
                 for (int i = 1; i < sp.Length; i++) {
                     var py = sp[i];
-                    if (CanRemoveTone(py)) {
-                        py = py.ToLower();
-                        var index = GetToneIndex(py);
-
-                        py = AddTone(RemoveTone(py) + index.ToString());
-                    }
-
+                    py = py.ToLower();
+                    py = RemoveTone(py)[0].ToString();
                     upyShow.Add(py.ToLower());
                 }
             }
@@ -46,11 +37,8 @@ namespace ToolGood.Pinyin.Build
                 var sp = line.Split("\t,:| '\"=>[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 1; i < sp.Length; i++) {
                     var py = sp[i];
-                    if (CanRemoveTone(py)) {
-                        py = py.ToLower();
-                        var index = GetToneIndex(py);
-                        py = AddTone(RemoveTone(py) + index.ToString());
-                    }
+                    py = py.ToLower();
+                    py = RemoveTone(py)[0].ToString();
                     upyShow.Add(py.ToLower());
                 }
             }
@@ -62,20 +50,15 @@ namespace ToolGood.Pinyin.Build
                 if (key.Length == 1) { continue; }
                 for (int i = 1; i < sp.Count; i++) {
                     var py = sp[i];
-                    if (CanRemoveTone(py)) {
-                        py = py.ToLower();
-                        var index = GetToneIndex(py);
-                        py = AddTone(RemoveTone(py) + index.ToString());
-                    }
+                    py = py.ToLower();
+                    py = RemoveTone(py)[0].ToString();
                     upyShow.Add(py.ToLower());
                 }
             }
 
             upyShow = upyShow.Distinct().OrderBy(q => q).ToList();
             foreach (var item in upyShow) {
-                var py = RemoveTone(item);
-                pyShow.Add(py.ToUpper()[0] + py.Substring(1));
-                pyShow.Add(item.ToUpper()[0] + item.Substring(1));
+                pyShow.Add(item.ToUpper());
             }
             #endregion
             #region 生成单字拼音1 
@@ -87,16 +70,17 @@ namespace ToolGood.Pinyin.Build
                 var sp = line.Split("\t,:| '\"=>-[]，　123456789?".ToArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (sp.Length > 1) {
                     var key = sp[0];
-                    List<int> indexs = new List<int>();
+                    HashSet<int> indexs = new HashSet<int>();
                     for (int i = 1; i < sp.Length; i++) {
                         var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
-                        var idx = upyShow.IndexOf(py) * 2 + 1;
+                        py = RemoveTone(py)[0].ToString();
+                        var idx = upyShow.IndexOf(py) + 1;
                         if (idx == -1) {
                             throw new Exception("");
                         }
                         indexs.Add(idx);
                     }
-                    dict[key] = indexs;
+                    dict[key] = indexs.ToList();
                 }
             }
 
@@ -121,10 +105,11 @@ namespace ToolGood.Pinyin.Build
             }
             var outText = string.Join(",", pyShow);
             outText += "\n" + string.Join("\n", pyData);
-            File.WriteAllText("pyIndex.txt", outText);
-            Compression("pyIndex.txt");
+            Directory.CreateDirectory("fpy");
+            File.WriteAllText("fpy\\pyIndex.txt", outText);
+            Compression("fpy\\pyIndex.txt");
 
-            File.WriteAllText("_pyShow.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyShow));
+            File.WriteAllText("fpy\\_pyShow.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyShow));
 
             List<int> pyIndex2 = new List<int>() { 0 };
             List<int> pyData2 = new List<int>();
@@ -137,8 +122,8 @@ namespace ToolGood.Pinyin.Build
                 }
                 pyIndex2.Add((ushort)pyData2.Count);
             }
-            File.WriteAllText("_pyIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
-            File.WriteAllText("_pyData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
+            File.WriteAllText("fpy\\_pyIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
+            File.WriteAllText("fpy\\_pyData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
             #endregion
 
             // 生成单字拼音 \U20000以上
@@ -151,17 +136,18 @@ namespace ToolGood.Pinyin.Build
                 if (sp.Length > 1) {
                     var key = sp[0];
 
-                    List<int> indexs = new List<int>();
+                    HashSet<int> indexs = new HashSet<int>();
                     for (int i = 1; i < sp.Length; i++) {
                         var py = sp[i].Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
-                        py = AddTone(py);
-                        var idx = upyShow.IndexOf(py) * 2 + 1;
+                        py = RemoveTone(py)[0].ToString();
+
+                        var idx = upyShow.IndexOf(py) + 1;
                         if (idx == -1) {
                             throw new Exception("");
                         }
                         indexs.Add(idx);
                     }
-                    py20000[key] = indexs;
+                    py20000[key] = indexs.ToList();
                 }
             }
             List<List<string>> pyData20000 = new List<List<string>>();
@@ -192,8 +178,8 @@ namespace ToolGood.Pinyin.Build
                 }
                 outText += string.Join("\t", data20000);
             }
-            File.WriteAllText("pyIndex2.txt", outText);
-            Compression("pyIndex2.txt");
+            File.WriteAllText("fpy\\pyIndex2.txt", outText);
+            Compression("fpy\\pyIndex2.txt");
             #endregion
 
             // 获取 姓名拼音
@@ -208,8 +194,8 @@ namespace ToolGood.Pinyin.Build
                     List<int> indexs = new List<int>();
                     for (int i = 1; i < sp.Length; i++) {
                         var py = sp[i];
-                        py = AddTone(py);
-                        var idx = upyShow.IndexOf(py) * 2 + 1;
+                        py = RemoveTone(py)[0].ToString();
+                        var idx = upyShow.IndexOf(py) + 1;
                         if (idx == -1) {
                             throw new Exception("");
                         }
@@ -227,10 +213,10 @@ namespace ToolGood.Pinyin.Build
                 }
                 ls.Add($"{item.Key},{string.Join(",", idxs)}");
             }
-            File.WriteAllText("pyName.txt", string.Join("\n", ls));
-            Compression("pyName.txt");
+            File.WriteAllText("fpy\\pyName.txt", string.Join("\n", ls));
+            Compression("fpy\\pyName.txt");
 
-            File.WriteAllText("_pyName.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyName));
+            File.WriteAllText("fpy\\_pyName.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyName));
             #endregion
 
             //生成多字拼音
@@ -243,6 +229,9 @@ namespace ToolGood.Pinyin.Build
                 var key = sp[0];
                 if (key.Length == 1) { continue; }
                 sp.RemoveAt(0);
+                for (int i = 0; i < sp.Count; i++) {
+                    sp[i] = RemoveTone(sp[i])[0].ToString();
+                }
                 pyWords[key] = sp;
             }
             // 搜狗拼音也有错误的
@@ -253,19 +242,22 @@ namespace ToolGood.Pinyin.Build
                 var key = sp[0];
                 if (key.Length == 1) { continue; }
                 sp.RemoveAt(0);
+                for (int i = 0; i < sp.Count; i++) {
+                    sp[i] = RemoveTone(sp[i])[0].ToString();
+                }
                 pyWords[key] = sp;
             }
             #endregion
 
 
-            Words.StringSearchEx stringSearch = new Words.StringSearchEx();
-            stringSearch.SetKeywords(pyWords.Keys.ToList());
+            //Words.StringSearchEx stringSearch = new Words.StringSearchEx();
+            //stringSearch.SetKeywords(pyWords.Keys.ToList());
 
             Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
             List<string> tempClearKeys = new List<string>();
 
             foreach (var item in pyWords) {
-                var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
+                var py = Regex.Replace(Words.WordsHelper.GetPinyinFast(item.Key, false), "[a-z]", "").ToLower();
                 if (py == string.Join("", item.Value)) {
                     tempClearWords[item.Key] = item.Value;
                     tempClearKeys.Add(item.Key);
@@ -283,7 +275,7 @@ namespace ToolGood.Pinyin.Build
 
             var index_remove = 1;
             var oldkey = keys[0];
-            while (index_remove< keys.Count) {
+            while (index_remove < keys.Count) {
                 var key = keys[index_remove];
                 if (key.StartsWith(oldkey)) {
                     bool remove = true;
@@ -333,7 +325,7 @@ namespace ToolGood.Pinyin.Build
             List<string> keys2 = new List<string>();
             List<string> splitWords = new List<string>();
             foreach (var item in pyWords2) {
-                var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
+                var py = Regex.Replace(Words.WordsHelper.GetPinyinFast(item.Key, false), "[a-z]", "").ToLower();
                 if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
                     for (int i = 1; i < item.Key.Length; i++) {
                         var start = item.Key.Substring(0, item.Key.Length - i);
@@ -376,7 +368,7 @@ namespace ToolGood.Pinyin.Build
                 List<string> pys = pyWords[str];
                 foreach (var py in pys) {
                     var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
-                    var idx = upyShow.IndexOf(py2) * 2 + 1;
+                    var idx = upyShow.IndexOf(py2) + 1;
                     if (idx == -1) {
                         throw new Exception("");
                     }
@@ -385,11 +377,11 @@ namespace ToolGood.Pinyin.Build
                 ls.Add(str);
             }
             ls = ls.OrderBy(q => q).ToList();
-            File.WriteAllText("pyWords.txt", string.Join("\n", ls));
-            Compression("pyWords.txt");
+            File.WriteAllText("fpy\\pyWords.txt", string.Join("\n", ls));
+            Compression("fpy\\pyWords.txt");
             //File.WriteAllText("pyWords.js.txt", string.Join("|", ls));
 
-            File.WriteAllText("_pyWordsKey.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(AddKeys));
+            File.WriteAllText("fpy\\_pyWordsKey.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(AddKeys));
 
             pyIndex2 = new List<int>() { 0 };
             pyData2 = new List<int>();
@@ -398,7 +390,7 @@ namespace ToolGood.Pinyin.Build
                 List<string> pys = pyWords[str];
                 foreach (var py in pys) {
                     var py2 = py.Replace("v", "ü").Replace("ǹ", "èn").Replace("ň", "ěn");
-                    var idx = upyShow.IndexOf(py2) * 2 + 1;
+                    var idx = upyShow.IndexOf(py2) + 1;
                     if (idx == -1) {
                         throw new Exception("");
                     }
@@ -406,16 +398,16 @@ namespace ToolGood.Pinyin.Build
                 }
                 pyIndex2.Add(pyData2.Count);
             }
-            File.WriteAllText("_pyWordsIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
-            File.WriteAllText("_pyWordsData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
+            File.WriteAllText("fpy\\_pyWordsIndex.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyIndex2));
+            File.WriteAllText("fpy\\_pyWordsData.js.txt", Newtonsoft.Json.JsonConvert.SerializeObject(pyData2));
 
 
 
-            PinyinDictBuild.InitPy();
-            PinyinDictBuild.WritePinyinDat();
-            PinyinDictBuild.WritePinyinBigDat();
-            Compression("Pinyin.dat");
-            Compression("PinyinBig.dat");
+            PinyinDictBuild2.InitPy();
+            PinyinDictBuild2.WritePinyinDat();
+            PinyinDictBuild2.WritePinyinBigDat();
+            Compression("fpy\\Pinyin.dat");
+            Compression("fpy\\PinyinBig.dat");
 
         }
 
@@ -441,181 +433,17 @@ namespace ToolGood.Pinyin.Build
             return pinyin;
         }
 
-
-        static string AddTone(string pinyin)
-        {
-            pinyin = pinyin.ToLower();
-            if (pinyin.Contains("j") || pinyin.Contains("q") || pinyin.Contains("x")) {
-                pinyin = pinyin.Replace("v", "u");
-            }
-            if (pinyin.Contains("iou")) {
-                pinyin = pinyin.Replace("iou", "iu");
-            }
-            if (pinyin.Contains("uei")) {
-                pinyin = pinyin.Replace("uei", "ui");
-            }
-            if (pinyin.Contains("uen")) {
-                pinyin = pinyin.Replace("uen", "un");
-            }
-
-            if (pinyin.EndsWith("1")) {
-                if (pinyin.Contains("a")) {
-                    pinyin = pinyin.Replace("a", "ā");
-                } else if (pinyin.Contains("o")) {
-                    pinyin = pinyin.Replace("o", "ō");
-                } else if (pinyin.Contains("e")) {
-                    pinyin = pinyin.Replace("e", "ē");
-
-                } else if (pinyin.Contains("iu")) {
-                    pinyin = pinyin.Replace("u", "ū");
-                } else if (pinyin.Contains("ui")) {
-                    pinyin = pinyin.Replace("i", "ī");
-
-                } else if (pinyin.Contains("u")) {
-                    pinyin = pinyin.Replace("u", "ū");
-                } else if (pinyin.Contains("i")) {
-                    pinyin = pinyin.Replace("i", "ī");
-                } else if (pinyin.Contains("v")) {
-                    pinyin = pinyin.Replace("v", "ǖ");
-                } else {
-                    throw new Exception("");
-                }
-            } else if (pinyin.EndsWith("2")) {
-                if (pinyin.Contains("a")) {
-                    pinyin = pinyin.Replace("a", "á");
-                } else if (pinyin.Contains("o")) {
-                    pinyin = pinyin.Replace("o", "ó");
-                } else if (pinyin.Contains("e")) {
-                    pinyin = pinyin.Replace("e", "é");
-
-                } else if (pinyin.Contains("iu")) {
-                    pinyin = pinyin.Replace("u", "ú");
-                } else if (pinyin.Contains("ui")) {
-                    pinyin = pinyin.Replace("i", "í");
-
-
-                } else if (pinyin.Contains("u")) {
-                    pinyin = pinyin.Replace("u", "ú");
-                } else if (pinyin.Contains("i")) {
-                    pinyin = pinyin.Replace("i", "í");
-                } else if (pinyin.Contains("v")) {
-                    pinyin = pinyin.Replace("v", "ǘ");
-                } else {
-                    throw new Exception("");
-                }
-            } else if (pinyin.EndsWith("3")) {
-                if (pinyin.Contains("a")) {
-                    pinyin = pinyin.Replace("a", "ǎ");
-                } else if (pinyin.Contains("o")) {
-                    pinyin = pinyin.Replace("o", "ǒ");
-                } else if (pinyin.Contains("e")) {
-                    pinyin = pinyin.Replace("e", "ě");
-
-                } else if (pinyin.Contains("iu")) {
-                    pinyin = pinyin.Replace("u", "ǔ");
-                } else if (pinyin.Contains("ui")) {
-                    pinyin = pinyin.Replace("i", "ǐ");
-
-                } else if (pinyin.Contains("u")) {
-                    pinyin = pinyin.Replace("u", "ǔ");
-                } else if (pinyin.Contains("i")) {
-                    pinyin = pinyin.Replace("i", "ǐ");
-                } else if (pinyin.Contains("v")) {
-                    pinyin = pinyin.Replace("v", "ǚ");
-                } else {
-                    throw new Exception("");
-                }
-            } else if (pinyin.EndsWith("4")) {
-                if (pinyin.Contains("a")) {
-                    pinyin = pinyin.Replace("a", "à");
-                } else if (pinyin.Contains("o")) {
-                    pinyin = pinyin.Replace("o", "ò");
-                } else if (pinyin.Contains("e")) {
-                    pinyin = pinyin.Replace("e", "è");
-
-                } else if (pinyin.Contains("iu")) {
-                    pinyin = pinyin.Replace("u", "ù");
-                } else if (pinyin.Contains("ui")) {
-                    pinyin = pinyin.Replace("i", "ì");
-
-                } else if (pinyin.Contains("u")) {
-                    pinyin = pinyin.Replace("u", "ù");
-                } else if (pinyin.Contains("i")) {
-                    pinyin = pinyin.Replace("i", "ì");
-                } else if (pinyin.Contains("v")) {
-                    pinyin = pinyin.Replace("v", "ǜ");
-                } else {
-                    throw new Exception("");
-                }
-            } else if (pinyin.EndsWith("0") || pinyin.EndsWith("5")) {
-                if (pinyin.Contains("a")) {
-                } else if (pinyin.Contains("o")) {
-                } else if (pinyin.Contains("e")) {
-                } else if (pinyin.Contains("i")) {
-                } else if (pinyin.Contains("u")) {
-                } else if (pinyin.Contains("v")) {
-                    pinyin = pinyin.Replace("v", "ü");
-                } else {
-                    throw new Exception("");
-                }
-            } else if (pinyin.EndsWith("6") || pinyin.EndsWith("7") || pinyin.EndsWith("8") || pinyin.EndsWith("9")) {
-                throw new Exception("");
-            }
-            pinyin = pinyin.Replace("v", "ü");
-            pinyin = Regex.Replace(pinyin, @"\d", "");
-
-            return pinyin;
-        }
-
-
-
         private static void Compression(string file)
         {
             var bytes = File.ReadAllBytes(file);
             var bs = CompressionUtil.GzipCompress(bytes);
-            Directory.CreateDirectory("dict");
+            Directory.CreateDirectory("dict\\fpy");
             File.WriteAllBytes("dict\\" + file + ".z", bs);
 
             var bs2 = CompressionUtil.BrCompress(bytes);
             File.WriteAllBytes("dict\\" + file + ".br", bs2);
         }
 
-        static int GetToneIndex(string text)
-        {
-            if (text == "ǹ") {
-                return 4;
-            }
-            if (text == "ǹg") {
-                return 4;
-            }
-            if (text == "ň") {
-                return 3;
-            }
-            if (text == "ňg") {
-                return 3;
-            }
-            var tone = @"aāáǎàa|oōóǒòo|eēéěèe|iīíǐìi|uūúǔùu|vǖǘǚǜü"
-                    .Replace("a", " ").Replace("o", " ").Replace("i", " ")
-                    .Replace("u", " ").Replace("v", " ")
-                    .Split('|');
-            foreach (var c in text) {
-                foreach (var to in tone) {
-                    var index = to.IndexOf(c);
-                    if (index > 0) {
-                        return index;
-                    }
-                }
-            }
-            return 5;
-        }
-
-        static bool CanRemoveTone(string text)
-        {
-            List<string> pys = new List<string>(){"fēnwǎ", "shíkě", "bǎikè", "lǐwǎ","líwǎ","pútí",
-                "jiālún", "shíwǎ", "máowǎ", "qiānwǎ", "gōngfēn", "qiānkè", "gōngfēn", "gōnglǐ", "yīngmǔ" };
-            return !pys.Contains(text);
-
-        }
 
 
     }
