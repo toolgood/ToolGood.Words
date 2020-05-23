@@ -1686,7 +1686,7 @@
 刂 dāo,lì
 冊 cè,zhà
 册 cè
-厕 cè
+厕 cè,si
 侧 cè,zè,zhāi
 拺 cè,sè,chuò
 荝 cè
@@ -1694,7 +1694,7 @@
 恻 cè
 敇 cè
 萗 cè
-厠 cè,cì
+厠 cè,cì,si
 笧 cè,shàn
 側 cè,zè,zhāi
 粣 cè,sè
@@ -1756,7 +1756,7 @@
 插 chā
 揷 chā
 嗏 chā
-馇 chā
+馇 chā,zha
 㛼 chā
 㮑 chā
 㬁 chā
@@ -1766,7 +1766,7 @@
 嚓 cā,chā
 鍤 chā
 鎈 cuō,chā,suǒ
-餷 chā
+餷 chā,zha
 秅 chá,ná
 垞 chá
 茬 chá
@@ -5014,7 +5014,7 @@
 翂 fēn
 紛 fēn
 棻 fēn
-兝 gōngfēn,fēn
+兝 gōngfēn
 酚 fēn
 躮 fēn
 訜 fēn,bīn
@@ -5930,7 +5930,7 @@
 䰸 gōng
 匔 gōng
 髸 gōng
-兣 lǐ,gōng
+兣 gōnglǐ
 篢 gōng,gǎn,lǒng
 䳍 gōng
 觵 gōng
@@ -10182,7 +10182,7 @@
 克 kè
 㕉 kè
 刻 kè
-兙 shíkě,kè
+兙 shíkě
 剋 kēi,kè
 勀 kè
 勊 kè
@@ -10191,7 +10191,7 @@
 㝓 kè
 客 kè
 尅 kēi,kè
-兛 qiān,kè
+兛 qiānkè
 㤩 kè
 㳳 kè
 袔 hè,kè
@@ -10205,7 +10205,7 @@
 㕎 kè
 㗐 kè,kē
 缂 kè
-兡 bǎikè,kè
+兡 bǎikè
 锞 kè
 溘 kè
 愙 kè
@@ -12497,7 +12497,7 @@
 腀 lún
 㷍 lún
 碖 lún,lǔn,lùn
-嗧 jiālún,jiā,lún
+嗧 jiālún
 耣 lún,lǔn
 蜦 lún
 䈁 lún
@@ -20613,7 +20613,7 @@
 蜥 xī
 㗭 xī
 㗩 xī
-㷩 xī
+㷩 jiǒng,xī
 熈 xī,yí
 僖 xī
 㒆 chì
