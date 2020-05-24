@@ -3,30 +3,28 @@ package toolgood.words;
 
 public class IllegalWordsSearchResult
 {
-    public IllegalWordsSearchResult(String keyword, int start, int end, String srcText)
+    public IllegalWordsSearchResult(String keyword, int start, int end, int index, String matchKeyword, int type)
     {
-        Keyword = keyword;
+        MatchKeyword = matchKeyword;
         End = end;
         Start = start;
-        SrcString = srcText.substring(Start, end+1);
-    }
-    public IllegalWordsSearchResult(String keyword, int start, int end, String srcText, int type)
-    {
+        Index = index;
         Keyword = keyword;
-        End = end;
-        Start = start;
-        SrcString = srcText.substring(Start, end+1);
         BlacklistType = type;
     }
- 
+
     /**开始位置 */
     public int Start;
     /**结束位置 */
     public int End ;
     /**原始文本 */
-    public String SrcString ;
+    public String Keyword ;
     /**关键字 */
-    public String Keyword;
+    public String MatchKeyword;
     /**黑名单类型 */
     public int BlacklistType ;
+    /**索引 */
+    public int Index;
+
+ 
 }

@@ -62,7 +62,7 @@ namespace ToolGood.Words
         /// 字符转化，可以设置繁简转化、忽略大小写，启用后UseIgnoreCase开启无效
         /// 若想使用CharTranslateHandler，请先添加事件CharTranslateHandler, 再用SetKeywords设置关键字
         /// </summary>
-        public event CharTranslateHandler CharTranslateHandler;
+        public event CharTranslateHandler CharTranslate;
 
         /// <summary>
         /// 自定义字符串匹配
@@ -123,13 +123,13 @@ namespace ToolGood.Words
         /// <param name="keywords"></param>
         public override void SetKeywords(ICollection<string> keywords)
         {
-            if (CharTranslateHandler != null) {
+            if (CharTranslate != null) {
                 string[] keys = new string[keywords.Count];
                 var index = 0;
                 foreach (var item in keywords) {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < item.Length; i++) {
-                        sb.Append(CharTranslateHandler(item[i], item, i));
+                        sb.Append(CharTranslate(item[i], item, i));
                     }
                     keys[index++] = sb.ToString();
                 }
@@ -235,8 +235,8 @@ namespace ToolGood.Words
                     }
                 }
 
-                if (CharTranslateHandler != null) { // 字符串转换
-                    t1 = CharTranslateHandler(t1, text, i);
+                if (CharTranslate != null) { // 字符串转换
+                    t1 = CharTranslate(t1, text, i);
                 } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     t1 = ToSenseWord(t1);
                 }
@@ -299,8 +299,8 @@ namespace ToolGood.Words
                     }
                 }
 
-                if (CharTranslateHandler != null) { // 字符串转换
-                    t1 = CharTranslateHandler(t1, text, i);
+                if (CharTranslate != null) { // 字符串转换
+                    t1 = CharTranslate(t1, text, i);
                 } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     t1 = ToSenseWord(t1);
                 }
@@ -363,8 +363,8 @@ namespace ToolGood.Words
                     }
                 }
 
-                if (CharTranslateHandler != null) { // 字符串转换
-                    t1 = CharTranslateHandler(t1, text, i);
+                if (CharTranslate != null) { // 字符串转换
+                    t1 = CharTranslate(t1, text, i);
                 } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     t1 = ToSenseWord(t1);
                 }
@@ -430,8 +430,8 @@ namespace ToolGood.Words
                     }
                 }
 
-                if (CharTranslateHandler != null) { // 字符串转换
-                    t1 = CharTranslateHandler(t1, text, i);
+                if (CharTranslate != null) { // 字符串转换
+                    t1 = CharTranslate(t1, text, i);
                 } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     t1 = ToSenseWord(t1);
                 }
@@ -497,8 +497,10 @@ namespace ToolGood.Words
                         return true;
                     }
                 }
-                if (CharTranslateHandler != null) { // 字符串转换
-                    e1 = CharTranslateHandler(e1, text, end + 1);
+                if (CharTranslate != null) { // 字符串转换
+                    e1 = CharTranslate(e1, text, end + 1);
+                } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                    e1 = ToSenseWord(e1);
                 }
                 if (IsEnglishOrNumber(e1)) {
                     return false;
@@ -525,13 +527,15 @@ namespace ToolGood.Words
             while (start > 0 && pIndex[start - 1] == pp) { start--; }
             if (start > 0) {
                 var s1 = text[start];
-                if (CharTranslateHandler != null) { // 字符串转换
-                    s1 = CharTranslateHandler(s1, text, start);
+                if (CharTranslate != null) { // 字符串转换
+                    s1 = CharTranslate(s1, text, start);
                 }
                 if (IsEnglishOrNumber(s1)) {
                     var s2 = text[start - 1];
-                    if (CharTranslateHandler != null) { // 字符串转换
-                        s2 = CharTranslateHandler(s2, text, start);
+                    if (CharTranslate != null) { // 字符串转换
+                        s2 = CharTranslate(s2, text, start - 1);
+                    } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                        s2 = ToSenseWord(s2);
                     }
                     if (IsEnglishOrNumber(s2)) {
                         return null;
@@ -551,66 +555,6 @@ namespace ToolGood.Words
             return null;
         }
 
-        private IllegalWordsSearchResult GetIllegalResult2(string text, int end, int firstStart, int index, int duplicateCount)
-        {
-            var key = _keywords[index];
-            var length = end - firstStart - duplicateCount - 1;
-
-            var start = firstStart;
-            for (int i = firstStart; i >= 0; i--) {
-                var t1 = text[i];
-                if (SkipWordFilter != null && SkipWordFilter(t1, text, i)) {//跳词跳过
-                    continue;
-                }
-                if (CharTranslateHandler != null) { // 字符串转换
-                    t1 = CharTranslateHandler(t1, text, i);
-                }
-                if (key[length] == t1) {
-                    length--;
-                }
-                if (length == -1) {
-                    start = i;
-                    break;
-                }
-            }
-            if (UseDuplicateWordFilter) {
-                for (int i = start - 1; i >= 0; i--) {
-                    var t1 = text[i];
-                    if (SkipWordFilter != null && SkipWordFilter(t1, text, i)) {//跳词跳过
-                        continue;
-                    }
-                    if (CharTranslateHandler != null) { // 字符串转换
-                        t1 = CharTranslateHandler(t1, text, i);
-                    }
-                    if (key[0] == t1) {
-                        start = i;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            var keyword = text.Substring(start, end - start + 1);
-            var bl = _blacklist.Length > index ? _blacklist[index] : 0;
-
-            if (StringMatch != null) {
-                if (StringMatch(text, start, end, keyword, index, key, bl)) {
-                    return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
-                }
-            } else {
-                if (end + 1 < text.Length) {
-                    var en1 = IsEnglishOrNumber(text[end + 1]);
-                    var en2 = IsEnglishOrNumber(text[end]);
-                    if (en1 && en2) { return null; }
-                }
-                if (start > 0) {
-                    var sn1 = IsEnglishOrNumber(text[start - 1]);
-                    var sn2 = IsEnglishOrNumber(text[start]);
-                    if (sn1 && sn2) { return null; }
-                }
-                return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
-            }
-            return null;
-        }
         private bool IsEnglishOrNumber(char c)
         {
             if (c < 128) {

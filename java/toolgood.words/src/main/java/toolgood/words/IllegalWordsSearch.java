@@ -7,20 +7,79 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
-import toolgood.words.internals.BaseSearchEx2;
+import toolgood.words.internals.BaseSearchEx;
 
 /**
- *
+ * 最新版本的IllegalWordsSearch， 与2020.05.24以前的版本不兼容
  */
-public class IllegalWordsSearch extends BaseSearchEx2 {
+public class IllegalWordsSearch extends BaseSearchEx {
+    public class SkipWordFilterHandler {
+        public char c;
+        public String text;
+        public int index;
+
+        public SkipWordFilterHandler(final char c, final String text, final int index) {
+            this.c = c;
+            this.text = text;
+            this.index = index;
+        }
+    }
+
+    public class CharTranslateHandler {
+        public char c;
+        public String text;
+        public int index;
+
+        public CharTranslateHandler(final char c, final String text, final int index) {
+            this.c = c;
+            this.text = text;
+            this.index = index;
+        }
+    }
+
+    public class StringMatchHandler {
+        public String text;
+        public int start;
+        public int end;
+        public String keyword;
+        public int keywordIndex;
+        public String matchKeyword;
+        public int blacklistIndex;
+
+        public StringMatchHandler(final String text, final int start, final int end, final String keyword,
+                final int keywordIndex, final String matchKeyword, final int blacklistIndex) {
+            this.text = text;
+            this.start = start;
+            this.end = end;
+            this.keyword = keyword;
+            this.keywordIndex = keywordIndex;
+            this.matchKeyword = matchKeyword;
+            this.blacklistIndex = blacklistIndex;
+        }
+    }
+
     /**
      * 使用跳词过滤器
      */
     public boolean UseSkipWordFilter = false;
-    private String _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;" +
-            "':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
+    private final String _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;"
+            + "':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
     private boolean[] _skipBitArray;
+
+    /** 过滤跳词 */
+    public Function<SkipWordFilterHandler, Boolean> SkipWordFilter;
+    /**
+     * 字符转化，可以设置繁简转化、忽略大小写，启用后UseIgnoreCase开启无效
+     * 若想使用CharTranslateHandler，请先添加事件CharTranslateHandler, 再用SetKeywords设置关键字
+     */
+    public Function<CharTranslateHandler, Character> CharTranslate;
+
+    /**
+     * 自定义字符串匹配
+     */
+    public Function<StringMatchHandler, Boolean> StringMatch;
     /**
      * 使用重复词过滤器
      */
@@ -28,8 +87,7 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
     /**
      * 使用黑名单过滤器
      */
-    public boolean UseBlacklistFilter = false;
-    private int[] _blacklist;
+    private int[] _blacklist=new int[0];
     /**
      * 使用半角转化器
      */
@@ -44,410 +102,70 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         for (int i = 0; i < _skipList.length(); i++) {
             _skipBitArray[_skipList.charAt(i)] = true;
         }
-        _blacklist = new int[0];
+        SkipWordFilter = null;
+        CharTranslate = null;
+        StringMatch = null;
     }
 
     /**
-     * 在文本中查找所有的关键字
+     * 设置跳词
      *
-     * @param text 文本
-     * @return
+     * @param skipList
      */
-    public List<IllegalWordsSearchResult> FindAll(String text) {
-        return FindAll(text, '*');
+    public void SetSkipWords(final String skipList) {
+
+        _skipBitArray = new boolean[Character.MAX_VALUE + 1];
+        if (skipList == null) {
+            for (int i = 0; i < _skipList.length(); i++) {
+                _skipBitArray[_skipList.charAt(i)] = true;
+            }
+        }
     }
 
     /**
-     * 在文本中查找所有的关键字
-     *
-     * @param text 文本
-     * @param flag 黑名单
-     * @return
+     * 设置关键字
+     * 如果想使用CharTranslateHandler，请先添加事件CharTranslateHandler, 再用SetKeywords设置关键字
+     * 使用CharTranslateHandler后，UseIgnoreCase配置无效
+     * 如果不使用忽略大小写，请先UseIgnoreCase设置为false,再用SetKeywords设置关键字
+     * @param keywords
      */
-    public List<IllegalWordsSearchResult> FindAll(String text, int flag) {
-        List<IllegalWordsSearchResult> results = new ArrayList<IllegalWordsSearchResult>();
-        int[] pIndex = new int[text.length()];
-        int p = 0;
-        int findIndex = 0;
-        char pChar = (char) 0;
-
-        for (int i = 0; i < text.length(); i++) {
-            if (p != 0) {
-                pIndex[i] = p;
-                if (findIndex != 0) {
-                    for (int item : _guides[findIndex]) {
-                        IllegalWordsSearchResult r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
-                        if (r != null) {
-                            results.add(r);
-                        }
-                    }
+    public void SetKeywords(final List<String> keywords) {
+        if (CharTranslate != null) {
+            final Set<String> kws = new HashSet<String>(keywords);
+            final List<String> list = new ArrayList<String>();
+            for (final String item : kws) {
+                final StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < item.length(); i++) {
+                    final char c = CharTranslate.apply(new CharTranslateHandler(item.charAt(i), item, i));
+                    sb.append(c);
                 }
+                list.add(sb.toString());
             }
-
-            Character c = text.charAt(i);
-            if (UseSkipWordFilter && _skipBitArray[c]) {
-                findIndex = 0;
-                continue;
-            }//使用跳词
-            int t = _dict[ToSenseWord(c)];
-            if (t == 0) {
-                p = 0;
-                pChar = c;
-                continue;
-            }//不在字表中，跳过
-
-            int next = _next[p] + t;
-            boolean find = _key[next] == t;
-            if (find == false) {
-                if (UseDuplicateWordFilter && pChar == c) {
-                    continue;
-                }
-                if (p != 0) {
-                    p = 0;
-                    next = _next[0] + t;
-                    find = _key[next] == t;
-                }
+            super.SetKeywords(list);
+        } else if (UseDBCcaseConverter || UseIgnoreCase) {
+            final Set<String> kws = new HashSet<String>(keywords);
+            final List<String> list = new ArrayList<String>();
+            for (final String item : kws) {
+                list.add(ToSenseWord(item));
             }
-            if (find) {
-                findIndex = _check[next];
-                p = next;
-            }
-            pChar = c;
+            super.SetKeywords(list);
+        } else {
+            super.SetKeywords(keywords);
         }
-        if (findIndex != 0) {
-            for (int item : _guides[findIndex]) {
-                IllegalWordsSearchResult r = GetIllegalResult(item, text.length() - 1, text, p, pIndex, flag);
-                if (r != null) {
-                    results.add(r);
-                }
-            }
-        }
-        return results;
     }
 
-    /**
-     * 在文本中查找第一个关键字
-     *
-     * @param text 文本
-     * @return
-     */
-    public IllegalWordsSearchResult FindFirst(String text) {
-        return FindFirst(text, Integer.MAX_VALUE);
-    }
-
-    /**
-     * 在文本中查找第一个关键字
-     *
-     * @param text 文本
-     * @param flag 黑名单
-     * @return
-     */
-    public IllegalWordsSearchResult FindFirst(String text, int flag) {
-        int[] pIndex = new int[text.length()];
-        int p = 0;
-        int findIndex = 0;
-        char pChar = (char) 0;
-
-        for (int i = 0; i < text.length(); i++) {
-            if (p != 0) {
-                pIndex[i] = p;
-                if (findIndex != 0) {
-                    for (int item : _guides[findIndex]) {
-                        IllegalWordsSearchResult r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
-                        if (r != null) {
-                            return r;
-                        }
-                    }
-                }
-            }
-
-            Character c = text.charAt(i);
-            if (UseSkipWordFilter && _skipBitArray[c]) {
-                findIndex = 0;
-                continue;
-            }//使用跳词
-            int t = _dict[ToSenseWord(c)];
-            if (t == 0) {
-                p = 0;
-                pChar = c;
-                continue;
-            }//不在字表中，跳过
-
-            int next = _next[p] + t;
-            boolean find = _key[next] == t;
-            if (find == false) {
-                if (UseDuplicateWordFilter && pChar == c) {
-                    continue;
-                }
-                if (p != 0) {
-                    p = 0;
-                    next = _next[0] + t;
-                    find = _key[next] == t;
-                }
-            }
-            if (find) {
-                findIndex = _check[next];
-                p = next;
-            }
-            pChar = c;
-        }
-        if (findIndex != 0) {
-            for (int item : _guides[findIndex]) {
-                IllegalWordsSearchResult r = GetIllegalResult(item, text.length() - 1, text, p, pIndex, flag);
-                if (r != null) {
-                    return r;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 判断文本是否包含关键字
-     *
-     * @param text 文本
-     * @return
-     */
-    public boolean ContainsAny(String text) {
-        return ContainsAny(text, Integer.MAX_VALUE);
-    }
-
-    /**
-     * 判断文本是否包含关键字
-     *
-     * @param text 文本
-     * @param flag 黑名单
-     * @return
-     */
-    public boolean ContainsAny(String text, int flag) {
-        int[] pIndex = new int[text.length()];
-        int p = 0;
-        int findIndex = 0;
-        char pChar = (char) 0;
-
-        for (int i = 0; i < text.length(); i++) {
-            if (p != 0) {
-                pIndex[i] = p;
-                if (findIndex != 0) {
-                    for (int item : _guides[findIndex]) {
-                        IllegalWordsSearchResult r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
-                        if (r != null) {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            Character c = text.charAt(i);
-            if (UseSkipWordFilter && _skipBitArray[c]) {
-                findIndex = 0;
-                continue;
-            }//使用跳词
-            int t = _dict[ToSenseWord(c)];
-            if (t == 0) {
-                p = 0;
-                pChar = c;
-                continue;
-            }//不在字表中，跳过
-
-
-            int next = _next[p] + t;
-            boolean find = _key[next] == t;
-            if (find == false) {
-                if (UseDuplicateWordFilter && pChar == c) {
-                    continue;
-                }
-                if (p != 0) {
-                    p = 0;
-                    next = _next[0] + t;
-                    find = _key[next] == t;
-                }
-            }
-            if (find) {
-                findIndex = _check[next];
-                p = next;
-            }
-            pChar = c;
-        }
-        if (findIndex != 0) {
-            for (int item : _guides[findIndex]) {
-                IllegalWordsSearchResult r = GetIllegalResult(item, text.length() - 1, text, p, pIndex, flag);
-                if (r != null) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 在文本中替换所有的关键字
-     *
-     * @param text 文本
-     * @return
-     */
-    public String Replace(String text) {
-        return Replace(text, '*', Integer.MAX_VALUE);
-    }
-
-    /**
-     * 在文本中替换所有的关键字
-     *
-     * @param text        文本
-     * @param replaceChar 替换符
-     * @return
-     */
-    public String Replace(String text, char replaceChar) {
-        return Replace(text, replaceChar, Integer.MAX_VALUE);
-    }
-
-    /**
-     * 在文本中替换所有的关键字
-     *
-     * @param text        文本
-     * @param replaceChar 替换符
-     * @param flag        黑名单
-     * @return
-     */
-    public String Replace(String text, char replaceChar, int flag) {
-        StringBuilder result = new StringBuilder(text);
-
-        int[] pIndex = new int[text.length()];
-        int p = 0;
-        int findIndex = 0;
-        char pChar = (char) 0;
-
-
-        for (int i = 0; i < text.length(); i++) {
-            if (p != 0) {
-                pIndex[i] = p;
-                if (findIndex != 0) {
-                    for (int item : _guides[findIndex]) {
-                        IllegalWordsSearchResult r = GetIllegalResult(item, i - 1, text, p, pIndex, flag);
-                        if (r != null) {
-                            for (int j = r.Start; j < i; j++) {
-                                result.setCharAt(j, replaceChar);
-                            }
-                            break;
-                        }
-                    }
-
-                }
-            }
-
-            Character c = text.charAt(i);
-            if (UseSkipWordFilter && _skipBitArray[c]) {
-                findIndex = 0;
-                continue;
-            }//使用跳词
-            int t = _dict[ToSenseWord(c)];
-            if (t == 0) {
-                p = 0;
-                pChar = c;
-                continue;
-            }//不在字表中，跳过
-
-            int next = _next[p] + t;
-            boolean find = _key[next] == t;
-            if (find == false) {
-                if (UseDuplicateWordFilter && pChar == c) {
-                    continue;
-                }
-                if (p != 0) {
-                    p = 0;
-                    next = _next[0] + t;
-                    find = _key[next] == t;
-                }
-            }
-            if (find) {
-                findIndex = _check[next];
-                p = next;
-            }
-            pChar = c;
-        }
-        if (findIndex != 0) {
-            for (int item : _guides[findIndex]) {
-                IllegalWordsSearchResult r = GetIllegalResult(item, text.length() - 1, text, p, pIndex, flag);
-                if (r != null) {
-                    for (int j = r.Start; j < text.length(); j++) {
-                        result.setCharAt(j, replaceChar);
-                    }
-                    break;
-                }
-            }
-        }
-        return result.toString();
-    }
-
-    private int FindStart(String keyword, int end, String srcText, int p, int[] pIndex) {
-        if (end + 1 < srcText.length()) {
-            boolean en1 = IsEnglishOrNumber(srcText.charAt(end + 1));
-            boolean en2 = IsEnglishOrNumber(srcText.charAt(end));
-            if (en1 && en2) {
-                return -1;
-            }
-        }
-        int n = keyword.length();
-        int start = end;
-        int pp = p;
-        while (n > 0) {
-            int pi = pIndex[start--];
-            if (pi != pp) {
-                n--;
-                pp = pi;
-            }
-            if (start == -1) return 0;
-        }
-        boolean sn1 = IsEnglishOrNumber(srcText.charAt(start++));
-        boolean sn2 = IsEnglishOrNumber(srcText.charAt(start));
-        if (sn1 && sn2) {
-            return -1;
-        }
-        return start;
-    }
-
-    private IllegalWordsSearchResult GetIllegalResult(int index, int end, String srcText, int p, int[] pIndex, int
-            flag) {
-        if (UseBlacklistFilter) {
-            int b = _blacklist[index];
-            if ((b | flag) != b) {
-                return null;
-            }
-        }
-        String keyword = _keywords[index];
-        if (keyword.length() == 1) {
-            if (ToSenseWord(srcText.charAt(end)).equals(ToSenseWord(keyword.charAt(0))) == false) {
-                return null;
-            }
-            return new IllegalWordsSearchResult(keyword, end, end, srcText);
-        }
-        int start = FindStart(keyword, end, srcText, p, pIndex);
-        if (start == -1) {
-            return null;
-        }
-        if (ToSenseWord(srcText.charAt(start)).equals(ToSenseWord(keyword.charAt(0))) == false) {
-            return null;
-        }
-        if (UseBlacklistFilter) {
-            return new IllegalWordsSearchResult(keyword, start, end, srcText, _blacklist[index]);
-        }
-        return new IllegalWordsSearchResult(keyword, start, end, srcText);
-    }
-
-
-    protected void Save(FileOutputStream bw) throws IOException {
+    protected void Save(final FileOutputStream bw) throws IOException {
         super.Save(bw);
 
         bw.write(UseSkipWordFilter ? 1 : 0);
         bw.write(NumHelper.serialize(_skipBitArray.length));
-        for (boolean item : _skipBitArray) {
+        for (final boolean item : _skipBitArray) {
             bw.write(item ? 1 : 0);
         }
 
         bw.write(UseDuplicateWordFilter ? 1 : 0);
-        bw.write(UseBlacklistFilter ? 1 : 0);
         bw.write(NumHelper.serialize(_blacklist.length));
-        for (int item : _blacklist) {
+        for (final int item : _blacklist) {
             bw.write(NumHelper.serialize(item));
         }
 
@@ -455,7 +173,7 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         bw.write(UseIgnoreCase ? 1 : 0);
     }
 
-    public void Load(InputStream br) throws IOException {
+    public void Load(final InputStream br) throws IOException {
         super.Load(br);
 
         UseSkipWordFilter = br.read() > 0;
@@ -466,7 +184,6 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         }
 
         UseDuplicateWordFilter = br.read() > 0;
-        UseBlacklistFilter = br.read() > 0;
         length = NumHelper.read(br);
         _blacklist = new int[length];
         for (int i = 0; i < length; i++) {
@@ -478,18 +195,375 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
     }
 
     /**
-     * 设置跳词
+     * 在文本中查找所有的关键字
      *
-     * @param skipList
+     * @param text 文本
+     * @return
      */
-    public void SetSkipWords(String skipList) {
+    public List<IllegalWordsSearchResult> FindAll(final String text) {
+        final List<IllegalWordsSearchResult> results = new ArrayList<IllegalWordsSearchResult>();
+        final int[] pIndex = new int[text.length()];
+        int p = 0;
+        char pChar = (char) 0;
 
-        _skipBitArray = new boolean[Character.MAX_VALUE + 1];
-        if (skipList == null) {
-            for (int i = 0; i < _skipList.length(); i++) {
-                _skipBitArray[_skipList.charAt(i)] = true;
+        for (int i = 0; i < text.length(); i++) {
+            Character t1 = text.charAt(i);
+            if (UseSkipWordFilter) {
+                if (SkipWordFilter != null) {// 跳词跳过
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
+                        pIndex[i] = p;
+                        continue;
+                    }
+                } else if (_skipBitArray[t1]) {
+                    pIndex[i] = p;
+                    continue;
+                }
+            }
+
+            if (CharTranslate != null) { // 字符串转换
+                t1 = CharTranslate.apply(new CharTranslateHandler(t1, text, i));
+            } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                t1 = ToSenseWord(t1);
+            }
+            final int t = _dict[t1];
+            if (t == 0) {
+                pChar = t1;
+                p = 0;
+                pIndex[i] = p;
+                continue;
+            }
+            int next;
+            if (p == 0 || t < _min[p] || t > _max[p]) {
+                next = _first[t];
+            } else {
+                final int index = _nextIndex[p].IndexOf(t);
+                if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else if (index == -1) {
+                    next = _first[t];
+                } else {
+                    next = _nextIndex[p].GetValue(index);
+                }
+            }
+
+            if (next != 0) {
+                if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
+                    for (int j = _end[next]; j < _end[next + 1]; j++) {
+                        final int index = _resultIndex[j];
+                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        if (r != null) {
+                            results.add(r);
+                        }
+                    }
+                }
+            }
+            p = next;
+            pChar = t1;
+            pIndex[i] = p;
+        }
+        return results;
+    }
+
+    /**
+     * 在文本中查找第一个关键字
+     *
+     * @param text 文本
+     * @return
+     */
+    public IllegalWordsSearchResult FindFirst(final String text) {
+        final int[] pIndex = new int[text.length()];
+        int p = 0;
+        char pChar = (char) 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            Character t1 = text.charAt(i);
+            if (UseSkipWordFilter) {
+                if (SkipWordFilter != null) {// 跳词跳过
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
+                        pIndex[i] = p;
+                        continue;
+                    }
+                } else if (_skipBitArray[t1]) {
+                    pIndex[i] = p;
+                    continue;
+                }
+            }
+
+            if (CharTranslate != null) { // 字符串转换
+                t1 = CharTranslate.apply(new CharTranslateHandler(t1, text, i));
+            } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                t1 = ToSenseWord(t1);
+            }
+            final int t = _dict[t1];
+            if (t == 0) {
+                pChar = t1;
+                p = 0;
+                pIndex[i] = p;
+                continue;
+            }
+            int next;
+            if (p == 0 || t < _min[p] || t > _max[p]) {
+                next = _first[t];
+            } else {
+                final int index = _nextIndex[p].IndexOf(t);
+                if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else if (index == -1) {
+                    next = _first[t];
+                } else {
+                    next = _nextIndex[p].GetValue(index);
+                }
+            }
+
+            if (next != 0) {
+                if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
+                    for (int j = _end[next]; j < _end[next + 1]; j++) {
+                        final int index = _resultIndex[j];
+                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        if (r != null) {
+                            return r;
+                        }
+                    }
+                }
+            }
+            p = next;
+            pChar = t1;
+            pIndex[i] = p;
+        }
+        return null;
+    }
+
+    /**
+     * 判断文本是否包含关键字
+     *
+     * @param text 文本
+     * @return
+     */
+    public boolean ContainsAny(final String text) {
+        final int[] pIndex = new int[text.length()];
+        int p = 0;
+        char pChar = (char) 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            Character t1 = text.charAt(i);
+            if (UseSkipWordFilter) {
+                if (SkipWordFilter != null) {// 跳词跳过
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
+                        pIndex[i] = p;
+                        continue;
+                    }
+                } else if (_skipBitArray[t1]) {
+                    pIndex[i] = p;
+                    continue;
+                }
+            }
+
+            if (CharTranslate != null) { // 字符串转换
+                t1 = CharTranslate.apply(new CharTranslateHandler(t1, text, i));
+            } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                t1 = ToSenseWord(t1);
+            }
+            final int t = _dict[t1];
+            if (t == 0) {
+                pChar = t1;
+                p = 0;
+                pIndex[i] = p;
+                continue;
+            }
+            int next;
+            if (p == 0 || t < _min[p] || t > _max[p]) {
+                next = _first[t];
+            } else {
+                final int index = _nextIndex[p].IndexOf(t);
+                if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else if (index == -1) {
+                    next = _first[t];
+                } else {
+                    next = _nextIndex[p].GetValue(index);
+                }
+            }
+
+            if (next != 0) {
+                if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
+                    for (int j = _end[next]; j < _end[next + 1]; j++) {
+                        final int index = _resultIndex[j];
+                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        if (r != null) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            p = next;
+            pChar = t1;
+            pIndex[i] = p;
+        }
+        return false;
+    }
+
+    /**
+     * 在文本中替换所有的关键字
+     *
+     * @param text 文本
+     * @return
+     */
+    public String Replace(final String text) {
+        return Replace(text, '*');
+    }
+
+    /**
+     * 在文本中替换所有的关键字
+     *
+     * @param text        文本
+     * @param replaceChar 文本
+     * @return
+     */
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
+
+        final int[] pIndex = new int[text.length()];
+        int p = 0;
+        char pChar = (char) 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            Character t1 = text.charAt(i);
+            if (UseSkipWordFilter) {
+                if (SkipWordFilter != null) {// 跳词跳过
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
+                        pIndex[i] = p;
+                        continue;
+                    }
+                } else if (_skipBitArray[t1]) {
+                    pIndex[i] = p;
+                    continue;
+                }
+            }
+
+            if (CharTranslate != null) { // 字符串转换
+                t1 = CharTranslate.apply(new CharTranslateHandler(t1, text, i));
+            } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                t1 = ToSenseWord(t1);
+            }
+            final int t = _dict[t1];
+            if (t == 0) {
+                pChar = t1;
+                p = 0;
+                pIndex[i] = p;
+                continue;
+            }
+            int next;
+            if (p == 0 || t < _min[p] || t > _max[p]) {
+                next = _first[t];
+            } else {
+                final int index = _nextIndex[p].IndexOf(t);
+                if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else if (index == -1) {
+                    next = _first[t];
+                } else {
+                    next = _nextIndex[p].GetValue(index);
+                }
+            }
+
+            if (next != 0) {
+                if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
+                    for (int j = _end[next]; j < _end[next + 1]; j++) {
+                        final int index = _resultIndex[j];
+                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        if (r != null) {
+                            for (int k = r.Start; k <= r.End; k++) {
+                                result.setCharAt(k, replaceChar);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            p = next;
+            pChar = t1;
+            pIndex[i] = p;
+        }
+        return result.toString();
+    }
+
+    private boolean CheckNextChar(final String text, final char c, final int end) {
+        if (IsEnglishOrNumber(c) == false) {
+            return true;
+        }
+        if (end + 1 < text.length()) {
+            char e1 = text.charAt(end + 1);
+            if (UseSkipWordFilter) {
+                if (SkipWordFilter != null) {// 跳词跳过
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(e1, text, end + 1))) {
+                        return true;
+                    }
+                } else if (_skipBitArray[e1]) {
+                    return true;
+                }
+            }
+            if (CharTranslate != null) { // 字符串转换
+                e1 = CharTranslate.apply(new CharTranslateHandler(e1, text, end + 1));
+            } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                e1 = ToSenseWord(e1);
+            }
+            if (IsEnglishOrNumber(e1)) {
+                return false;
             }
         }
+        return true;
+    }
+
+    private IllegalWordsSearchResult GetIllegalResult(final String text, final int end, final int index, final int p,
+            final int[] pIndex) {
+        final String key = _keywords[index];
+
+        int n = key.length() - 1;
+        int start = end;
+
+        int pp = p;
+        while (n > 0) {
+            int pi = pIndex[--start];
+            while (pi == pp) {
+                pi = pIndex[--start];
+            }
+            pp = pi;
+            n--;
+            if (start == 0) {
+                break;
+            }
+        }
+        while (start > 0 && pIndex[start - 1] == pp) {
+            start--;
+        }
+        if (start > 0) {
+            char s1 = text.charAt(start);
+            if (CharTranslate != null) { // 字符串转换
+                s1 = CharTranslate.apply(new CharTranslateHandler(s1, text, start));
+            }
+            if (IsEnglishOrNumber(s1)) {
+                char s2 = text.charAt(start - 1);
+                if (CharTranslate != null) { // 字符串转换
+                    s2 = CharTranslate.apply(new CharTranslateHandler(s2, text, start - 1));
+                } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                    s2 = ToSenseWord(s2);
+                }
+                if (IsEnglishOrNumber(s2)) {
+                    return null;
+                }
+            }
+        }
+
+        final String keyword = text.substring(start, end+1);
+        final int bl = _blacklist.length > index ? _blacklist[index] : 0;
+        if (StringMatch != null) {
+            if (StringMatch.apply(new StringMatchHandler(text, start, end, keyword, index, key, _blacklist[index]))) {
+                return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
+            }
+        } else {
+            return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
+        }
+        return null;
     }
 
     /**
@@ -498,7 +572,7 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
      * @param blacklist
      * @throws IllegalArgumentException
      */
-    public void SetBlacklist(int[] blacklist) throws IllegalArgumentException {
+    public void SetBlacklist(final int[] blacklist) throws IllegalArgumentException {
         if (_keywords == null) {
             throw new IllegalArgumentException("请先使用SetKeywords方法设置关键字！");
         }
@@ -508,21 +582,7 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         _blacklist = blacklist;
     }
 
-    /**
-     * 设置关键字
-     *
-     * @param keywords
-     */
-    public void SetKeywords(List<String> keywords) {
-        Set<String> kws = new HashSet<String>(keywords);
-        List<String> list = new ArrayList<String>();
-        for (String item : kws) {
-            list.add(ToSenseWord(item));
-        }
-        super.SetKeywords(list);
-    }
-
-    private Boolean IsEnglishOrNumber(Character c) {
+    private Boolean IsEnglishOrNumber(final Character c) {
         if (c < 128) {
             if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 return true;
@@ -531,21 +591,23 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         return false;
     }
 
-    private String ToSenseWord(String text) {
-        StringBuilder stringBuilder = new StringBuilder(text.length());
+    private String ToSenseWord(final String text) {
+        final StringBuilder stringBuilder = new StringBuilder(text.length());
         for (int i = 0; i < text.length(); i++) {
             stringBuilder.append(ToSenseWord(text.charAt(i)));
         }
         return stringBuilder.toString();
     }
 
-    private Character ToSenseWord(Character c) {
+    private Character ToSenseWord(final Character c) {
 
         if (UseIgnoreCase) {
-            if (c >= 'A' && c <= 'Z') return (char) (c | 0x20);
+            if (c >= 'A' && c <= 'Z')
+                return (char) (c | 0x20);
         }
         if (UseDBCcaseConverter) {
-            if (c == 12288) return ' ';
+            if (c == 12288)
+                return ' ';
             if (c >= 65280 && c < 65375) {
                 Character k = (char) (c - 65248);
                 if (UseIgnoreCase) {
@@ -558,6 +620,5 @@ public class IllegalWordsSearch extends BaseSearchEx2 {
         }
         return c;
     }
-
 
 }
