@@ -54,6 +54,7 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("zg人", all[0].Keyword);
 
             test = "fuck al[]l"; //未启用跳词
+            iwords.UseSkipWordFilter = false; 
             all = iwords.FindAll(test);
             Assert.AreEqual("fuck", all[0].Keyword);
             Assert.AreEqual(1, all.Count);
@@ -73,6 +74,7 @@ namespace ToolGood.Words.Test
             Assert.AreEqual(1, all.Count);
 
             test = "asssert all";
+            iwords.UseDuplicateWordFilter = false; //启用重复词
             all = iwords.FindAll(test); //未启用重复词
             Assert.AreEqual("all", all[0].Keyword);
             Assert.AreEqual(1, all.Count);
@@ -113,12 +115,12 @@ namespace ToolGood.Words.Test
             var ss = iwords.Replace(test, '*');
             Assert.AreEqual("我是【****", ss);
 
-            test = "我是中国人"; //使用黑名单
-            iwords.SetBlacklist(bl);
-            iwords.UseBlacklistFilter = true;
-            all = iwords.FindAll(test, 1);
-            Assert.AreEqual("中国", all[0].Keyword);
-            Assert.AreEqual(1, all.Count);
+            //test = "我是中国人"; //使用黑名单
+            //iwords.SetBlacklist(bl);
+            //iwords.UseBlacklistFilter = true;
+            //all = iwords.FindAll(test, 1);
+            //Assert.AreEqual("中国", all[0].Keyword);
+            //Assert.AreEqual(1, all.Count);
 
         }
 

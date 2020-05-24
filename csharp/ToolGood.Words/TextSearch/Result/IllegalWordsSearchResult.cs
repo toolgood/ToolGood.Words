@@ -2,20 +2,14 @@
 {
     public class IllegalWordsSearchResult
     {
-        internal IllegalWordsSearchResult(string keyword, int start, int end, string srcText)
+
+        internal IllegalWordsSearchResult(string keyword, int start, int end, int index, string matchKeyword, int type)
         {
-            MatchKeyword = keyword;
+            MatchKeyword = matchKeyword;
             End = end;
             Start = start;
-            Keyword = srcText.Substring(Start, end - Start + 1);
-            BlacklistType = BlacklistType.None;
-        }
-        internal IllegalWordsSearchResult(string keyword, int start, int end, string srcText, BlacklistType type)
-        {
-            MatchKeyword = keyword;
-            End = end;
-            Start = start;
-            Keyword = srcText.Substring(Start, end - Start + 1);
+            Index = index;
+            Keyword = keyword;
             BlacklistType = type;
         }
 
@@ -31,6 +25,12 @@
         /// 原始文本
         /// </summary>
         public string Keyword { get; private set; }
+
+        /// <summary>
+        /// 索引
+        /// </summary>
+        public int Index { get; private set; }
+
         /// <summary>
         /// 关键字
         /// </summary>
@@ -39,7 +39,7 @@
         /// <summary>
         /// 黑名单类型
         /// </summary>
-        public BlacklistType BlacklistType { get; private set; }
+        public int BlacklistType { get; private set; }
 
 
         public override string ToString()

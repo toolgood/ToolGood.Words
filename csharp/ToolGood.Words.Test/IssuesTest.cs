@@ -20,7 +20,9 @@ namespace ToolGood.Words.Test
             illegalWordsSearch.SetKeywords(s.Split('|'));
             var str = illegalWordsSearch.Replace("我是中美国人厉害中国完美ａｂｃddb好的", '*');
 
-            Assert.AreEqual("我是中美国人厉害**完美***ddb好的", str);
+            //Assert.AreEqual("我是中美国人厉害**完美***ddb好的", str);
+            //注，ａｂｃ先转abc,再判断abc左右是否为英文或数字,因为后面为d是英文，所以不能过滤
+            Assert.AreEqual("我是中美国人厉害**完美ａｂｃddb好的", str);
         }
 
 
@@ -40,16 +42,19 @@ namespace ToolGood.Words.Test
             iws.UseIgnoreCase = true;
             iws.UseDBCcaseConverter = true;
             var iwsFirst = iws.FindFirst(text);
+            Assert.AreEqual("吃", iwsFirst.Keyword);
             var iwsAll = iws.FindAll(text);
-            Assert.AreEqual(9, iwsAll.Count);
+            Assert.AreEqual(1, iwsAll.Count);// 因为1A20左右都是英文或数字，所以识别失败
 
             ss.SetKeywords(keywords);
             var ssFirst = ss.FindFirst(text);
+            Assert.AreEqual("吃", ssFirst);
             var ssAll = ss.FindAll(text);
             Assert.AreEqual(9, ssAll.Count);
 
             sse.SetKeywords(keywords);
             var sseFirst = sse.FindFirst(text);
+            Assert.AreEqual("吃", sseFirst);
             var sseAll = sse.FindAll(text);
             Assert.AreEqual(9, sseAll.Count);
 
