@@ -48,13 +48,13 @@ namespace ToolGood.Words.Test
 
             ss.SetKeywords(keywords);
             var ssFirst = ss.FindFirst(text);
-            Assert.AreEqual("吃", ssFirst);
+            Assert.AreEqual("A", ssFirst);
             var ssAll = ss.FindAll(text);
             Assert.AreEqual(9, ssAll.Count);
 
             sse.SetKeywords(keywords);
             var sseFirst = sse.FindFirst(text);
-            Assert.AreEqual("吃", sseFirst);
+            Assert.AreEqual("A", sseFirst);
             var sseAll = sse.FindAll(text);
             Assert.AreEqual(9, sseAll.Count);
 

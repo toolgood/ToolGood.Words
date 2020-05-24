@@ -61,9 +61,9 @@ public class IllegalWordsSearch extends BaseSearchEx {
     }
 
     /**
-     * 使用跳词过滤器
+     * 使用跳词过滤器，默认使用
      */
-    public boolean UseSkipWordFilter = false;
+    public boolean UseSkipWordFilter = true;
     private final String _skipList = " \t\r\n~!@#$%^&*()_+-=【】、[]{}|;"
             + "':\"，。、《》？αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑⒒⒓⒔⒕⒖⒗⒘⒙⒚⒛㈠㈡㈢㈣㈤㈥㈦㈧㈨㈩①②③④⑤⑥⑦⑧⑨⑩⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇≈≡≠＝≤≥＜＞≮≯∷±＋－×÷／∫∮∝∞∧∨∑∏∪∩∈∵∴⊥∥∠⌒⊙≌∽√§№☆★○●◎◇◆□℃‰€■△▲※→←↑↓〓¤°＃＆＠＼︿＿￣―♂♀┌┍┎┐┑┒┓─┄┈├┝┞┟┠┡┢┣│┆┊┬┭┮┯┰┱┲┳┼┽┾┿╀╁╂╃└┕┖┗┘┙┚┛━┅┉┤┥┦┧┨┩┪┫┃┇┋┴┵┶┷┸┹┺┻╋╊╉╈╇╆╅╄";
     private boolean[] _skipBitArray;
@@ -83,7 +83,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
     /**
      * 使用重复词过滤器
      */
-    public boolean UseDuplicateWordFilter = false;
+    public boolean UseDuplicateWordFilter = true;
     /**
      * 使用黑名单过滤器
      */
