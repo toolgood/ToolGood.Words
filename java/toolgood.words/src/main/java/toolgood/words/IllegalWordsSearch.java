@@ -87,7 +87,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
     /**
      * 使用黑名单过滤器
      */
-    private int[] _blacklist=new int[0];
+    private int[] _blacklist = new int[0];
     /**
      * 使用半角转化器
      */
@@ -123,10 +123,10 @@ public class IllegalWordsSearch extends BaseSearchEx {
     }
 
     /**
-     * 设置关键字
-     * 如果想使用CharTranslateHandler，请先添加事件CharTranslateHandler, 再用SetKeywords设置关键字
-     * 使用CharTranslateHandler后，UseIgnoreCase配置无效
+     * 设置关键字 如果想使用CharTranslateHandler，请先添加事件CharTranslateHandler,
+     * 再用SetKeywords设置关键字 使用CharTranslateHandler后，UseIgnoreCase配置无效
      * 如果不使用忽略大小写，请先UseIgnoreCase设置为false,再用SetKeywords设置关键字
+     * 
      * @param keywords
      */
     public void SetKeywords(final List<String> keywords) {
@@ -237,12 +237,12 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 next = _first[t];
             } else {
                 final int index = _nextIndex[p].IndexOf(t);
-                if (UseDuplicateWordFilter && pChar == t1) {
-                    next = p;
-                } else if (index == -1) {
-                    next = _first[t];
-                } else {
+                if (index > -1) {
                     next = _nextIndex[p].GetValue(index);
+                } else if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else {
+                    next = _first[t];
                 }
             }
 
@@ -306,12 +306,12 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 next = _first[t];
             } else {
                 final int index = _nextIndex[p].IndexOf(t);
-                if (UseDuplicateWordFilter && pChar == t1) {
-                    next = p;
-                } else if (index == -1) {
-                    next = _first[t];
-                } else {
+                if (index > -1) {
                     next = _nextIndex[p].GetValue(index);
+                } else if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else {
+                    next = _first[t];
                 }
             }
 
@@ -375,12 +375,12 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 next = _first[t];
             } else {
                 final int index = _nextIndex[p].IndexOf(t);
-                if (UseDuplicateWordFilter && pChar == t1) {
-                    next = p;
-                } else if (index == -1) {
-                    next = _first[t];
-                } else {
+                if (index > -1) {
                     next = _nextIndex[p].GetValue(index);
+                } else if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else {
+                    next = _first[t];
                 }
             }
 
@@ -457,12 +457,12 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 next = _first[t];
             } else {
                 final int index = _nextIndex[p].IndexOf(t);
-                if (UseDuplicateWordFilter && pChar == t1) {
-                    next = p;
-                } else if (index == -1) {
-                    next = _first[t];
-                } else {
+                if (index > -1) {
                     next = _nextIndex[p].GetValue(index);
+                } else if (UseDuplicateWordFilter && pChar == t1) {
+                    next = p;
+                } else {
+                    next = _first[t];
                 }
             }
 
@@ -554,7 +554,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
         }
 
-        final String keyword = text.substring(start, end+1);
+        final String keyword = text.substring(start, end + 1);
         final int bl = _blacklist.length > index ? _blacklist[index] : 0;
         if (StringMatch != null) {
             if (StringMatch.apply(new StringMatchHandler(text, start, end, keyword, index, key, _blacklist[index]))) {

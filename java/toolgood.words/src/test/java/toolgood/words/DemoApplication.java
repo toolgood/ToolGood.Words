@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -46,6 +47,8 @@ public class DemoApplication {
 		// 	e.printStackTrace();
 		// }
 		// test_times();
+
+		test_issues_54();
 	}
 
 	private static void test_StringSearch() {
@@ -886,5 +889,14 @@ public class DemoApplication {
 			System.out.println("ToTraditionalChinese is Error.");
 		}
 
+	}
+
+	public static void test_issues_54() {
+		IllegalWordsSearch search = new IllegalWordsSearch();
+		search.SetKeywords(Arrays.asList("test", "world", "this", "hello", "monster"));
+		String result = search.Replace("test, hahaha, this is a hello world", '*');
+		if (result.equals("****, hahaha, **** is a ***** *****") == false) {
+			System.out.println("IllegalWordsSearch Replace is Error.");
+		}
 	}
 }
