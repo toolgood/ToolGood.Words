@@ -190,7 +190,12 @@ namespace ToolGood.Words.Test
                         _search = CreateIllegalWordsSearch();
                     } else {
                         var s = new IllegalWordsSearch();
-                        s.Load(Path.GetFullPath(bitPath));
+                        try {
+                            s.Load(Path.GetFullPath(bitPath));
+                        } catch (Exception ex) {
+                            Console.WriteLine(ex.Message);
+                            throw;
+                        }
                         _search = s;
                     }
                 }

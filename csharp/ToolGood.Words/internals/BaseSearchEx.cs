@@ -153,8 +153,8 @@ namespace ToolGood.Words.internals
             _max = max.ToArray();
             _nextIndex = new IntDictionary[nextIndexs.Count];
             for (int i = 0; i < nextIndexs.Count; i++) {
-                IntDictionary dictionary = new IntDictionary();
-                dictionary.SetDictionary(nextIndexs[i]);
+                IntDictionary dictionary = new IntDictionary(nextIndexs[i]);
+                //dictionary.SetDictionary(nextIndexs[i]);
                 _nextIndex[i] = dictionary;
             }
             _end = end.ToArray();
@@ -310,9 +310,11 @@ namespace ToolGood.Words.internals
                 _keywords[i] = br.ReadString();
             }
 
+
             length = br.ReadInt32();
             var bs = br.ReadBytes(length);
             _dict = ByteArrToUshortArr(bs);
+
 
             length = br.ReadInt32();
             bs = br.ReadBytes(length);
@@ -331,6 +333,7 @@ namespace ToolGood.Words.internals
             _max = new ushort[dictLength];
             _min = new ushort[dictLength];
 
+
             for (int i = 0; i < dictLength; i++) {
                 length = br.ReadInt32();
                 bs = br.ReadBytes(length);
@@ -340,8 +343,8 @@ namespace ToolGood.Words.internals
                 bs = br.ReadBytes(length);
                 var values = ByteArrToIntArr(bs);
 
-                IntDictionary dictionary = new IntDictionary();
-                dictionary.SetDictionary(keys, values);
+
+                IntDictionary dictionary = new IntDictionary(keys, values);
                 _nextIndex[i] = dictionary;
                 if (length == 0) {
                     _min[i] = ushort.MaxValue;

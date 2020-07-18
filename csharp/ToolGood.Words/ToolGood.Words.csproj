@@ -15,7 +15,6 @@
     <PackageProjectUrl>https://github.com/toolgood/ToolGood.Words</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/toolgood/ToolGood.Words</RepositoryUrl>
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -68,9 +67,10 @@
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+  <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ToolGood.Words.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RepositoryUrl></RepositoryUrl>
   </PropertyGroup>
 
 </Project>

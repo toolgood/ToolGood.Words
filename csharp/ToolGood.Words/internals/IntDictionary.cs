@@ -5,15 +5,29 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public class IntDictionary
+    public struct IntDictionary
     {
         private ushort[] _keys;
         private int[] _values;
         private int last;
-        public IntDictionary()
+        public IntDictionary(ushort[] keys, int[] values)
         {
-            last = -1;
+            _keys = keys;
+            _values = values;
+            last = keys.Length - 1;
         }
+        public IntDictionary(Dictionary<ushort, int> dict)
+        {
+            var keys = dict.Select(q => q.Key).OrderBy(q => q).ToArray();
+            var values = new int[keys.Length];
+            for (int i = 0; i < keys.Length; i++) {
+                values[i] = dict[keys[i]];
+            }
+            _keys = keys;
+            _values = values;
+            last = keys.Length - 1;
+        }
+
 
         public ushort[] Keys {
             get {
@@ -26,23 +40,6 @@ namespace ToolGood.Words.internals
                 return _values;
             }
         }
-
-        public void SetDictionary(Dictionary<ushort, int> dict)
-        {
-            _keys = dict.Select(q => q.Key).OrderBy(q => q).ToArray();
-            _values = new int[_keys.Length];
-            for (int i = 0; i < _keys.Length; i++) {
-                _values[i] = dict[_keys[i]];
-            }
-            last = _keys.Length - 1;
-        }
-        public void SetDictionary(ushort[] keys, int[] values)
-        {
-            _keys = keys;
-            _values = values;
-            last = _keys.Length - 1;
-        }
-
 
         public bool TryGetValue(ushort key, out int value)
         {
