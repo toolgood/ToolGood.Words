@@ -51,9 +51,20 @@ namespace ToolGood.Words.internals
                 value = _values[0];
                 return true;
             }
+            else if (last==0 || _keys[0] > key)
+            {
+                value = 0;
+                return false;
+            }
+
             if (_keys[last] == key) {
                 value = _values[last];
                 return true;
+            }
+            else if ( _keys[last] < key)
+            {
+                value = 0;
+                return false;
             }
 
             var left = 0;
