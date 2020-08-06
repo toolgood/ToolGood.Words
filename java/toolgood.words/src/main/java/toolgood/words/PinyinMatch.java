@@ -21,13 +21,13 @@ public class PinyinMatch extends BasePinyinMatch {
      * @throws NumberFormatException
      * @throws IOException
      */
-    public void SetKeywords(List<String> keywords) throws NumberFormatException, IOException {
+    public void SetKeywords(final List<String> keywords) throws NumberFormatException, IOException {
         _keywords = keywords.toArray(new String[0]);
         _keywordsFirstPinyin = new String[_keywords.length];
         _keywordsPinyin = new String[_keywords.length][];
         for (int i = 0; i < _keywords.length; i++) {
-            String text = _keywords[i];
-            String[] pys = PinyinDict.GetPinyinList(text, 0);
+            final String text = _keywords[i];
+            final String[] pys = PinyinDict.GetPinyinList(text, 0);
             String fpy = "";
             for (int j = 0; j < pys.length; j++) {
                 pys[j] = pys[j].toUpperCase();
@@ -45,7 +45,7 @@ public class PinyinMatch extends BasePinyinMatch {
      * @param keywords
      * @param pinyin
      */
-    public void SetKeywords(List<String> keywords, List<String> pinyin) {
+    public void SetKeywords(final List<String> keywords, final List<String> pinyin) {
         SetKeywords(keywords, pinyin, ',');
     }
 
@@ -56,13 +56,13 @@ public class PinyinMatch extends BasePinyinMatch {
      * @param pinyin
      * @param splitChar
      */
-    public void SetKeywords(List<String> keywords, List<String> pinyin, char splitChar) {
+    public void SetKeywords(final List<String> keywords, final List<String> pinyin, final char splitChar) {
         _keywords = keywords.toArray(new String[0]);
         _keywordsFirstPinyin = new String[_keywords.length];
         _keywordsPinyin = new String[_keywords.length][];
         for (int i = 0; i < _keywords.length; i++) {
-            String text = pinyin.get(i);
-            String[] pys = text.split(((Character) splitChar).toString());
+            final String text = pinyin.get(i);
+            final String[] pys = text.split(((Character) splitChar).toString());
             String fpy = "";
             for (int j = 0; j < pys.length; j++) {
                 pys[j] = pys[j].toUpperCase();
@@ -80,7 +80,7 @@ public class PinyinMatch extends BasePinyinMatch {
      * @param indexs
      * @throws Exception
      */
-    public void SetIndexs(List<Integer> indexs) throws Exception {
+    public void SetIndexs(final List<Integer> indexs) throws Exception {
         if (_keywords == null) {
             throw new Exception("请先使用 SetKeywords 方法");
         }
@@ -107,11 +107,11 @@ public class PinyinMatch extends BasePinyinMatch {
             return null;
         }
 
-        boolean hasPinyin =key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
+        final boolean hasPinyin = key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
         if (hasPinyin == false) {
-            List<String> rs = new ArrayList<String>();
+            final List<String> rs = new ArrayList<String>();
             for (int i = 0; i < _keywords.length; i++) {
-                String keyword = _keywords[i];
+                final String keyword = _keywords[i];
                 if (keyword.contains(key)) {
                     rs.add(keyword);
                 }
@@ -119,27 +119,27 @@ public class PinyinMatch extends BasePinyinMatch {
             return rs;
         }
 
-        List<String> pykeys = SplitKeywords(key);
+        final List<String> pykeys = SplitKeywords(key);
         int minLength = Integer.MAX_VALUE;
-        List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
-        for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character)(char)0).toString());
+        final List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
+        for (final String pykey : pykeys) {
+            final String[] keys = pykey.split(((Character) (char) 0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
             MergeKeywords(keys, 0, "", list);
         }
 
-        PinyinSearch search = new PinyinSearch();
+        final PinyinSearch search = new PinyinSearch();
         search.SetKeywords2(list);
-        List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<String>();
         for (int i = 0; i < _keywords.length; i++) {
-            String keywords = _keywords[i];
+            final String keywords = _keywords[i];
             if (keywords.length() < minLength) {
                 continue;
             }
-            String fpy = _keywordsFirstPinyin[i];
-            String[] pylist = _keywordsPinyin[i];
+            final String fpy = _keywordsFirstPinyin[i];
+            final String[] pylist = _keywordsPinyin[i];
 
             if (search.Find(fpy, keywords, pylist)) {
                 result.add(keywords);
@@ -161,11 +161,11 @@ public class PinyinMatch extends BasePinyinMatch {
         if (key == null || key.equals("")) {
             return null;
         }
-        boolean hasPinyin =key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
+        final boolean hasPinyin = key.matches("^.*?[A-Z]+.*$");// Pattern.matches("[a-zA-Z]",key);
         if (hasPinyin == false) {
-            List<Integer> rs = new ArrayList<Integer>();
+            final List<Integer> rs = new ArrayList<Integer>();
             for (int i = 0; i < _keywords.length; i++) {
-                String keyword = _keywords[i];
+                final String keyword = _keywords[i];
                 if (keyword.contains(key)) {
                     if (_indexs == null) {
                         rs.add(i);
@@ -177,27 +177,27 @@ public class PinyinMatch extends BasePinyinMatch {
             return rs;
         }
 
-        List<String> pykeys = SplitKeywords(key);
+        final List<String> pykeys = SplitKeywords(key);
         int minLength = Integer.MAX_VALUE;
-        List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
-        for (String pykey : pykeys) {
-            String[] keys = pykey.split(((Character)(char)0).toString());
+        final List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
+        for (final String pykey : pykeys) {
+            final String[] keys = pykey.split(((Character) (char) 0).toString());
             if (minLength > keys.length) {
                 minLength = keys.length;
             }
             MergeKeywords(keys, 0, "", list);
         }
 
-        PinyinSearch search = new PinyinSearch();
+        final PinyinSearch search = new PinyinSearch();
         search.SetKeywords2(list);
-        List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<Integer>();
         for (int i = 0; i < _keywords.length; i++) {
-            String keywords = _keywords[i];
+            final String keywords = _keywords[i];
             if (keywords.length() < minLength) {
                 continue;
             }
-            String fpy = _keywordsFirstPinyin[i];
-            String[] pylist = _keywordsPinyin[i];
+            final String fpy = _keywordsFirstPinyin[i];
+            final String[] pylist = _keywordsPinyin[i];
             if (search.Find(fpy, keywords, pylist)) {
                 if (_indexs == null) {
                     result.add(i);
@@ -226,19 +226,19 @@ public class PinyinMatch extends BasePinyinMatch {
             return Find(keywords);
         }
 
-        List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
-        List<Integer> indexs = new ArrayList<Integer>();
+        final List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
+        final List<Integer> indexs = new ArrayList<Integer>();
         int minLength = 0;
         int keysCount;
         {
-            String[] keys = keywords.split(" ");
+            final String[] keys = keywords.split(" ");
             keysCount = keys.length;
             for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
-                List<String> pykeys = SplitKeywords(key);
+                final String key = keys[i];
+                final List<String> pykeys = SplitKeywords(key);
                 int min = Integer.MAX_VALUE;
-                for (String pykey : pykeys) {
-                    String[] keys2 = pykey.split(((Character)(char)0).toString());
+                for (final String pykey : pykeys) {
+                    final String[] keys2 = pykey.split(((Character) (char) 0).toString());
                     if (min > keys2.length) {
                         min = keys2.length;
                     }
@@ -248,18 +248,18 @@ public class PinyinMatch extends BasePinyinMatch {
             }
         }
 
-        PinyinSearch search = new PinyinSearch();
+        final PinyinSearch search = new PinyinSearch();
         search.SetKeywords2(list);
         search.SetIndexs(indexs);
 
-        List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<String>();
         for (int i = 0; i < _keywords.length; i++) {
-            String keywords2 = _keywords[i];
+            final String keywords2 = _keywords[i];
             if (keywords2.length() < minLength) {
                 continue;
             }
-            String fpy = _keywordsFirstPinyin[i];
-            String[] pylist = _keywordsPinyin[i];
+            final String fpy = _keywordsFirstPinyin[i];
+            final String[] pylist = _keywordsPinyin[i];
 
             if (search.Find2(fpy, keywords2, pylist, keysCount)) {
                 result.add(keywords2);
@@ -285,19 +285,19 @@ public class PinyinMatch extends BasePinyinMatch {
             return FindIndex(keywords);
         }
 
-        List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
-        List<Integer> indexs = new ArrayList<Integer>();
+        final List<TwoTuple<String, String[]>> list = new ArrayList<TwoTuple<String, String[]>>();
+        final List<Integer> indexs = new ArrayList<Integer>();
         int minLength = 0;
         int keysCount;
         {
-            String[] keys = keywords.split(" ");
+            final String[] keys = keywords.split(" ");
             keysCount = keys.length;
             for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
-                List<String> pykeys = SplitKeywords(key);
+                final String key = keys[i];
+                final List<String> pykeys = SplitKeywords(key);
                 int min = Integer.MAX_VALUE;
-                for (String pykey : pykeys) {
-                    String[] keys2 = pykey.split(((Character)(char)0).toString());
+                for (final String pykey : pykeys) {
+                    final String[] keys2 = pykey.split(((Character) (char) 0).toString());
                     if (min > keys2.length) {
                         min = keys2.length;
                     }
@@ -307,18 +307,18 @@ public class PinyinMatch extends BasePinyinMatch {
             }
         }
 
-        PinyinSearch search = new PinyinSearch();
+        final PinyinSearch search = new PinyinSearch();
         search.SetKeywords2(list);
         search.SetIndexs(indexs);
 
-        List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<Integer>();
         for (int i = 0; i < _keywords.length; i++) {
-            String keywords2 = _keywords[i];
+            final String keywords2 = _keywords[i];
             if (keywords2.length() < minLength) {
                 continue;
             }
-            String fpy = _keywordsFirstPinyin[i];
-            String[] pylist = _keywordsPinyin[i];
+            final String fpy = _keywordsFirstPinyin[i];
+            final String[] pylist = _keywordsPinyin[i];
             if (search.Find2(fpy, keywords2, pylist, keysCount)) {
                 if (_indexs == null) {
                     result.add(i);

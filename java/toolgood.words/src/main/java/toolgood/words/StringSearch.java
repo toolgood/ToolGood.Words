@@ -13,10 +13,10 @@ public class StringSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public String FindFirst(String text) {
+    public String FindFirst(final String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -43,12 +43,12 @@ public class StringSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public List<String> FindAll(String text) {
+    public List<String> FindAll(final String text) {
         TrieNode2 ptr = null;
-        List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<String>();
 
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -77,10 +77,10 @@ public class StringSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public boolean ContainsAny(String text) {
+    public boolean ContainsAny(final String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -107,7 +107,7 @@ public class StringSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public String Replace(String text) {
+    public String Replace(final String text) {
         return Replace(text, '*');
     }
 
@@ -118,12 +118,12 @@ public class StringSearch extends BaseSearch {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, char replaceChar) {
-        StringBuilder result = new StringBuilder(text);
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
 
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -136,8 +136,8 @@ public class StringSearch extends BaseSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    int maxLength = _keywords[tn.Results.get(0)].length();
-                    int start = i + 1 - maxLength;
+                    final int maxLength = _keywords[tn.Results.get(0)].length();
+                    final int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
                     }

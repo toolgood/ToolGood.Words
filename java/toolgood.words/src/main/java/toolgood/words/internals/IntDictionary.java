@@ -74,38 +74,5 @@ public class IntDictionary {
     public int GetValue(int index){
         return _values[index];
     }
-
-    public boolean TryGetValue(int key, Object value) {
-        if (last == -1) {
-            value = 0;
-            return false;
-        }
-        if (_keys[0] == key) {
-            value = _values[0];
-            return true;
-        }
-        if (_keys[last] == key) {
-            value = _values[last];
-            return true;
-        }
-
-        int left = 0;
-        int right = last;
-        while (left + 1 < right) {
-            int mid = (left + right) >> 1;
-            int d = _keys[mid] - key;
-
-            if (d == 0) {
-                value = _values[mid];
-                return true;
-            } else if (d > 0) {
-                right = mid;
-            } else {
-                left = mid;
-            }
-        }
-        value = 0;
-        return false;
-    }
-
+ 
 }

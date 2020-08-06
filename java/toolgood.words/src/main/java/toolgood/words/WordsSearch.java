@@ -15,10 +15,10 @@ public class WordsSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public WordsSearchResult FindFirst(String text) {
+    public WordsSearchResult FindFirst(final String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -31,8 +31,8 @@ public class WordsSearch extends BaseSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    for (Integer index : tn.Results) {
-                        String key = _keywords[index];
+                    for (final Integer index : tn.Results) {
+                        final String key = _keywords[index];
                         return new WordsSearchResult(key, i + 1 - key.length(), i, index);
                     }
                 }
@@ -48,12 +48,12 @@ public class WordsSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public List<WordsSearchResult> FindAll(String text) {
+    public List<WordsSearchResult> FindAll(final String text) {
         TrieNode2 ptr = null;
-        List<WordsSearchResult> list = new ArrayList<WordsSearchResult>();
+        final List<WordsSearchResult> list = new ArrayList<WordsSearchResult>();
 
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -66,9 +66,9 @@ public class WordsSearch extends BaseSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    for (Integer index : tn.Results) {
-                        String key = _keywords[index];
-                        WordsSearchResult item = new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                    for (final Integer index : tn.Results) {
+                        final String key = _keywords[index];
+                        final WordsSearchResult item = new WordsSearchResult(key, i + 1 - key.length(), i, index);
                         list.add(item);
                     }
                 }
@@ -84,10 +84,10 @@ public class WordsSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public boolean ContainsAny(String text) {
+    public boolean ContainsAny(final String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -114,7 +114,7 @@ public class WordsSearch extends BaseSearch {
      * @param text 文本
      * @return
      */
-    public String Replace(String text) {
+    public String Replace(final String text) {
         return Replace(text, '*');
     }
 
@@ -125,12 +125,12 @@ public class WordsSearch extends BaseSearch {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, char replaceChar) {
-        StringBuilder result = new StringBuilder(text);
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
 
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            char t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -143,8 +143,8 @@ public class WordsSearch extends BaseSearch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    int maxLength = _keywords[tn.Results.get(0)].length();
-                    int start = i + 1 - maxLength;
+                    final int maxLength = _keywords[tn.Results.get(0)].length();
+                    final int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
                     }

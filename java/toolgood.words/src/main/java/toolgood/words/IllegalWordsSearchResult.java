@@ -3,7 +3,8 @@ package toolgood.words;
 
 public class IllegalWordsSearchResult
 {
-    public IllegalWordsSearchResult(String keyword, int start, int end, int index, String matchKeyword, int type)
+    public IllegalWordsSearchResult(final String keyword, final int start, final int end, final int index,
+            final String matchKeyword, final int type)
     {
         MatchKeyword = matchKeyword;
         End = end;

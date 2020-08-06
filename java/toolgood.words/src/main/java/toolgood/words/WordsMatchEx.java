@@ -12,11 +12,11 @@ public class WordsMatchEx extends BaseMatchEx {
     /// </summary>
     /// <param name="text">文本</param>
     /// <returns></returns>
-    public WordsSearchResult FindFirst(String text) {
+    public WordsSearchResult FindFirst(final String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            char t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
 
             if (t == 0) {
                 p = 0;
@@ -26,10 +26,10 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     if (_wildcard[p] > 0) {
-                        WordsSearchResult r = FindFirst(text, i + 1, _wildcard[p]);
+                        final WordsSearchResult r = FindFirst(text, i + 1, _wildcard[p]);
                         if (r != null) {
                             return r;
                         }
@@ -40,15 +40,15 @@ public class WordsMatchEx extends BaseMatchEx {
                 }
             }
             if (next != 0) {
-                int start = _end[next];
+                final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    int length = _keywordLength[_resultIndex[start]];
-                    int s = i - length + 1;
+                    final int length = _keywordLength[_resultIndex[start]];
+                    final int s = i - length + 1;
                     if (s >= 0) {
-                        String key = text.substring(s, i + 1);
-                        int index = _resultIndex[start];
-                        String matchKeyword = _matchKeywords[index];
-                        return new WordsSearchResult(key, i + 1 - key.length(), i, index,matchKeyword);
+                        final String key = text.substring(s, i + 1);
+                        final int index = _resultIndex[start];
+                        final String matchKeyword = _matchKeywords[index];
+                        return new WordsSearchResult(key, i + 1 - key.length(), i, index, matchKeyword);
                     }
                 }
             }
@@ -57,10 +57,10 @@ public class WordsMatchEx extends BaseMatchEx {
         return null;
     }
 
-    private WordsSearchResult FindFirst(String text, int index, int p) {
+    private WordsSearchResult FindFirst(final String text, final int index, int p) {
         for (int i = index; i < text.length(); i++) {
-            char t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 return null;
             }
@@ -68,10 +68,10 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
-                        WordsSearchResult r = FindFirst(text, i + 1, _wildcard[p]);
+                        final WordsSearchResult r = FindFirst(text, i + 1, _wildcard[p]);
                         if (r != null) {
                             return r;
                         }
@@ -81,15 +81,15 @@ public class WordsMatchEx extends BaseMatchEx {
                     next = _nextIndex[p].GetValue(index2);
                 }
             }
-            int start = _end[next];
+            final int start = _end[next];
             if (start < _end[next + 1]) {
-                int length = _keywordLength[_resultIndex[start]];
-                int s = i - length + 1;
+                final int length = _keywordLength[_resultIndex[start]];
+                final int s = i - length + 1;
                 if (s >= 0) {
-                    String key = text.substring(s, i + 1);
-                    int index2 = _resultIndex[start];
-                    String matchKeyword = _matchKeywords[index2];
-                    return new WordsSearchResult(key, i + 1 - key.length(), i, index2,matchKeyword);
+                    final String key = text.substring(s, i + 1);
+                    final int index2 = _resultIndex[start];
+                    final String matchKeyword = _matchKeywords[index2];
+                    return new WordsSearchResult(key, i + 1 - key.length(), i, index2, matchKeyword);
                 }
             }
             p = next;
@@ -102,14 +102,14 @@ public class WordsMatchEx extends BaseMatchEx {
     /// </summary>
     /// <param name="text">文本</param>
     /// <returns></returns>
-    public List<WordsSearchResult> FindAll(String text) {
-        List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
+    public List<WordsSearchResult> FindAll(final String text) {
+        final List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
         int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
-            char t1 = text.charAt(i);
+            final char t1 = text.charAt(i);
 
-            int t = _dict[t1];
+            final int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -118,7 +118,7 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
                         FindAll(text, i + 1, _wildcard[p], result);
@@ -131,13 +131,13 @@ public class WordsMatchEx extends BaseMatchEx {
 
             if (next != 0) {
                 for (int j = _end[next]; j < _end[next + 1]; j++) {
-                    int length = _keywordLength[_resultIndex[j]];
-                    int s = i - length + 1;
+                    final int length = _keywordLength[_resultIndex[j]];
+                    final int s = i - length + 1;
                     if (s >= 0) {
-                        int kIndex = _keywordIndex[j];
-                        String matchKeyword = _matchKeywords[kIndex];
-                        String key = text.substring(s, i + 1);
-                        WordsSearchResult r = new WordsSearchResult(key, s, i, kIndex, matchKeyword);
+                        final int kIndex = _keywordIndex[j];
+                        final String matchKeyword = _matchKeywords[kIndex];
+                        final String key = text.substring(s, i + 1);
+                        final WordsSearchResult r = new WordsSearchResult(key, s, i, kIndex, matchKeyword);
                         result.add(r);
                     }
                 }
@@ -147,10 +147,10 @@ public class WordsMatchEx extends BaseMatchEx {
         return result;
     }
 
-    private void FindAll(String text, int index, int p, List<WordsSearchResult> result) {
+    private void FindAll(final String text, final int index, int p, final List<WordsSearchResult> result) {
         for (int i = index; i < text.length(); i++) {
-            char t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 return;
             }
@@ -158,7 +158,7 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
                         FindAll(text, i + 1, _wildcard[p], result);
@@ -170,13 +170,13 @@ public class WordsMatchEx extends BaseMatchEx {
             }
 
             for (int j = _end[next]; j < _end[next + 1]; j++) {
-                int length = _keywordLength[_resultIndex[j]];
-                int s = i - length + 1;
+                final int length = _keywordLength[_resultIndex[j]];
+                final int s = i - length + 1;
                 if (s >= 0) {
-                    int kIndex = _keywordIndex[j];
-                    String matchKeyword = _matchKeywords[kIndex];
-                    String key = text.substring(s, i + 1);
-                    WordsSearchResult r = new WordsSearchResult(key, s, i, kIndex, matchKeyword);
+                    final int kIndex = _keywordIndex[j];
+                    final String matchKeyword = _matchKeywords[kIndex];
+                    final String key = text.substring(s, i + 1);
+                    final WordsSearchResult r = new WordsSearchResult(key, s, i, kIndex, matchKeyword);
                     result.add(r);
                 }
             }
@@ -189,12 +189,11 @@ public class WordsMatchEx extends BaseMatchEx {
     /// </summary>
     /// <param name="text">文本</param>
     /// <returns></returns>
-    public boolean ContainsAny(String text)
-    {
+    public boolean ContainsAny(final String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            char t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
 
             if (t == 0) {
                 p = 0;
@@ -204,10 +203,10 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     if (_wildcard[p] > 0) {
-                        boolean r = ContainsAny(text, i + 1, _wildcard[p]);
+                        final boolean r = ContainsAny(text, i + 1, _wildcard[p]);
                         if (r) {
                             return true;
                         }
@@ -228,12 +227,11 @@ public class WordsMatchEx extends BaseMatchEx {
         return false;
     }
 
-    private boolean ContainsAny(String text, int index, int p)
-    {
+    private boolean ContainsAny(final String text, final int index, int p) {
         for (int i = index; i < text.length(); i++) {
-            char t1 = text.charAt(i);
+            final char t1 = text.charAt(i);
 
-            int t = _dict[t1];
+            final int t = _dict[t1];
             if (t == 0) {
                 return false;
             }
@@ -241,10 +239,10 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
-                        boolean r = ContainsAny(text, i + 1, _wildcard[p]);
+                        final boolean r = ContainsAny(text, i + 1, _wildcard[p]);
                         if (r) {
                             return true;
                         }
@@ -254,11 +252,11 @@ public class WordsMatchEx extends BaseMatchEx {
                     next = _nextIndex[p].GetValue(index2);
                 }
             }
- 
-            int start = _end[next];
+
+            final int start = _end[next];
             if (start < _end[next + 1]) {
-                int length = _keywordLength[_resultIndex[start]];
-                int s = i - length + 1;
+                final int length = _keywordLength[_resultIndex[start]];
+                final int s = i - length + 1;
                 if (s >= 0) {
                     return true;
                 }
@@ -274,15 +272,14 @@ public class WordsMatchEx extends BaseMatchEx {
     /// <param name="text">文本</param>
     /// <param name="replaceChar">替换符</param>
     /// <returns></returns>
-    public String Replace(String text, char replaceChar)
-    {
-        StringBuilder result = new StringBuilder(text);
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
 
         int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
-            char t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
 
             if (t == 0) {
                 p = 0;
@@ -292,10 +289,10 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
-                        Replace(text, i + 1, _wildcard[p],replaceChar, result);
+                        Replace(text, i + 1, _wildcard[p], replaceChar, result);
                     }
                     next = _firstIndex[t];
                 } else {
@@ -304,10 +301,10 @@ public class WordsMatchEx extends BaseMatchEx {
             }
 
             if (next != 0) {
-                int start = _end[next];
+                final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    int maxLength = _keywordLength[_resultIndex[start]];
-                    int start2 = i + 1 - maxLength;
+                    final int maxLength = _keywordLength[_resultIndex[start]];
+                    final int start2 = i + 1 - maxLength;
                     if (start2 >= 0) {
                         for (int j = start2; j <= i; j++) {
                             result.setCharAt(j, replaceChar);
@@ -320,12 +317,12 @@ public class WordsMatchEx extends BaseMatchEx {
         return result.toString();
     }
 
-    private void Replace(String text, int index, int p, char replaceChar, StringBuilder result)
-    {
+    private void Replace(final String text, final int index, int p, final char replaceChar,
+            final StringBuilder result) {
         for (int i = index; i < text.length(); i++) {
-            char t1 = text.charAt(i);
- 
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+
+            final int t = _dict[t1];
             if (t == 0) {
                 return;
             }
@@ -333,21 +330,21 @@ public class WordsMatchEx extends BaseMatchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _firstIndex[t];
             } else {
-                int index2 = _nextIndex[p].IndexOf(t);
+                final int index2 = _nextIndex[p].IndexOf(t);
                 if (index2 == -1) {
                     if (_wildcard[p] > 0) {
-                        Replace(text, i + 1, _wildcard[p],replaceChar, result);
+                        Replace(text, i + 1, _wildcard[p], replaceChar, result);
                     }
                     return;
                 } else {
                     next = _nextIndex[p].GetValue(index2);
                 }
             }
- 
-            int start = _end[next];
+
+            final int start = _end[next];
             if (start < _end[next + 1]) {
-                int maxLength = _keywordLength[_resultIndex[start]];
-                int start2 = i + 1 - maxLength;
+                final int maxLength = _keywordLength[_resultIndex[start]];
+                final int start2 = i + 1 - maxLength;
                 if (start2 >= 0) {
                     for (int j = start2; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
