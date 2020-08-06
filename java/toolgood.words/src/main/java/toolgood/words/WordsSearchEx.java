@@ -17,8 +17,8 @@ public class WordsSearchEx extends BaseSearchEx {
 
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
-            Integer t = _dict[t1];
+            char t1 = text.charAt(i);
+            int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -56,7 +56,7 @@ public class WordsSearchEx extends BaseSearchEx {
     public WordsSearchResult FindFirst(String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
             if (t == 0) {
                 p = 0;
@@ -95,7 +95,7 @@ public class WordsSearchEx extends BaseSearchEx {
     public boolean ContainsAny(String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
             if (t == 0) {
                 p = 0;
@@ -139,11 +139,11 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, Character replaceChar) {
+    public String Replace(String text, char replaceChar) {
         StringBuilder result = new StringBuilder(text);
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
             if (t == 0) {
                 p = 0;

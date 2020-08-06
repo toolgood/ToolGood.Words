@@ -57,7 +57,7 @@ public class IntDictionary {
         int left = 0;
         int right = last;
         while (left + 1 < right) {
-            int mid = (left + right) / 2;
+            int mid = (left + right) >> 1;
             int d = _keys[mid] - key;
 
             if (d == 0) {
@@ -92,7 +92,7 @@ public class IntDictionary {
         int left = 0;
         int right = last;
         while (left + 1 < right) {
-            int mid = (left + right) / 2;
+            int mid = (left + right) >> 1;
             int d = _keys[mid] - key;
 
             if (d == 0) {

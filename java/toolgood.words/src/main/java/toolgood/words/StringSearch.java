@@ -16,7 +16,7 @@ public class StringSearch extends BaseSearch {
     public String FindFirst(String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -48,7 +48,7 @@ public class StringSearch extends BaseSearch {
         List<String> list = new ArrayList<String>();
 
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -80,7 +80,7 @@ public class StringSearch extends BaseSearch {
     public boolean ContainsAny(String text) {
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];
@@ -118,12 +118,12 @@ public class StringSearch extends BaseSearch {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, Character replaceChar) {
+    public String Replace(String text, char replaceChar) {
         StringBuilder result = new StringBuilder(text);
 
         TrieNode2 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode2 tn = null;
             if (ptr == null) {
                 tn = _first[t];

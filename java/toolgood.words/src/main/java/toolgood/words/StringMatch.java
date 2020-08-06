@@ -20,7 +20,7 @@ public class StringMatch extends BaseMatch {
     public String FindFirst(String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
 
             TrieNode3 tn;
             if (ptr == null) {
@@ -54,7 +54,7 @@ public class StringMatch extends BaseMatch {
 
     private String FindFirst(String text, int index, TrieNode3 ptr) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -90,7 +90,7 @@ public class StringMatch extends BaseMatch {
         List<String> result = new ArrayList<String>();
 
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
@@ -124,7 +124,7 @@ public class StringMatch extends BaseMatch {
 
     private void FindAll(String text, int index, TrieNode3 ptr, List<String> result) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -156,7 +156,7 @@ public class StringMatch extends BaseMatch {
     public boolean ContainsAny(String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
@@ -189,7 +189,7 @@ public class StringMatch extends BaseMatch {
 
     private boolean ContainsAny(String text, int index, TrieNode3 ptr) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -233,7 +233,7 @@ public class StringMatch extends BaseMatch {
 
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
@@ -265,7 +265,7 @@ public class StringMatch extends BaseMatch {
 
     private void Replace(String text, int index, TrieNode3 ptr, char replaceChar, StringBuilder result) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {

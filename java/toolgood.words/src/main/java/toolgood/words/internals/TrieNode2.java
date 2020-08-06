@@ -35,14 +35,14 @@ public class TrieNode2{
         }
     }
 
-    public boolean HasKey(Character c)
+    public boolean HasKey(char c)
     {
         if (minflag <= c && maxflag >= c) {
             return m_values.containsKey(c);
         }
         return false;
     }
-    public TrieNode2 GetValue(Character c ){
+    public TrieNode2 GetValue(char c ){
         return m_values.get(c);
     }
 }

@@ -121,7 +121,7 @@ public class StringSearchEx2 extends BaseSearchEx2 {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, Character replaceChar)
+    public String Replace(String text, char replaceChar)
     {
         StringBuilder result = new StringBuilder(text);
 

@@ -15,7 +15,7 @@ public class WordsMatchEx extends BaseMatchEx {
     public WordsSearchResult FindFirst(String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
 
             if (t == 0) {
@@ -59,7 +59,7 @@ public class WordsMatchEx extends BaseMatchEx {
 
     private WordsSearchResult FindFirst(String text, int index, int p) {
         for (int i = index; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
             if (t == 0) {
                 return null;
@@ -107,7 +107,7 @@ public class WordsMatchEx extends BaseMatchEx {
         int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
 
             int t = _dict[t1];
             if (t == 0) {
@@ -149,7 +149,7 @@ public class WordsMatchEx extends BaseMatchEx {
 
     private void FindAll(String text, int index, int p, List<WordsSearchResult> result) {
         for (int i = index; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
             if (t == 0) {
                 return;
@@ -193,7 +193,7 @@ public class WordsMatchEx extends BaseMatchEx {
     {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
 
             if (t == 0) {
@@ -231,7 +231,7 @@ public class WordsMatchEx extends BaseMatchEx {
     private boolean ContainsAny(String text, int index, int p)
     {
         for (int i = index; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
 
             int t = _dict[t1];
             if (t == 0) {
@@ -274,14 +274,14 @@ public class WordsMatchEx extends BaseMatchEx {
     /// <param name="text">文本</param>
     /// <param name="replaceChar">替换符</param>
     /// <returns></returns>
-    public String Replace(String text, char replaceChar  )
+    public String Replace(String text, char replaceChar)
     {
         StringBuilder result = new StringBuilder(text);
 
         int p = 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             int t = _dict[t1];
 
             if (t == 0) {
@@ -323,7 +323,7 @@ public class WordsMatchEx extends BaseMatchEx {
     private void Replace(String text, int index, int p, char replaceChar, StringBuilder result)
     {
         for (int i = index; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
  
             int t = _dict[t1];
             if (t == 0) {
