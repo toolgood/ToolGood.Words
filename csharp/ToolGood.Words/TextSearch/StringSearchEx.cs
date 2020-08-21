@@ -28,7 +28,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
@@ -55,7 +55,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
@@ -83,7 +83,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
@@ -115,7 +115,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {

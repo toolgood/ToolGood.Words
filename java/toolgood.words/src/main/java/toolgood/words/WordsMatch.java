@@ -17,10 +17,10 @@ public class WordsMatch extends BaseMatch {
      * @param text 文本
      * @return
      */
-    public WordsSearchResult FindFirst(String text) {
+    public WordsSearchResult FindFirst(final String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
 
             TrieNode3 tn;
             if (ptr == null) {
@@ -28,7 +28,7 @@ public class WordsMatch extends BaseMatch {
             } else {
                 if (ptr.HasKey(t) == false) {
                     if (ptr.HasWildcard) {
-                        WordsSearchResult result = FindFirst(text, i + 1, ptr.WildcardNode);
+                        final WordsSearchResult result = FindFirst(text, i + 1, ptr.WildcardNode);
                         if (result != null) {
                             return result;
                         }
@@ -40,13 +40,13 @@ public class WordsMatch extends BaseMatch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    Integer r = tn.Results.get(0);
-                    int length = _keywordLength[r];
-                    int start = i - length + 1;
+                    final Integer r = tn.Results.get(0);
+                    final int length = _keywordLength[r];
+                    final int start = i - length + 1;
                     if (start >= 0) {
-                        int kIndex = _keywordIndex[r];
-                        String matchKeyword = _matchKeywords[kIndex];
-                        String keyword = text.substring(start, i + 1);
+                        final int kIndex = _keywordIndex[r];
+                        final String matchKeyword = _matchKeywords[kIndex];
+                        final String keyword = text.substring(start, i + 1);
                         return new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                     }
                 }
@@ -56,13 +56,13 @@ public class WordsMatch extends BaseMatch {
         return null;
     }
 
-    private WordsSearchResult FindFirst(String text, int index, TrieNode3 ptr) {
+    private WordsSearchResult FindFirst(final String text, final int index, TrieNode3 ptr) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
-                    WordsSearchResult result = FindFirst(text, i + 1, ptr.WildcardNode);
+                    final WordsSearchResult result = FindFirst(text, i + 1, ptr.WildcardNode);
                     if (result != null) {
                         return result;
                     }
@@ -72,13 +72,13 @@ public class WordsMatch extends BaseMatch {
             tn = ptr.GetValue(t);
 
             if (tn.End) {
-                Integer r = tn.Results.get(0);
-                int length = _keywordLength[r];
-                int start = i - length + 1;
+                final Integer r = tn.Results.get(0);
+                final int length = _keywordLength[r];
+                final int start = i - length + 1;
                 if (start >= 0) {
-                    int kIndex = _keywordIndex[r];
-                    String matchKeyword = _matchKeywords[kIndex];
-                    String keyword = text.substring(start, i + 1);
+                    final int kIndex = _keywordIndex[r];
+                    final String matchKeyword = _matchKeywords[kIndex];
+                    final String keyword = text.substring(start, i + 1);
                     return new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                 }
             }
@@ -93,12 +93,12 @@ public class WordsMatch extends BaseMatch {
      * @param text 文本
      * @return
      */
-    public List<WordsSearchResult> FindAll(String text) {
+    public List<WordsSearchResult> FindAll(final String text) {
         TrieNode3 ptr = null;
-        List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
+        final List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
 
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
@@ -114,14 +114,14 @@ public class WordsMatch extends BaseMatch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    for (Integer r : tn.Results) {
-                        int length = _keywordLength[r];
-                        int start = i - length + 1;
+                    for (final Integer r : tn.Results) {
+                        final int length = _keywordLength[r];
+                        final int start = i - length + 1;
                         if (start >= 0) {
-                            int kIndex = _keywordIndex[r];
-                            String matchKeyword = _matchKeywords[kIndex];
-                            String keyword = text.substring(start, i + 1);
-                            WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                            final int kIndex = _keywordIndex[r];
+                            final String matchKeyword = _matchKeywords[kIndex];
+                            final String keyword = text.substring(start, i + 1);
+                            final WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                             result.add(wr);
                         }
                     }
@@ -132,9 +132,9 @@ public class WordsMatch extends BaseMatch {
         return result;
     }
 
-    private void FindAll(String text, int index, TrieNode3 ptr, List<WordsSearchResult> result) {
+    private void FindAll(final String text, final int index, TrieNode3 ptr, final List<WordsSearchResult> result) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -145,14 +145,14 @@ public class WordsMatch extends BaseMatch {
                 tn = ptr.GetValue(t);
             }
             if (tn.End) {
-                for (Integer r : tn.Results) {
-                    int length = _keywordLength[r];
-                    int start = i - length + 1;
+                for (final Integer r : tn.Results) {
+                    final int length = _keywordLength[r];
+                    final int start = i - length + 1;
                     if (start >= 0) {
-                        int kIndex = _keywordIndex[r];
-                        String matchKeyword = _matchKeywords[kIndex];
-                        String keyword = text.substring(start, i + 1);
-                        WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
+                        final int kIndex = _keywordIndex[r];
+                        final String matchKeyword = _matchKeywords[kIndex];
+                        final String keyword = text.substring(start, i + 1);
+                        final WordsSearchResult wr = new WordsSearchResult(keyword, start, i, kIndex, matchKeyword);
                         result.add(wr);
                     }
                 }
@@ -167,17 +167,17 @@ public class WordsMatch extends BaseMatch {
      * @param text 文本
      * @return
      */
-    public boolean ContainsAny(String text) {
+    public boolean ContainsAny(final String text) {
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
             } else {
                 if (ptr.HasKey(t) == false) {
                     if (ptr.HasWildcard) {
-                        boolean result = ContainsAny(text, i + 1, ptr.WildcardNode);
+                        final boolean result = ContainsAny(text, i + 1, ptr.WildcardNode);
                         if (result) {
                             return true;
                         }
@@ -189,8 +189,8 @@ public class WordsMatch extends BaseMatch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    int length = _keywordLength[tn.Results.get(0)];
-                    int s = i - length + 1;
+                    final int length = _keywordLength[tn.Results.get(0)];
+                    final int s = i - length + 1;
                     if (s >= 0) {
                         return true;
                     }
@@ -201,9 +201,9 @@ public class WordsMatch extends BaseMatch {
         return false;
     }
 
-    private boolean ContainsAny(String text, int index, TrieNode3 ptr) {
+    private boolean ContainsAny(final String text, final int index, TrieNode3 ptr) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -214,8 +214,8 @@ public class WordsMatch extends BaseMatch {
             tn = ptr.GetValue(t);
 
             if (tn.End) {
-                int length = _keywordLength[tn.Results.get(0)];
-                int s = i - length + 1;
+                final int length = _keywordLength[tn.Results.get(0)];
+                final int s = i - length + 1;
                 if (s >= 0) {
                     return true;
                 }
@@ -231,7 +231,7 @@ public class WordsMatch extends BaseMatch {
      * @param text 文本
      * @return
      */
-    public String Replace(String text) {
+    public String Replace(final String text) {
         return Replace(text, '*');
     }
 
@@ -242,12 +242,12 @@ public class WordsMatch extends BaseMatch {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, char replaceChar) {
-        StringBuilder result = new StringBuilder(text);
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
 
         TrieNode3 ptr = null;
         for (int i = 0; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr == null) {
                 tn = _first[t];
@@ -263,8 +263,8 @@ public class WordsMatch extends BaseMatch {
             }
             if (tn != null) {
                 if (tn.End) {
-                    int maxLength = _keywordLength[tn.Results.get(0)];
-                    int start = i + 1 - maxLength;
+                    final int maxLength = _keywordLength[tn.Results.get(0)];
+                    final int start = i + 1 - maxLength;
                     if (start >= 0) {
                         for (int j = start; j <= i; j++) {
                             result.setCharAt(j, replaceChar);
@@ -277,9 +277,10 @@ public class WordsMatch extends BaseMatch {
         return result.toString();
     }
 
-    private void Replace(String text, int index, TrieNode3 ptr, char replaceChar, StringBuilder result) {
+    private void Replace(final String text, final int index, TrieNode3 ptr, final char replaceChar,
+            final StringBuilder result) {
         for (int i = index; i < text.length(); i++) {
-            Character t = text.charAt(i);
+            final char t = text.charAt(i);
             TrieNode3 tn;
             if (ptr.HasKey(t) == false) {
                 if (ptr.HasWildcard) {
@@ -289,8 +290,8 @@ public class WordsMatch extends BaseMatch {
             }
             tn = ptr.GetValue(t);
             if (tn.End) {
-                int maxLength = _keywordLength[tn.Results.get(0)];
-                int start = i + 1 - maxLength;
+                final int maxLength = _keywordLength[tn.Results.get(0)];
+                final int start = i + 1 - maxLength;
                 if (start >= 0) {
                     for (int j = start; j <= i; j++) {
                         result.setCharAt(j, replaceChar);

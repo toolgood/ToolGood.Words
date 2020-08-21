@@ -248,7 +248,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
                     } else {
@@ -312,7 +312,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
                     } else {
@@ -376,7 +376,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
                     } else {
@@ -443,7 +443,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
                     } else {

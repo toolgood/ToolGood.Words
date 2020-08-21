@@ -35,7 +35,7 @@ public class TrieNode implements Comparable<TrieNode> {
         return node;
     }
 
-    public void SetResults(Integer index) {
+    public void SetResults(final Integer index) {
         if (End == false) {
             End = true;
         }
@@ -45,7 +45,7 @@ public class TrieNode implements Comparable<TrieNode> {
     }
 
     @Override
-    public int compareTo(TrieNode o) {
+    public int compareTo(final TrieNode o) {
         return this.Layer - o.Layer  ;
     }
 }

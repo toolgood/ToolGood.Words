@@ -26,7 +26,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         var r = FindFirst(text, i + 1, _wildcard[p]);
                         if (r != null) {
@@ -63,7 +63,7 @@ namespace ToolGood.Words
                     return null;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         return FindFirst(text, i + 1, _wildcard[p]);
                     }
@@ -106,7 +106,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         FindAll(text, i + 1, _wildcard[p], result);
                     }
@@ -142,7 +142,7 @@ namespace ToolGood.Words
                     return;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         FindAll(text, i + 1, _wildcard[p], result);
                     }
@@ -186,7 +186,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         var r = ContainsAny(text, i + 1, _wildcard[p]);
                         if (r) {
@@ -214,7 +214,7 @@ namespace ToolGood.Words
                     return false;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         return ContainsAny(text, i + 1, _wildcard[p]);
                     }
@@ -258,7 +258,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         Replace(text, i + 1, _wildcard[p], replaceChar, result);
                     }
@@ -290,7 +290,7 @@ namespace ToolGood.Words
                     return;
                 }
                 int next;
-                if (p == 0 || t < _min[p] || t > _max[p] || _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (_wildcard[p] > 0) {
                         Replace(text, i + 1, _wildcard[p], replaceChar, result);
                     }

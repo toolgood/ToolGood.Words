@@ -207,7 +207,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
         char pChar = (char) 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
@@ -276,7 +276,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
         char pChar = (char) 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
@@ -345,7 +345,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
         char pChar = (char) 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
@@ -427,7 +427,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
         char pChar = (char) 0;
 
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
+            char t1 = text.charAt(i);
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
@@ -582,7 +582,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
         _blacklist = blacklist;
     }
 
-    private Boolean IsEnglishOrNumber(final Character c) {
+    private Boolean IsEnglishOrNumber(final char c) {
         if (c < 128) {
             if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 return true;

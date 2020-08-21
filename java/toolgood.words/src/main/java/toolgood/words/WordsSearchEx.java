@@ -12,13 +12,13 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param text 文本
      * @return
      */
-    public List<WordsSearchResult> FindAll(String text) {
-        List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
+    public List<WordsSearchResult> FindAll(final String text) {
+        final List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
 
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
-            Integer t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -27,7 +27,7 @@ public class WordsSearchEx extends BaseSearchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _first[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
                 } else {
@@ -36,9 +36,9 @@ public class WordsSearchEx extends BaseSearchEx {
             }
             if (next != 0) {
                 for (int j = _end[next]; j < _end[next + 1]; j++) {
-                    int index = _resultIndex[j];
-                    String key = _keywords[index];
-                    WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                    final int index = _resultIndex[j];
+                    final String key = _keywords[index];
+                    final WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, index);
                     result.add(r);
                 }
             }
@@ -53,11 +53,11 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param text 文本
      * @return
      */
-    public WordsSearchResult FindFirst(String text) {
+    public WordsSearchResult FindFirst(final String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -66,7 +66,7 @@ public class WordsSearchEx extends BaseSearchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _first[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
                 } else {
@@ -74,10 +74,10 @@ public class WordsSearchEx extends BaseSearchEx {
                 }
             }
             if (next != 0) {
-                int start = _end[next];
+                final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    int index = _resultIndex[start];
-                    String key = _keywords[index];
+                    final int index = _resultIndex[start];
+                    final String key = _keywords[index];
                     return new WordsSearchResult(key, i + 1 - key.length(), i, index);
                 }
             }
@@ -92,11 +92,11 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param text 文本
      * @return
      */
-    public boolean ContainsAny(String text) {
+    public boolean ContainsAny(final String text) {
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -105,7 +105,7 @@ public class WordsSearchEx extends BaseSearchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _first[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
                 } else {
@@ -128,7 +128,7 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param text 文本
      * @return
      */
-    public String Replace(String text) {
+    public String Replace(final String text) {
         return Replace(text, '*');
     }
 
@@ -139,12 +139,12 @@ public class WordsSearchEx extends BaseSearchEx {
      * @param replaceChar 替换符
      * @return
      */
-    public String Replace(String text, Character replaceChar) {
-        StringBuilder result = new StringBuilder(text);
+    public String Replace(final String text, final char replaceChar) {
+        final StringBuilder result = new StringBuilder(text);
         int p = 0;
         for (int i = 0; i < text.length(); i++) {
-            Character t1 = text.charAt(i);
-            int t = _dict[t1];
+            final char t1 = text.charAt(i);
+            final int t = _dict[t1];
             if (t == 0) {
                 p = 0;
                 continue;
@@ -153,7 +153,7 @@ public class WordsSearchEx extends BaseSearchEx {
             if (p == 0 || t < _min[p] || t > _max[p]) {
                 next = _first[t];
             } else {
-                int index = _nextIndex[p].IndexOf(t);
+                final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
                 } else {
@@ -161,9 +161,9 @@ public class WordsSearchEx extends BaseSearchEx {
                 }
             }
             if (next != 0) {
-                int start = _end[next];
+                final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    int maxLength = _keywords[_resultIndex[start]].length();
+                    final int maxLength = _keywords[_resultIndex[start]].length();
                     for (int j = i + 1 - maxLength; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
                     }

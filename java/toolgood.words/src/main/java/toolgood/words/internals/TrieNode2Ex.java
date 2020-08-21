@@ -18,15 +18,17 @@ public class TrieNode2Ex {
         m_values = new HashMap<Integer, TrieNode2Ex>();
     }
 
-    public void Add(int c, TrieNode2Ex node3)
-    {
-        if (minflag > c) { minflag = c; }
-        if (maxflag < c) { maxflag = c; }
+    public void Add(final int c, final TrieNode2Ex node3) {
+        if (minflag > c) {
+            minflag = c;
+        }
+        if (maxflag < c) {
+            maxflag = c;
+        }
         m_values.put(c, node3);
     }
 
-    public void SetResults(Integer index)
-    {
+    public void SetResults(final int index) {
         if (End == false) {
             End = true;
         }
@@ -35,14 +37,14 @@ public class TrieNode2Ex {
         }
     }
 
-    public boolean HasKey(Integer c)
-    {
+    public boolean HasKey(final int c) {
         if (minflag <= c && maxflag >= c) {
             return m_values.containsKey(c);
         }
         return false;
     }
-    public TrieNode2Ex GetValue(Integer c ){
+
+    public TrieNode2Ex GetValue(final int c) {
         return m_values.get(c);
     }
 

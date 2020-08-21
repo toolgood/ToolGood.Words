@@ -21,7 +21,7 @@ public abstract class BaseSearchEx2 {
     protected int[] _dict;
 
     /**
-     * 保存
+     * 保存, 修改于2020-08-06，使用utf-8保存与以前保存的数据不同
      *
      * @param filePath 文件地址
      * @throws IOException
@@ -36,7 +36,7 @@ public abstract class BaseSearchEx2 {
     protected void Save(FileOutputStream bw) throws IOException {
         bw.write(NumHelper.serialize(_keywords.length));
         for (String item : _keywords) {
-            byte[] bytes = item.getBytes();
+            byte[] bytes = item.getBytes("utf-8");
             bw.write(NumHelper.serialize(bytes.length));
             bw.write(bytes);
         }
@@ -71,7 +71,7 @@ public abstract class BaseSearchEx2 {
     }
 
     /**
-     * 加载
+     * 加载, 修改于2020-08-06，使用utf-8加载，加载以前数据可能会出错
      *
      * @param filePath
      * @throws FileNotFoundException
@@ -91,7 +91,7 @@ public abstract class BaseSearchEx2 {
             int l = NumHelper.read(br);
             byte[] bytes = new byte[l];
             br.read(bytes, 0, l);
-            _keywords[i] = new String(bytes);
+            _keywords[i] = new String(bytes,"utf-8");
         }
         length = NumHelper.read(br);
         _guides = new int[length][];
