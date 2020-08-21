@@ -86,7 +86,8 @@ namespace ToolGood.Words.Test
             iws.SetSkipWords("]");
 
             var ts = iws.FindAll(txt);
-            Assert.AreEqual(1, ts.Count);
+            Assert.AreEqual(3, ts.Count);
+            Assert.AreEqual("中]国", ts[0].Keyword);
 
         }
 
