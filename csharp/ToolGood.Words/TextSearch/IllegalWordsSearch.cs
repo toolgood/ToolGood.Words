@@ -102,7 +102,7 @@ namespace ToolGood.Words
         public void SetSkipWords(string skipList)
         {
             _skipBitArray = new bool[char.MaxValue + 1];
-            if (skipList == null) {
+            if (skipList != null) {
                 for (int i = 0; i < _skipList.Length; i++) {
                     _skipBitArray[_skipList[i]] = true;
                 }
