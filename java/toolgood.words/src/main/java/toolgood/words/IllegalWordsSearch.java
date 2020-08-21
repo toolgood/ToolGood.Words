@@ -116,8 +116,8 @@ public class IllegalWordsSearch extends BaseSearchEx {
 
         _skipBitArray = new boolean[Character.MAX_VALUE + 1];
         if (skipList != null) {
-            for (int i = 0; i < _skipList.length(); i++) {
-                _skipBitArray[_skipList.charAt(i)] = true;
+            for (int i = 0; i < skipList.length(); i++) {
+                _skipBitArray[skipList.charAt(i)] = true;
             }
         }
     }

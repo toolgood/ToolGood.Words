@@ -72,6 +72,23 @@ namespace ToolGood.Words.Test
             iwords.SetKeywords(words);
         }
 
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/50
+        /// </summary>
+        [Test]
+        public void IssuesTest_50()
+        {
+            var keywords = new string[] { "我爱中国", "中国", };
+            var txt = "新型财富密码就是大喊“我[爱中]国”么？伏拉夫，轻松拥有千万粉丝的新晋网红，快手粉丝465万，抖音粉丝704万。他是靠“爱中国”火起来的。伏拉夫在短视频平台上的简介是：爱中国！爱火锅！";
+
+            var iws = new IllegalWordsSearch();
+            iws.SetKeywords(keywords);
+            iws.SetSkipWords("]");
+
+            var ts = iws.FindAll(txt);
+            Assert.AreEqual(1, ts.Count);
+
+        }
 
     }
 }
