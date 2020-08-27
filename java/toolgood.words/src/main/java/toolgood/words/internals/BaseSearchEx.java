@@ -255,7 +255,7 @@ public class BaseSearchEx {
             oldNode = oldNode.Failure;
             while (oldNode != root) {
                 for (Character key : oldNode.m_values.keySet()) {
-                    if (newNode.HasKey((Integer) (int) key) == false) {
+                    if (newNode.HasKey(_dict[key]) == false) {
                         TrieNode nd = oldNode.m_values.get(key);
                         newNode.Add(_dict[key], allNode2.get(nd.Index));
                     }

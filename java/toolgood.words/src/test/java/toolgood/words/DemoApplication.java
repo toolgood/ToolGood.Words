@@ -49,6 +49,8 @@ public class DemoApplication {
 		// test_times();
 
 		test_issues_54();
+		test_issues_57();
+		test_issues_57_2();
 	}
 
 	private static void test_StringSearch() {
@@ -897,6 +899,71 @@ public class DemoApplication {
 		String result = search.Replace("test, hahaha, this is a hello world", '*');
 		if (result.equals("****, hahaha, **** is a ***** *****") == false) {
 			System.out.println("IllegalWordsSearch Replace is Error.");
+		}
+	}
+	public static void test_issues_57(){
+		String test = "一,二二,三三三,四四四四,五五五五五,六六六六六六";
+		List<String> list = new ArrayList<String>();
+		list.add("一");
+		list.add("二二");
+		list.add("三三三");
+		list.add("四四四四");
+		list.add("五五五五五");
+		list.add("六六六六六六");
+		System.out.println("test_issues_57 run Test.");
+
+		IllegalWordsSearch iwords = new IllegalWordsSearch();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		IllegalWordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("一") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+
+		List<IllegalWordsSearchResult> all = iwords.FindAll(test);
+		if (all.get(0).Keyword.equals("一") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(1).Keyword.equals("二二") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(2).Keyword.equals("三三三") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(3).Keyword.equals("四四四四") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(4).Keyword.equals("五五五五五") == false) {
+			System.out.println("FindAll is Error.");
+		}
+		if (all.get(5).Keyword.equals("六六六六六六") == false) {
+			System.out.println("FindAll is Error.");
+		}
+	}
+
+	public static void test_issues_57_2(){
+        String test = "jameson吃饭";
+		List<String> list = new ArrayList<String>();
+		list.add("jameson吃饭");
+		list.add("吃饭jameson");
+		System.out.println("IllegalWordsSearch run Test.");
+
+		IllegalWordsSearch iwords = new IllegalWordsSearch();
+		iwords.SetKeywords(list);
+
+		boolean b = iwords.ContainsAny(test);
+		if (b == false) {
+			System.out.println("ContainsAny is Error.");
+		}
+
+		IllegalWordsSearchResult f = iwords.FindFirst(test);
+		if (f.Keyword.equals("jameson吃饭") == false) {
+			System.out.println("FindFirst is Error.");
 		}
 	}
 }
