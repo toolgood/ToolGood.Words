@@ -51,6 +51,7 @@ public class DemoApplication {
 		test_issues_54();
 		test_issues_57();
 		test_issues_57_2();
+		test_issues_57_3();
 	}
 
 	private static void test_StringSearch() {
@@ -951,7 +952,7 @@ public class DemoApplication {
 		List<String> list = new ArrayList<String>();
 		list.add("jameson吃饭");
 		list.add("吃饭jameson");
-		System.out.println("IllegalWordsSearch run Test.");
+		System.out.println("test_issues_57_2 run Test.");
 
 		IllegalWordsSearch iwords = new IllegalWordsSearch();
 		iwords.SetKeywords(list);
@@ -966,4 +967,26 @@ public class DemoApplication {
 			System.out.println("FindFirst is Error.");
 		}
 	}
+	public static void test_issues_57_3(){
+		String test = "his is sha ash";
+        List<String> list = new ArrayList<String>();
+        list.add("ash");
+        list.add("sha");
+        list.add("bcd");
+        System.out.println("test_issues_57_3 run Test.");
+
+        IllegalWordsSearch iwords = new IllegalWordsSearch();
+        iwords.SetKeywords(list);
+
+        boolean b = iwords.ContainsAny(test);
+        if (b == false) {
+            System.out.println("ContainsAny is Error.");
+        }
+
+        IllegalWordsSearchResult f = iwords.FindFirst(test);
+        if (f == null || f.Keyword.equals("sha") == false) {
+            System.out.println("FindFirst is Error.");
+        }
+	}
+
 }

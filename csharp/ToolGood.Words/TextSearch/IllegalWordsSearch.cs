@@ -591,10 +591,10 @@ namespace ToolGood.Words
 
         private IllegalWordsSearchResult GetGetIllegalResult(string text, string key, int start, int end, int index)
         {
-            var s1 = text[start];
-            if (CharTranslate != null) { s1 = CharTranslate(s1, text, start); }
             if (start>0)
             {
+                var s1 = text[start];
+                if (CharTranslate != null) { s1 = CharTranslate(s1, text, start); }
                 if (IsEnglishOrNumber(s1))
                 {
                     var s2 = text[start - 1];

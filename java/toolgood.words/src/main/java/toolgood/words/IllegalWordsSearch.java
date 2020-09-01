@@ -202,7 +202,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
      */
     public List<IllegalWordsSearchResult> FindAll(final String text) {
         final List<IllegalWordsSearchResult> results = new ArrayList<IllegalWordsSearchResult>();
-        final int[] pIndex = new int[text.length()];
+        boolean hasSkipWordOrDuplicateWord = false;
         int p = 0;
         char pChar = (char) 0;
 
@@ -211,11 +211,11 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord=true;
                         continue;
                     }
                 } else if (_skipBitArray[t1]) {
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord=true;
                     continue;
                 }
             }
@@ -229,7 +229,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (t == 0) {
                 pChar = t1;
                 p = 0;
-                pIndex[i] = p;
+                hasSkipWordOrDuplicateWord=false;
                 continue;
             }
             int next;
@@ -241,8 +241,10 @@ public class IllegalWordsSearch extends BaseSearchEx {
                     next = _nextIndex[p].GetValue(index);
                 } else if (UseDuplicateWordFilter && pChar == t1) {
                     next = p;
+                    hasSkipWordOrDuplicateWord=true;
                 } else {
                     next = _first[t];
+                    hasSkipWordOrDuplicateWord=false;
                 }
             }
 
@@ -250,7 +252,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
                         final int index = _resultIndex[j];
-                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        final IllegalWordsSearchResult r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
                         if (r != null) {
                             results.add(r);
                         }
@@ -259,7 +261,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
             p = next;
             pChar = t1;
-            pIndex[i] = p;
         }
         return results;
     }
@@ -271,7 +272,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
      * @return
      */
     public IllegalWordsSearchResult FindFirst(final String text) {
-        final int[] pIndex = new int[text.length()];
+        boolean hasSkipWordOrDuplicateWord = false;
         int p = 0;
         char pChar = (char) 0;
 
@@ -280,11 +281,11 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord=true;
                         continue;
                     }
                 } else if (_skipBitArray[t1]) {
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord=true;
                     continue;
                 }
             }
@@ -298,7 +299,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (t == 0) {
                 pChar = t1;
                 p = 0;
-                pIndex[i] = p;
+                hasSkipWordOrDuplicateWord=false;
                 continue;
             }
             int next;
@@ -310,8 +311,10 @@ public class IllegalWordsSearch extends BaseSearchEx {
                     next = _nextIndex[p].GetValue(index);
                 } else if (UseDuplicateWordFilter && pChar == t1) {
                     next = p;
+                    hasSkipWordOrDuplicateWord=true;
                 } else {
                     next = _first[t];
+                    hasSkipWordOrDuplicateWord=false;
                 }
             }
 
@@ -319,7 +322,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
                         final int index = _resultIndex[j];
-                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        final IllegalWordsSearchResult r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
                         if (r != null) {
                             return r;
                         }
@@ -328,7 +331,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
             p = next;
             pChar = t1;
-            pIndex[i] = p;
         }
         return null;
     }
@@ -340,7 +342,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
      * @return
      */
     public boolean ContainsAny(final String text) {
-        final int[] pIndex = new int[text.length()];
+        boolean hasSkipWordOrDuplicateWord = false;
         int p = 0;
         char pChar = (char) 0;
 
@@ -349,11 +351,11 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord=true;
                         continue;
                     }
                 } else if (_skipBitArray[t1]) {
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord=true;
                     continue;
                 }
             }
@@ -367,7 +369,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (t == 0) {
                 pChar = t1;
                 p = 0;
-                pIndex[i] = p;
+                hasSkipWordOrDuplicateWord=false;
                 continue;
             }
             int next;
@@ -379,8 +381,10 @@ public class IllegalWordsSearch extends BaseSearchEx {
                     next = _nextIndex[p].GetValue(index);
                 } else if (UseDuplicateWordFilter && pChar == t1) {
                     next = p;
+                    hasSkipWordOrDuplicateWord=true;
                 } else {
                     next = _first[t];
+                    hasSkipWordOrDuplicateWord=false;
                 }
             }
 
@@ -388,7 +392,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
                         final int index = _resultIndex[j];
-                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        final IllegalWordsSearchResult r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
                         if (r != null) {
                             return true;
                         }
@@ -397,7 +401,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
             p = next;
             pChar = t1;
-            pIndex[i] = p;
         }
         return false;
     }
@@ -422,7 +425,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
     public String Replace(final String text, final char replaceChar) {
         final StringBuilder result = new StringBuilder(text);
 
-        final int[] pIndex = new int[text.length()];
+        boolean hasSkipWordOrDuplicateWord = false;
         int p = 0;
         char pChar = (char) 0;
 
@@ -431,11 +434,11 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (UseSkipWordFilter) {
                 if (SkipWordFilter != null) {// 跳词跳过
                     if (SkipWordFilter.apply(new SkipWordFilterHandler(t1, text, i))) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord=true;
                         continue;
                     }
                 } else if (_skipBitArray[t1]) {
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord=true;
                     continue;
                 }
             }
@@ -449,7 +452,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
             if (t == 0) {
                 pChar = t1;
                 p = 0;
-                pIndex[i] = p;
+                hasSkipWordOrDuplicateWord=false;
                 continue;
             }
             int next;
@@ -461,8 +464,10 @@ public class IllegalWordsSearch extends BaseSearchEx {
                     next = _nextIndex[p].GetValue(index);
                 } else if (UseDuplicateWordFilter && pChar == t1) {
                     next = p;
+                    hasSkipWordOrDuplicateWord=true;
                 } else {
                     next = _first[t];
+                    hasSkipWordOrDuplicateWord=false;
                 }
             }
 
@@ -470,7 +475,7 @@ public class IllegalWordsSearch extends BaseSearchEx {
                 if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
                         final int index = _resultIndex[j];
-                        final IllegalWordsSearchResult r = GetIllegalResult(text, i, index, next, pIndex);
+                        final IllegalWordsSearchResult r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
                         if (r != null) {
                             for (int k = r.Start; k <= r.End; k++) {
                                 result.setCharAt(k, replaceChar);
@@ -482,7 +487,6 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
             p = next;
             pChar = t1;
-            pIndex[i] = p;
         }
         return result.toString();
     }
@@ -513,29 +517,72 @@ public class IllegalWordsSearch extends BaseSearchEx {
         }
         return true;
     }
+ 
+    private IllegalWordsSearchResult GetGetIllegalResult(String text, int end, int index)
+    {
+        String key = _keywords[index];
 
-    private IllegalWordsSearchResult GetIllegalResult(final String text, final int end, final int index, final int p,
-            final int[] pIndex) {
-        final String key = _keywords[index];
-
-        int n = key.length() - 1;
+        int keyIndex = key.length() - 1;
         int start = end;
+        for (int i = end; i >= 0; i--)
+        {
+            char s2 = text.charAt(i);
+            if (UseSkipWordFilter)
+            {
+                if (SkipWordFilter != null)
+                {
+                    if (SkipWordFilter.apply(new SkipWordFilterHandler(s2, text, i))) { continue; }
+                }
+                else if (_skipBitArray[s2]) { continue; }
+            }
 
-        int pp = p;
-        while (n > 0) {
-            int pi = pIndex[--start];
-            while (pi == pp) {
-                pi = pIndex[--start];
+            if (CharTranslate != null)
+            { // 字符串转换
+                s2 = CharTranslate.apply(new CharTranslateHandler(s2, text, i));
             }
-            pp = pi;
-            n--;
-            if (start == 0) {
-                break;
+            else if (UseDBCcaseConverter || UseIgnoreCase)
+            {
+                s2 = ToSenseWord(s2);
+            }
+            if (s2 == key.charAt(keyIndex))
+            {
+                keyIndex--;
+                if (keyIndex == -1) { start = i; break; }
             }
         }
-        while (start > 0 && pIndex[start - 1] == pp) {
-            start--;
+        for (int i = start; i >= 0; i--)
+        {
+            char s2 = text.charAt(i);
+            if (CharTranslate != null)
+            { // 字符串转换
+                s2 = CharTranslate.apply(new CharTranslateHandler(s2, text, i));
+            }
+            else if (UseDBCcaseConverter || UseIgnoreCase)
+            {
+                s2 = ToSenseWord(s2);
+            }
+            if (s2 != key.charAt(0)) { break; }
+            start = i;
         }
+        return GetGetIllegalResult(text, key, start, end, index);
+    }
+
+    /// <summary>
+    /// 没有跳词，没有重复词
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="end"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    private IllegalWordsSearchResult GetIllegalResultByLength(String text, int end, int index)
+    {
+        String key = _keywords[index];
+        int start = end - key.length() + 1;
+        return GetGetIllegalResult(text, key, start, end, index);
+    }
+
+    private IllegalWordsSearchResult GetGetIllegalResult(String text, String key, int start, int end, int index)
+    {
         if (start > 0) {
             char s1 = text.charAt(start);
             if (CharTranslate != null) { // 字符串转换
@@ -554,16 +601,16 @@ public class IllegalWordsSearch extends BaseSearchEx {
             }
         }
 
+
         final String keyword = text.substring(start, end + 1);
         final int bl = _blacklist.length > index ? _blacklist[index] : 0;
         if (StringMatch != null) {
             if (StringMatch.apply(new StringMatchHandler(text, start, end, keyword, index, key, _blacklist[index]))) {
                 return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
             }
-        } else {
-            return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
+            return null;
         }
-        return null;
+        return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
     }
 
     /**
