@@ -218,58 +218,74 @@ namespace ToolGood.Words
         {
             List<IllegalWordsSearchResult> result = new List<IllegalWordsSearchResult>();
             int p = 0;
-            char pChar = (char)0;
-            int[] pIndex = new int[text.Length];
+            ushort pChar = 0;
+            bool hasSkipWordOrDuplicateWord = false;
 
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 var t1 = text[i];
-                if (UseSkipWordFilter) {
-                    if (SkipWordFilter != null) {//跳词跳过
-                        if (SkipWordFilter(t1, text, i)) {
-                            pIndex[i] = p;
+                if (UseSkipWordFilter)
+                {
+                    if (SkipWordFilter != null)
+                    {//跳词跳过
+                        if (SkipWordFilter(t1, text, i))
+                        {
+                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
-                    } else if (_skipBitArray[t1]) {
-                        pIndex[i] = p;
+                    }
+                    else if (_skipBitArray[t1])
+                    {
+                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
 
-                if (CharTranslate != null) { // 字符串转换
+                if (CharTranslate != null)
+                { // 字符串转换
                     t1 = CharTranslate(t1, text, i);
-                } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                }
+                else if (UseDBCcaseConverter || UseIgnoreCase)
+                {
                     t1 = ToSenseWord(t1);
                 }
                 var t = _dict[t1];
-                if (t == 0) {
+                if (t == 0)
+                {
                     pChar = t1;
                     p = 0;
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
-                    if (UseDuplicateWordFilter && pChar == t1) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false)
+                {
+                    if (UseDuplicateWordFilter && pChar == t1)
+                    {
                         next = p;
-                    } else {
+                        hasSkipWordOrDuplicateWord = true;
+                    }
+                    else
+                    {
                         next = _first[t];
+                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
-                if (next != 0) {
-                    if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
-                        for (int j = _end[next]; j < _end[next + 1]; j++) {
+                if (next != 0)
+                {
+                    if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i))
+                    {
+                        for (int j = _end[next]; j < _end[next + 1]; j++)
+                        {
                             var index = _resultIndex[j];
-                            var r = GetIllegalResult(text, i, index, next, pIndex);
-                            if (r != null) {
-                                result.Add(r);
-                            }
+                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            if (r != null) { result.Add(r); }
                         }
                     }
                 }
                 p = next;
                 pChar = t1;
-                pIndex[i] = p;
             }
             return result;
         }
@@ -282,19 +298,19 @@ namespace ToolGood.Words
         public IllegalWordsSearchResult FindFirst(string text)
         {
             int p = 0;
-            char pChar = (char)0;
-            int[] pIndex = new int[text.Length];
+            ushort pChar = 0;
+            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            pIndex[i] = p;
+                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -308,15 +324,18 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
                 if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                    } else {
+                        hasSkipWordOrDuplicateWord = true;
+                    }
+                    else {
                         next = _first[t];
+                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -324,16 +343,13 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = GetIllegalResult(text, i, index, next, pIndex);
-                            if (r != null) {
-                                return r;
-                            }
+                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            if (r != null) { return r; }
                         }
                     }
                 }
                 p = next;
                 pChar = t1;
-                pIndex[i] = p;
             }
             return null;
         }
@@ -346,19 +362,19 @@ namespace ToolGood.Words
         public bool ContainsAny(string text)
         {
             int p = 0;
-            char pChar = (char)0;
-            int[] pIndex = new int[text.Length];
+            ushort pChar = 0;
+            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            pIndex[i] = p;
+                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -372,15 +388,18 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
                 if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                    } else {
+                        hasSkipWordOrDuplicateWord = true;
+                    }
+                    else {
                         next = _first[t];
+                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -388,16 +407,13 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = GetIllegalResult(text, i, index, next, pIndex);
-                            if (r != null) {
-                                return true;
-                            }
+                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            if (r != null) { return true; }
                         }
                     }
                 }
                 p = next;
                 pChar = t1;
-                pIndex[i] = p;
             }
             return false;
         }
@@ -413,19 +429,19 @@ namespace ToolGood.Words
             StringBuilder result = new StringBuilder(text);
 
             int p = 0;
-            char pChar = (char)0;
-            int[] pIndex = new int[text.Length];
+            ushort pChar = 0;
+            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            pIndex[i] = p;
+                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        pIndex[i] = p;
+                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -439,15 +455,17 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    pIndex[i] = p;
+                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
                 if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
+                        hasSkipWordOrDuplicateWord = true;
                     } else {
                         next = _first[t];
+                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -455,7 +473,7 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = GetIllegalResult(text, i, index, next, pIndex);
+                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
                             if (r != null) {
                                 for (int k = r.Start; k <= r.End; k++) {
                                     result[k] = replaceChar;
@@ -467,7 +485,6 @@ namespace ToolGood.Words
                 }
                 p = next;
                 pChar = t1;
-                pIndex[i] = p;
             }
             return result.ToString();
         }
@@ -509,50 +526,101 @@ namespace ToolGood.Words
             return true;
         }
 
-        private IllegalWordsSearchResult GetIllegalResult(string text, int end, int index, int p, int[] pIndex)
+        private IllegalWordsSearchResult GetGetIllegalResult(string text, int end, int index)
         {
             var key = _keywords[index];
 
-            var n = key.Length - 1;
-            var start = end;
-
-            int pp = p;
-            while (n > 0) {
-                var pi = pIndex[--start];
-                while (pi == pp) { pi = pIndex[--start]; }
-                pp = pi;
-                n--;
-                if (start == 0) { break; }
-            }
-            while (start > 0 && pIndex[start - 1] == pp) { start--; }
-            if (start > 0) {
-                var s1 = text[start];
-                if (CharTranslate != null) { // 字符串转换
-                    s1 = CharTranslate(s1, text, start);
+            int keyIndex = key.Length - 1;
+            int start = end;
+            for (int i = end; i >= 0; i--)
+            {
+                var s2 = text[i];
+                if (UseSkipWordFilter)
+                {
+                    if (SkipWordFilter != null)
+                    {
+                        if (SkipWordFilter(s2, text, i)) { continue; }
+                    }
+                    else if (_skipBitArray[s2]) { continue; }
                 }
-                if (IsEnglishOrNumber(s1)) {
+
+                if (CharTranslate != null)
+                { // 字符串转换
+                    s2 = CharTranslate(s2, text, i);
+                }
+                else if (UseDBCcaseConverter || UseIgnoreCase)
+                {
+                    s2 = ToSenseWord(s2);
+                }
+                if (s2 == key[keyIndex])
+                {
+                    keyIndex--;
+                    if (keyIndex == -1) { start = i; break; }
+                }
+            }
+            for (int i = start; i >= 0; i--)
+            {
+                var s2 = text[i];
+                if (CharTranslate != null)
+                { // 字符串转换
+                    s2 = CharTranslate(s2, text, i);
+                }
+                else if (UseDBCcaseConverter || UseIgnoreCase)
+                {
+                    s2 = ToSenseWord(s2);
+                }
+                if (s2 != key[0]) { break; }
+                start = i;
+            }
+            return GetGetIllegalResult(text, key, start, end, index);
+        }
+
+        /// <summary>
+        /// 没有跳词，没有重复词
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="end"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private IllegalWordsSearchResult GetIllegalResultByLength(string text, int end, int index)
+        {
+            var key = _keywords[index];
+            var start = end - key.Length + 1;
+            return GetGetIllegalResult(text, key, start, end, index);
+        }
+
+        private IllegalWordsSearchResult GetGetIllegalResult(string text, string key, int start, int end, int index)
+        {
+            var s1 = text[start];
+            if (CharTranslate != null) { s1 = CharTranslate(s1, text, start); }
+            if (start>0)
+            {
+                if (IsEnglishOrNumber(s1))
+                {
                     var s2 = text[start - 1];
-                    if (CharTranslate != null) { // 字符串转换
+                    if (CharTranslate != null)
+                    { // 字符串转换
                         s2 = CharTranslate(s2, text, start - 1);
-                    } else if (UseDBCcaseConverter || UseIgnoreCase) {
+                    }
+                    else if (UseDBCcaseConverter || UseIgnoreCase)
+                    {
                         s2 = ToSenseWord(s2);
                     }
-                    if (IsEnglishOrNumber(s2)) {
-                        return null;
-                    }
+                    if (IsEnglishOrNumber(s2)) { return null; }
                 }
             }
 
             var keyword = text.Substring(start, end - start + 1);
             var bl = _blacklist.Length > index ? _blacklist[index] : 0;
-            if (StringMatch != null) {
-                if (StringMatch(text, start, end, keyword, index, key, _blacklist[index])) {
+            if (StringMatch != null)
+            {
+                if (StringMatch(text, start, end, keyword, index, key, _blacklist[index]))
+                {
                     return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
                 }
-            } else {
-                return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
+                return null;
             }
-            return null;
+            return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
         }
 
         private bool IsEnglishOrNumber(char c)

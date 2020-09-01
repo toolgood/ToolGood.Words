@@ -73,10 +73,10 @@ namespace ToolGood.Words.Test
         }
 
         /// <summary>
-        /// https://github.com/toolgood/ToolGood.Words/issues/50
+        /// https://github.com/toolgood/ToolGood.Words/issues/56
         /// </summary>
         [Test]
-        public void IssuesTest_50()
+        public void IssuesTest_56()
         {
             var keywords = new string[] { "我爱中国", "中国", };
             var txt = "新型财富密码就是大喊“我[爱中]国”么？伏拉夫，轻松拥有千万粉丝的新晋网红，快手粉丝465万，抖音粉丝704万。他是靠“爱中国”火起来的。伏拉夫在短视频平台上的简介是：爱中国！爱火锅！";
@@ -90,6 +90,90 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("中]国", ts[0].Keyword);
 
         }
+
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/57
+        /// </summary>
+        [Test]
+        public void IssuesTest_57()
+        {
+            String test = "一,二二,三三三,四四四四,五五五五五,六六六六六六";
+            List<String> list = new List<String>();
+            list.Add("一");
+            list.Add("二二");
+            list.Add("三三三");
+            list.Add("四四四四");
+            list.Add("五五五五五");
+            list.Add("六六六六六六");
+
+            IllegalWordsSearch iwords = new IllegalWordsSearch();
+            iwords.SetKeywords(list);
+
+            bool b = iwords.ContainsAny(test);
+            Assert.AreEqual(true, b);
+ 
+
+            IllegalWordsSearchResult f = iwords.FindFirst(test);
+            Assert.AreEqual("一", f.Keyword);
+
+            List<IllegalWordsSearchResult> all = iwords.FindAll(test);
+            Assert.AreEqual("一", all[0].Keyword);
+            Assert.AreEqual("二二", all[1].Keyword);
+            Assert.AreEqual("三三三", all[2].Keyword);
+            Assert.AreEqual("四四四四", all[3].Keyword);
+            Assert.AreEqual("五五五五五", all[4].Keyword);
+            Assert.AreEqual("六六六六六六", all[5].Keyword);
+             
+        }
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/57
+        /// </summary>
+        [Test]
+        public void IssuesTest_57_2()
+        {
+            String test = "jameson吃饭";
+            List<String> list = new List<String>();
+            list.Add("jameson吃饭");
+            list.Add("吃饭jameson");
+
+            IllegalWordsSearch iwords = new IllegalWordsSearch();
+            iwords.SetKeywords(list);
+
+            var b = iwords.ContainsAny(test);
+            Assert.AreEqual(true, b);
+
+            var f = iwords.FindFirst(test);
+            Assert.AreEqual("jameson吃饭", f.Keyword);
+
+        }
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/57
+        /// </summary>
+        [Test]
+        public void IssuesTest_57_3()
+        {
+            String test = "his is sha ash";
+            List<String> list = new List<String>();
+            list.Add("ash");
+            list.Add("sha");
+            list.Add("bcd");
+
+            IllegalWordsSearch iwords = new IllegalWordsSearch();
+            iwords.SetKeywords(list);
+
+            var b = iwords.ContainsAny(test);
+            Assert.AreEqual(true, b);
+
+            var f = iwords.FindFirst(test);
+            Assert.AreEqual("sha", f.Keyword);
+
+            var all = iwords.FindAll(test);
+            Assert.AreEqual(2, all.Count);
+
+
+
+        }
+
 
     }
 }
