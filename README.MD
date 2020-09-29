@@ -218,3 +218,35 @@ ToolGood.Words:                 本项目源代码
 ![Alipay, WeChat](https://toolgood.github.io/image/toolgood.png)
 
 
+## 个人未来规划
+
+### ToolGood.Algorithm项目
+
+1、完成javascript版本，目前 javascript只写了一小部分。
+
+
+### ToolGood.Words项目
+
+1、GO语言算法优化：在GO版本移植成功后，测试后性能不理想，性能 GO<JAVA<C#，因为我没有完全理解GO语言。JAVA与C#采用了新的算法，GO还是采用老的算法。
+
+2、汉字转拼音功能扩展：当初为了减少dll体积，删去古诗拼音，准备添加一个加载拼音库的功能，以及拼音库管理器。
+
+3、繁体简体转换功能扩展：https://github.com/BYVoid/OpenCC 项目更新比较频繁，过于频繁更新dll库，对项目更新不太好友。准备添加一个添加繁体简体字典的功能，及字典生成器。
+
+4、IllegalWordsSearch类，重新审核代码，因为https://github.com/toolgood/ToolGood.Words/issues/59 没有关闭。
+
+5、代码添加注释：AC自动机原理本身比较难理解，优化后的代码更难理解了。
+
+
+#### 其他方向：
+
+1、研究一下《多个关键字组合过滤》技术。
+
+2、研究一下《情感分析》技术
+
+3、整理一份敏感词。
+
+细分敏感词词组：动词+名词+特定词
+
+细分敏感词分类：涉政文本、涉爆文本、色情文本、辱骂文本、非法交易文本、广告导流文本
+
