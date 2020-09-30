@@ -40,8 +40,12 @@ namespace ToolGood.Words
     public delegate bool StringMatchHandler(string text, int start, int end, string keyword, int keywordIndex, string matchKeyword, int blacklistIndex);
 
     /// <summary>
-    /// 最新版本的IllegalWordsSearch， 与3.0.2.0以前的版本不兼容
+    /// 最新版本的IllegalWordsSearch， 与3.0.2.0以前的版本不兼容。
+    /// IllegalWordsSearch类太费精力了，头发稀疏了。
+    /// 我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了。
+    /// IllegalWordsSearch修复了2020-10-8日前所有bug。
     /// </summary>
+    [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
     public class IllegalWordsSearch : BaseSearchEx
     {
         private int[] _blacklist = new int[0];
@@ -71,6 +75,7 @@ namespace ToolGood.Words
 
         /// <summary>
         /// 使用重复词过滤，默认使用
+        /// 在 SetKeywords 前使用
         /// </summary>
         public bool UseDuplicateWordFilter = true;
 
@@ -78,6 +83,7 @@ namespace ToolGood.Words
         /// 使用半角转化器，默认使用，如果不使用关闭，请先UseDBCcaseConverter设置为false,再用SetKeywords设置关键字
         /// </summary>
         public bool UseDBCcaseConverter = true;
+
         /// <summary>
         /// 使用忽略大小写，默认使用，如果不使用关闭，请先UseIgnoreCase设置为false,再用SetKeywords设置关键字
         /// </summary>
@@ -214,72 +220,50 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">文本</param>
         /// <returns></returns>
+        [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
         public List<IllegalWordsSearchResult> FindAll(string text)
         {
             List<IllegalWordsSearchResult> result = new List<IllegalWordsSearchResult>();
             int p = 0;
             ushort pChar = 0;
-            bool hasSkipWordOrDuplicateWord = false;
 
-            for (int i = 0; i < text.Length; i++)
-            {
+            for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
-                if (UseSkipWordFilter)
-                {
-                    if (SkipWordFilter != null)
-                    {//跳词跳过
-                        if (SkipWordFilter(t1, text, i))
-                        {
-                            hasSkipWordOrDuplicateWord = true;
+                if (UseSkipWordFilter) {
+                    if (SkipWordFilter != null) {//跳词跳过
+                        if (SkipWordFilter(t1, text, i)) {
                             continue;
                         }
-                    }
-                    else if (_skipBitArray[t1])
-                    {
-                        hasSkipWordOrDuplicateWord = true;
+                    } else if (_skipBitArray[t1]) {
                         continue;
                     }
                 }
 
-                if (CharTranslate != null)
-                { // 字符串转换
+                if (CharTranslate != null) { // 字符串转换
                     t1 = CharTranslate(t1, text, i);
-                }
-                else if (UseDBCcaseConverter || UseIgnoreCase)
-                {
+                } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     t1 = ToSenseWord(t1);
                 }
                 var t = _dict[t1];
-                if (t == 0)
-                {
+                if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
-                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false)
-                {
-                    if (UseDuplicateWordFilter && pChar == t1)
-                    {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                        hasSkipWordOrDuplicateWord = true;
-                    }
-                    else
-                    {
+                    } else {
                         next = _first[t];
-                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
-                if (next != 0)
-                {
-                    if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i))
-                    {
-                        for (int j = _end[next]; j < _end[next + 1]; j++)
-                        {
+                if (next != 0) {
+                    if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
+                        for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            var r = GetGetIllegalResult(text, i, index);
                             if (r != null) { result.Add(r); }
                         }
                     }
@@ -295,22 +279,20 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">文本</param>
         /// <returns></returns>
+        [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
         public IllegalWordsSearchResult FindFirst(string text)
         {
             int p = 0;
             ushort pChar = 0;
-            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -324,18 +306,14 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                        hasSkipWordOrDuplicateWord = true;
-                    }
-                    else {
+                    } else {
                         next = _first[t];
-                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -343,7 +321,7 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            var r = GetGetIllegalResult(text, i, index);
                             if (r != null) { return r; }
                         }
                     }
@@ -359,22 +337,20 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">文本</param>
         /// <returns></returns>
+        [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
         public bool ContainsAny(string text)
         {
             int p = 0;
             ushort pChar = 0;
-            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -388,18 +364,14 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                        hasSkipWordOrDuplicateWord = true;
-                    }
-                    else {
+                    } else {
                         next = _first[t];
-                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -407,7 +379,7 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            var r = GetGetIllegalResult(text, i, index);
                             if (r != null) { return true; }
                         }
                     }
@@ -424,24 +396,22 @@ namespace ToolGood.Words
         /// <param name="text">文本</param>
         /// <param name="replaceChar">替换符</param>
         /// <returns></returns>
+        [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
         public string Replace(string text, char replaceChar = '*')
         {
             StringBuilder result = new StringBuilder(text);
 
             int p = 0;
             ushort pChar = 0;
-            bool hasSkipWordOrDuplicateWord = false;
 
             for (int i = 0; i < text.Length; i++) {
                 var t1 = text[i];
                 if (UseSkipWordFilter) {
                     if (SkipWordFilter != null) {//跳词跳过
                         if (SkipWordFilter(t1, text, i)) {
-                            hasSkipWordOrDuplicateWord = true;
                             continue;
                         }
                     } else if (_skipBitArray[t1]) {
-                        hasSkipWordOrDuplicateWord = true;
                         continue;
                     }
                 }
@@ -455,17 +425,14 @@ namespace ToolGood.Words
                 if (t == 0) {
                     pChar = t1;
                     p = 0;
-                    hasSkipWordOrDuplicateWord = false;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     if (UseDuplicateWordFilter && pChar == t1) {
                         next = p;
-                        hasSkipWordOrDuplicateWord = true;
                     } else {
                         next = _first[t];
-                        hasSkipWordOrDuplicateWord = false;
                     }
                 }
 
@@ -473,7 +440,7 @@ namespace ToolGood.Words
                     if (_end[next] < _end[next + 1] && CheckNextChar(text, t1, i)) {
                         for (int j = _end[next]; j < _end[next + 1]; j++) {
                             var index = _resultIndex[j];
-                            var r = hasSkipWordOrDuplicateWord ? GetGetIllegalResult(text, i, index) : GetIllegalResultByLength(text, i, index);
+                            var r = GetGetIllegalResult(text, i, index);
                             if (r != null) {
                                 for (int k = r.Start; k <= r.End; k++) {
                                     result[k] = replaceChar;
@@ -532,41 +499,29 @@ namespace ToolGood.Words
 
             int keyIndex = key.Length - 1;
             int start = end;
-            for (int i = end; i >= 0; i--)
-            {
+            for (int i = end; i >= 0; i--) {
                 var s2 = text[i];
-                if (UseSkipWordFilter)
-                {
-                    if (SkipWordFilter != null)
-                    {
+                if (UseSkipWordFilter) {
+                    if (SkipWordFilter != null) {
                         if (SkipWordFilter(s2, text, i)) { continue; }
-                    }
-                    else if (_skipBitArray[s2]) { continue; }
+                    } else if (_skipBitArray[s2]) { continue; }
                 }
 
-                if (CharTranslate != null)
-                { // 字符串转换
+                if (CharTranslate != null) { // 字符串转换
                     s2 = CharTranslate(s2, text, i);
-                }
-                else if (UseDBCcaseConverter || UseIgnoreCase)
-                {
+                } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     s2 = ToSenseWord(s2);
                 }
-                if (s2 == key[keyIndex])
-                {
+                if (s2 == key[keyIndex]) {
                     keyIndex--;
                     if (keyIndex == -1) { start = i; break; }
                 }
             }
-            for (int i = start; i >= 0; i--)
-            {
+            for (int i = start; i >= 0; i--) {
                 var s2 = text[i];
-                if (CharTranslate != null)
-                { // 字符串转换
+                if (CharTranslate != null) { // 字符串转换
                     s2 = CharTranslate(s2, text, i);
-                }
-                else if (UseDBCcaseConverter || UseIgnoreCase)
-                {
+                } else if (UseDBCcaseConverter || UseIgnoreCase) {
                     s2 = ToSenseWord(s2);
                 }
                 if (s2 != key[0]) { break; }
@@ -575,35 +530,16 @@ namespace ToolGood.Words
             return GetGetIllegalResult(text, key, start, end, index);
         }
 
-        /// <summary>
-        /// 没有跳词，没有重复词
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="end"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        private IllegalWordsSearchResult GetIllegalResultByLength(string text, int end, int index)
-        {
-            var key = _keywords[index];
-            var start = end - key.Length + 1;
-            return GetGetIllegalResult(text, key, start, end, index);
-        }
-
         private IllegalWordsSearchResult GetGetIllegalResult(string text, string key, int start, int end, int index)
         {
-            if (start>0)
-            {
+            if (start > 0) {
                 var s1 = text[start];
                 if (CharTranslate != null) { s1 = CharTranslate(s1, text, start); }
-                if (IsEnglishOrNumber(s1))
-                {
+                if (IsEnglishOrNumber(s1)) {
                     var s2 = text[start - 1];
-                    if (CharTranslate != null)
-                    { // 字符串转换
+                    if (CharTranslate != null) { // 字符串转换
                         s2 = CharTranslate(s2, text, start - 1);
-                    }
-                    else if (UseDBCcaseConverter || UseIgnoreCase)
-                    {
+                    } else if (UseDBCcaseConverter || UseIgnoreCase) {
                         s2 = ToSenseWord(s2);
                     }
                     if (IsEnglishOrNumber(s2)) { return null; }
@@ -612,10 +548,8 @@ namespace ToolGood.Words
 
             var keyword = text.Substring(start, end - start + 1);
             var bl = _blacklist.Length > index ? _blacklist[index] : 0;
-            if (StringMatch != null)
-            {
-                if (StringMatch(text, start, end, keyword, index, key, _blacklist[index]))
-                {
+            if (StringMatch != null) {
+                if (StringMatch(text, start, end, keyword, index, key, _blacklist[index])) {
                     return new IllegalWordsSearchResult(keyword, start, end, index, key, bl);
                 }
                 return null;

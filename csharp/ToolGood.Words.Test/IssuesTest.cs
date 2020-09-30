@@ -169,11 +169,22 @@ namespace ToolGood.Words.Test
 
             var all = iwords.FindAll(test);
             Assert.AreEqual(2, all.Count);
-
-
-
         }
 
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/65
+        /// </summary>
+        [Test]
+        public void IssuesTest_65()
+        {
+            var search = new IllegalWordsSearch();
+            List<string> keywords = new List<string>();
+            keywords.Add("fuck");
+            keywords.Add("ffx");
+            search.SetKeywords(keywords);
+            var result = search.Replace("fFuck");
+            Assert.AreEqual("*****", result);
+        }
 
     }
 }
