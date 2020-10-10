@@ -1,6 +1,7 @@
 ﻿using PetaTest;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -111,7 +112,7 @@ namespace ToolGood.Words.Test
 
             bool b = iwords.ContainsAny(test);
             Assert.AreEqual(true, b);
- 
+
 
             IllegalWordsSearchResult f = iwords.FindFirst(test);
             Assert.AreEqual("一", f.Keyword);
@@ -123,7 +124,7 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("四四四四", all[3].Keyword);
             Assert.AreEqual("五五五五五", all[4].Keyword);
             Assert.AreEqual("六六六六六六", all[5].Keyword);
-             
+
         }
         /// <summary>
         /// https://github.com/toolgood/ToolGood.Words/issues/57
@@ -186,5 +187,23 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("*****", result);
         }
 
+
+        /// <summary>
+        /// https://github.com/toolgood/ToolGood.Words/issues/68
+        /// </summary>
+        [Test]
+        public void IssuesTest_68_1()
+        {
+            var txts = File.ReadAllLines("_texts/dict.txt");
+            var keywords = new List<String>();
+            foreach (var item in txts)
+            {
+                keywords.Add(item.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0]);
+            }
+            var search = new PinyinMatch();
+            search.SetKeywords(keywords);
+            var ts = search.Find("野huo");
+            Assert.AreEqual(5, ts.Count);
+        }
     }
 }
