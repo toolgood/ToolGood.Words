@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class BaseSearchEx2 {
     protected String[] _keywords;
@@ -141,7 +142,7 @@ public abstract class BaseSearchEx2 {
 
     private void SetKeywords() {
         TrieNode root = new TrieNode();
-        Map<Integer,List<TrieNode>> allNodeLayers=new Hashtable<Integer,List<TrieNode>>();
+        Map<Integer,List<TrieNode>> allNodeLayers=new TreeMap<Integer,List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
             TrieNode nd = root;
