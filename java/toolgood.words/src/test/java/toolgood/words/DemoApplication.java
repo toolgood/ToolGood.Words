@@ -1,6 +1,8 @@
 package toolgood.words;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +20,7 @@ import org.springframework.util.StopWatch;
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
+		
 		test_StringSearch();
 		test_WordsSearch();
 
@@ -53,6 +56,7 @@ public class DemoApplication {
 		test_issues_57_2();
 		test_issues_57_3();
 		test_issues_65();
+		test_issues_74();
 	}
 
 	private static void test_StringSearch() {
@@ -1010,4 +1014,34 @@ public class DemoApplication {
             System.out.println("Replace is Error.");
         }
 	}
+
+	public static void test_issues_74(){
+        List<String> list =loadKeywords(new File("sensi_words.txt"));
+        System.out.println("test_issues_74 run Test.");
+
+		IllegalWordsSearch iwords = new IllegalWordsSearch();
+        iwords.SetKeywords(list);
+		String test = "机机歪歪";
+
+		boolean b = iwords.ContainsAny(test);
+		if (b==false) {
+            System.out.println("ContainsAny is Error.");
+		}
+	}
+	
+	public static List<String> loadKeywords(File file){
+		List<String> keyArray=new ArrayList<String>();
+		try{
+			BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+			String s = null;
+			while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+				keyArray.add(s);
+			}
+			br.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return keyArray;
+    }
+
 }

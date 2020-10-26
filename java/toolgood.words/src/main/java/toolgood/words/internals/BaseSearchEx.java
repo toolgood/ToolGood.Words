@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import toolgood.words.NumHelper;
 
@@ -178,7 +179,7 @@ public class BaseSearchEx {
 
     private void SetKeywords() {
         TrieNode root = new TrieNode();
-        Map<Integer, List<TrieNode>> allNodeLayers = new Hashtable<Integer, List<TrieNode>>();
+        Map<Integer, List<TrieNode>> allNodeLayers = new TreeMap<Integer, List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
             TrieNode nd = root;
@@ -277,7 +278,7 @@ public class BaseSearchEx {
         end.add(0);
         List<Integer> resultIndex = new ArrayList<Integer>();
         for (int i = 0; i < allNode2.size(); i++) {
-            Map<Integer, Integer> dict = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> dict = new TreeMap<Integer, Integer>();
             TrieNode2Ex node = allNode2.get(i);
             min.add(node.minflag);
             max.add(node.maxflag);
