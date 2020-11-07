@@ -32,6 +32,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>4.3.21.RELEASE</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
