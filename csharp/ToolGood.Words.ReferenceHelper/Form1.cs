@@ -101,15 +101,57 @@ namespace ToolGood.Words.ReferenceHelper
             foreach (var item in this.listBox1.Items) {
                 files.Add(item.ToString());
             }
+            if (files.Count==0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+
             PinyinBuild pinyinBuild = new PinyinBuild();
             pinyinBuild.Load(files);
 
             pinyinBuild.OutputSingleFile("out/allPinyin.txt");
             pinyinBuild = null;
-        } 
+            MessageBox.Show("合并完成！");
+        }
+        /// <summary>
+        /// 拼音查错
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button7_Click(object sender, EventArgs e)
+        {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
+
+            pinyinBuild.CheckPinyin("out/rightPinyin.txt", "out/errorPinyin.txt");
+            pinyinBuild = null;
+            MessageBox.Show("拼音查错完成！");
+
+
+
+            // out/rightPinyin.txt
+            // out/errorPinyin.txt
+        }
+        /// <summary>
+        /// 清空列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button8_Click(object sender, EventArgs e)
+        {
+            this.listBox1.Items.Clear();
+        }
+
         #endregion
-
-
 
     }
 }

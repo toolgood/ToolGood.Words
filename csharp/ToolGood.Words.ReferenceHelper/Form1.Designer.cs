@@ -32,7 +32,6 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
@@ -40,7 +39,9 @@ namespace ToolGood.Words.ReferenceHelper
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button7 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,6 +49,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -86,16 +88,15 @@ namespace ToolGood.Words.ReferenceHelper
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(3, 103);
+            this.listBox1.Location = new System.Drawing.Point(3, 120);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(956, 332);
+            this.listBox1.Size = new System.Drawing.Size(956, 315);
             this.listBox1.TabIndex = 3;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.button6);
             this.panel2.Controls.Add(this.button5);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.button4);
@@ -107,16 +108,6 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(956, 64);
             this.panel2.TabIndex = 2;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(707, 6);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(116, 29);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "合并文件";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -179,15 +170,29 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button8);
+            this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(956, 100);
+            this.panel1.Size = new System.Drawing.Size(956, 117);
             this.panel1.TabIndex = 1;
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(835, 45);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(116, 29);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "声调查错";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // label4
             // 
@@ -197,6 +202,17 @@ namespace ToolGood.Words.ReferenceHelper
             this.label4.Size = new System.Drawing.Size(510, 20);
             this.label4.TabIndex = 3;
             this.label4.Text = "注: 生成时会自动将删除 /* 及 //后的内容, 分割符为空格,等号,逗号,分号,\\t等";
+            // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(835, 9);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(116, 29);
+            this.button6.TabIndex = 6;
+            this.button6.Text = "合并文件";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label3
             // 
@@ -263,6 +279,17 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage3.Text = "姓氏拼音资源包";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Location = new System.Drawing.Point(835, 80);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(116, 29);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "清空列表";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -305,6 +332,8 @@ namespace ToolGood.Words.ReferenceHelper
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
 
