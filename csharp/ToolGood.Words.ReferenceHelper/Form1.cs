@@ -25,7 +25,21 @@ namespace ToolGood.Words.ReferenceHelper
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
 
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
+
+            pinyinBuild.CreateZip("out/gzip", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/gzip 目录内。");
         }
 
         /// <summary>
@@ -35,7 +49,20 @@ namespace ToolGood.Words.ReferenceHelper
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
 
+            pinyinBuild.CreateBr("out/br", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/br 目录内。");
         }
 
         /// <summary>
@@ -45,7 +72,21 @@ namespace ToolGood.Words.ReferenceHelper
         /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
 
+
+            pinyinBuild.CreateJava("out/Java", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/Java 目录内。");
         }
 
         /// <summary>
@@ -55,7 +96,20 @@ namespace ToolGood.Words.ReferenceHelper
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
 
+            pinyinBuild.CreateJs("out/js", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/js 目录内。");
         }
 
         /// <summary>
@@ -65,9 +119,23 @@ namespace ToolGood.Words.ReferenceHelper
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
 
+            pinyinBuild.CreatePython("out/python", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/python 目录内。");
         }
 
+        #region DragDrop
         private void listBox1_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -90,6 +158,8 @@ namespace ToolGood.Words.ReferenceHelper
                 }
             }
         }
+        #endregion
+
         /// <summary>
         /// 合并文件
         /// </summary>
@@ -101,7 +171,7 @@ namespace ToolGood.Words.ReferenceHelper
             foreach (var item in this.listBox1.Items) {
                 files.Add(item.ToString());
             }
-            if (files.Count==0) {
+            if (files.Count == 0) {
                 MessageBox.Show("请拖入文件！");
                 return;
             }
@@ -111,7 +181,7 @@ namespace ToolGood.Words.ReferenceHelper
 
             pinyinBuild.OutputSingleFile("out/allPinyin.txt");
             pinyinBuild = null;
-            MessageBox.Show("合并完成！");
+            MessageBox.Show("完成！已保存在 out/allPinyin.txt 文件内。");
         }
         /// <summary>
         /// 拼音查错
@@ -134,10 +204,7 @@ namespace ToolGood.Words.ReferenceHelper
 
             pinyinBuild.CheckPinyin("out/rightPinyin.txt", "out/errorPinyin.txt");
             pinyinBuild = null;
-            MessageBox.Show("拼音查错完成！");
-
-
-
+            MessageBox.Show("拼音查错完成！已保存在 out 目录内。");
             // out/rightPinyin.txt
             // out/errorPinyin.txt
         }
@@ -151,7 +218,32 @@ namespace ToolGood.Words.ReferenceHelper
             this.listBox1.Items.Clear();
         }
 
+        /// <summary>
+        /// 生成拼音序列
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button9_Click(object sender, EventArgs e)
+        {
+            var files = new List<string>();
+            foreach (var item in this.listBox1.Items) {
+                files.Add(item.ToString());
+            }
+            if (files.Count == 0) {
+                MessageBox.Show("请拖入文件！");
+                return;
+            }
+            PinyinBuild pinyinBuild = new PinyinBuild();
+            pinyinBuild.Load(files);
+
+            pinyinBuild.CreatePyShow("out/Pinyin.txt", this.checkBox1.Checked);
+            pinyinBuild = null;
+            MessageBox.Show("完成！已保存在 out/Pinyin.txt 文件内。");
+
+        }
+
         #endregion
+
 
     }
 }

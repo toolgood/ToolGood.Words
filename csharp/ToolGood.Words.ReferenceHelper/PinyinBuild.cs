@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Globalization;
+using ToolGood.Bedrock;
 
 namespace ToolGood.Words.ReferenceHelper
 {
@@ -275,8 +276,8 @@ namespace ToolGood.Words.ReferenceHelper
                 var py = strList2[i];
                 var rtome = RemoveTone(py);
                 var t = w.SubstringByTextElements(i, 1);
-                if (noneTomeDict.TryGetValue(t,out List<string> pys)) {
-                    if (pys.Contains(rtome) ==false) {
+                if (noneTomeDict.TryGetValue(t, out List<string> pys)) {
+                    if (pys.Contains(rtome) == false) {
                         return null;
                     }
                 }
@@ -535,6 +536,377 @@ namespace ToolGood.Words.ReferenceHelper
         #endregion
 
 
+        public void CreateZip(string zipPath, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var pyShow = GetPinyins();
+            var dict = BuildPinyinDict(pyShow);
+
+            var outPy = BuildSingleWord(pyShow, dict);
+            Directory.CreateDirectory(zipPath);
+            File.WriteAllBytes(zipPath + "/pyIndex.txt.z", CompressionUtil.GzipCompress(Encoding.UTF8.GetBytes(outPy)));
+            if (useMin == false) {
+                var outPy2 = BuildData20000(dict);
+                File.WriteAllBytes(zipPath + "/pyIndex2.txt.z", CompressionUtil.GzipCompress(Encoding.UTF8.GetBytes(outPy2)));
+            }
+            var words = BuildMiniWords(pyShow, dict);
+
+            var ls = new List<string>();
+            foreach (var item in words) {
+                var str = item;
+                List<int> pys = dict[str];
+                foreach (var py in pys) {
+                    str += "," + py.ToString("X");
+                }
+                ls.Add(str);
+            }
+            ls = ls.OrderBy(q => q).ToList();
+            File.WriteAllBytes(zipPath + "/pyWords.txt.z", CompressionUtil.GzipCompress(Encoding.UTF8.GetBytes(string.Join("\n", ls))));
+
+        }
+
+        public void CreateBr(string brPath, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var pyShow = GetPinyins();
+            var dict = BuildPinyinDict(pyShow);
+
+            var outPy = BuildSingleWord(pyShow, dict);
+            Directory.CreateDirectory(brPath);
+            File.WriteAllBytes(brPath + "/pyIndex.txt.br", CompressionUtil.BrCompress(Encoding.UTF8.GetBytes(outPy)));
+            if (useMin == false) {
+                var outPy2 = BuildData20000(dict);
+                File.WriteAllBytes(brPath + "/pyIndex2.txt.br", CompressionUtil.BrCompress(Encoding.UTF8.GetBytes(outPy2)));
+            }
+            var words = BuildMiniWords(pyShow, dict);
+
+            var ls = new List<string>();
+            foreach (var item in words) {
+                var str = item;
+                List<int> pys = dict[str];
+                foreach (var py in pys) {
+                    str += "," + py.ToString("X");
+                }
+                ls.Add(str);
+            }
+            ls = ls.OrderBy(q => q).ToList();
+            File.WriteAllBytes(brPath + "/pyWords.txt.br", CompressionUtil.BrCompress(Encoding.UTF8.GetBytes(string.Join("\n", ls))));
+        }
+        public void CreateJava(string javaPath, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var pyShow = GetPinyins();
+            var dict = BuildPinyinDict(pyShow);
+
+            var outPy = BuildSingleWord(pyShow, dict);
+            Directory.CreateDirectory(javaPath);
+            File.WriteAllText(javaPath + "/pyIndex.txt", outPy, Encoding.UTF8);
+            if (useMin == false) {
+                var outPy2 = BuildData20000(dict);
+                File.WriteAllText(javaPath + "/pyIndex2.txt", outPy2, Encoding.UTF8);
+            }
+            var words = BuildMiniWords(pyShow, dict);
+
+            var ls = new List<string>();
+            foreach (var item in words) {
+                var str = item;
+                List<int> pys = dict[str];
+                foreach (var py in pys) {
+                    str += "," + py.ToString("X");
+                }
+                ls.Add(str);
+            }
+            ls = ls.OrderBy(q => q).ToList();
+            File.WriteAllText(javaPath + "/pyWords.txt", string.Join("\n", ls), Encoding.UTF8);
+
+        }
+        public void CreateJs(string jsPath, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var upyShow = GetPinyins();
+
+
+        }
+        public void CreatePython(string python, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var upyShow = GetPinyins();
+
+
+        }
+
+
+
+
+        private void RemoveChar()
+        {
+            var keys = sDict.Keys.ToList();
+            foreach (var key in keys) {
+                if (key < 0x3400 && key > 0x9fd5) {
+                    sDict.Remove(key);
+                }
+            }
+            sDict2.Clear();
+
+            var keys2 = mDict.Keys.ToList();
+            foreach (var key in keys2) {
+                bool remove = false;
+                foreach (var ch in key) {
+                    if (ch < 0x3400 && ch > 0x9fd5) {
+                        remove = true;
+                        break;
+                    }
+                }
+                if (remove) {
+                    mDict.Remove(key);
+                }
+            }
+        }
+
+        private List<string> GetPinyins()
+        {
+            HashSet<string> pys = new HashSet<string>();
+            foreach (var item in sDict) {
+                foreach (var py in item.Value) {
+                    pys.Add(py);
+                }
+            }
+            foreach (var item in sDict2) {
+                foreach (var py in item.Value) {
+                    pys.Add(py);
+                }
+            }
+            foreach (var item in mDict) {
+                foreach (var py in item.Value) {
+                    pys.Add(py);
+                }
+            }
+            var result = new List<string>();
+            foreach (var item in pys) {
+                result.Add(item);
+            }
+            result = result.OrderBy(q => q).ToList();
+
+            var pyShow = new List<string>() { "" };
+            foreach (var item in result) {
+                var py = RemoveTone(item);
+                pyShow.Add(py.ToUpper()[0] + py.Substring(1));
+                pyShow.Add(item.ToUpper()[0] + item.Substring(1));
+            }
+            return pyShow;
+        }
+
+        private Dictionary<string, List<int>> BuildPinyinDict(List<string> upyShow)
+        {
+            Dictionary<string, int> pyDict = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < upyShow.Count; i += 2) {
+                if (pyDict.ContainsKey(upyShow[i]) == false) {
+                    pyDict[upyShow[i]] = i - 1;
+                }
+            }
+            Dictionary<string, List<int>> dict = new Dictionary<string, List<int>>();
+            foreach (var item in sDict) {
+                var key = item.Key.ToString();
+                List<int> list = new List<int>();
+                foreach (var py in item.Value) {
+                    list.Add(pyDict[py]);
+                }
+                dict[key] = list;
+            }
+            foreach (var item in sDict2) {
+                var key = new string(new char[] { item.Key.Item1, item.Key.Item2 });
+                List<int> list = new List<int>();
+                foreach (var py in item.Value) {
+                    list.Add(pyDict[py]);
+                }
+                dict[key] = list;
+            }
+            foreach (var item in mDict) {
+                var key = item.Key;
+                List<int> list = new List<int>();
+                foreach (var py in item.Value) {
+                    list.Add(pyDict[py]);
+                }
+                dict[key] = list;
+            }
+            return dict;
+        }
+
+        private string BuildSingleWord(List<string> pyShow, Dictionary<string, List<int>> dict)
+        {
+            List<string> pyData = new List<string>();
+            for (int i = 0x3400; i <= 0x9fd5; i++) {
+                var c = ((char)i).ToString();
+                if (dict.TryGetValue(c, out List<int> indexs)) {
+                    List<string> idxs = new List<string>();
+                    foreach (var index in indexs) {
+                        idxs.Add(index.ToString("X"));
+                    }
+                    if (idxs[0] == "FFFFFFFF") {
+                        throw new Exception("");
+                    }
+                    pyData.Add(string.Join(",", idxs));
+                } else {
+                    pyData.Add("0");
+                }
+            }
+            var outText = string.Join(",", pyShow);
+            outText += "\n" + string.Join("\n", pyData);
+            return outText;
+        }
+
+        private string BuildData20000(Dictionary<string, List<int>> dict)
+        {
+            //List<List<string>> pyData20000 = new List<List<string>>();
+            string outText = null;
+            for (int i = 0xd840; i <= 0xd86e; i++) {
+                List<string> data20000 = new List<string>();
+                for (int j = 0xdc00; j <= 0xdfff; j++) {
+                    if (dict.TryGetValue(new string(new char[] { (char)i, (char)j }), out List<int> indexs)) {
+                        List<string> idxs = new List<string>();
+                        foreach (var index in indexs) {
+                            idxs.Add(index.ToString("X"));
+                        }
+                        if (idxs[0] == "FFFFFFFF") {
+                            throw new Exception("");
+                        }
+                        data20000.Add(string.Join(",", idxs));
+                    } else {
+                        data20000.Add("0");
+                    }
+                }
+                //pyData20000.Add(data20000);
+                if (outText != null) {
+                    outText += "\n";
+                }
+                outText += string.Join("\t", data20000);
+            }
+            return outText;
+        }
+
+
+        private List<string> BuildMiniWords(List<string> pyShow, Dictionary<string, List<int>> dict)
+        {
+            Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
+            List<string> tempClearKeys = new List<string>();
+            foreach (var item in mDict) {
+                var sinfo = new StringInfo(item.Key);
+                var allSome = true;
+                for (int i = 0; i < sinfo.LengthInTextElements; i++) {
+                    var t = sinfo.SubstringByTextElements(i, 1);
+                    if (pyShow[dict[t][0]] != item.Value[i]) {
+                        allSome = false;
+                        break;
+                    }
+                }
+                if (allSome) {
+                    tempClearWords[item.Key] = item.Value;
+                    tempClearKeys.Add(item.Key);
+                }
+            }
+
+            var pyWords2 = new Dictionary<string, List<string>>();
+            foreach (var item in mDict) {
+                pyWords2[item.Key] = item.Value;
+            }
+
+            foreach (var item in tempClearWords) {
+                pyWords2.Remove(item.Key);
+            }
+            var keys = pyWords2.Select(q => q.Key).OrderBy(q => q).ToList();
+
+            var index_remove = 1;
+            var oldkey = keys[0];
+            while (index_remove < keys.Count) {
+                var key = keys[index_remove];
+                if (key.StartsWith(oldkey)) {
+                    bool remove = true;
+                    for (int j = oldkey.Length; j < key.Length; j++) {
+                        if (sDict.ContainsKey(key[j]) == false) {
+                            remove = false;
+                            break;
+                        }
+                    }
+                    if (remove) {
+                        keys.RemoveAt(index_remove);
+                        pyWords2.Remove(key);
+                    } else {
+                        index_remove++;
+                        oldkey = key;
+                    }
+                } else {
+                    index_remove++;
+                    oldkey = key;
+                }
+            }
+
+            List<string> AddKeys = new List<string>();
+            Words.WordsSearch wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(keys);
+            foreach (var item in tempClearKeys) {
+                if (wordsSearch.ContainsAny(item)) {
+                    AddKeys.Add(item);
+                }
+            }
+
+
+            HashSet<string> starts = new HashSet<string>();
+            HashSet<string> ends = new HashSet<string>();
+            foreach (var item in tempClearKeys) {
+                for (int i = 1; i < item.Length; i++) {
+                    var start = item.Substring(0, item.Length - i);
+                    var end = item.Substring(i);
+
+                    ends.Add(start);
+                    starts.Add(end);
+                }
+            }
+
+
+            List<string> AddKeys2 = new List<string>();
+            List<string> keys2 = new List<string>();
+            List<string> splitWords = new List<string>();
+            foreach (var item in pyWords2) {
+                var py = Words.WordsHelper.GetPinyinFast(item.Key, true).ToLower();
+                if (RemoveTone(py) != RemoveTone(string.Join("", item.Value))) {
+                    for (int i = 1; i < item.Key.Length; i++) {
+                        var start = item.Key.Substring(0, item.Key.Length - i);
+                        if (keys2.Contains(start)) { continue; }
+                        var end = item.Key.Substring(i);
+
+                        if (starts.Contains(start) && ends.Contains(end)) {
+                            keys2.Add(start);
+                            splitWords.Add(start + "|" + end);
+                        }
+                    }
+                }
+            }
+            keys2 = keys2.Distinct().ToList();
+            wordsSearch = new Words.WordsSearch();
+            wordsSearch.SetKeywords(keys2);
+            foreach (var item in tempClearKeys) {
+                if (item.Length >= 7) { continue; } //排除诗句 歇后语
+                var all = wordsSearch.FindAll(item);
+                if (all.Any(q => q.End + 1 == item.Length)) {
+                    AddKeys2.Add(item);
+                }
+            }
+
+            AddKeys.AddRange(AddKeys2);
+            AddKeys.AddRange(keys);
+            AddKeys = AddKeys.Distinct().ToList();
+
+            return AddKeys;
+        }
+
+
+        public void CreatePyShow(string file, bool useMin)
+        {
+            if (useMin) { RemoveChar(); }
+            var upyShow = GetPinyins();
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
+            File.WriteAllText(file, string.Join(",", upyShow));
+        }
 
     }
 }

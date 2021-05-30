@@ -32,6 +32,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
@@ -39,6 +40,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.button6 = new System.Windows.Forms.Button();
@@ -49,7 +51,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -88,15 +90,16 @@ namespace ToolGood.Words.ReferenceHelper
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(3, 120);
+            this.listBox1.Location = new System.Drawing.Point(3, 97);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(956, 315);
+            this.listBox1.Size = new System.Drawing.Size(956, 338);
             this.listBox1.TabIndex = 3;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.checkBox1);
             this.panel2.Controls.Add(this.button5);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.button4);
@@ -108,6 +111,16 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(956, 64);
             this.panel2.TabIndex = 2;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(7, 39);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(230, 24);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "只使用0x3400-0x9fd5区间。";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
@@ -122,7 +135,7 @@ namespace ToolGood.Words.ReferenceHelper
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(5, 38);
+            this.label5.Location = new System.Drawing.Point(234, 40);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(539, 20);
             this.label5.TabIndex = 4;
@@ -164,12 +177,13 @@ namespace ToolGood.Words.ReferenceHelper
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(130, 29);
             this.button1.TabIndex = 0;
-            this.button1.Text = "生成zip资源包";
+            this.button1.Text = "生成gzip资源包";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button9);
             this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.label4);
@@ -180,13 +194,24 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(956, 117);
+            this.panel1.Size = new System.Drawing.Size(956, 94);
             this.panel1.TabIndex = 1;
+            // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Location = new System.Drawing.Point(835, 40);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(116, 29);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "清空列表";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(835, 45);
+            this.button7.Location = new System.Drawing.Point(835, 5);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(116, 29);
             this.button7.TabIndex = 7;
@@ -206,7 +231,7 @@ namespace ToolGood.Words.ReferenceHelper
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(835, 9);
+            this.button6.Location = new System.Drawing.Point(713, 5);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(116, 29);
             this.button6.TabIndex = 6;
@@ -279,16 +304,16 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage3.Text = "姓氏拼音资源包";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // button8
+            // button9
             // 
-            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(835, 80);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(116, 29);
-            this.button8.TabIndex = 8;
-            this.button8.Text = "清空列表";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button9.Location = new System.Drawing.Point(713, 40);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(116, 29);
+            this.button9.TabIndex = 9;
+            this.button9.Text = "生成拼音序列";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // Form1
             // 
@@ -334,6 +359,8 @@ namespace ToolGood.Words.ReferenceHelper
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button9;
     }
 }
 
