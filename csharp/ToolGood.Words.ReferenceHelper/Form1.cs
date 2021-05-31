@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -242,7 +243,130 @@ namespace ToolGood.Words.ReferenceHelper
 
         }
 
+
         #endregion
+
+        #region 生产拼音
+        private void button20_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                this.textBox1.Text = openFileDialog.FileName;
+            }
+            openFileDialog = null;
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                this.textBox2.Text = openFileDialog.FileName;
+            }
+            openFileDialog = null;
+        }
+        private void textBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            List<string> list = new List<string>();
+            var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
+            foreach (var item in files) {
+                var file = item.ToString();
+                if (file.ToLower().EndsWith(".txt")
+                    ) {
+                    this.textBox1.Text = file;
+                }
+            }
+        }
+
+        private void textBox2_DragDrop(object sender, DragEventArgs e)
+        {
+            List<string> list = new List<string>();
+            var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
+            foreach (var item in files) {
+                var file = item.ToString();
+                if (file.ToLower().EndsWith(".txt")
+                    ) {
+                    this.textBox2.Text = file;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 生成gzip资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button15_Click(object sender, EventArgs e)
+        {
+            var pinyinIndex = this.textBox1.Text;
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            var pinyinName = this.textBox2.Text;
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+
+            PinyinNameBuild build = new PinyinNameBuild();
+            build.CreateZip(pinyinIndex, pinyinName, "out/gzip/pyName.txt.z");
+            build = null;
+            MessageBox.Show("完成！已保存在 out/gzip/pyName.txt.z 文件内。");
+
+        }
+        /// <summary>
+        /// 生成br资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button16_Click(object sender, EventArgs e)
+        {
+            var pinyinIndex = this.textBox1.Text;
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            var pinyinName = this.textBox2.Text;
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+
+            PinyinNameBuild build = new PinyinNameBuild();
+            build.CreateBr(pinyinIndex, pinyinName, "out/br/pyName.txt.br");
+            build = null;
+            MessageBox.Show("完成！已保存在 out/gzip/pyName.txt.br 文件内。");
+        }
+        /// <summary>
+        /// 生成java资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button17_Click(object sender, EventArgs e)
+        {
+            var pinyinIndex = this.textBox1.Text;
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            var pinyinName = this.textBox2.Text;
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+
+            PinyinNameBuild build = new PinyinNameBuild();
+            build.CreateJava(pinyinIndex, pinyinName, "out/java/pyName.txt");
+            build = null;
+            MessageBox.Show("完成！已保存在 out/java/pyName.txt 文件内。");
+        }
+        /// <summary>
+        /// 生成js资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button18_Click(object sender, EventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// 生成python资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button19_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
 
 
     }

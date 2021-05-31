@@ -885,7 +885,7 @@ namespace ToolGood.Words.ReferenceHelper
             wordsSearch = new Words.WordsSearch();
             wordsSearch.SetKeywords(keys2);
             foreach (var item in tempClearKeys) {
-                if (item.Length >= 7) { continue; } //排除诗句 歇后语
+                //if (item.Length >= 7) { continue; } //排除诗句 歇后语
                 var all = wordsSearch.FindAll(item);
                 if (all.Any(q => q.End + 1 == item.Length)) {
                     AddKeys2.Add(item);
