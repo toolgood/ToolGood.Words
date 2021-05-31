@@ -94,7 +94,7 @@ namespace ToolGood.Words.ReferenceHelper
             }
             return pyDict;
         }
-        private Dictionary<string, List<string>> LoadPinyinName(string pyName)
+        internal Dictionary<string, List<string>> LoadPinyinName(string pyName)
         {
             var txts = File.ReadAllLines(pyName);
             Dictionary<string, List<string>> result = new Dictionary<string, List<string>>();
@@ -117,7 +117,30 @@ namespace ToolGood.Words.ReferenceHelper
             }
             return result;
         }
-        private Dictionary<string, List<int>> BuildPinyinDict(Dictionary<string, int> pyDict, Dictionary<string, List<string>> mDict)
+
+
+        internal Dictionary<string, List<int>> BuildPinyinDict(List<string> upyShow, Dictionary<string, List<string>> mDict)
+        {
+            Dictionary<string, int> pyDict = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < upyShow.Count; i += 2) {
+                if (pyDict.ContainsKey(upyShow[i]) == false) {
+                    pyDict[upyShow[i]] = i - 1;
+                }
+            }
+            Dictionary<string, List<int>> dict = new Dictionary<string, List<int>>();
+            foreach (var item in mDict) {
+                var key = item.Key;
+                List<int> list = new List<int>();
+                foreach (var py in item.Value) {
+                    var py2 = AddTone(py.ToLower());
+                    list.Add(pyDict[py2]);
+                }
+                dict[key] = list;
+            }
+            return dict;
+        }
+
+        internal Dictionary<string, List<int>> BuildPinyinDict(Dictionary<string, int> pyDict, Dictionary<string, List<string>> mDict)
         {
             //Dictionary<string, int> pyDict = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             //for (int i = 0; i < upyShow.Count; i += 2) {

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Globalization;
 using ToolGood.Bedrock;
+using ToolGood.PinYin.Build.Pinyin;
 
 namespace ToolGood.Words.ReferenceHelper
 {
@@ -535,6 +536,7 @@ namespace ToolGood.Words.ReferenceHelper
         }
         #endregion
 
+        #region CreateZip CreateBr CreateJava CreateJs CreatePython
 
         public void CreateZip(string zipPath, bool useMin)
         {
@@ -636,9 +638,7 @@ namespace ToolGood.Words.ReferenceHelper
         }
 
 
-
-
-        private void RemoveChar()
+        internal void RemoveChar()
         {
             var keys = sDict.Keys.ToList();
             foreach (var key in keys) {
@@ -663,7 +663,7 @@ namespace ToolGood.Words.ReferenceHelper
             }
         }
 
-        private List<string> GetPinyins()
+        internal List<string> GetPinyins()
         {
             HashSet<string> pys = new HashSet<string>();
             foreach (var item in sDict) {
@@ -696,7 +696,7 @@ namespace ToolGood.Words.ReferenceHelper
             return pyShow;
         }
 
-        private Dictionary<string, List<int>> BuildPinyinDict(List<string> upyShow)
+        internal Dictionary<string, List<int>> BuildPinyinDict(List<string> upyShow)
         {
             Dictionary<string, int> pyDict = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i < upyShow.Count; i += 2) {
@@ -732,7 +732,7 @@ namespace ToolGood.Words.ReferenceHelper
             return dict;
         }
 
-        private string BuildSingleWord(List<string> pyShow, Dictionary<string, List<int>> dict)
+        internal string BuildSingleWord(List<string> pyShow, Dictionary<string, List<int>> dict)
         {
             List<string> pyData = new List<string>();
             for (int i = 0x3400; i <= 0x9fd5; i++) {
@@ -755,7 +755,7 @@ namespace ToolGood.Words.ReferenceHelper
             return outText;
         }
 
-        private string BuildData20000(Dictionary<string, List<int>> dict)
+        internal string BuildData20000(Dictionary<string, List<int>> dict)
         {
             //List<List<string>> pyData20000 = new List<List<string>>();
             string outText = null;
@@ -785,7 +785,7 @@ namespace ToolGood.Words.ReferenceHelper
         }
 
 
-        private List<string> BuildMiniWords(List<string> pyShow, Dictionary<string, List<int>> dict)
+        internal List<string> BuildMiniWords(List<string> pyShow, Dictionary<string, List<int>> dict)
         {
             Dictionary<string, List<string>> tempClearWords = new Dictionary<string, List<string>>();
             List<string> tempClearKeys = new List<string>();
@@ -899,14 +899,17 @@ namespace ToolGood.Words.ReferenceHelper
             return AddKeys;
         }
 
-
-        public void CreatePyShow(string file, bool useMin)
+        internal void CreatePyShow(string file, bool useMin)
         {
             if (useMin) { RemoveChar(); }
             var upyShow = GetPinyins();
             Directory.CreateDirectory(Path.GetDirectoryName(file));
             File.WriteAllText(file, string.Join(",", upyShow));
         }
+
+        #endregion
+
+ 
 
     }
 }

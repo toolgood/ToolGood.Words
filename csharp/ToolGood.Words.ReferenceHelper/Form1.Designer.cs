@@ -49,8 +49,6 @@ namespace ToolGood.Words.ReferenceHelper
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.button21 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -58,6 +56,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.label23 = new System.Windows.Forms.Label();
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
@@ -78,11 +77,25 @@ namespace ToolGood.Words.ReferenceHelper
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label11 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label24 = new System.Windows.Forms.Label();
             this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button28 = new System.Windows.Forms.Button();
+            this.button27 = new System.Windows.Forms.Button();
+            this.button26 = new System.Windows.Forms.Button();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.button25 = new System.Windows.Forms.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.button24 = new System.Windows.Forms.Button();
+            this.label20 = new System.Windows.Forms.Label();
+            this.button23 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -92,6 +105,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -99,6 +113,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -316,8 +331,6 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label10);
-            this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.button21);
             this.tabPage3.Controls.Add(this.button20);
             this.tabPage3.Controls.Add(this.textBox2);
@@ -333,27 +346,9 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage3.Text = "姓氏拼音资源包";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(30, 169);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(99, 20);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "支持文件拖入";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(30, 66);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(99, 20);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "支持文件拖入";
-            // 
             // button21
             // 
-            this.button21.Location = new System.Drawing.Point(649, 139);
+            this.button21.Location = new System.Drawing.Point(649, 106);
             this.button21.Name = "button21";
             this.button21.Size = new System.Drawing.Size(94, 29);
             this.button21.TabIndex = 6;
@@ -374,13 +369,13 @@ namespace ToolGood.Words.ReferenceHelper
             // textBox2
             // 
             this.textBox2.AllowDrop = true;
-            this.textBox2.Location = new System.Drawing.Point(8, 139);
+            this.textBox2.Location = new System.Drawing.Point(8, 106);
             this.textBox2.Name = "textBox2";
             this.textBox2.PlaceholderText = "支持文件拖入";
             this.textBox2.Size = new System.Drawing.Size(635, 27);
             this.textBox2.TabIndex = 4;
             this.textBox2.Text = "dict/_pyName.txt";
-            this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox2_DragDrop);
+            this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
             this.textBox2.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
             // 
             // textBox1
@@ -398,7 +393,7 @@ namespace ToolGood.Words.ReferenceHelper
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 116);
+            this.label7.Location = new System.Drawing.Point(8, 83);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(103, 20);
             this.label7.TabIndex = 2;
@@ -415,6 +410,7 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.label23);
             this.panel5.Controls.Add(this.button19);
             this.panel5.Controls.Add(this.button18);
             this.panel5.Controls.Add(this.button17);
@@ -425,6 +421,15 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(956, 65);
             this.panel5.TabIndex = 0;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(5, 35);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(539, 20);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "br资源包体积更小，支持 netstandard2.1版本，生成的文件都在out文件夹内。";
             // 
             // button19
             // 
@@ -537,7 +542,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.textBox3.Size = new System.Drawing.Size(633, 27);
             this.textBox3.TabIndex = 10;
             this.textBox3.Text = "dict/_allPinyin.txt";
-            this.textBox3.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox3_DragDrop);
+            this.textBox3.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
             this.textBox3.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
             // 
             // label17
@@ -625,6 +630,7 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.label24);
             this.panel3.Controls.Add(this.button14);
             this.panel3.Controls.Add(this.button13);
             this.panel3.Controls.Add(this.button12);
@@ -635,6 +641,15 @@ namespace ToolGood.Words.ReferenceHelper
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(956, 68);
             this.panel3.TabIndex = 0;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(5, 38);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(539, 20);
+            this.label24.TabIndex = 5;
+            this.label24.Text = "br资源包体积更小，支持 netstandard2.1版本，生成的文件都在out文件夹内。";
             // 
             // button14
             // 
@@ -688,6 +703,146 @@ namespace ToolGood.Words.ReferenceHelper
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.button28);
+            this.tabPage4.Controls.Add(this.button27);
+            this.tabPage4.Controls.Add(this.button26);
+            this.tabPage4.Controls.Add(this.label22);
+            this.tabPage4.Controls.Add(this.label21);
+            this.tabPage4.Controls.Add(this.button25);
+            this.tabPage4.Controls.Add(this.textBox5);
+            this.tabPage4.Controls.Add(this.button24);
+            this.tabPage4.Controls.Add(this.label20);
+            this.tabPage4.Controls.Add(this.button23);
+            this.tabPage4.Controls.Add(this.textBox4);
+            this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(962, 502);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "拼音迷你包";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button28
+            // 
+            this.button28.Location = new System.Drawing.Point(492, 96);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(94, 29);
+            this.button28.TabIndex = 10;
+            this.button28.Text = "浏览";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
+            // 
+            // button27
+            // 
+            this.button27.Location = new System.Drawing.Point(492, 34);
+            this.button27.Name = "button27";
+            this.button27.Size = new System.Drawing.Size(94, 29);
+            this.button27.TabIndex = 9;
+            this.button27.Text = "浏览";
+            this.button27.UseVisualStyleBackColor = true;
+            this.button27.Click += new System.EventHandler(this.button27_Click);
+            // 
+            // button26
+            // 
+            this.button26.Location = new System.Drawing.Point(149, 237);
+            this.button26.Name = "button26";
+            this.button26.Size = new System.Drawing.Size(130, 29);
+            this.button26.TabIndex = 8;
+            this.button26.Text = "生成br资源包";
+            this.button26.UseVisualStyleBackColor = true;
+            this.button26.Click += new System.EventHandler(this.button26_Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(8, 214);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(227, 20);
+            this.label22.TabIndex = 7;
+            this.label22.Text = "0x3400-0x9fd5区间拼音首字母:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(13, 135);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(182, 20);
+            this.label21.TabIndex = 6;
+            this.label21.Text = "0x3400-0x9fd5区间拼音:";
+            // 
+            // button25
+            // 
+            this.button25.Location = new System.Drawing.Point(13, 237);
+            this.button25.Name = "button25";
+            this.button25.Size = new System.Drawing.Size(130, 29);
+            this.button25.TabIndex = 5;
+            this.button25.Text = "生成gzip资源包";
+            this.button25.UseVisualStyleBackColor = true;
+            this.button25.Click += new System.EventHandler(this.button25_Click);
+            // 
+            // textBox5
+            // 
+            this.textBox5.AllowDrop = true;
+            this.textBox5.Location = new System.Drawing.Point(13, 98);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(473, 27);
+            this.textBox5.TabIndex = 4;
+            this.textBox5.Text = "dict/_pyName.txt";
+            this.textBox5.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
+            this.textBox5.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
+            // 
+            // button24
+            // 
+            this.button24.Location = new System.Drawing.Point(149, 158);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(130, 29);
+            this.button24.TabIndex = 2;
+            this.button24.Text = "生成br资源包";
+            this.button24.UseVisualStyleBackColor = true;
+            this.button24.Click += new System.EventHandler(this.button24_Click);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(13, 75);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(103, 20);
+            this.label20.TabIndex = 3;
+            this.label20.Text = "姓氏拼音文件:";
+            // 
+            // button23
+            // 
+            this.button23.Location = new System.Drawing.Point(13, 158);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(130, 29);
+            this.button23.TabIndex = 1;
+            this.button23.Text = "生成gzip资源包";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.Click += new System.EventHandler(this.button23_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.AllowDrop = true;
+            this.textBox4.Location = new System.Drawing.Point(13, 36);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(473, 27);
+            this.textBox4.TabIndex = 2;
+            this.textBox4.Text = "dict/_allPinyin.txt";
+            this.textBox4.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
+            this.textBox4.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(8, 13);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(88, 20);
+            this.label19.TabIndex = 1;
+            this.label19.Text = "拼音库文件:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -706,10 +861,14 @@ namespace ToolGood.Words.ReferenceHelper
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -755,8 +914,6 @@ namespace ToolGood.Words.ReferenceHelper
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.LinkLabel linkLabel1;
@@ -771,6 +928,21 @@ namespace ToolGood.Words.ReferenceHelper
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button button24;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.Button button27;
+        private System.Windows.Forms.Button button26;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Button button25;
     }
 }
 

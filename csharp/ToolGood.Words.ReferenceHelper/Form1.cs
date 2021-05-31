@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using ToolGood.PinYin.Build.Pinyin;
 
 namespace ToolGood.Words.ReferenceHelper
 {
@@ -156,7 +157,7 @@ namespace ToolGood.Words.ReferenceHelper
                     || file.ToLower().EndsWith(".txt")
                     ) {
                     if (list.Contains(item) == false) {
-                        this.listBox1.Items.Add(item);
+                        ((ListBox)sender).Items.Add(item);
                     }
                 }
             }
@@ -275,23 +276,10 @@ namespace ToolGood.Words.ReferenceHelper
                 var file = item.ToString();
                 if (file.ToLower().EndsWith(".txt")
                     ) {
-                    this.textBox1.Text = file;
+                    ((TextBox)sender).Text = file;
                 }
             }
         }
-
-        private void textBox2_DragDrop(object sender, DragEventArgs e)
-        {
-            var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
-            foreach (var item in files) {
-                var file = item.ToString();
-                if (file.ToLower().EndsWith(".txt")
-                    ) {
-                    this.textBox2.Text = file;
-                }
-            }
-        }
-
 
         /// <summary>
         /// 生成gzip资源包
@@ -591,10 +579,104 @@ namespace ToolGood.Words.ReferenceHelper
             build = null;
             MessageBox.Show("完成！已保存在 out/python 目录内。");
         }
+        #endregion
 
+        #region 0x3400-0x9fd5区间拼音
+        private void button23_Click(object sender, EventArgs e)
+        {
+            var py = this.textBox4.Text;
+            var pyName = this.textBox5.Text;
+            if (File.Exists(py)==false) {
+                MessageBox.Show("拼音库文件不存在");
+                return;
+            }
+            if (File.Exists(pyName) == false) {
+                MessageBox.Show("姓氏拼音文件不存在");
+                return;
+            }
+            PinyinDictBuild build = new PinyinDictBuild();
+            build.InitPyFile(py, pyName);
+            build.WriteGzip("out/mini/Pinyin.dat.z");
+            build = null;
+            MessageBox.Show("完成！已保存在 out/mini/Pinyin.dat.z 文件内。");
+        }
+        private void button24_Click(object sender, EventArgs e)
+        {
+            var py = this.textBox4.Text;
+            var pyName = this.textBox5.Text;
+            if (File.Exists(py) == false) {
+                MessageBox.Show("拼音库文件不存在");
+                return;
+            }
+            if (File.Exists(pyName) == false) {
+                MessageBox.Show("姓氏拼音文件不存在");
+                return;
+            }
+            PinyinDictBuild build = new PinyinDictBuild();
+            build.InitPyFile(py, pyName);
+            build.WriteBr("out/mini/Pinyin.dat.br");
+            build = null;
+            MessageBox.Show("完成！已保存在 out/mini/Pinyin.dat.br 文件内。");
+        }
+        #endregion
+
+        #region 0x3400-0x9fd5区间拼音首字母
+        private void button25_Click(object sender, EventArgs e)
+        {
+            var py = this.textBox4.Text;
+            var pyName = this.textBox5.Text;
+            if (File.Exists(py) == false) {
+                MessageBox.Show("拼音库文件不存在");
+                return;
+            }
+            if (File.Exists(pyName) == false) {
+                MessageBox.Show("姓氏拼音文件不存在");
+                return;
+            }
+
+
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            var py = this.textBox4.Text;
+            var pyName = this.textBox5.Text;
+            if (File.Exists(py) == false) {
+                MessageBox.Show("拼音库文件不存在");
+                return;
+            }
+            if (File.Exists(pyName) == false) {
+                MessageBox.Show("姓氏拼音文件不存在");
+                return;
+            }
+
+
+        }
+        #endregion
+
+        #region 浏览
+        private void button27_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                this.textBox4.Text = openFileDialog.FileName;
+            }
+            openFileDialog = null;
+        }
+
+        private void button28_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                this.textBox5.Text = openFileDialog.FileName;
+            }
+            openFileDialog = null;
+        }
 
         #endregion
 
-
+   
     }
 }
