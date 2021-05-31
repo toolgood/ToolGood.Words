@@ -176,7 +176,7 @@ namespace ToolGood.Words
         #endregion
 
         /// <summary>
-        /// 查询
+        /// 查询, 已知bug  key 不能太长
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -251,7 +251,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 查询索引号
+        /// 查询索引号 , 已知bug  keywords 不能太长
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -338,7 +338,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 查询，空格为通配符
+        /// 查询，空格为通配符 , 已知bug  keywords 不能太长
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>
@@ -421,7 +421,7 @@ namespace ToolGood.Words
             return result;
         }
         /// <summary>
-        /// 查询索引号，空格为通配符
+        /// 查询索引号，空格为通配符 , 已知bug  key 不能太长
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>

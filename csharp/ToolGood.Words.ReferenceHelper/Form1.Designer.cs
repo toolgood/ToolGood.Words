@@ -65,7 +65,18 @@ namespace ToolGood.Words.ReferenceHelper
             this.button15 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label18 = new System.Windows.Forms.Label();
+            this.button22 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label11 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
@@ -417,6 +428,7 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // button19
             // 
+            this.button19.Enabled = false;
             this.button19.Location = new System.Drawing.Point(549, 3);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(130, 29);
@@ -427,6 +439,7 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // button18
             // 
+            this.button18.Enabled = false;
             this.button18.Location = new System.Drawing.Point(413, 3);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(130, 29);
@@ -479,21 +492,136 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.label18);
+            this.panel4.Controls.Add(this.button22);
+            this.panel4.Controls.Add(this.textBox3);
+            this.panel4.Controls.Add(this.label17);
+            this.panel4.Controls.Add(this.label16);
+            this.panel4.Controls.Add(this.label15);
+            this.panel4.Controls.Add(this.label14);
+            this.panel4.Controls.Add(this.label13);
+            this.panel4.Controls.Add(this.label12);
             this.panel4.Controls.Add(this.label8);
+            this.panel4.Controls.Add(this.linkLabel1);
+            this.panel4.Controls.Add(this.label11);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(956, 428);
             this.panel4.TabIndex = 1;
             // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(34, 360);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(99, 20);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "支持文件拖入";
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(653, 328);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(94, 29);
+            this.button22.TabIndex = 11;
+            this.button22.Text = "浏览";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.AllowDrop = true;
+            this.textBox3.Location = new System.Drawing.Point(14, 330);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(633, 27);
+            this.textBox3.TabIndex = 10;
+            this.textBox3.Text = "dict/_allPinyin.txt";
+            this.textBox3.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox3_DragDrop);
+            this.textBox3.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(14, 307);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(159, 20);
+            this.label17.TabIndex = 9;
+            this.label17.Text = "分词库，用于缩小字典";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(14, 260);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(287, 20);
+            this.label16.TabIndex = 8;
+            this.label16.Text = "5、_Ext结尾为自定义转化文件，优先级高";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(14, 219);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(235, 20);
+            this.label15.TabIndex = 7;
+            this.label15.Text = "4、HK开头为通用繁体转台湾繁体";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(14, 178);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(235, 20);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "3、HK开头为通用繁体转香港繁体";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(14, 137);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(231, 20);
+            this.label13.TabIndex = 5;
+            this.label13.Text = "2、TS开头文件为通用繁体转简体";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(14, 55);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(217, 20);
+            this.label12.TabIndex = 4;
+            this.label12.Text = "繁简转化词库保存在dict文件内";
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(325, 58);
+            this.label8.Location = new System.Drawing.Point(14, 96);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(271, 20);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "https://github.com/BYVoid/OpenCC";
+            this.label8.Size = new System.Drawing.Size(231, 20);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "1、ST开头文件为简体转通用繁体";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(164, 14);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(271, 20);
+            this.linkLabel1.TabIndex = 2;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "https://github.com/BYVoid/OpenCC";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(14, 14);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(144, 20);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "繁简转化词库来源：";
             // 
             // panel3
             // 
@@ -510,21 +638,25 @@ namespace ToolGood.Words.ReferenceHelper
             // 
             // button14
             // 
+            this.button14.Enabled = false;
             this.button14.Location = new System.Drawing.Point(547, 6);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(130, 29);
             this.button14.TabIndex = 4;
             this.button14.Text = "生成python资源包";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // button13
             // 
+            this.button13.Enabled = false;
             this.button13.Location = new System.Drawing.Point(411, 6);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(130, 29);
             this.button13.TabIndex = 3;
             this.button13.Text = "生成js资源包";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // button12
             // 
@@ -534,6 +666,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.button12.TabIndex = 2;
             this.button12.Text = "生成java资源包";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button11
             // 
@@ -543,6 +676,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.button11.TabIndex = 1;
             this.button11.Text = "生成br资源包";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // button10
             // 
@@ -552,6 +686,7 @@ namespace ToolGood.Words.ReferenceHelper
             this.button10.TabIndex = 0;
             this.button10.Text = "生成gzip资源包";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // Form1
             // 
@@ -620,11 +755,22 @@ namespace ToolGood.Words.ReferenceHelper
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label17;
     }
 }
 

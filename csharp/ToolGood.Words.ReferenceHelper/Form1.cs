@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace ToolGood.Words.ReferenceHelper
 {
@@ -268,7 +270,6 @@ namespace ToolGood.Words.ReferenceHelper
         }
         private void textBox1_DragDrop(object sender, DragEventArgs e)
         {
-            List<string> list = new List<string>();
             var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in files) {
                 var file = item.ToString();
@@ -281,7 +282,6 @@ namespace ToolGood.Words.ReferenceHelper
 
         private void textBox2_DragDrop(object sender, DragEventArgs e)
         {
-            List<string> list = new List<string>();
             var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in files) {
                 var file = item.ToString();
@@ -301,9 +301,9 @@ namespace ToolGood.Words.ReferenceHelper
         private void button15_Click(object sender, EventArgs e)
         {
             var pinyinIndex = this.textBox1.Text;
-            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！");return; }
             var pinyinName = this.textBox2.Text;
-            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); return; }
 
             PinyinNameBuild build = new PinyinNameBuild();
             build.CreateZip(pinyinIndex, pinyinName, "out/gzip/pyName.txt.z");
@@ -319,9 +319,9 @@ namespace ToolGood.Words.ReferenceHelper
         private void button16_Click(object sender, EventArgs e)
         {
             var pinyinIndex = this.textBox1.Text;
-            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); return; }
             var pinyinName = this.textBox2.Text;
-            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); return; }
 
             PinyinNameBuild build = new PinyinNameBuild();
             build.CreateBr(pinyinIndex, pinyinName, "out/br/pyName.txt.br");
@@ -336,9 +336,9 @@ namespace ToolGood.Words.ReferenceHelper
         private void button17_Click(object sender, EventArgs e)
         {
             var pinyinIndex = this.textBox1.Text;
-            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); }
+            if (File.Exists(pinyinIndex) == false) { MessageBox.Show("拼音序列文件不存在！"); return; }
             var pinyinName = this.textBox2.Text;
-            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); }
+            if (File.Exists(pinyinName) == false) { MessageBox.Show("姓氏拼音文件不存在！"); return; }
 
             PinyinNameBuild build = new PinyinNameBuild();
             build.CreateJava(pinyinIndex, pinyinName, "out/java/pyName.txt");
@@ -363,10 +363,237 @@ namespace ToolGood.Words.ReferenceHelper
         {
 
         }
-
         #endregion
 
+        #region 繁简转化
 
+        public String GetDefaultWebBrowserFilePath()
+        {
+            string _BrowserKey1 = @"Software\Clients\StartmenuInternet\";
+            string _BrowserKey2 = @"shell\open\command";
+            string outPath;
+
+            RegistryKey localKey;
+            if (Environment.Is64BitOperatingSystem) {
+                localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            } else {
+                localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            }
+
+            RegistryKey _RegistryKey = localKey.OpenSubKey(_BrowserKey1, false);
+            var names = _RegistryKey.GetSubKeyNames();
+            if (names.Contains("Google Chrome")) {
+                var key = _RegistryKey.OpenSubKey("Google Chrome").OpenSubKey(_BrowserKey2);
+                outPath = key.GetValue("").ToString();
+            } else if (names.Any(q => q.StartsWith("Firefox"))) {
+                var name = names.Where(q => q.StartsWith("Firefox")).FirstOrDefault();
+                var key = _RegistryKey.OpenSubKey(name).OpenSubKey(_BrowserKey2);
+                outPath = key.GetValue("").ToString();
+            } else {
+                String name = _RegistryKey.GetValue("").ToString();
+                var key = _RegistryKey.OpenSubKey(name).OpenSubKey(_BrowserKey2);
+                outPath = key.GetValue("").ToString();
+            }
+            _RegistryKey.Close();
+
+            if (outPath.Contains("\"")) {
+                outPath = outPath.TrimStart('"');
+                outPath = outPath.Substring(0, outPath.IndexOf('"'));
+            }
+            return outPath;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var exePath = GetDefaultWebBrowserFilePath();
+            System.Diagnostics.Process.Start(exePath, linkLabel1.Text);
+        }
+        private void button22_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                this.textBox3.Text = openFileDialog.FileName;
+            }
+            openFileDialog = null;
+        }
+
+        private void textBox3_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (System.Array)e.Data.GetData(DataFormats.FileDrop);
+            foreach (var item in files) {
+                var file = item.ToString();
+                if (file.ToLower().EndsWith(".txt")
+                    ) {
+                    this.textBox3.Text = file;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 生成gzip资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button10_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles("dict", "TS*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TS文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "ST*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少ST文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "HK*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少HK文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "TW*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TW文件");
+                return;
+            }
+            TransformationBuild build = new TransformationBuild();
+            build.CreateZip("out/gzip", this.textBox3.Text);
+            build = null;
+            MessageBox.Show("完成！已保存在 out/gzip 目录内。");
+
+        }
+        /// <summary>
+        /// 生成br资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button11_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles("dict", "TS*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TS文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "ST*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少ST文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "HK*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少HK文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "TW*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TW文件");
+                return;
+            }
+            TransformationBuild build = new TransformationBuild();
+            build.CreateBr("out/br", this.textBox3.Text);
+            build = null;
+            MessageBox.Show("完成！已保存在 out/br 目录内。");
+        }
+        /// <summary>
+        /// 生成java资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button12_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles("dict", "TS*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TS文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "ST*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少ST文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "HK*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少HK文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "TW*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TW文件");
+                return;
+            }
+            TransformationBuild build = new TransformationBuild();
+            build.CreateJava("out/java", this.textBox3.Text);
+            build = null;
+            MessageBox.Show("完成！已保存在 out/java 目录内。");
+        }
+        /// <summary>
+        /// 生成js资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button13_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles("dict", "TS*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TS文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "ST*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少ST文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "HK*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少HK文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "TW*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TW文件");
+                return;
+            }
+            TransformationBuild build = new TransformationBuild();
+            build.CreateJs("out/js", this.textBox3.Text);
+            build = null;
+            MessageBox.Show("完成！已保存在 out/js 目录内。");
+        }
+        /// <summary>
+        /// 生成python资源包
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button14_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles("dict", "TS*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TS文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "ST*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少ST文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "HK*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少HK文件");
+                return;
+            }
+            files = Directory.GetFiles("dict", "TW*.txt");
+            if (files.Length == 0) {
+                MessageBox.Show("缺少TW文件");
+                return;
+            }
+            TransformationBuild build = new TransformationBuild();
+            build.CreatePython("out/python", this.textBox3.Text);
+            build = null;
+            MessageBox.Show("完成！已保存在 out/python 目录内。");
+        }
+
+
+        #endregion
 
 
     }

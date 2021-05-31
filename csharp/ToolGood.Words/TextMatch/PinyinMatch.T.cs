@@ -48,7 +48,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 查询
+        /// 查询 , 已知bug  keywords 不能太长
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>
@@ -110,7 +110,7 @@ namespace ToolGood.Words
         }
 
         /// <summary>
-        /// 查询，空格为通配符
+        /// 查询，空格为通配符  , 已知bug  keywords 不能太长
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>
