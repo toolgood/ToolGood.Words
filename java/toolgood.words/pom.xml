@@ -17,6 +17,13 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <developers>
+          <developer>
+            <name>LinZhijun</name>
+            <email>toolgood@qq.com</email>
+        </developer>
+  </developers>
+
 
   <dependencies>
     <dependency>
@@ -35,9 +42,32 @@
     </dependency>
   </dependencies>
 
+<distributionManagement>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+  <repository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+</distributionManagement>
+
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+        </plugin>
+
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -65,8 +95,12 @@
           <version>2.5.2</version>
         </plugin>
         <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
+  <configuration>
+    <skip>true</skip>
+  </configuration>
         </plugin>
         <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
         <plugin>
@@ -79,5 +113,9 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
   </build>
+
 </project>
+
+ 
