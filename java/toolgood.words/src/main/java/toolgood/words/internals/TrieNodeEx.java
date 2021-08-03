@@ -69,42 +69,34 @@ public class TrieNodeEx {
         }
         Integer s = start < minflag ? minflag : start;
 
-        for (int i = s; i < s + (maxflag - minflag); i++) {
-            if (has[i] != null) {
-                for (int j = 0; j < length; j++) {
-                    Integer p = i + moves[j];
-                    if (seats2[p] == false) {
-                        seats2[p] = true;
+        int next = s - minflag;
+        int e = next + maxflag;
+        while (e < has.length) {
+            if (seats2[e] == false && seats[next] == false) {
+                boolean isok = true;
+                for (int i = 0; i < keys.size(); i++) {
+                    int position = next + keys.get(i);
+                    if (has[position] != null) {
+                        for (int j = 0; j < length; j++) {
+                            seats2[position + moves[j]] = true;
+                        }
+                        isok = false;
+                        break;
                     }
                 }
-            }
-        }
-        Integer max = 0;
-        for (int i = s + (maxflag - minflag); i < has.length; i++) {
-            if (has[i] == null) {
-                if (seats2[i]) {
-                    continue;
-                }
-                Integer next = i - (Integer) maxflag;
-                if (seats[next])
-                    continue;
-                SetSeats(next, seats, has);
-                max = i;
-                break;
-            } else {
-                for (int j = 0; j < length; j++) {
-                    Integer p = i + moves[j];
-                    if (seats2[p] == false) {
-                        seats2[p] = true;
+                if (isok) {
+                    SetSeats(next, seats, has);
+                    start += keys.size() / 2;
+                    for (int p = start; p < e + maxflag - start + 1; p++) {
+                        if (seats2[p] == true) {
+                            seats2[p] = false;
+                        }
                     }
+                    return;
                 }
             }
-        }
-        start += keys.size() / 2;
-        for (int p = start; p < max + maxflag - start + 1; p++) {
-            if (seats2[p] == true) {
-                seats2[p] = false;
-            }
+            next++;
+            e++;
         }
     }
 
@@ -125,7 +117,6 @@ public class TrieNodeEx {
         }
         start++;
     }
-
 
     private void SetSeats(Integer next, boolean[] seats, Integer[] has) {
         Next = next;

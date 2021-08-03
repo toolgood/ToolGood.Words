@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.IntFunction;
 
 public abstract class BaseSearchEx2 {
     protected String[] _keywords;
@@ -92,7 +93,7 @@ public abstract class BaseSearchEx2 {
             int l = NumHelper.read(br);
             byte[] bytes = new byte[l];
             br.read(bytes, 0, l);
-            _keywords[i] = new String(bytes,"utf-8");
+            _keywords[i] = new String(bytes, "utf-8");
         }
         length = NumHelper.read(br);
         _guides = new int[length][];
@@ -142,7 +143,7 @@ public abstract class BaseSearchEx2 {
 
     private void SetKeywords() {
         TrieNode root = new TrieNode();
-        Map<Integer,List<TrieNode>> allNodeLayers=new TreeMap<Integer,List<TrieNode>>();
+        Map<Integer, List<TrieNode>> allNodeLayers = new TreeMap<Integer, List<TrieNode>>();
         for (int i = 0; i < _keywords.length; i++) {
             String p = _keywords[i];
             TrieNode nd = root;
@@ -150,35 +151,36 @@ public abstract class BaseSearchEx2 {
                 nd = nd.Add(p.charAt(j));
                 if (nd.Layer == 0) {
                     nd.Layer = j + 1;
-                    if(allNodeLayers.containsKey(nd.Layer)==false){
-                        List<TrieNode> nodes=new ArrayList<TrieNode>();
+                    if (allNodeLayers.containsKey(nd.Layer) == false) {
+                        List<TrieNode> nodes = new ArrayList<TrieNode>();
                         nodes.add(nd);
                         allNodeLayers.put(nd.Layer, nodes);
-                    }else {
+                    } else {
                         allNodeLayers.get(nd.Layer).add(nd);
-                    }                }
+                    }
+                }
             }
             nd.SetResults(i);
         }
 
         List<TrieNode> allNode = new ArrayList<TrieNode>();
         allNode.add(root);
-        for (int i = 0; i < allNodeLayers.size(); i++) { //注意 这里不能用 keySet()
-            List<TrieNode> nodes = allNodeLayers.get(i+1);
+        for (int i = 0; i < allNodeLayers.size(); i++) { // 注意 这里不能用 keySet()
+            List<TrieNode> nodes = allNodeLayers.get(i + 1);
             for (int j = 0; j < nodes.size(); j++) {
                 allNode.add(nodes.get(j));
             }
         }
         allNodeLayers.clear();
-        allNodeLayers=null;
+        allNodeLayers = null;
 
-        
         for (int i = 1; i < allNode.size(); i++) {
             TrieNode nd = allNode.get(i);
             nd.Index = i;
             TrieNode r = nd.Parent.Failure;
             Character c = nd.Char;
-            while (r != null && !r.m_values.containsKey(c)) r = r.Failure;
+            while (r != null && !r.m_values.containsKey(c))
+                r = r.Failure;
             if (r == null)
                 nd.Failure = root;
             else {
@@ -189,7 +191,6 @@ public abstract class BaseSearchEx2 {
             }
         }
         root.Failure = root;
- 
 
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 1; i < allNode.size(); i++) {
