@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toMap;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -109,7 +108,7 @@ public class BaseSearchEx {
             int l = NumHelper.read(br);
             byte[] bytes = new byte[l];
             br.read(bytes, 0, l);
-            _keywords[i] = new String(bytes,"utf-8");
+            _keywords[i] = new String(bytes, "utf-8");
         }
 
         length = NumHelper.read(br);

@@ -50,9 +50,7 @@ namespace ToolGood.Words.internals
             if (_keys[0] == key) {
                 value = _values[0];
                 return true;
-            }
-            else if (last==0 || _keys[0] > key)
-            {
+            } else if (last == 0 || _keys[0] > key) {
                 value = 0;
                 return false;
             }
@@ -60,16 +58,14 @@ namespace ToolGood.Words.internals
             if (_keys[last] == key) {
                 value = _values[last];
                 return true;
-            }
-            else if ( _keys[last] < key)
-            {
+            } else if (_keys[last] < key) {
                 value = 0;
                 return false;
             }
 
-            var left = 0;
-            var right = last;
-            while (left + 1 < right) {
+            var left = 1;
+            var right = last - 1;
+            while (left <= right) {
                 int mid = (left + right) >> 1;
                 int d = _keys[mid] - key;
 
@@ -77,9 +73,9 @@ namespace ToolGood.Words.internals
                     value = _values[mid];
                     return true;
                 } else if (d > 0) {
-                    right = mid;
+                    right = mid - 1;
                 } else {
-                    left = mid;
+                    left = mid + 1;
                 }
             }
             value = 0;

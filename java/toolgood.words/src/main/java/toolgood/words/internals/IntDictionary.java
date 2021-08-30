@@ -54,25 +54,25 @@ public class IntDictionary {
             return last;
         }
 
-        int left = 0;
-        int right = last;
-        while (left + 1 < right) {
+        int left = 1;
+        int right = last - 1;
+        while (left <= right) {
             int mid = (left + right) >> 1;
             int d = _keys[mid] - key;
 
             if (d == 0) {
                 return mid;
             } else if (d > 0) {
-                right = mid;
+                right = mid - 1;
             } else {
-                left = mid;
+                left = mid + 1;
             }
         }
         return -1;
     }
 
-    public int GetValue(int index){
+    public int GetValue(int index) {
         return _values[index];
     }
- 
+
 }
