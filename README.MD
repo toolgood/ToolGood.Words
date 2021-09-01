@@ -232,7 +232,7 @@ o  O  ⒪  ō  ó  ǒ  ò  ｏ  ⓞ  O  Ｏ  Ⓞ  о  О  𝐨  𝑜  𝚘  𝒐
 ## 敏感词相关文章
 1、[敏感词过滤方案那些事](https://www.cnblogs.com/toolgood/p/15208734.html)
 
-2、普通公司敏感词审核度制
+2、[普通公司敏感词审核制度](https://www.cnblogs.com/toolgood/p/15213549.html)
 
 3、新人小白过滤敏感词方案
 
