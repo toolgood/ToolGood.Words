@@ -293,19 +293,6 @@ namespace ToolGood.Words.internals
                     }
                     oldNode = oldNode.Failure;
                 }
-
-                //if (oldNode.Failure != root) {
-                //    foreach (var item in oldNode.Failure.m_values) {
-                //        var key = _dict[item.Key];
-                //        var index = item.Value.Index;
-                //        if (newNode.HasKey(key) == false) {
-                //            newNode.Add(key, allNode2[index]);
-                //        }
-                //    }
-                //    foreach (var item in oldNode.Failure.Results) {
-                //        newNode.SetResults(item);
-                //    }
-                //}
             }
             allNode.Clear();
             allNode = null;
@@ -335,7 +322,6 @@ namespace ToolGood.Words.internals
             while (has[maxCount] == 0) { maxCount--; }
             length = maxCount + length + 1;
 
-            //length = root.Rank(has) + length + 1;
             _key = new Int32[length];
             _next = new Int32[length];
             _check = new Int32[length];

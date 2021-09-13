@@ -10,8 +10,6 @@ namespace ToolGood.Words.internals
     {
         protected ushort[] _dict;
         protected int[] _first;
-        protected ushort[] _min;
-        protected ushort[] _max;
 
         protected IntDictionary[] _nextIndex;
         protected int[] _end;
@@ -121,16 +119,12 @@ namespace ToolGood.Words.internals
             allNode = null;
             root = null;
 
-            var min = new List<ushort>();
-            var max = new List<ushort>();
             var nextIndexs = new List<Dictionary<ushort, int>>();
             var end = new List<int>() { 0 };
             var resultIndex = new List<int>();
             for (int i = 0; i < allNode2.Count; i++) {
                 var dict = new Dictionary<ushort, int>();
                 var node = allNode2[i];
-                min.Add(node.minflag);
-                max.Add(node.maxflag);
 
                 if (i > 0) {
                     foreach (var item in node.m_values) {
@@ -143,18 +137,16 @@ namespace ToolGood.Words.internals
                 end.Add(resultIndex.Count);
                 nextIndexs.Add(dict);
             }
+
             var first = new int[Char.MaxValue + 1];
             foreach (var item in allNode2[0].m_values) {
                 first[item.Key] = item.Value.Index;
             }
 
             _first = first;
-            _min = min.ToArray();
-            _max = max.ToArray();
             _nextIndex = new IntDictionary[nextIndexs.Count];
             for (int i = 0; i < nextIndexs.Count; i++) {
                 IntDictionary dictionary = new IntDictionary(nextIndexs[i]);
-                //dictionary.SetDictionary(nextIndexs[i]);
                 _nextIndex[i] = dictionary;
             }
             _end = end.ToArray();
@@ -330,8 +322,6 @@ namespace ToolGood.Words.internals
 
             var dictLength = br.ReadInt32();
             _nextIndex = new IntDictionary[dictLength];
-            _max = new ushort[dictLength];
-            _min = new ushort[dictLength];
 
 
             for (int i = 0; i < dictLength; i++) {
@@ -346,12 +336,6 @@ namespace ToolGood.Words.internals
 
                 IntDictionary dictionary = new IntDictionary(keys, values);
                 _nextIndex[i] = dictionary;
-                if (length == 0) {
-                    _min[i] = ushort.MaxValue;
-                } else {
-                    _max[i] = keys[keys.Length - 1];
-                    _min[i] = keys[0];
-                }
             }
         }
 
@@ -372,3 +356,6 @@ namespace ToolGood.Words.internals
         #endregion
     }
 }
+
+
+
