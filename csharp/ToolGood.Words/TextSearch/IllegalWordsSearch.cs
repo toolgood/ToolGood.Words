@@ -40,7 +40,7 @@ namespace ToolGood.Words
     public delegate bool StringMatchHandler(string text, int start, int end, string keyword, int keywordIndex, string matchKeyword, int blacklistIndex);
 
     /// <summary>
-    /// 最新版本的IllegalWordsSearch， 与3.0.2.0以前的版本不兼容。
+    /// 最新版本的IllegalWordsSearch， 与3.0.3.0以前的版本不兼容。
     /// IllegalWordsSearch类太费精力了，头发稀疏了。
     /// 我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了。
     /// IllegalWordsSearch修复了2020-10-8日前所有bug。
@@ -90,7 +90,7 @@ namespace ToolGood.Words
         public bool UseIgnoreCase = true;
 
         /// <summary>
-        /// 最新版本的IllegalWordsSearch， 与3.0.2.0以前的版本不兼容
+        /// 最新版本的IllegalWordsSearch， 与3.0.3.0以前的版本不兼容
         /// </summary>
         public IllegalWordsSearch()
         {
