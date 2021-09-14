@@ -162,7 +162,7 @@ ToolGood.Words:                 本项目源代码
 
 `Regex.Matches`的运行方式跟`IQueryable`的类似，只返回`MatchCollection`,还没有计算。
 
- 在 Find All测试中, （检测出的文本中有敏感词汇，就不显示了，大家可自行查看）。
+ 在 Find All测试中, （检测出的文本中有敏感词汇，就不显示了，大家可自行调试查看）。
 
 `FastFilter`只能检测出7个
 
@@ -197,6 +197,13 @@ o O ⒪ ō ó ǒ ò ｏ ⓞ O Ｏ Ⓞ о О 𝐨 𝑜 𝚘 𝒐 𝓸 𝕠 𝗈 �
 㐷 吗 嘛 妈 娘 嫲 嬷 杩 溤 犘 犸 玛 痲 码 祃 蔴 蚂 马 骂 鰢 鷌 麻 嚒 ma
 ```
 
+出售`整理后的敏感词库`和`《ToolGood 内容审核系统》`源码授权。
+
+此敏感词库从70W多词组中整理出来的，敏感词分类齐全，并且内有18W多组常用分词、2W多字的拼音扩展、14066个左右拆字、4000组繁简转化，4850组同音同形字，1160组异形字……
+
+有意的联系QQ：`1665690808`，非企业人员忽扰。
+
+
 ## 敏感词相关文章
 1、[敏感词过滤方案那些事](https://www.cnblogs.com/toolgood/p/15208734.html)
 
@@ -204,8 +211,8 @@ o O ⒪ ō ó ǒ ò ｏ ⓞ O Ｏ Ⓞ о О 𝐨 𝑜 𝚘 𝒐 𝓸 𝕠 𝗈 �
 
 3、[新人小白过滤敏感词方案](https://www.cnblogs.com/toolgood/p/15251918.html)
 
-4、网络常用敏感词过滤方法
+4、[网络常用敏感词过滤方法](https://www.cnblogs.com/toolgood/p/15261554.html)
 
-5、ToolGood.Words算法过滤敏感词优化原理
+5、[ToolGood.Words算法过滤敏感词优化原理](https://mianbaoduo.com/o/bread/YZ2Yk5hy)   （收费30元，一顿KFC）
 
 6、敏感词过滤中常遇的几个问题
