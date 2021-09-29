@@ -6,6 +6,7 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words
 {
+    [Obsolete("WordsMatch是向正则方向探索的过渡版本，过渡版本慎用！")]
     public class StringMatchEx : BaseMatchEx
     {
         #region FindFirst

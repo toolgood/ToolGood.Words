@@ -10,6 +10,7 @@ namespace ToolGood.Words
     /// <summary>
     /// 文本搜索匹配, 支持 部分 正则 如 . ? [ ] \ ( | ) ,不支持( )内再嵌套( )
     /// </summary>
+    [Obsolete("WordsMatch是向正则方向探索的过渡版本，过渡版本慎用！")]
     public class WordsMatch : BaseMatch
     {
         #region FindFirst
