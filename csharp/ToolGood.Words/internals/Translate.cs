@@ -158,8 +158,8 @@ namespace ToolGood.Words.internals
         internal static Dictionary<string, string> GetTransformationDict(string fileName)
         {
             var ass = typeof(WordsHelper).Assembly;
-            var dir = Path.GetDirectoryName(ass.Location);
-            var file = Path.Combine(dir, fileName);
+            //var dir = Path.GetDirectoryName(ass.Location);
+            //var file = Path.Combine(dir, fileName);
             string tStr;
             //if (File.Exists(file)) {
             //    tStr = File.ReadAllText(file);
