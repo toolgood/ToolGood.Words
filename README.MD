@@ -173,9 +173,6 @@ ToolGood.Words:                 本项目源代码
 
 `Regex.Matches`只能检测出11个
 
-## 探讨敏感信息过滤：
-
-敏感信息过滤研究会，Q群：128994346
 
 ## 广告一下
 
@@ -183,9 +180,15 @@ ToolGood.Words:                 本项目源代码
 
 官网：https://toolgood.com/
 
+部分源码：https://github.com/toolgood/ToolGood.TextFilter
+
 SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Linux双平台。
 
 源码：https://github.com/toolgood/ToolGood.SqlOnline
+
+## 探讨敏感信息过滤：
+
+敏感信息过滤研究会，Q群：128994346
 
 ## 敏感词相关文章
 1、[敏感词过滤方案那些事](https://www.cnblogs.com/toolgood/p/15208734.html)
