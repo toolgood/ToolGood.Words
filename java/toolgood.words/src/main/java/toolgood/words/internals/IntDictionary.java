@@ -50,9 +50,16 @@ public class IntDictionary {
         if (_keys[0] == key) {
             return 0;
         }
+        if (_keys[0] >key){
+            return -1;
+        }
         if (_keys[last] == key) {
             return last;
         }
+        if (_keys[last] < key) {
+            return -1;
+        }
+
 
         int left = 1;
         int right = last - 1;

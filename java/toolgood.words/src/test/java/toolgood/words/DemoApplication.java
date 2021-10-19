@@ -298,6 +298,7 @@ public class DemoApplication {
 		list.add("中国");
 		list.add("国人");
 		list.add("zg人");
+		list.add("fuck");
 		System.out.println("IllegalWordsSearch run Test.");
 
 		IllegalWordsSearch iwords = new IllegalWordsSearch();
@@ -312,7 +313,11 @@ public class DemoApplication {
 		if (f.Keyword.equals("中国") == false) {
 			System.out.println("FindFirst is Error.");
 		}
-
+		IllegalWordsSearchResult f2 = iwords.FindFirst("fuuuuck");
+		if (f2.Keyword.equals("fuuuuck") == false) {
+			System.out.println("FindFirst is Error.");
+		}
+		
 		List<IllegalWordsSearchResult> all = iwords.FindAll(test);
 		if (all.get(0).Keyword.equals("中国") == false) {
 			System.out.println("FindAll is Error.");
