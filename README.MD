@@ -173,6 +173,11 @@ ToolGood.Words:                 本项目源代码
 
 `Regex.Matches`只能检测出11个
 
+# 其他语言实现
+## Lua版本
+作者：wenlifan 地址：https://github.com/wenlifan/SensitiveWordFilter
+
+
 
 ## 广告一下
 
