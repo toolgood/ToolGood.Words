@@ -179,13 +179,14 @@ ToolGood.Words:                 本项目源代码
 
 
 
+
 ## 广告一下
 
 《ToolGood 内容审核系统》正式发布，Windows、Linux双平台，内存占用小于100M。
 
 官网：https://toolgood.com/
 
-部分源码：https://github.com/toolgood/ToolGood.TextFilter
+开源代码：https://github.com/toolgood/ToolGood.TextFilter
 
 SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Linux双平台。
 
@@ -204,10 +205,14 @@ SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Lin
 
 4、[网络常用敏感词过滤方法](https://www.cnblogs.com/toolgood/p/15261554.html)
 
-5、[ToolGood.Words算法过滤敏感词优化原理](https://mianbaoduo.com/o/bread/YZ2Yk5hy)   （收费30元，一顿KFC）
+5、[ToolGood.Words算法过滤敏感词优化原理](https://mianbaoduo.com/o/bread/YZ2Yk5hy)  （收费30元，一顿KFC）
 
-6、[ToolGood.TextFilter开源代码优化详解](https://mianbaoduo.com/o/bread/YpWXlp9u)（收费200元）
+6、[ToolGood.TextFilter开源代码优化详解](https://mianbaoduo.com/o/bread/YpWXlp9u)  （收费300元）
 与IllegalWordsSearch算法进行对比，阐述了ToolGood.TextFilter过滤算法优化点，如何减少内存使用量。
 还有一小部分未写好，心急的人可以先买，我会持续更新。
 
-7、敏感词过滤中常遇的几个问题
+7、正则转DFA算法（C#版、JAVA版）
+
+8、JAVA版ToolGood.TextFilter
+
+9、C#版图片鉴黄
