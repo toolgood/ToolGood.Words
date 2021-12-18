@@ -204,7 +204,7 @@ SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Lin
 
 4、[网络常用敏感词过滤方法](https://www.cnblogs.com/toolgood/p/15261554.html)
 
-5、[ToolGood.Words算法过滤敏感词优化原理](https://mianbaoduo.com/o/bread/YZ2Yk5hy)   （收费5元）
+5、[ToolGood.Words算法过滤敏感词优化原理](https://mianbaoduo.com/o/bread/YZ2Yk5hy)   （收费30元，一顿KFC）
 
 6、[ToolGood.TextFilter开源代码优化详解](https://mianbaoduo.com/o/bread/YpWXlp9u)（收费200元）
 与IllegalWordsSearch算法进行对比，阐述了ToolGood.TextFilter过滤算法优化点，如何减少内存使用量。
