@@ -211,7 +211,8 @@ SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Lin
 与IllegalWordsSearch算法进行对比，阐述了ToolGood.TextFilter过滤算法优化点，如何减少内存使用量。
 还有一小部分未写好，心急的人可以先买，我会持续更新。
 
-7、正则转DFA算法（C#版、JAVA版）
+7、[正则转DFA算法（C#版、JAVA版）](https://mianbaoduo.com/o/bread/Y5ubl5w=) （收费30元，一顿KFC）
+ToolGood.TextFilter的一个核心算法就使用到正则转DFA。（目前只有C#代码）
 
 8、JAVA版ToolGood.TextFilter
 
