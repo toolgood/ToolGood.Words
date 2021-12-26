@@ -216,4 +216,4 @@ ToolGood.TextFilter的一个核心算法就使用到正则转DFA。（目前只�
 
 8、JAVA版ToolGood.TextFilter
 
-9、C#版图片鉴黄
+9、[C#版图片鉴黄](https://mianbaoduo.com/o/bread/mbd-YZ2Yk5hw)（收费30元，一顿KFC）
