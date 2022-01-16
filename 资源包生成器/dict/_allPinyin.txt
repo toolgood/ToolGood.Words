@@ -18932,7 +18932,7 @@
 莋	zuó
 莌	tuō
 莍	qiú
-莎	suō,shā
+莎	shā,suō
 莏	suō
 莐	chén
 莑	péng,fēng
@@ -23955,7 +23955,7 @@
 霯	tèng
 霰	xiàn
 霱	yù
-露	lòu,lù
+露	lù,lòu
 霳	lóng
 霴	dài
 霵	jí

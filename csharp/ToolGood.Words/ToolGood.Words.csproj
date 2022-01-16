@@ -18,7 +18,7 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>3.0.3.0</Version>
+    <Version>3.0.3.1</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -58,6 +58,15 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+ 
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net40" Version="1.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
