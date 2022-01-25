@@ -1,0 +1,1 @@
+mvn clean  install -Dmaven.test.skip javadoc:jar source:jar install gpg:sign
