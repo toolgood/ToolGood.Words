@@ -7,6 +7,15 @@ ToolGood.Words(Java版)
 
 目前java版本已移植了`StringSearch`、`StringSearchEx`、`StringSearchEx2`、`WordsSearch`、`WordsSearchEx`、`WordsSearchEx2`、`IllegalWordsSearch`及部分`WordsHelper`
 
+## pom.xml
+``` 
+     <dependency>
+      <groupId>io.github.toolgood</groupId>
+      <artifactId>toolgood-words</artifactId>
+      <version>3.0.3.1</version>
+    </dependency>
+```
+
 
 ## 繁体简体互换、全角半角互换、拼音操作
 ``` java
