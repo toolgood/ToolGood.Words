@@ -278,7 +278,7 @@ namespace ToolGood.Words.internals
 
         #region 加载文件
         /// <summary>
-        /// 加载文件
+        /// 加载文件，注意：不是加载原文件，是加载Save后文件
         /// </summary>
         /// <param name="filePath"></param>
         public void Load(string filePath)
@@ -290,7 +290,7 @@ namespace ToolGood.Words.internals
             fs.Close();
         }
         /// <summary>
-        /// 加载Stream
+        /// 加载Stream，注意：不是加载原文件，是加载Save后文件
         /// </summary>
         /// <param name="stream"></param>
         public void Load(Stream stream)
