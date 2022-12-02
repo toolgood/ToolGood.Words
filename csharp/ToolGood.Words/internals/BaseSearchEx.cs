@@ -85,93 +85,94 @@ namespace ToolGood.Words.internals
             var length = CreateDict(stringBuilder.ToString());
             stringBuilder = null;
 
-
-            var allNode2 = new List<TrieNode2Ex>();
-            for (int i = 0; i < allNode.Count; i++) {
-                allNode2.Add(new TrieNode2Ex() { Index = i });
+            var first = new int[Char.MaxValue + 1];
+            if (allNode[0].m_values != null) {
+                foreach (var item in allNode[0].m_values) {
+                    var key = (char)_dict[item.Key];
+                    first[key] = item.Value.Index;
+                }
             }
-            for (int i = allNode2.Count - 1; i >= 0; i--) {
-                var oldNode = allNode[i];
-                var newNode = allNode2[i];
+            _first= first;
 
-                if (oldNode.m_values!=null) {
+            var resultIndex2 = new List<int>();
+            var isEndStart = new List<bool>();
+            var _nextIndex2 = new IntDictionary[allNode.Count];
+
+            for (int i = allNode.Count - 1; i >= 0; i--) {
+                var dict = new Dictionary<ushort, int>();
+                var result = new List<int>();
+                var oldNode = allNode[i];
+
+                if (oldNode.m_values != null) {
                     foreach (var item in oldNode.m_values) {
                         var key = (char)_dict[item.Key];
                         var index = item.Value.Index;
-                        newNode.Add(key, allNode2[index]);
+                        dict[key] = index;
                     }
                 }
-                if (oldNode.Results!=null) {
+                if (oldNode.Results != null) {
                     foreach (var item in oldNode.Results) {
-                        newNode.SetResults(item);
+                        if (result.Contains(item)==false) {
+                            result.Add(item);
+                        }
                     }
                 }
-          
+
                 oldNode = oldNode.Failure;
                 while (oldNode != root) {
-                    if (oldNode.m_values!=null) {
+                    if (oldNode.m_values != null) {
                         foreach (var item in oldNode.m_values) {
                             var key = (char)_dict[item.Key];
                             var index = item.Value.Index;
-                            if (newNode.HasKey(key) == false) {
-                                newNode.Add(key, allNode2[index]);
+                            if (dict.ContainsKey(key) == false) {
+                                dict[key] = index;
                             }
                         }
                     }
-                    if (oldNode.Results!=null) {
+                    if (oldNode.Results != null) {
                         foreach (var item in oldNode.Results) {
-                            newNode.SetResults(item);
+                            if (result.Contains(item) == false) {
+                                result.Add(item);
+                            }
                         }
                     }
                     oldNode = oldNode.Failure;
                 }
+                _nextIndex2[i] = new IntDictionary(dict);
+
+                if (result.Count > 0) {
+                    for (int j = result.Count - 1; j >= 0; j--) {
+                        resultIndex2.Add(result[j]);
+                        isEndStart.Add(false);
+                    }
+                    isEndStart[isEndStart.Count - 1] = true;
+                } else {
+                    resultIndex2.Add(-1);
+                    isEndStart.Add(true);
+                }
+                dict = null;
+                result= null;
                 allNode[i].Dispose();
+                allNode.RemoveAt(i);
             }
             allNode.Clear();
             allNode = null;
             root = null;
+            _nextIndex = _nextIndex2;
 
-            var nextIndexs = new List<Dictionary<ushort, int>>();
-            var end = new List<int>() { 0 };
             var resultIndex = new List<int>();
-            for (int i = 0; i < allNode2.Count; i++) {
-                var dict = new Dictionary<ushort, int>();
-                var node = allNode2[i];
-
-                if (i > 0) {
-                    if (node.m_values!=null) {
-                        foreach (var item in node.m_values) {
-                            dict[item.Key] = item.Value.Index;
-                        }
-                    }
+            var end = new List<int>() { };
+            for (int i = isEndStart.Count - 1; i >= 0; i--) {
+                if (isEndStart[i]) {
+                    end.Add(resultIndex.Count);
                 }
-                if (node.Results!=null) {
-                    foreach (var item in node.Results) {
-                        resultIndex.Add(item);
-                    }
-                }
-                end.Add(resultIndex.Count);
-                nextIndexs.Add(dict);
-            }
-
-            var first = new int[Char.MaxValue + 1];
-            if (allNode2[0].m_values!=null) {
-                foreach (var item in allNode2[0].m_values) {
-                    first[item.Key] = item.Value.Index;
+                if (resultIndex2[i] > -1) {
+                    resultIndex.Add(resultIndex2[i]);
                 }
             }
-
-            _first = first;
-            _nextIndex = new IntDictionary[nextIndexs.Count];
-            for (int i = 0; i < nextIndexs.Count; i++) {
-                IntDictionary dictionary = new IntDictionary(nextIndexs[i]);
-                _nextIndex[i] = dictionary;
-            }
-            _end = end.ToArray();
+            end.Add(resultIndex.Count);
             _resultIndex = resultIndex.ToArray();
-
-            allNode2.Clear();
-            allNode2 = null;
+            _end = end.ToArray();
         }
 
         #endregion
