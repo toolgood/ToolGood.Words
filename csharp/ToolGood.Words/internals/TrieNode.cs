@@ -9,7 +9,7 @@ namespace ToolGood.Words.internals
     {
         public int Index;
         public int Layer;
-        public bool End;
+        public bool End { get { return Results != null; } }
         public char Char;
         public List<int> Results;
         public Dictionary<char, TrieNode> m_values;
@@ -37,9 +37,7 @@ namespace ToolGood.Words.internals
 
         public void SetResults(int index)
         {
-            if (End == false) {
-                End = true;
-            }
+
             if (Results == null) {
                 Results = new List<int>();
             }

@@ -7,7 +7,7 @@ namespace ToolGood.Words.internals
 {
     public sealed class TrieNode2
     {
-        public bool End;
+        public bool End { get { return Results != null; } }
         public List<int> Results;
         public Dictionary<char, TrieNode2> m_values;
         private uint minflag = uint.MaxValue;
@@ -26,12 +26,10 @@ namespace ToolGood.Words.internals
 
         public void SetResults(int index)
         {
-            if (End == false) {
-                End = true;
-            }
-            if (Results==null) {
+            if (Results == null) {
                 Results = new List<int>();
             }
+     
             if (Results.Contains(index) == false) {
                 Results.Add(index);
             }

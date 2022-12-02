@@ -7,7 +7,7 @@ namespace ToolGood.Words.internals
 {
     public sealed class TrieNode3
     {
-        public bool End;
+        public bool End { get { return Results != null; } }
         public bool HasWildcard;
         public List<int> Results;
         public Dictionary<char, TrieNode3> m_values;
@@ -28,9 +28,6 @@ namespace ToolGood.Words.internals
 
         public void SetResults(int index)
         {
-            if (End == false) {
-                End = true;
-            }
             if (Results == null) {
                 Results = new List<int>();
             }

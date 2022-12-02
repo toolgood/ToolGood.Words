@@ -8,7 +8,7 @@ namespace ToolGood.Words.internals
     sealed class TrieNodeEx
     {
         internal int Char;
-        internal bool End;
+        public bool End { get { return Results != null; } }
         internal int Index;
         internal List<Int32> Results;
         internal Dictionary<int, TrieNodeEx> m_values;
@@ -31,9 +31,6 @@ namespace ToolGood.Words.internals
 
         public void SetResults(Int32 text)
         {
-            if (End == false) {
-                End = true;
-            }
             if (Results==null) {
                 Results = new List<int>();
             }
