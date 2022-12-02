@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public class TrieNode
+    public sealed class TrieNode
     {
         public int Index;
         public int Layer;
@@ -22,14 +22,16 @@ namespace ToolGood.Words.internals
 
         public TrieNode()
         {
-            m_values = new Dictionary<char, TrieNode>();
-            Results = new List<int>();
+            //m_values = new Dictionary<char, TrieNode>();
+            //Results = new List<int>();
         }
 
         public TrieNode Add(char c)
         {
             TrieNode node;
-            if (m_values.TryGetValue(c, out node)) {
+            if (m_values == null) {
+                m_values = new Dictionary<char, TrieNode>();
+            } else if (m_values.TryGetValue(c, out node)) {
                 return node;
             }
             node = new TrieNode();
@@ -43,6 +45,9 @@ namespace ToolGood.Words.internals
         {
             if (End == false) {
                 End = true;
+            }
+            if (Results == null) {
+                Results = new List<int>();
             }
             Results.Add(index);
         }

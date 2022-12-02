@@ -102,13 +102,15 @@ namespace ToolGood.Words.internals
                 nd.Index = i;
                 TrieNode r = nd.Parent.Failure;
                 char c = nd.Char;
-                while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                while (r != null &&(r.m_values==null || !r.m_values.ContainsKey(c))) r = r.Failure;
                 if (r == null)
                     nd.Failure = root;
                 else {
                     nd.Failure = r.m_values[c];
-                    foreach (var result in nd.Failure.Results)
-                        nd.SetResults(result);
+                    if (nd.Failure.Results!=null) {
+                        foreach (var result in nd.Failure.Results)
+                            nd.SetResults(result);
+                    }
                 }
             }
             #endregion
@@ -117,8 +119,10 @@ namespace ToolGood.Words.internals
             for (int i = 1; i < allNode.Count; i++) {
                 var nd = allNode[i];
                 if (nd.Layer == 1) { continue; }
-                if (nd.m_values.ContainsKey((char)0)) {
-                    nd.HasWildcard = true;
+                if (nd.m_values!=null) {
+                    if (nd.m_values.ContainsKey((char)0)) {
+                        nd.HasWildcard = true;
+                    }
                 }
                 if (nd.Failure.HasWildcard) {
                     nd.HasWildcard = true;
@@ -365,53 +369,62 @@ namespace ToolGood.Words.internals
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
-                foreach (var item in oldNode.m_values) {
-                    var key = item.Key;
-                    var index = item.Value.Index;
-                    if (key == 0) {
-                        newNode.HasWildcard = true;
-                        newNode.WildcardNode = allNode2[index];
-                        continue;
-                    }
-                    newNode.Add(key, allNode2[index]);
-                }
-                foreach (var item in oldNode.Results) {
-                    if (oldNode.IsWildcard) {
-                        if (keywords[item].Length > oldNode.WildcardLayer) {
-                            newNode.SetResults(item);
-                        }
-                    } else {
-                        newNode.SetResults(item);
-                    }
-                    //newNode.SetResults(item);
-                }
-
-                var failure = oldNode.Failure;
-                while (failure != root) {
-                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
-                        break;
-                    }
-                    foreach (var item in failure.m_values) {
+                if (oldNode.m_values!=null) {
+                    foreach (var item in oldNode.m_values) {
                         var key = item.Key;
                         var index = item.Value.Index;
                         if (key == 0) {
                             newNode.HasWildcard = true;
-                            if (newNode.WildcardNode == null) {
-                                newNode.WildcardNode = allNode2[index];
-                            }
+                            newNode.WildcardNode = allNode2[index];
                             continue;
                         }
-                        if (newNode.HasKey(key) == false) {
-                            newNode.Add(key, allNode2[index]);
-                        }
+                        newNode.Add(key, allNode2[index]);
                     }
-                    foreach (var item in failure.Results) {
+                }
+                if (oldNode.Results!=null) {
+                    foreach (var item in oldNode.Results) {
                         if (oldNode.IsWildcard) {
                             if (keywords[item].Length > oldNode.WildcardLayer) {
                                 newNode.SetResults(item);
                             }
                         } else {
                             newNode.SetResults(item);
+                        }
+                        //newNode.SetResults(item);
+                    }
+                }
+            
+
+                var failure = oldNode.Failure;
+                while (failure != root) {
+                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                        break;
+                    }
+                    if (failure.m_values!=null) {
+                        foreach (var item in failure.m_values) {
+                            var key = item.Key;
+                            var index = item.Value.Index;
+                            if (key == 0) {
+                                newNode.HasWildcard = true;
+                                if (newNode.WildcardNode == null) {
+                                    newNode.WildcardNode = allNode2[index];
+                                }
+                                continue;
+                            }
+                            if (newNode.HasKey(key) == false) {
+                                newNode.Add(key, allNode2[index]);
+                            }
+                        }
+                    }
+                    if (failure.Results!=null) {
+                        foreach (var item in failure.Results) {
+                            if (oldNode.IsWildcard) {
+                                if (keywords[item].Length > oldNode.WildcardLayer) {
+                                    newNode.SetResults(item);
+                                }
+                            } else {
+                                newNode.SetResults(item);
+                            }
                         }
                     }
                     failure = failure.Failure;

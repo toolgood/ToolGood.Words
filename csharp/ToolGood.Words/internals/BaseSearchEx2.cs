@@ -244,13 +244,16 @@ namespace ToolGood.Words.internals
                 nd.Index = i;
                 TrieNode r = nd.Parent.Failure;
                 char c = nd.Char;
-                while (r != null && !r.m_values.ContainsKey(c)) r = r.Failure;
+                while (r != null &&(r.m_values==null || !r.m_values.ContainsKey(c))) r = r.Failure;
                 if (r == null)
                     nd.Failure = root;
                 else {
                     nd.Failure = r.m_values[c];
-                    foreach (var result in nd.Failure.Results)
-                        nd.SetResults(result);
+                    if (nd.Failure.Results!=null) {
+                        foreach (var result in nd.Failure.Results)
+                            nd.SetResults(result);
+                    }
+                  
                 }
             }
             root.Failure = root;
@@ -271,25 +274,33 @@ namespace ToolGood.Words.internals
                 var newNode = allNode2[i];
                 newNode.Char = _dict[oldNode.Char];
 
-                foreach (var item in oldNode.m_values) {
-                    var key = _dict[item.Key];
-                    var index = item.Value.Index;
-                    newNode.Add(key, allNode2[index]);
-                }
-                foreach (var item in oldNode.Results) {
-                    newNode.SetResults(item);
-                }
-                oldNode = oldNode.Failure;
-                while (oldNode != root) {
+                if (oldNode.m_values!=null) {
                     foreach (var item in oldNode.m_values) {
                         var key = _dict[item.Key];
                         var index = item.Value.Index;
-                        if (newNode.HasKey(key) == false) {
-                            newNode.Add(key, allNode2[index]);
-                        }
+                        newNode.Add(key, allNode2[index]);
                     }
+                }
+                if (oldNode.Results!=null) {
                     foreach (var item in oldNode.Results) {
                         newNode.SetResults(item);
+                    }
+                }
+                oldNode = oldNode.Failure;
+                while (oldNode != root) {
+                    if (oldNode.m_values!=null) {
+                        foreach (var item in oldNode.m_values) {
+                            var key = _dict[item.Key];
+                            var index = item.Value.Index;
+                            if (newNode.HasKey(key) == false) {
+                                newNode.Add(key, allNode2[index]);
+                            }
+                        }
+                    }
+                    if (oldNode.Results!=null) {
+                        foreach (var item in oldNode.Results) {
+                            newNode.SetResults(item);
+                        }
                     }
                     oldNode = oldNode.Failure;
                 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public class TrieNode2
+    public sealed class TrieNode2
     {
         public bool End;
         public List<int> Results;

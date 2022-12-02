@@ -42,53 +42,62 @@ namespace ToolGood.Words.internals
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
-                foreach (var item in oldNode.m_values) {
-                    var key = _dict[item.Key];
-                    var index = item.Value.Index;
-                    if (key == 0) {
-                        newNode.HasWildcard = true;
-                        newNode.WildcardNode = allNode2[index];
-                        continue;
-                    }
-                    newNode.Add((char)key, allNode2[index]);
-                }
-                foreach (var item in oldNode.Results) {
-                    if (oldNode.IsWildcard) {
-                        if (keywords[item].Length > oldNode.WildcardLayer) {
-                            newNode.SetResults(item);
-                        }
-                    } else {
-                        newNode.SetResults(item);
-                    }
-                    //newNode.SetResults(item);
-                }
-
-                var failure = oldNode.Failure;
-                while (failure != root) {
-                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
-                        break;
-                    }
-                    foreach (var item in failure.m_values) {
+                if (oldNode.m_values!=null) {
+                    foreach (var item in oldNode.m_values) {
                         var key = _dict[item.Key];
                         var index = item.Value.Index;
                         if (key == 0) {
                             newNode.HasWildcard = true;
-                            if (newNode.WildcardNode == null) {
-                                newNode.WildcardNode = allNode2[index];
-                            }
+                            newNode.WildcardNode = allNode2[index];
                             continue;
                         }
-                        if (newNode.HasKey((char)key) == false) {
-                            newNode.Add((char)key, allNode2[index]);
-                        }
+                        newNode.Add((char)key, allNode2[index]);
                     }
-                    foreach (var item in failure.Results) {
+                }
+                if (oldNode.Results!=null) {
+                    foreach (var item in oldNode.Results) {
                         if (oldNode.IsWildcard) {
                             if (keywords[item].Length > oldNode.WildcardLayer) {
                                 newNode.SetResults(item);
                             }
                         } else {
                             newNode.SetResults(item);
+                        }
+                        //newNode.SetResults(item);
+                    }
+                }
+     
+
+                var failure = oldNode.Failure;
+                while (failure != root) {
+                    if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                        break;
+                    }
+                    if (failure.m_values!=null) {
+                        foreach (var item in failure.m_values) {
+                            var key = _dict[item.Key];
+                            var index = item.Value.Index;
+                            if (key == 0) {
+                                newNode.HasWildcard = true;
+                                if (newNode.WildcardNode == null) {
+                                    newNode.WildcardNode = allNode2[index];
+                                }
+                                continue;
+                            }
+                            if (newNode.HasKey((char)key) == false) {
+                                newNode.Add((char)key, allNode2[index]);
+                            }
+                        }
+                    }
+                    if (failure.Results!=null) {
+                        foreach (var item in failure.Results) {
+                            if (oldNode.IsWildcard) {
+                                if (keywords[item].Length > oldNode.WildcardLayer) {
+                                    newNode.SetResults(item);
+                                }
+                            } else {
+                                newNode.SetResults(item);
+                            }
                         }
                     }
                     failure = failure.Failure;
