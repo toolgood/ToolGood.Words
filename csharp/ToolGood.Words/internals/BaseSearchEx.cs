@@ -138,20 +138,26 @@ namespace ToolGood.Words.internals
                 var node = allNode2[i];
 
                 if (i > 0) {
-                    foreach (var item in node.m_values) {
-                        dict[item.Key] = item.Value.Index;
+                    if (node.m_values!=null) {
+                        foreach (var item in node.m_values) {
+                            dict[item.Key] = item.Value.Index;
+                        }
                     }
                 }
-                foreach (var item in node.Results) {
-                    resultIndex.Add(item);
+                if (node.Results!=null) {
+                    foreach (var item in node.Results) {
+                        resultIndex.Add(item);
+                    }
                 }
                 end.Add(resultIndex.Count);
                 nextIndexs.Add(dict);
             }
 
             var first = new int[Char.MaxValue + 1];
-            foreach (var item in allNode2[0].m_values) {
-                first[item.Key] = item.Value.Index;
+            if (allNode2[0].m_values!=null) {
+                foreach (var item in allNode2[0].m_values) {
+                    first[item.Key] = item.Value.Index;
+                }
             }
 
             _first = first;

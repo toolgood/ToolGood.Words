@@ -12,7 +12,7 @@ using ZIPStream = System.IO.Compression.GZipStream;
 
 namespace ToolGood.Words.internals
 {
-    public class PinyinDict
+    public static class PinyinDict
     {
         private static Dictionary<string, ushort[]> _pyName;
         private static string[] _pyShow;

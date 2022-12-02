@@ -12,7 +12,7 @@ using ZIPStream = System.IO.Compression.GZipStream;
 
 namespace ToolGood.Words.internals
 {
-    class Translate
+    static class Translate
     {
         private static WordsSearch s2tSearch;
         private static WordsSearch t2sSearch;

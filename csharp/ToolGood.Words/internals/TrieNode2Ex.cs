@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    class TrieNode2Ex 
+    sealed class TrieNode2Ex
     {
         public int Index;
         public bool End;
@@ -14,16 +14,13 @@ namespace ToolGood.Words.internals
         public ushort minflag = ushort.MaxValue;
         public ushort maxflag = ushort.MinValue;
 
-        public TrieNode2Ex()
-        {
-            Results = new List<int>();
-            m_values = new Dictionary<char, TrieNode2Ex>();
-        }
-
         public void Add(char c, TrieNode2Ex node3)
         {
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
+            if (m_values == null) {
+                m_values = new Dictionary<char, TrieNode2Ex>();
+            }
             m_values.Add(c, node3);
         }
 
@@ -32,6 +29,9 @@ namespace ToolGood.Words.internals
             if (End == false) {
                 End = true;
             }
+            if (Results == null) {
+                Results = new List<int>();
+            }
             if (Results.Contains(index) == false) {
                 Results.Add(index);
             }
@@ -39,6 +39,9 @@ namespace ToolGood.Words.internals
 
         public bool HasKey(char c)
         {
+            if (m_values == null) {
+                return false;
+            }
             return m_values.ContainsKey(c);
         }
 

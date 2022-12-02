@@ -13,16 +13,14 @@ namespace ToolGood.Words.internals
         private uint minflag = uint.MaxValue;
         private uint maxflag = uint.MinValue;
 
-        public TrieNode2()
-        {
-            Results = new List<int>();
-            m_values = new Dictionary<char, TrieNode2>();
-        }
 
         public void Add(char c, TrieNode2 node3)
         {
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
+            if (m_values==null) {
+                m_values = new Dictionary<char, TrieNode2>();
+            }
             m_values.Add(c, node3);
         }
 
@@ -31,6 +29,9 @@ namespace ToolGood.Words.internals
             if (End == false) {
                 End = true;
             }
+            if (Results==null) {
+                Results = new List<int>();
+            }
             if (Results.Contains(index) == false) {
                 Results.Add(index);
             }
@@ -38,6 +39,9 @@ namespace ToolGood.Words.internals
 
         public bool HasKey(char c)
         {
+            if (m_values==null) {
+                return false;
+            }
             return m_values.ContainsKey(c);
         }
 

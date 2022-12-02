@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    class TrieNodeEx
+    sealed class TrieNodeEx
     {
         internal int Char;
         internal bool End;
@@ -17,16 +17,14 @@ namespace ToolGood.Words.internals
         internal Int32 Next;
         public int Count;
 
-        public TrieNodeEx()
-        {
-            m_values = new Dictionary<int, TrieNodeEx>();
-            Results = new List<Int32>();
-        }
-
+  
         public void Add(int c, TrieNodeEx node3)
         {
             if (minflag > c) { minflag = c; }
             if (maxflag < c) { maxflag = c; }
+            if (m_values==null) {
+                m_values = new Dictionary<int, TrieNodeEx>();
+            }
             m_values.Add(c, node3);
             Count++;
         }
@@ -36,6 +34,9 @@ namespace ToolGood.Words.internals
             if (End == false) {
                 End = true;
             }
+            if (Results==null) {
+                Results = new List<int>();
+            }
             if (Results.Contains(text) == false) {
                 Results.Add(text);
             }
@@ -43,6 +44,9 @@ namespace ToolGood.Words.internals
 
         public bool HasKey(int c)
         {
+            if (m_values==null) {
+                return false;
+            }
             return m_values.ContainsKey(c);
         }
 
@@ -115,9 +119,11 @@ namespace ToolGood.Words.internals
             Next = next;
             seats[next] = true;
 
-            foreach (var item in m_values) {
-                var position = next + item.Key;
-                has[position] = item.Value.Index;
+            if (m_values!=null) {
+                foreach (var item in m_values) {
+                    var position = next + item.Key;
+                    has[position] = item.Value.Index;
+                }
             }
 
         }

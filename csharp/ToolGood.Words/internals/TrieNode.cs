@@ -20,12 +20,6 @@ namespace ToolGood.Words.internals
         public bool HasWildcard;
 
 
-        public TrieNode()
-        {
-            //m_values = new Dictionary<char, TrieNode>();
-            //Results = new List<int>();
-        }
-
         public TrieNode Add(char c)
         {
             TrieNode node;

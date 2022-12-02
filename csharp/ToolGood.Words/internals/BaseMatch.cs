@@ -102,12 +102,12 @@ namespace ToolGood.Words.internals
                 nd.Index = i;
                 TrieNode r = nd.Parent.Failure;
                 char c = nd.Char;
-                while (r != null &&(r.m_values==null || !r.m_values.ContainsKey(c))) r = r.Failure;
+                while (r != null && (r.m_values == null || !r.m_values.ContainsKey(c))) r = r.Failure;
                 if (r == null)
                     nd.Failure = root;
                 else {
                     nd.Failure = r.m_values[c];
-                    if (nd.Failure.Results!=null) {
+                    if (nd.Failure.Results != null) {
                         foreach (var result in nd.Failure.Results)
                             nd.SetResults(result);
                     }
@@ -119,7 +119,7 @@ namespace ToolGood.Words.internals
             for (int i = 1; i < allNode.Count; i++) {
                 var nd = allNode[i];
                 if (nd.Layer == 1) { continue; }
-                if (nd.m_values!=null) {
+                if (nd.m_values != null) {
                     if (nd.m_values.ContainsKey((char)0)) {
                         nd.HasWildcard = true;
                     }
@@ -369,7 +369,7 @@ namespace ToolGood.Words.internals
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
-                if (oldNode.m_values!=null) {
+                if (oldNode.m_values != null) {
                     foreach (var item in oldNode.m_values) {
                         var key = item.Key;
                         var index = item.Value.Index;
@@ -381,7 +381,7 @@ namespace ToolGood.Words.internals
                         newNode.Add(key, allNode2[index]);
                     }
                 }
-                if (oldNode.Results!=null) {
+                if (oldNode.Results != null) {
                     foreach (var item in oldNode.Results) {
                         if (oldNode.IsWildcard) {
                             if (keywords[item].Length > oldNode.WildcardLayer) {
@@ -393,14 +393,14 @@ namespace ToolGood.Words.internals
                         //newNode.SetResults(item);
                     }
                 }
-            
+
 
                 var failure = oldNode.Failure;
                 while (failure != root) {
                     if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
                         break;
                     }
-                    if (failure.m_values!=null) {
+                    if (failure.m_values != null) {
                         foreach (var item in failure.m_values) {
                             var key = item.Key;
                             var index = item.Value.Index;
@@ -416,7 +416,7 @@ namespace ToolGood.Words.internals
                             }
                         }
                     }
-                    if (failure.Results!=null) {
+                    if (failure.Results != null) {
                         foreach (var item in failure.Results) {
                             if (oldNode.IsWildcard) {
                                 if (keywords[item].Length > oldNode.WildcardLayer) {
@@ -440,7 +440,7 @@ namespace ToolGood.Words.internals
                 first[item.Key] = item.Value;
             }
             _first = first;
-        } 
+        }
         #endregion
 
 

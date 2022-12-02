@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words
 {
-    class NumberConventer
+    static class NumberConventer
     {
         public static Decimal ChnToArab(string ChnNum)
         {
