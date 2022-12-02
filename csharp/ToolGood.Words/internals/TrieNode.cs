@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public sealed class TrieNode
+    public sealed class TrieNode //:IDisposable
     {
         public int Index;
         public int Layer;
@@ -43,6 +43,21 @@ namespace ToolGood.Words.internals
             }
             Results.Add(index);
         }
-
+        /// <summary>
+        /// 伪释放
+        /// </summary>
+        public void Dispose()
+        {
+            if (Results!=null) {
+                Results.Clear();
+                Results = null;
+            }
+            if (m_values!=null) {
+                m_values.Clear();
+                m_values = null;
+            }
+            Failure =null;
+            Parent = null;
+        }
     }
 }

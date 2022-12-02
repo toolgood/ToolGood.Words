@@ -75,7 +75,7 @@ namespace ToolGood.Words.internals
             for (int i = 0; i < allNode.Count; i++) {
                 allNode2.Add(new TrieNode2());
             }
-            for (int i = 0; i < allNode2.Count; i++) {
+            for (int i = allNode2.Count - 1; i >= 0; i--) {
                 var oldNode = allNode[i];
                 var newNode = allNode2[i];
 
@@ -109,6 +109,7 @@ namespace ToolGood.Words.internals
                     }
                     oldNode = oldNode.Failure;
                 }
+                allNode[i].Dispose();
             }
             allNode.Clear();
             allNode = null;
