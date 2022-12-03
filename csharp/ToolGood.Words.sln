@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29920.165
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.Words", "ToolGood.Words\ToolGood.Words.csproj", "{4A5BA2B0-8C34-4891-89BC-F1536AE424D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Contrast", "ToolGood.Words.Contrast\ToolGood.Words.Contrast.csproj", "{ED41B333-03FB-41C3-A25C-18763D626D77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Test", "ToolGood.Words.Test\ToolGood.Words.Test.csproj", "{37920783-B278-422F-8632-E00D6ED7F8C0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pinyinBuild", "pinyinBuild", "{7D72C4EE-77B9-456B-8894-349B7D64F3A1}"
 EndProject
@@ -23,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{E6FB2A2D-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolGood.Words.ReferenceHelper", "ToolGood.Words.ReferenceHelper\ToolGood.Words.ReferenceHelper.csproj", "{2807D4C1-4F89-4442-9F40-A6AC852FC506}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolGood.Words.Test", "ToolGood.Words.Test\ToolGood.Words.Test.csproj", "{D7D6A603-3355-45F5-A70A-A1BE95676FB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +37,6 @@ Global
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED41B333-03FB-41C3-A25C-18763D626D77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37920783-B278-422F-8632-E00D6ED7F8C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,17 +53,21 @@ Global
 		{2807D4C1-4F89-4442-9F40-A6AC852FC506}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2807D4C1-4F89-4442-9F40-A6AC852FC506}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2807D4C1-4F89-4442-9F40-A6AC852FC506}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D6A603-3355-45F5-A70A-A1BE95676FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D6A603-3355-45F5-A70A-A1BE95676FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D6A603-3355-45F5-A70A-A1BE95676FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D6A603-3355-45F5-A70A-A1BE95676FB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ED41B333-03FB-41C3-A25C-18763D626D77} = {08D4758B-23A0-4EF7-AA2B-195244D5B50A}
-		{37920783-B278-422F-8632-E00D6ED7F8C0} = {08D4758B-23A0-4EF7-AA2B-195244D5B50A}
 		{30F08AE2-38A0-43AC-9784-48B54091FAD0} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
 		{2F601855-A9BA-4828-A804-34DF81FE55CF} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
 		{68C3BBE4-BA05-42C0-A495-3E1A183274C6} = {7D72C4EE-77B9-456B-8894-349B7D64F3A1}
 		{2807D4C1-4F89-4442-9F40-A6AC852FC506} = {E6FB2A2D-125E-4D47-A258-5502183E9A89}
+		{D7D6A603-3355-45F5-A70A-A1BE95676FB8} = {08D4758B-23A0-4EF7-AA2B-195244D5B50A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE963BE7-BF91-4803-8179-58AFAE0A2C91}
