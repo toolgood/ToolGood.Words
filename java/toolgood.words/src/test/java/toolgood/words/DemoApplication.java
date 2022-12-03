@@ -59,7 +59,7 @@ public class DemoApplication {
 		test_issues_74();
 		test_issues_90();
 	}
-
+	
 	private static void test_StringSearch() {
 		String test = "我是中国人";
 		List<String> list = new ArrayList<String>();

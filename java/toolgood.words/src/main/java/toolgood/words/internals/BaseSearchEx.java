@@ -16,8 +16,6 @@ import toolgood.words.NumHelper;
 public class BaseSearchEx {
     protected int[] _dict;
     protected int[] _first;
-    protected int[] _min;
-    protected int[] _max;
 
     protected IntDictionary[] _nextIndex;
     protected int[] _end;
@@ -52,14 +50,6 @@ public class BaseSearchEx {
 
         bw.write(NumHelper.serialize(_first.length));
         for (int item : _first) {
-            bw.write(NumHelper.serialize(item));
-        }
-        bw.write(NumHelper.serialize(_min.length));
-        for (int item : _min) {
-            bw.write(NumHelper.serialize(item));
-        }
-        bw.write(NumHelper.serialize(_max.length));
-        for (int item : _max) {
             bw.write(NumHelper.serialize(item));
         }
         bw.write(NumHelper.serialize(_end.length));
@@ -124,18 +114,6 @@ public class BaseSearchEx {
         }
 
         length = NumHelper.read(br);
-        _min = new int[length];
-        for (int i = 0; i < length; i++) {
-            _min[i] = NumHelper.read(br);
-        }
-
-        length = NumHelper.read(br);
-        _max = new int[length];
-        for (int i = 0; i < length; i++) {
-            _max[i] = NumHelper.read(br);
-        }
-
-        length = NumHelper.read(br);
         _end = new int[length];
         for (int i = 0; i < length; i++) {
             _end[i] = NumHelper.read(br);
@@ -176,6 +154,7 @@ public class BaseSearchEx {
         SetKeywords();
     }
 
+
     private void SetKeywords() {
         TrieNode root = new TrieNode();
         Map<Integer, List<TrieNode>> allNodeLayers = new TreeMap<Integer, List<TrieNode>>();
@@ -214,13 +193,13 @@ public class BaseSearchEx {
             nd.Index = i;
             TrieNode r = nd.Parent.Failure;
             Character c = nd.Char;
-            while (r != null &&(r.m_values==null || !r.m_values.containsKey(c)))
+            while (r != null && (r.m_values == null || !r.m_values.containsKey(c)))
                 r = r.Failure;
             if (r == null)
                 nd.Failure = root;
             else {
                 nd.Failure = r.m_values.get(c);
-                if (nd.Failure.Results!=null){
+                if (nd.Failure.Results != null) {
                     for (Integer result : nd.Failure.Results) {
                         nd.SetResults(result);
                     }
@@ -236,106 +215,95 @@ public class BaseSearchEx {
         CreateDict(stringBuilder.toString());
         stringBuilder = null;
 
-        List<TrieNode2Ex> allNode2 = new ArrayList<TrieNode2Ex>();
-        for (int i = 0; i < allNode.size(); i++) {
-            TrieNode2Ex nd = new TrieNode2Ex();
-            nd.Index = i;
-            allNode2.add(nd);
+        int[] first = new int[Character.MAX_VALUE + 1];
+        for (Character key : allNode.get(0).m_values.keySet()) {
+            TrieNode nd = allNode.get(0).m_values.get(key);
+            first[_dict[key]] = nd.Index;
         }
-        for (int i = allNode2.size()-1; i >= 0; i--) {
+        _first = first;
+
+        List<Integer> resultIndex2 = new ArrayList<>();
+        List<Boolean> isEndStart = new ArrayList<>();
+        IntDictionary[] _nextIndex2 = new IntDictionary[allNode.size()];
+
+        for (int i = allNode.size() - 1; i >= 0; i--) {
+            Map<Integer, Integer> dict = new TreeMap<Integer, Integer>();
+            List<Integer> result = new ArrayList<>();
             TrieNode oldNode = allNode.get(i);
-            TrieNode2Ex newNode = allNode2.get(i);
-            
-            if(oldNode.m_values!=null){
+            if (oldNode.m_values != null) {
                 for (Character key : oldNode.m_values.keySet()) {
                     TrieNode nd = oldNode.m_values.get(key);
-                    newNode.Add(_dict[key], allNode2.get(nd.Index));
+                    dict.put(_dict[key], nd.Index);
                 }
             }
-            if(oldNode.Results!=null){
+            if (oldNode.Results != null) {
                 oldNode.Results.forEach(item -> {
-                    newNode.SetResults(item);
+                    if (result.contains(item) == false) {
+                        result.add(item);
+                    }
                 });
             }
+
             oldNode = oldNode.Failure;
             while (oldNode != root) {
-                if(oldNode.m_values!=null){
+                if (oldNode.m_values != null) {
                     for (Character key : oldNode.m_values.keySet()) {
-                        if (newNode.HasKey(_dict[key]) == false) {
-                            TrieNode nd = oldNode.m_values.get(key);
-                            newNode.Add(_dict[key], allNode2.get(nd.Index));
+                        TrieNode nd = oldNode.m_values.get(key);
+                        if (dict.containsKey(_dict[key]) == false) {
+                            dict.put(_dict[key], nd.Index);
                         }
                     }
                 }
-               if(oldNode.Results!=null){
-                oldNode.Results.forEach(item -> {
-                    newNode.SetResults(item);
-                });
-               }
+                if (oldNode.Results != null) {
+                    oldNode.Results.forEach(item -> {
+                        if (result.contains(item) == false) {
+                            result.add(item);
+                        }
+                    });
+                }
                 oldNode = oldNode.Failure;
             }
+            _nextIndex2[i] = new IntDictionary();
+            _nextIndex2[i].SetDictionary(dict);
+
+            if (result.size() > 0) {
+                for (int j = result.size() - 1; j >= 0; j--) {
+                    resultIndex2.add(result.get(j));
+                    isEndStart.add(false);
+                }
+                isEndStart.set(isEndStart.size() - 1, true);
+            } else {
+                resultIndex2.add(-1);
+                isEndStart.add(true);
+            }
+            dict = null;
             allNode.get(i).Dispose();
         }
         allNode.clear();
         allNode = null;
         root = null;
+        _nextIndex = _nextIndex2;
 
-        List<Integer> min = new ArrayList<Integer>();
-        List<Integer> max = new ArrayList<Integer>();
-        List<Map<Integer, Integer>> nextIndexs = new ArrayList<Map<Integer, Integer>>();
-        List<Integer> end = new ArrayList<Integer>();
-        end.add(0);
-        List<Integer> resultIndex = new ArrayList<Integer>();
-        for (int i = 0; i < allNode2.size(); i++) {
-            Map<Integer, Integer> dict = new TreeMap<Integer, Integer>();
-            TrieNode2Ex node = allNode2.get(i);
-            min.add(node.minflag);
-            max.add(node.maxflag);
-
-            if (i > 0) {
-                if(node.m_values!=null){
-                    for (Integer key : node.m_values.keySet()) {
-                        dict.put(key, node.m_values.get(key).Index);
-                    }
-                }
+        List<Integer> resultIndex = new ArrayList<>();
+        List<Integer> end = new ArrayList<>();
+        for (int i = isEndStart.size() - 1; i >= 0; i--) {
+            if (isEndStart.get(i)) {
+                end.add(resultIndex.size());
             }
-            if(node.Results!=null){
-                for (int j = 0; j < node.Results.size(); j++) {
-                    resultIndex.add(node.Results.get(j));
-                }
+            if (resultIndex2.get(i) > -1) {
+                resultIndex.add(resultIndex2.get(i));
             }
-            end.add(resultIndex.size());
-            nextIndexs.add(dict);
         }
-        int[] first = new int[Character.MAX_VALUE + 1];
-        for (Integer key : allNode2.get(0).m_values.keySet()) {
-            TrieNode2Ex nd = allNode2.get(0).m_values.get(key);
-            first[(int) key] = nd.Index;
-        }
-
-        _first = first;
-        _min = new int[min.size()];
-        _max = new int[min.size()];
-        for (int i = 0; i < min.size(); i++) {
-            _min[i] = (int) (min.get(i));
-            _max[i] = (int) (max.get(i));
-        }
-        _nextIndex = new IntDictionary[nextIndexs.size()];
-        for (int i = 0; i < nextIndexs.size(); i++) {
-            IntDictionary dictionary = new IntDictionary();
-            dictionary.SetDictionary(nextIndexs.get(i));
-            _nextIndex[i] = dictionary;
-        }
-        _end = new int[end.size()];
-        for (int i = 0; i < end.size(); i++) {
-            _end[i] = (int) (end.get(i));
-        }
+        end.add(resultIndex.size());
         _resultIndex = new int[resultIndex.size()];
         for (int i = 0; i < resultIndex.size(); i++) {
             _resultIndex[i] = (int) (resultIndex.get(i));
         }
-        allNode2.clear();
-        allNode2 = null;
+
+        _end = new int[end.size()];
+        for (int i = 0; i < end.size(); i++) {
+            _end[i] = (int) (end.get(i));
+        }
     }
 
     private int CreateDict(String keywords) {

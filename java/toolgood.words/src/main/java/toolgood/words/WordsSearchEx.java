@@ -24,9 +24,9 @@ public class WordsSearchEx extends BaseSearchEx {
                 continue;
             }
             int next;
-            if (p == 0 || t < _min[p] || t > _max[p]) {
+            if (p == 0) {
                 next = _first[t];
-            } else {
+            }else {
                 final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
@@ -63,9 +63,9 @@ public class WordsSearchEx extends BaseSearchEx {
                 continue;
             }
             int next;
-            if (p == 0 || t < _min[p] || t > _max[p]) {
+            if (p == 0) {
                 next = _first[t];
-            } else {
+            }else {
                 final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
@@ -102,9 +102,9 @@ public class WordsSearchEx extends BaseSearchEx {
                 continue;
             }
             int next;
-            if (p == 0 || t < _min[p] || t > _max[p]) {
+            if (p == 0) {
                 next = _first[t];
-            } else {
+            }else {
                 final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
@@ -150,9 +150,9 @@ public class WordsSearchEx extends BaseSearchEx {
                 continue;
             }
             int next;
-            if (p == 0 || t < _min[p] || t > _max[p]) {
+            if (p == 0) {
                 next = _first[t];
-            } else {
+            }else {
                 final int index = _nextIndex[p].IndexOf(t);
                 if (index == -1) {
                     next = _first[t];
