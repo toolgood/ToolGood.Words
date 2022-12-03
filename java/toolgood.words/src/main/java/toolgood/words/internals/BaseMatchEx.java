@@ -43,51 +43,24 @@ public class BaseMatchEx extends BaseMatch {
             allNode2.add(node3); ;
         }
 
-        for (int i = 0; i < allNode2.size(); i++) {
+        for (int i = allNode2.size()-1; i >= 0; i--) {
             TrieNode oldNode = allNode.get(i);
             TrieNode3Ex newNode = allNode2.get(i);
 
-            for (Character item : oldNode.m_values.keySet()) {
-                int key = _dict[item];
-                int index = oldNode.m_values.get(item).Index;
-                if (key == 0) {
-                    newNode.HasWildcard = true;
-                    newNode.WildcardNode = allNode2.get(index) ;
-                    continue;
-                }
-                newNode.Add((char)key, allNode2.get(index) );
-            }
-            for (int item : oldNode.Results) {
-                if (oldNode.IsWildcard) {
-                    if (keywords.get(item).length() > oldNode.WildcardLayer) {
-                        newNode.SetResults(item);
-                    }
-                } else {
-                    newNode.SetResults(item);
-                }
-                //newNode.SetResults(item);
-            }
-
-            TrieNode failure = oldNode.Failure;
-            while (failure != root) {
-                if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
-                    break;
-                }
-                for (Character item : failure.m_values.keySet()) {
+            if(oldNode.m_values!=null){
+                for (Character item : oldNode.m_values.keySet()) {
                     int key = _dict[item];
-                    int index = failure.m_values.get(item).Index;
+                    int index = oldNode.m_values.get(item).Index;
                     if (key == 0) {
                         newNode.HasWildcard = true;
-                        if (newNode.WildcardNode == null) {
-                            newNode.WildcardNode = allNode2.get(index);
-                        }
+                        newNode.WildcardNode = allNode2.get(index) ;
                         continue;
                     }
-                    if (newNode.HasKey((char)key) == false) {
-                        newNode.Add((char)key, allNode2.get(index));
-                    }
+                    newNode.Add((char)key, allNode2.get(index) );
                 }
-                for (int item : failure.Results) {
+            }
+            if(oldNode.Results!=null){
+                for (int item : oldNode.Results) {
                     if (oldNode.IsWildcard) {
                         if (keywords.get(item).length() > oldNode.WildcardLayer) {
                             newNode.SetResults(item);
@@ -96,8 +69,43 @@ public class BaseMatchEx extends BaseMatch {
                         newNode.SetResults(item);
                     }
                 }
+            }
+
+            TrieNode failure = oldNode.Failure;
+            while (failure != root) {
+                if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                    break;
+                }
+                if(failure.m_values!=null){
+                    for (Character item : failure.m_values.keySet()) {
+                        int key = _dict[item];
+                        int index = failure.m_values.get(item).Index;
+                        if (key == 0) {
+                            newNode.HasWildcard = true;
+                            if (newNode.WildcardNode == null) {
+                                newNode.WildcardNode = allNode2.get(index);
+                            }
+                            continue;
+                        }
+                        if (newNode.HasKey((char)key) == false) {
+                            newNode.Add((char)key, allNode2.get(index));
+                        }
+                    }
+                }
+                if(failure.Results!=null){
+                    for (int item : failure.Results) {
+                        if (oldNode.IsWildcard) {
+                            if (keywords.get(item).length() > oldNode.WildcardLayer) {
+                                newNode.SetResults(item);
+                            }
+                        } else {
+                            newNode.SetResults(item);
+                        }
+                    }
+                }
                 failure = failure.Failure;
             }
+            allNode.get(i).Dispose();
         }
         allNode.clear();
         allNode = null;
@@ -124,12 +132,16 @@ public class BaseMatchEx extends BaseMatch {
             }
 
             if (i > 0) {
-                for (Character item : node.m_values.keySet()) {
-                    dict.put((Integer)(int)(item) , node.m_values.get(item).Index);
+                if(node.m_values!=null){
+                    for (Character item : node.m_values.keySet()) {
+                        dict.put((Integer)(int)(item) , node.m_values.get(item).Index);
+                    }
                 }
             }
-            for (int item : node.Results) {
-                resultIndex.add(item);
+            if(node.Results!=null){
+                for (int item : node.Results) {
+                    resultIndex.add(item);
+                }
             }
             end.add(resultIndex.size());
             nextIndexs.add(dict);

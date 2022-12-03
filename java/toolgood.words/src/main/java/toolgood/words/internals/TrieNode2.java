@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class TrieNode2{
-    public boolean End;
+public final class TrieNode2{
     public List<Integer> Results;
     public HashMap<Character, TrieNode2> m_values;
     private int minflag = Integer.MAX_VALUE;
@@ -14,8 +13,11 @@ public class TrieNode2{
 
     public TrieNode2()
     {
-        Results = new ArrayList<Integer>();
-        m_values = new HashMap<Character, TrieNode2>();
+        // Results = new ArrayList<Integer>();
+        // m_values = new HashMap<Character, TrieNode2>();
+    }
+    public boolean End(){
+        return Results!=null;
     }
 
     public void Add(final char c, final TrieNode2 node3) {
@@ -25,12 +27,15 @@ public class TrieNode2{
         if (maxflag < c) {
             maxflag = c;
         }
+        if(m_values==null){
+            m_values = new HashMap<Character, TrieNode2>();
+        }
         m_values.put(c, node3);
     }
 
     public void SetResults(final Integer index) {
-        if (End == false) {
-            End = true;
+        if(Results==null){
+            Results = new ArrayList<Integer>();
         }
         if (Results.contains(index) == false) {
             Results.add(index);

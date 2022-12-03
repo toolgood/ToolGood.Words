@@ -108,7 +108,7 @@ public class BaseMatch {
             nd.Index = i;
             TrieNode r = nd.Parent.Failure;
             char c = nd.Char;
-            while (r != null && !r.m_values.containsKey(c))
+            while (r != null &&(r.m_values==null || !r.m_values.containsKey(c)))
                 r = r.Failure;
             if (r == null)
                 nd.Failure = root;
@@ -126,9 +126,10 @@ public class BaseMatch {
             if (nd.Layer == 1) {
                 continue;
             }
-
-            if (nd.m_values.containsKey(zore)) {
-                nd.HasWildcard = true;
+            if(nd.m_values!=null){
+                if (nd.m_values.containsKey(zore)) {
+                    nd.HasWildcard = true;
+                }
             }
             if (nd.Failure.HasWildcard) {
                 nd.HasWildcard = true;
@@ -388,49 +389,23 @@ public class BaseMatch {
         for (int i = 0; i < allNode.size(); i++) {
             allNode2.add(new TrieNode3());
         }
-
-        for (int i = 0; i < allNode2.size(); i++) {
+        for (int i = allNode2.size()-1; i >= 0; i--) {
             TrieNode oldNode = allNode.get(i);
             TrieNode3 newNode = allNode2.get(i);
 
-            for (Character key : oldNode.m_values.keySet()) {
-                int index = oldNode.m_values.get(key).Index;
-                if (key == 0) {
-                    newNode.HasWildcard = true;
-                    newNode.WildcardNode = allNode2.get(index);
-                    continue;
-                }
-                newNode.Add(key, allNode2.get(index));
-            }
-            for (Integer item : oldNode.Results) {
-                if (oldNode.IsWildcard) {
-                    if (keywords.get(item).length() > oldNode.WildcardLayer) {
-                        newNode.SetResults(item);
-                    }
-                } else {
-                    newNode.SetResults(item);
-                }
-            }
-
-            TrieNode failure = oldNode.Failure;
-            while (failure != root) {
-                if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
-                    break;
-                }
-                for (Character key : failure.m_values.keySet()) {
-                    int index = failure.m_values.get(key).Index;
+            if(oldNode.m_values!=null){
+                for (Character key : oldNode.m_values.keySet()) {
+                    int index = oldNode.m_values.get(key).Index;
                     if (key == 0) {
                         newNode.HasWildcard = true;
-                        if (newNode.WildcardNode == null) {
-                            newNode.WildcardNode = allNode2.get(index);
-                        }
+                        newNode.WildcardNode = allNode2.get(index);
                         continue;
                     }
-                    if (newNode.HasKey(key) == false) {
-                        newNode.Add(key, allNode2.get(index));
-                    }
+                    newNode.Add(key, allNode2.get(index));
                 }
-                for (Integer item : failure.Results) {
+            }
+            if(oldNode.Results!=null){
+                for (Integer item : oldNode.Results) {
                     if (oldNode.IsWildcard) {
                         if (keywords.get(item).length() > oldNode.WildcardLayer) {
                             newNode.SetResults(item);
@@ -439,8 +414,41 @@ public class BaseMatch {
                         newNode.SetResults(item);
                     }
                 }
+            }
+            TrieNode failure = oldNode.Failure;
+            while (failure != root) {
+                if (oldNode.IsWildcard && failure.Layer <= oldNode.WildcardLayer) {
+                    break;
+                }
+                if  (failure.m_values!=null){
+                    for (Character key : failure.m_values.keySet()) {
+                        int index = failure.m_values.get(key).Index;
+                        if (key == 0) {
+                            newNode.HasWildcard = true;
+                            if (newNode.WildcardNode == null) {
+                                newNode.WildcardNode = allNode2.get(index);
+                            }
+                            continue;
+                        }
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2.get(index));
+                        }
+                    }
+                }
+                if(failure.Results!=null){
+                    for (Integer item : failure.Results) {
+                        if (oldNode.IsWildcard) {
+                            if (keywords.get(item).length() > oldNode.WildcardLayer) {
+                                newNode.SetResults(item);
+                            }
+                        } else {
+                            newNode.SetResults(item);
+                        }
+                    }
+                }
                 failure = failure.Failure;
             }
+            allNode.get(i).Dispose();
         }
         allNode.clear();
         allNode = null;

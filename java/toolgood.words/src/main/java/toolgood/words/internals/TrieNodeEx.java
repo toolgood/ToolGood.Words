@@ -1,13 +1,9 @@
 package toolgood.words.internals;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class TrieNodeEx {
+public final class TrieNodeEx {
     public Integer Char;
-    public boolean End;
     public Integer Index;
     public List<Integer> Results;
     public Map<Integer, TrieNodeEx> m_values;
@@ -16,8 +12,11 @@ public class TrieNodeEx {
     public int Next;
 
     public TrieNodeEx() {
-        m_values = new Hashtable<Integer, TrieNodeEx>();
-        Results = new ArrayList<Integer>();
+        // m_values = new Hashtable<Integer, TrieNodeEx>();
+        // Results = new ArrayList<Integer>();
+    }
+    public boolean End(){
+        return Results!=null;
     }
 
     public void Add(int c, TrieNodeEx node3) {
@@ -27,12 +26,15 @@ public class TrieNodeEx {
         if (maxflag < c) {
             maxflag = c;
         }
+        if(m_values==null){
+            m_values = new HashMap<Integer, TrieNodeEx>();
+        }
         m_values.put(c, node3);
     }
 
     public void SetResults(Integer text) {
-        if (End == false) {
-            End = true;
+        if(Results==null){
+            Results = new ArrayList<Integer>();
         }
         if (Results.contains(text) == false) {
             Results.add(text);
@@ -122,10 +124,13 @@ public class TrieNodeEx {
         Next = next;
         seats[next] = true;
 
-        m_values.forEach((key, value) -> {
-            int position = next + key;
-            has[position] = value.Index;
-        });
+        if(m_values!=null){
+            m_values.forEach((key, value) -> {
+                int position = next + key;
+                has[position] = value.Index;
+            });
+        }
+      
     }
 
 }

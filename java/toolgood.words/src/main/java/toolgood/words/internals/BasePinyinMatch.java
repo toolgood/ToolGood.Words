@@ -50,7 +50,7 @@ public class BasePinyinMatch {
                     }
                 }
                 if (tn != null) {
-                    if (tn.End) {
+                    if (tn.End()) {
                         for (final int result : tn.Results) {
                             final String keyword = _keywords[result];
                             final int start = i + 1 - keyword.length();
@@ -100,7 +100,7 @@ public class BasePinyinMatch {
                     }
                 }
                 if (tn != null) {
-                    if (tn.End) {
+                    if (tn.End()) {
                         for (final Integer result : tn.Results) {
                             final int index = _indexs[result];
                             if (index != findCount) {

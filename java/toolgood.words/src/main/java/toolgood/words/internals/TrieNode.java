@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrieNode implements Comparable<TrieNode> {
+public final class TrieNode implements Comparable<TrieNode> {
 
     public int Index;
     public int Layer;
-    public boolean End;
     public char Char;
     public List<Integer> Results;
     public HashMap<Character, TrieNode> m_values;
@@ -20,11 +19,17 @@ public class TrieNode implements Comparable<TrieNode> {
 
 
     public TrieNode() {
-        m_values = new HashMap<Character, TrieNode>();
-        Results = new ArrayList<Integer>();
+        // m_values = new HashMap<Character, TrieNode>();
+        // Results = new ArrayList<Integer>();
+    }
+    public boolean End(){
+        return Results!=null;
     }
 
     public TrieNode Add(final Character c) {
+        if(m_values==null){
+            m_values = new HashMap<Character, TrieNode>();
+        }
         if (m_values.containsKey(c)) {
             return m_values.get(c);
         }
@@ -36,8 +41,8 @@ public class TrieNode implements Comparable<TrieNode> {
     }
 
     public void SetResults(final Integer index) {
-        if (End == false) {
-            End = true;
+        if(Results==null){
+            Results = new ArrayList<Integer>();
         }
         if (Results.contains(index) == false) {
             Results.add(index);
@@ -47,5 +52,21 @@ public class TrieNode implements Comparable<TrieNode> {
     @Override
     public int compareTo(final TrieNode o) {
         return this.Layer - o.Layer  ;
+    }
+    /**
+     * 伪释放
+     */
+    public void Dispose()
+    {
+        if (Results!=null) {
+            Results.clear();
+            Results = null;
+        }
+        if (m_values!=null) {
+            m_values.clear();
+            m_values = null;
+        }
+        Failure =null;
+        Parent = null;
     }
 }

@@ -59,14 +59,16 @@ public class BaseSearch {
             nd.Index = i;
             TrieNode r = nd.Parent.Failure;
             Character c = nd.Char;
-            while (r != null && !r.m_values.containsKey(c))
+            while (r != null &&(r.m_values==null || !r.m_values.containsKey(c)))
                 r = r.Failure;
             if (r == null)
                 nd.Failure = root;
             else {
                 nd.Failure = r.m_values.get(c);
-                for (Integer result : nd.Failure.Results) {
-                    nd.SetResults(result);
+                if(nd.Failure.Results!=null){
+                    for (Integer result : nd.Failure.Results) {
+                        nd.SetResults(result);
+                    }
                 }
             }
         }
@@ -76,31 +78,40 @@ public class BaseSearch {
         for (int i = 0; i < allNode.size(); i++) {
             allNode2.add(new TrieNode2());
         }
-        for (int i = 0; i < allNode2.size(); i++) {
+        for (int i = allNode2.size()-1; i >= 0; i--) {
             TrieNode oldNode = allNode.get(i);
             TrieNode2 newNode = allNode2.get(i);
 
-            for (Character key : oldNode.m_values.keySet()) {
-                TrieNode nd = oldNode.m_values.get(key);
-                newNode.Add(key, allNode2.get(nd.Index));
-            }
-            oldNode.Results.forEach(item -> {
-                newNode.SetResults(item);
-            });
-
-            oldNode = oldNode.Failure;
-            while (oldNode != root) {
+            if(oldNode.m_values!=null){
                 for (Character key : oldNode.m_values.keySet()) {
                     TrieNode nd = oldNode.m_values.get(key);
-                    if (newNode.HasKey(key) == false) {
-                        newNode.Add(key, allNode2.get(nd.Index));
-                    }
+                    newNode.Add(key, allNode2.get(nd.Index));
                 }
+            }
+            if(oldNode.Results!=null){
                 oldNode.Results.forEach(item -> {
                     newNode.SetResults(item);
                 });
+            }
+          
+            oldNode = oldNode.Failure;
+            while (oldNode != root) {
+                if(oldNode.m_values!=null){
+                    for (Character key : oldNode.m_values.keySet()) {
+                        TrieNode nd = oldNode.m_values.get(key);
+                        if (newNode.HasKey(key) == false) {
+                            newNode.Add(key, allNode2.get(nd.Index));
+                        }
+                    }
+                }
+                if(oldNode.Results!=null){
+                    oldNode.Results.forEach(item -> {
+                        newNode.SetResults(item);
+                    });
+                }
                 oldNode = oldNode.Failure;
             }
+            allNode.get(i).Dispose();
         }
         allNode.clear();
         allNode = null;

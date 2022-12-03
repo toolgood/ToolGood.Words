@@ -214,14 +214,16 @@ public class BaseSearchEx {
             nd.Index = i;
             TrieNode r = nd.Parent.Failure;
             Character c = nd.Char;
-            while (r != null && !r.m_values.containsKey(c))
+            while (r != null &&(r.m_values==null || !r.m_values.containsKey(c)))
                 r = r.Failure;
             if (r == null)
                 nd.Failure = root;
             else {
                 nd.Failure = r.m_values.get(c);
-                for (Integer result : nd.Failure.Results) {
-                    nd.SetResults(result);
+                if (nd.Failure.Results!=null){
+                    for (Integer result : nd.Failure.Results) {
+                        nd.SetResults(result);
+                    }
                 }
             }
         }
@@ -240,31 +242,39 @@ public class BaseSearchEx {
             nd.Index = i;
             allNode2.add(nd);
         }
-        for (int i = 0; i < allNode2.size(); i++) {
+        for (int i = allNode2.size()-1; i >= 0; i--) {
             TrieNode oldNode = allNode.get(i);
             TrieNode2Ex newNode = allNode2.get(i);
-
-            for (Character key : oldNode.m_values.keySet()) {
-                TrieNode nd = oldNode.m_values.get(key);
-                newNode.Add(_dict[key], allNode2.get(nd.Index));
-            }
-            oldNode.Results.forEach(item -> {
-                newNode.SetResults(item);
-            });
-
-            oldNode = oldNode.Failure;
-            while (oldNode != root) {
+            
+            if(oldNode.m_values!=null){
                 for (Character key : oldNode.m_values.keySet()) {
-                    if (newNode.HasKey(_dict[key]) == false) {
-                        TrieNode nd = oldNode.m_values.get(key);
-                        newNode.Add(_dict[key], allNode2.get(nd.Index));
-                    }
+                    TrieNode nd = oldNode.m_values.get(key);
+                    newNode.Add(_dict[key], allNode2.get(nd.Index));
                 }
+            }
+            if(oldNode.Results!=null){
                 oldNode.Results.forEach(item -> {
                     newNode.SetResults(item);
                 });
+            }
+            oldNode = oldNode.Failure;
+            while (oldNode != root) {
+                if(oldNode.m_values!=null){
+                    for (Character key : oldNode.m_values.keySet()) {
+                        if (newNode.HasKey(_dict[key]) == false) {
+                            TrieNode nd = oldNode.m_values.get(key);
+                            newNode.Add(_dict[key], allNode2.get(nd.Index));
+                        }
+                    }
+                }
+               if(oldNode.Results!=null){
+                oldNode.Results.forEach(item -> {
+                    newNode.SetResults(item);
+                });
+               }
                 oldNode = oldNode.Failure;
             }
+            allNode.get(i).Dispose();
         }
         allNode.clear();
         allNode = null;
@@ -283,12 +293,16 @@ public class BaseSearchEx {
             max.add(node.maxflag);
 
             if (i > 0) {
-                for (Integer key : node.m_values.keySet()) {
-                    dict.put(key, node.m_values.get(key).Index);
+                if(node.m_values!=null){
+                    for (Integer key : node.m_values.keySet()) {
+                        dict.put(key, node.m_values.get(key).Index);
+                    }
                 }
             }
-            for (int j = 0; j < node.Results.size(); j++) {
-                resultIndex.add(node.Results.get(j));
+            if(node.Results!=null){
+                for (int j = 0; j < node.Results.size(); j++) {
+                    resultIndex.add(node.Results.get(j));
+                }
             }
             end.add(resultIndex.size());
             nextIndexs.add(dict);

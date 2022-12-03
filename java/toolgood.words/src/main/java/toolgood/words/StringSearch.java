@@ -28,7 +28,7 @@ public class StringSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     return _keywords[tn.Results.get(0)];
                 }
             }
@@ -60,7 +60,7 @@ public class StringSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     tn.Results.forEach(item -> {
                         list.add(_keywords[item]);
                     });
@@ -92,7 +92,7 @@ public class StringSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     return true;
                 }
             }
@@ -135,7 +135,7 @@ public class StringSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     final int maxLength = _keywords[tn.Results.get(0)].length();
                     final int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {

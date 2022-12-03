@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrieNode3Ex {
+public final class TrieNode3Ex {
     public int Index;
-    public boolean End;
     public boolean HasWildcard;
     public List<Integer> Results;
     public HashMap<Character, TrieNode3Ex> m_values;
@@ -17,8 +16,11 @@ public class TrieNode3Ex {
 
     public TrieNode3Ex()
     {
-        Results = new ArrayList<Integer>();
-        m_values = new HashMap<Character, TrieNode3Ex>();
+        // Results = new ArrayList<Integer>();
+        // m_values = new HashMap<Character, TrieNode3Ex>();
+    }
+    public boolean End(){
+        return Results!=null;
     }
 
     public void Add(final char c, final TrieNode3Ex node3) {
@@ -28,12 +30,15 @@ public class TrieNode3Ex {
         if (maxflag < c) {
             maxflag = c;
         }
+        if(m_values==null){
+            m_values = new HashMap<Character, TrieNode3Ex>();
+        }
         m_values.put(c, node3);
     }
 
     public void SetResults(final int index) {
-        if (End == false) {
-            End = true;
+        if(Results==null){
+            Results = new ArrayList<Integer>();
         }
         if (Results.contains(index) == false) {
             Results.add(index);

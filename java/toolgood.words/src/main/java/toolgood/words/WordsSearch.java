@@ -30,7 +30,7 @@ public class WordsSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     for (final Integer index : tn.Results) {
                         final String key = _keywords[index];
                         return new WordsSearchResult(key, i + 1 - key.length(), i, index);
@@ -65,7 +65,7 @@ public class WordsSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     for (final Integer index : tn.Results) {
                         final String key = _keywords[index];
                         final WordsSearchResult item = new WordsSearchResult(key, i + 1 - key.length(), i, index);
@@ -99,7 +99,7 @@ public class WordsSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     return true;
                 }
             }
@@ -142,7 +142,7 @@ public class WordsSearch extends BaseSearch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     final int maxLength = _keywords[tn.Results.get(0)].length();
                     final int start = i + 1 - maxLength;
                     for (int j = start; j <= i; j++) {

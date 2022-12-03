@@ -39,7 +39,7 @@ public class WordsMatch extends BaseMatch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     final Integer r = tn.Results.get(0);
                     final int length = _keywordLength[r];
                     final int start = i - length + 1;
@@ -71,7 +71,7 @@ public class WordsMatch extends BaseMatch {
             }
             tn = ptr.GetValue(t);
 
-            if (tn.End) {
+            if (tn.End()) {
                 final Integer r = tn.Results.get(0);
                 final int length = _keywordLength[r];
                 final int start = i - length + 1;
@@ -113,7 +113,7 @@ public class WordsMatch extends BaseMatch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     for (final Integer r : tn.Results) {
                         final int length = _keywordLength[r];
                         final int start = i - length + 1;
@@ -144,7 +144,7 @@ public class WordsMatch extends BaseMatch {
             } else {
                 tn = ptr.GetValue(t);
             }
-            if (tn.End) {
+            if (tn.End()) {
                 for (final Integer r : tn.Results) {
                     final int length = _keywordLength[r];
                     final int start = i - length + 1;
@@ -188,7 +188,7 @@ public class WordsMatch extends BaseMatch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     final int length = _keywordLength[tn.Results.get(0)];
                     final int s = i - length + 1;
                     if (s >= 0) {
@@ -213,7 +213,7 @@ public class WordsMatch extends BaseMatch {
             }
             tn = ptr.GetValue(t);
 
-            if (tn.End) {
+            if (tn.End()) {
                 final int length = _keywordLength[tn.Results.get(0)];
                 final int s = i - length + 1;
                 if (s >= 0) {
@@ -262,7 +262,7 @@ public class WordsMatch extends BaseMatch {
                 }
             }
             if (tn != null) {
-                if (tn.End) {
+                if (tn.End()) {
                     final int maxLength = _keywordLength[tn.Results.get(0)];
                     final int start = i + 1 - maxLength;
                     if (start >= 0) {
@@ -289,7 +289,7 @@ public class WordsMatch extends BaseMatch {
                 return;
             }
             tn = ptr.GetValue(t);
-            if (tn.End) {
+            if (tn.End()) {
                 final int maxLength = _keywordLength[tn.Results.get(0)];
                 final int start = i + 1 - maxLength;
                 if (start >= 0) {
