@@ -114,8 +114,10 @@ public class BaseMatch {
                 nd.Failure = root;
             else {
                 nd.Failure = r.m_values.get(c);
-                for (Integer result : nd.Failure.Results)
-                    nd.SetResults(result);
+                if (nd.Failure.Results!=null){
+                    for (Integer result : nd.Failure.Results)
+                        nd.SetResults(result);
+                }
             }
         }
 
@@ -208,7 +210,7 @@ public class BaseMatch {
                     lt.add("");
                     lt.add(zore.toString());
                     parameterDict.put(parameterIndex, lt);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index += 2;
 
@@ -222,7 +224,7 @@ public class BaseMatch {
                     lt.add("");
                     lt.add(((Character) keyword.charAt(index + 1)).toString());
                     parameterDict.put(parameterIndex, lt);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index += 3;
                 } else if (index + 1 < keyword.length()) {
@@ -254,12 +256,12 @@ public class BaseMatch {
                 if (index + 1 < keyword.length() && keyword.charAt(index + 1) == '?') {
                     ps.add("");
                     parameterDict.put(parameterIndex, ps);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index += 2;
                 } else {
                     parameterDict.put(parameterIndex, ps);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index++;
                 }
@@ -292,12 +294,12 @@ public class BaseMatch {
                 if (index + 1 < keyword.length() && keyword.charAt(index + 1) == '?') {
                     ps.add("");
                     parameterDict.put(parameterIndex, ps);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index += 2;
                 } else {
                     parameterDict.put(parameterIndex, ps);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1)  + "$s");
                     parameterIndex++;
                     index++;
                 }
@@ -307,7 +309,7 @@ public class BaseMatch {
                     lt.add("");
                     lt.add(c.toString());
                     parameterDict.put(parameterIndex, lt);
-                    stringBuilder.append("%" + parameterIndex + "$s");
+                    stringBuilder.append("%" + (parameterIndex+1) + "$s");
                     parameterIndex++;
                     index += 2;
                 } else {
