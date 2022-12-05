@@ -20,69 +20,27 @@ namespace ToolGood.Words.Benchmark
 //  [Host]     : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
 //  DefaultJob : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
 
-
 //|                            Method |       Mean |    Error |   StdDev |
 //|---------------------------------- |-----------:|---------:|---------:|
-//|          stringSearchEx_FindFirst |   190.2 ns |  0.86 ns |  0.81 ns |
-//|    stringSearchExUnsafe_FindFirst |   176.6 ns |  1.50 ns |  1.33 ns | 
-//|   stringSearchExUnsafe2_FindFirst |   180.1 ns |  0.88 ns |  0.82 ns |
-//|            stringSearchEx_FindAll | 1,657.2 ns | 22.94 ns | 21.46 ns |
-//|      stringSearchExUnsafe_FindAll | 1,606.5 ns | 28.76 ns | 26.90 ns |
-//|     stringSearchExUnsafe2_FindAll | 1,574.1 ns | 16.66 ns | 15.58 ns |
-//|           wordsSearchEx_FindFirst |   209.1 ns |  1.38 ns |  1.29 ns |
-//|     wordsSearchExUnsafe_FindFirst |   180.6 ns |  0.86 ns |  0.67 ns |
-//|    wordsSearchExUnsafe2_FindFirst |   189.2 ns |  0.96 ns |  0.80 ns |
-//|             wordsSearchEx_FindAll | 1,900.1 ns | 29.78 ns | 27.85 ns |
-//|       wordsSearchExUnsafe_FindAll | 1,815.5 ns | 26.19 ns | 24.50 ns |
-//|      wordsSearchExUnsafe2_FindAll | 1,918.0 ns | 37.30 ns | 44.40 ns |
-//|            stringSearchEx_Replace | 1,553.9 ns | 12.44 ns | 11.03 ns |
-//|      stringSearchExUnsafe_Replace | 1,687.1 ns | 33.72 ns | 38.83 ns |
-//|     stringSearchExUnsafe2_Replace | 1,645.1 ns |  3.78 ns |  3.54 ns |
-//|        stringSearchEx_ContainsAny |   163.6 ns |  0.74 ns |  0.66 ns |
-//|  stringSearchExUnsafe_ContainsAny |   157.0 ns |  0.62 ns |  0.58 ns |
-//| stringSearchExUnsafe2_ContainsAny |   145.6 ns |  1.07 ns |  0.95 ns |
+//|          stringSearchEx_FindFirst |   205.6 ns |  1.78 ns |  1.66 ns |
+//|    stringSearchExUnsafe_FindFirst |   192.0 ns |  1.30 ns |  1.22 ns |
+//|   stringSearchExUnsafe2_FindFirst |   203.3 ns |  0.73 ns |  0.61 ns |
+//|            stringSearchEx_FindAll | 5,410.8 ns | 90.17 ns | 84.34 ns |
+//|      stringSearchExUnsafe_FindAll | 4,908.2 ns | 37.72 ns | 31.49 ns |
+//|     stringSearchExUnsafe2_FindAll | 4,925.4 ns | 52.46 ns | 46.51 ns |
+//|           wordsSearchEx_FindFirst |   207.4 ns |  1.59 ns |  1.41 ns |
+//|     wordsSearchExUnsafe_FindFirst |   202.1 ns |  0.67 ns |  0.56 ns |
+//|    wordsSearchExUnsafe2_FindFirst |   207.7 ns |  0.84 ns |  0.79 ns |
+//|             wordsSearchEx_FindAll | 5,601.4 ns | 33.20 ns | 29.43 ns |
+//|       wordsSearchExUnsafe_FindAll | 5,334.7 ns | 35.98 ns | 31.89 ns |
+//|      wordsSearchExUnsafe2_FindAll | 5,833.3 ns | 24.62 ns | 21.83 ns |
+//|            stringSearchEx_Replace | 5,186.5 ns | 30.58 ns | 27.11 ns |
+//|      stringSearchExUnsafe_Replace | 5,440.4 ns | 31.11 ns | 27.58 ns |
+//|     stringSearchExUnsafe2_Replace | 6,008.5 ns | 83.80 ns | 74.29 ns |
+//|        stringSearchEx_ContainsAny |   191.4 ns |  1.16 ns |  1.02 ns |
+//|  stringSearchExUnsafe_ContainsAny |   176.2 ns |  0.63 ns |  0.59 ns |
+//| stringSearchExUnsafe2_ContainsAny |   165.9 ns |  0.57 ns |  0.51 ns |
 
-//|                            Method |       Mean |    Error |   StdDev |
-//|---------------------------------- |-----------:|---------:|---------:|
-//|          stringSearchEx_FindFirst |   188.9 ns |  0.89 ns |  0.79 ns |
-//|    stringSearchExUnsafe_FindFirst |   175.1 ns |  1.76 ns |  1.64 ns |
-//|   stringSearchExUnsafe2_FindFirst |   179.6 ns |  1.05 ns |  0.98 ns |
-//|            stringSearchEx_FindAll | 1,679.0 ns | 26.51 ns | 24.80 ns |
-//|      stringSearchExUnsafe_FindAll | 1,582.6 ns | 19.33 ns | 17.13 ns |
-//|     stringSearchExUnsafe2_FindAll | 1,582.4 ns | 24.36 ns | 22.79 ns |
-//|           wordsSearchEx_FindFirst |   204.6 ns |  1.88 ns |  1.76 ns |
-//|     wordsSearchExUnsafe_FindFirst |   183.9 ns |  1.29 ns |  1.21 ns |
-//|    wordsSearchExUnsafe2_FindFirst |   178.0 ns |  1.91 ns |  1.79 ns |
-//|             wordsSearchEx_FindAll | 1,831.8 ns | 12.07 ns | 11.29 ns |
-//|       wordsSearchExUnsafe_FindAll | 1,808.5 ns | 26.85 ns | 25.12 ns |
-//|      wordsSearchExUnsafe2_FindAll | 1,958.6 ns | 27.74 ns | 25.94 ns |
-//|            stringSearchEx_Replace | 1,582.7 ns | 30.69 ns | 34.12 ns |
-//|      stringSearchExUnsafe_Replace | 1,689.1 ns | 29.94 ns | 28.00 ns |
-//|     stringSearchExUnsafe2_Replace | 1,650.6 ns |  6.17 ns |  5.78 ns |
-//|        stringSearchEx_ContainsAny |   163.3 ns |  0.44 ns |  0.37 ns |
-//|  stringSearchExUnsafe_ContainsAny |   156.9 ns |  0.59 ns |  0.55 ns |
-//| stringSearchExUnsafe2_ContainsAny |   146.1 ns |  0.70 ns |  0.65 ns |
-
-//|                            Method |       Mean |    Error |   StdDev |
-//|---------------------------------- |-----------:|---------:|---------:|
-//|          stringSearchEx_FindFirst |   187.8 ns |  0.73 ns |  0.68 ns |
-//|    stringSearchExUnsafe_FindFirst |   175.7 ns |  0.60 ns |  0.56 ns |
-//|   stringSearchExUnsafe2_FindFirst |   180.0 ns |  0.74 ns |  0.65 ns |
-//|            stringSearchEx_FindAll | 1,642.6 ns | 11.25 ns |  9.40 ns |
-//|      stringSearchExUnsafe_FindAll | 1,586.1 ns | 16.51 ns | 15.44 ns |
-//|     stringSearchExUnsafe2_FindAll | 1,534.8 ns | 11.01 ns | 10.30 ns |
-//|           wordsSearchEx_FindFirst |   203.0 ns |  0.92 ns |  0.81 ns |
-//|     wordsSearchExUnsafe_FindFirst |   185.7 ns |  3.78 ns |  3.15 ns |
-//|    wordsSearchExUnsafe2_FindFirst |   190.7 ns |  0.98 ns |  0.91 ns |
-//|             wordsSearchEx_FindAll | 1,834.4 ns | 10.53 ns |  8.22 ns |
-//|       wordsSearchExUnsafe_FindAll | 2,008.0 ns | 30.15 ns | 26.72 ns |
-//|      wordsSearchExUnsafe2_FindAll | 1,998.4 ns | 14.39 ns | 11.23 ns |
-//|            stringSearchEx_Replace | 1,701.8 ns | 33.07 ns | 40.61 ns |
-//|      stringSearchExUnsafe_Replace | 1,775.2 ns | 28.16 ns | 26.34 ns |
-//|     stringSearchExUnsafe2_Replace | 1,757.3 ns | 17.72 ns | 15.71 ns |
-//|        stringSearchEx_ContainsAny |   166.9 ns |  1.64 ns |  1.54 ns |
-//|  stringSearchExUnsafe_ContainsAny |   158.8 ns |  0.67 ns |  0.56 ns |
-//| stringSearchExUnsafe2_ContainsAny |   147.2 ns |  0.56 ns |  0.49 ns |
     }
 
     public class Test
