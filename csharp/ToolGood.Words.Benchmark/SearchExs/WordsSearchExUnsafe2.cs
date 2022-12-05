@@ -2,7 +2,7 @@
 
 namespace ToolGood.Words.Benchmark.SearchExs
 {
-    public class WordsSearchExUnsafe2 : BaseSearchEx
+    public sealed class WordsSearchExUnsafe2 : BaseSearchEx
     {
         /// <summary>
         /// 在文本中查找所有的关键字

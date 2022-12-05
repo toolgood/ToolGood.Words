@@ -7,7 +7,7 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words.Benchmark.SearchExs
 {
-    public class WordsSearchEx : BaseSearchEx
+    public sealed class WordsSearchEx : BaseSearchEx
     {
         /// <summary>
         /// 在文本中查找所有的关键字

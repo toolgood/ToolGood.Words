@@ -63,6 +63,26 @@ namespace ToolGood.Words.Benchmark
 //|  stringSearchExUnsafe_ContainsAny |   156.9 ns |  0.59 ns |  0.55 ns |
 //| stringSearchExUnsafe2_ContainsAny |   146.1 ns |  0.70 ns |  0.65 ns |
 
+//|                            Method |       Mean |    Error |   StdDev |
+//|---------------------------------- |-----------:|---------:|---------:|
+//|          stringSearchEx_FindFirst |   187.8 ns |  0.73 ns |  0.68 ns |
+//|    stringSearchExUnsafe_FindFirst |   175.7 ns |  0.60 ns |  0.56 ns |
+//|   stringSearchExUnsafe2_FindFirst |   180.0 ns |  0.74 ns |  0.65 ns |
+//|            stringSearchEx_FindAll | 1,642.6 ns | 11.25 ns |  9.40 ns |
+//|      stringSearchExUnsafe_FindAll | 1,586.1 ns | 16.51 ns | 15.44 ns |
+//|     stringSearchExUnsafe2_FindAll | 1,534.8 ns | 11.01 ns | 10.30 ns |
+//|           wordsSearchEx_FindFirst |   203.0 ns |  0.92 ns |  0.81 ns |
+//|     wordsSearchExUnsafe_FindFirst |   185.7 ns |  3.78 ns |  3.15 ns |
+//|    wordsSearchExUnsafe2_FindFirst |   190.7 ns |  0.98 ns |  0.91 ns |
+//|             wordsSearchEx_FindAll | 1,834.4 ns | 10.53 ns |  8.22 ns |
+//|       wordsSearchExUnsafe_FindAll | 2,008.0 ns | 30.15 ns | 26.72 ns |
+//|      wordsSearchExUnsafe2_FindAll | 1,998.4 ns | 14.39 ns | 11.23 ns |
+//|            stringSearchEx_Replace | 1,701.8 ns | 33.07 ns | 40.61 ns |
+//|      stringSearchExUnsafe_Replace | 1,775.2 ns | 28.16 ns | 26.34 ns |
+//|     stringSearchExUnsafe2_Replace | 1,757.3 ns | 17.72 ns | 15.71 ns |
+//|        stringSearchEx_ContainsAny |   166.9 ns |  1.64 ns |  1.54 ns |
+//|  stringSearchExUnsafe_ContainsAny |   158.8 ns |  0.67 ns |  0.56 ns |
+//| stringSearchExUnsafe2_ContainsAny |   147.2 ns |  0.56 ns |  0.49 ns |
     }
 
     public class Test

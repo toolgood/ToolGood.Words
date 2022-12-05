@@ -7,7 +7,7 @@ using ToolGood.Words.internals;
 
 namespace ToolGood.Words.Benchmark.SearchExs
 {
-    public class StringSearchExUnsafe2 : BaseSearchEx
+    public sealed class StringSearchExUnsafe2 : BaseSearchEx
     {
         #region 查找 替换 查找第一个关键字 判断是否包含关键字
         /// <summary>
