@@ -18,12 +18,52 @@ namespace ToolGood.Words.internals
         private static ushort[][] _pyData2;
         private static int[] _wordPyIndex;
         private static ushort[] _wordPy;
-        private static WordsSearchEx _search;
+        private static WordsSearchEx2 _search;
         public static string[] PyShow {
             get
             {
                 InitPyIndex();
                 return _pyShow;
+            }
+        }
+
+        sealed class WordsSearchEx2 : BaseSearchEx
+        {
+            public unsafe List<WordsSearchResult> FindAll(string text)
+            {
+                List<WordsSearchResult> result = new List<WordsSearchResult>();
+                var p = 0;
+                var txt = text.AsSpan();
+                fixed (int* first = &_first[0])
+                fixed (int* end = &_end[0])
+                fixed (ushort* dict = &_dict[0])
+                fixed (int* resultIndex = &_resultIndex[0])
+                fixed (IntDictionary* nextIndex = &_nextIndex[0])
+                fixed (int* keywordLengths = &_keywordLengths[0]) {
+                    for (int i = 0; i < txt.Length; i++) {
+                        var t = dict[txt[i]];
+                        if (t == 0) {
+                            p = 0;
+                            continue;
+                        }
+                        int next;
+                        if (p == 0 || nextIndex[p].TryGetValue(t, out next) == false) {
+                            next = first[t];
+                        }
+                        if (next != 0) {
+                            var start = end[next];
+                            if (start < end[next + 1]) { //只取第一个
+                                var index = resultIndex[start];
+                                var len = keywordLengths[index];
+                                var st = i + 1 - len;
+                                var r = new WordsSearchResult(null, st, len, index);
+                                result.Add(r);
+                            }
+                        }
+                        p = next;
+                    }
+                }
+                return result;
             }
         }
 
@@ -39,7 +79,7 @@ namespace ToolGood.Words.internals
             var pindex = -1;
             foreach (var p in pos) {
                 if (p.Start > pindex) {
-                    for (int j = 0; j < p.Keyword.Length; j++) {
+                    for (int j = 0; j < p.End; j++) {
                         list[j + p.Start] = _pyShow[_wordPy[_wordPyIndex[p.Index] + j] + tone];
                     }
                     pindex = p.End;
@@ -335,7 +375,7 @@ namespace ToolGood.Words.internals
                             }
                             wordPyIndex.Add(wordPy.Count);
                         }
-                        var search = new WordsSearchEx();
+                        var search = new WordsSearchEx2();
                         search.SetKeywords(keywords);
                         _wordPyIndex = wordPyIndex.ToArray();
                         _wordPy = wordPy.ToArray();
