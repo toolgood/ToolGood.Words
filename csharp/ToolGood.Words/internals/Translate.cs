@@ -4,11 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-#if NETSTANDARD2_1
 using ZIPStream = System.IO.Compression.BrotliStream;
-#else
-using ZIPStream = System.IO.Compression.GZipStream;
-#endif
 
 namespace ToolGood.Words.internals
 {
@@ -164,11 +160,7 @@ namespace ToolGood.Words.internals
             //if (File.Exists(file)) {
             //    tStr = File.ReadAllText(file);
             //} else {
-#if NETSTANDARD2_1
                 var resourceName = "ToolGood.Words.dict." + fileName + ".br";
-#else
-            var resourceName = "ToolGood.Words.dict." + fileName + ".z";
-#endif
             Stream sm = ass.GetManifestResourceStream(resourceName);
             byte[] bs = new byte[sm.Length];
             sm.Read(bs, 0, (int)sm.Length);

@@ -4,11 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-#if NETSTANDARD2_1
 using ZIPStream = System.IO.Compression.BrotliStream;
-#else
-using ZIPStream = System.IO.Compression.GZipStream;
-#endif
 
 namespace ToolGood.Words.internals
 {
@@ -24,7 +20,8 @@ namespace ToolGood.Words.internals
         private static ushort[] _wordPy;
         private static WordsSearchEx _search;
         public static string[] PyShow {
-            get {
+            get
+            {
                 InitPyIndex();
                 return _pyShow;
             }
@@ -200,11 +197,7 @@ namespace ToolGood.Words.internals
                     if (_pyIndex2 == null) {
                         var ass = typeof(WordsHelper).Assembly;
                         {
-#if NETSTANDARD2_1
-                    const string resourceName = "ToolGood.Words.dict.pyIndex.txt.br";
-#else
-                            const string resourceName = "ToolGood.Words.dict.pyIndex.txt.z";
-#endif
+                            const string resourceName = "ToolGood.Words.dict.pyIndex.txt.br";
                             Stream sm = ass.GetManifestResourceStream(resourceName);
                             byte[] bs = new byte[sm.Length];
                             sm.Read(bs, 0, (int)sm.Length);
@@ -237,11 +230,7 @@ namespace ToolGood.Words.internals
                             pyData = null;
                         }
                         {
-#if NETSTANDARD2_1
-                    const string resourceName = "ToolGood.Words.dict.pyIndex2.txt.br";
-#else
-                            const string resourceName = "ToolGood.Words.dict.pyIndex2.txt.z";
-#endif
+                            const string resourceName = "ToolGood.Words.dict.pyIndex2.txt.br";
                             Stream sm = ass.GetManifestResourceStream(resourceName);
                             byte[] bs = new byte[sm.Length];
                             sm.Read(bs, 0, (int)sm.Length);
@@ -289,11 +278,7 @@ namespace ToolGood.Words.internals
                 lock (lockObj) {
                     if (_pyName == null) {
                         var ass = typeof(WordsHelper).Assembly;
-#if NETSTANDARD2_1
-                var resourceName = "ToolGood.Words.dict.pyName.txt.br";
-#else
-                        var resourceName = "ToolGood.Words.dict.pyName.txt.z";
-#endif
+                        var resourceName = "ToolGood.Words.dict.pyName.txt.br";
                         Stream sm = ass.GetManifestResourceStream(resourceName);
                         byte[] bs = new byte[sm.Length];
                         sm.Read(bs, 0, (int)sm.Length);
@@ -324,11 +309,7 @@ namespace ToolGood.Words.internals
                 lock (lockObj) {
                     if (_search == null) {
                         var ass = typeof(WordsHelper).Assembly;
-#if NETSTANDARD2_1
-                const string resourceName = "ToolGood.Words.dict.pyWords.txt.br";
-#else
-                        const string resourceName = "ToolGood.Words.dict.pyWords.txt.z";
-#endif
+                        const string resourceName = "ToolGood.Words.dict.pyWords.txt.br";
                         Stream sm = ass.GetManifestResourceStream(resourceName);
                         byte[] bs = new byte[sm.Length];
                         sm.Read(bs, 0, (int)sm.Length);

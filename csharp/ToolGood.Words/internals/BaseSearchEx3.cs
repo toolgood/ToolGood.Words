@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ToolGood.Words.internals
 {
-    public abstract class BaseSearchEx
+    public abstract class BaseSearchEx3
     {
         protected ushort[] _dict;
         protected int[] _first;
@@ -14,30 +14,26 @@ namespace ToolGood.Words.internals
         protected IntDictionary[] _nextIndex;
         protected int[] _end;
         protected int[] _resultIndex;
-        protected int[] _keywordLengths;
+        protected string[] _keywords;
 
 
         #region 设置关键字
+
         /// <summary>
         /// 设置关键字
         /// </summary>
         /// <param name="keywords">关键字列表</param>
         public virtual void SetKeywords(ICollection<string> keywords)
         {
-            _keywordLengths = new int[keywords.Count];
-            int index = 0;
-            foreach (var item in keywords) {
-                _keywordLengths[index++] = item.Length;
-            }
-
-            SetKeywords2(keywords.ToArray());
+            _keywords = keywords.ToArray();
+            SetKeywords();
         }
-        private void SetKeywords2(ICollection<string> _keywords)
+        private void SetKeywords()
         {
             var root = new TrieNode();
             Dictionary<int, List<TrieNode>> allNodeLayers = new Dictionary<int, List<TrieNode>>();
-            int kindex = 0;
-            foreach (string p in _keywords) {
+            for (int i = 0; i < _keywords.Length; i++) {
+                var p = _keywords[i];
                 var nd = root;
                 for (int j = 0; j < p.Length; j++) {
                     nd = nd.Add((char)p[j]);
@@ -51,7 +47,7 @@ namespace ToolGood.Words.internals
                         trieNodes.Add(nd);
                     }
                 }
-                nd.SetResults(kindex++);
+                nd.SetResults(i);
             }
 
             List<TrieNode> allNode = new List<TrieNode>();
@@ -96,7 +92,7 @@ namespace ToolGood.Words.internals
                     first[key] = item.Value.Index;
                 }
             }
-            _first = first;
+            _first= first;
 
             var resultIndex2 = new List<int>();
             var isEndStart = new List<bool>();
@@ -116,7 +112,7 @@ namespace ToolGood.Words.internals
                 }
                 if (oldNode.Results != null) {
                     foreach (var item in oldNode.Results) {
-                        if (result.Contains(item) == false) {
+                        if (result.Contains(item)==false) {
                             result.Add(item);
                         }
                     }
@@ -155,7 +151,7 @@ namespace ToolGood.Words.internals
                     isEndStart.Add(true);
                 }
                 dict = null;
-                result = null;
+                result= null;
                 allNode[i].Dispose();
                 allNode.RemoveAt(i);
             }
@@ -241,11 +237,11 @@ namespace ToolGood.Words.internals
 
         protected internal virtual void Save(BinaryWriter bw)
         {
-            var bs = IntArrToByteArr(_keywordLengths);
-            bw.Write(bs.Length);
-            bw.Write(bs);
-
-            bs = IntArrToByteArr(_dict);
+            bw.Write(_keywords.Length);
+            foreach (var item in _keywords) {
+                bw.Write(item);
+            }
+            var bs = IntArrToByteArr(_dict);
             bw.Write(bs.Length);
             bw.Write(bs);
 
@@ -320,11 +316,14 @@ namespace ToolGood.Words.internals
         protected internal virtual void Load(BinaryReader br)
         {
             var length = br.ReadInt32();
-            var bs = br.ReadBytes(length);
-            _keywordLengths = ByteArrToIntArr(bs);
+            _keywords = new string[length];
+            for (int i = 0; i < length; i++) {
+                _keywords[i] = br.ReadString();
+            }
+
 
             length = br.ReadInt32();
-            bs = br.ReadBytes(length);
+            var bs = br.ReadBytes(length);
             _dict = ByteArrToUshortArr(bs);
 
 

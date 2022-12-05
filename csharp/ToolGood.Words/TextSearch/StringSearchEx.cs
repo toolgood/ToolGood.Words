@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using ToolGood.Words.internals;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ToolGood.Words
 {
@@ -20,20 +22,23 @@ namespace ToolGood.Words
         {
             List<string> result = new List<string>();
             var p = 0;
-
-            foreach (char t1 in text) {
-                var t = _dict[t1];
+            var txt = text.AsSpan();
+            for (int i = 0; i < txt.Length; i++) {
+                var t = _dict[txt[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
-                        result.Add(_keywords[_resultIndex[j]]);
+                        var index = _resultIndex[j];
+                        var len = _keywordLengths[index];
+                        var key = txt.Slice(i + 1 - len, len).ToString();
+                        result.Add(key);
                     }
                 }
                 p = next;
@@ -48,20 +53,23 @@ namespace ToolGood.Words
         public string FindFirst(string text)
         {
             var p = 0;
-            foreach (char t1 in text) {
-                var t = _dict[t1];
+            var txt = text.AsSpan();
+            for (int i = 0; i < txt.Length; i++) {
+                var t = _dict[txt[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
                     var start = _end[next];
                     if (start < _end[next + 1]) {
-                        return _keywords[_resultIndex[start]];
+                        var index = _resultIndex[start];
+                        var len = _keywordLengths[index];
+                        return txt.Slice(i + 1 - len, len).ToString();
                     }
                 }
                 p = next;
@@ -83,7 +91,7 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
@@ -115,17 +123,16 @@ namespace ToolGood.Words
                     continue;
                 }
                 int next;
-                if (p == 0 ||  _nextIndex[p].TryGetValue(t, out next) == false) {
+                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
                     next = _first[t];
                 }
                 if (next != 0) {
                     var start = _end[next];
                     if (start < _end[next + 1]) {
-                        var maxLength = _keywords[_resultIndex[start]].Length;
+                        var maxLength = _keywordLengths[_resultIndex[start]];
                         for (int j = i + 1 - maxLength; j <= i; j++) {
                             result[j] = replaceChar;
                         }
-
                     }
                 }
                 p = next;

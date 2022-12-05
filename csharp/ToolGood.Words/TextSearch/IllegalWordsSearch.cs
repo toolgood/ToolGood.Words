@@ -46,7 +46,7 @@ namespace ToolGood.Words
     /// IllegalWordsSearch修复了2020-10-8日前所有bug。
     /// </summary>
     [Obsolete("IllegalWordsSearch类太费精力了，头发稀疏了。我未来可能以敏感词过滤做为创业项目，所以这是最后的开源版本，不再免费补bug了，修复了2020-10-8日前所有bug。")]
-    public class IllegalWordsSearch : BaseSearchEx
+    public class IllegalWordsSearch : BaseSearchEx3
     {
         private int[] _blacklist = new int[0];
 

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using ToolGood.Words.internals;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ToolGood.Words
 {
@@ -20,9 +22,9 @@ namespace ToolGood.Words
         {
             List<WordsSearchResult> result = new List<WordsSearchResult>();
             var p = 0;
-
-            for (int i = 0; i < text.Length; i++) {
-                var t = _dict[text[i]];
+            var txt = text.AsSpan();
+            for (int i = 0; i < txt.Length; i++) {
+                var t = _dict[txt[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
@@ -34,8 +36,10 @@ namespace ToolGood.Words
                 if (next != 0) {
                     for (int j = _end[next]; j < _end[next + 1]; j++) {
                         var index = _resultIndex[j];
-                        var key = _keywords[index];
-                        var r = new WordsSearchResult(key, i + 1 - key.Length, i, index);
+                        var len = _keywordLengths[index];
+                        var st = i + 1 - len;
+                        var key = txt.Slice(st, len).ToString();
+                        var r = new WordsSearchResult(key, st, i, index);
                         result.Add(r);
                     }
                 }
@@ -52,9 +56,9 @@ namespace ToolGood.Words
         public WordsSearchResult FindFirst(string text)
         {
             var p = 0;
-            var length = text.Length;
-            for (int i = 0; i < length; i++) {
-                var t = _dict[text[i]];
+            var txt = text.AsSpan();
+            for (int i = 0; i < txt.Length; i++) {
+                var t = _dict[txt[i]];
                 if (t == 0) {
                     p = 0;
                     continue;
@@ -67,8 +71,10 @@ namespace ToolGood.Words
                     var start = _end[next];
                     if (start < _end[next + 1]) {
                         var index = _resultIndex[start];
-                        var key = _keywords[index];
-                        return new WordsSearchResult(key, i + 1 - key.Length, i, index);
+                        var len = _keywordLengths[index];
+                        var st = i + 1 - len;
+                        var key = txt.Slice(st, len).ToString();
+                        return new WordsSearchResult(key, st, i, index);
                     }
                 }
                 p = next;
@@ -129,7 +135,7 @@ namespace ToolGood.Words
                 if (next != 0) {
                     var start = _end[next];
                     if (start < _end[next + 1]) {
-                        var maxLength = _keywords[_resultIndex[start]].Length;
+                        var maxLength = _keywordLengths[_resultIndex[start]];
                         for (int j = i + 1 - maxLength; j <= i; j++) {
                             result[j] = replaceChar;
                         }
