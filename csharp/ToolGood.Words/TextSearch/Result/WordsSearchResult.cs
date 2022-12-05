@@ -2,7 +2,7 @@
 {
     public class WordsSearchResult
     {
-        internal WordsSearchResult(string keyword, int start, int end, int index)
+        public WordsSearchResult(string keyword, int start, int end, int index)
         {
             Keyword = keyword;
             End = end;
@@ -12,7 +12,7 @@
         }
 
 
-        internal WordsSearchResult(string keyword, int start, int end, int index, string matchKeyword)
+        public WordsSearchResult(string keyword, int start, int end, int index, string matchKeyword)
         {
             Keyword = keyword;
             End = end;
