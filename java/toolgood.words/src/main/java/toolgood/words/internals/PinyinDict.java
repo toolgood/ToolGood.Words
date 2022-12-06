@@ -19,7 +19,45 @@ public class PinyinDict {
     private static Integer[] _pyData;
     private static Integer[] _wordPyIndex;
     private static Integer[] _wordPy;
-    private static WordsSearch _search;
+    private static WordsSearchEx2 _search;
+
+    public static class WordsSearchEx2 extends BaseSearchEx {
+        public List<WordsSearchResult> FindAll(final String text) {
+            final List<WordsSearchResult> result = new ArrayList<WordsSearchResult>();
+
+            int p = 0;
+            for (int i = 0; i < text.length(); i++) {
+                final char t1 = text.charAt(i);
+                final int t = _dict[t1];
+                if (t == 0) {
+                    p = 0;
+                    continue;
+                }
+                int next;
+                if (p == 0) {
+                    next = _first[t];
+                }else {
+                    final int index = _nextIndex[p].IndexOf(t);
+                    if (index == -1) {
+                        next = _first[t];
+                    } else {
+                        next = _nextIndex[p].GetValue(index);
+                    }
+                }
+                if (next != 0) {
+                    final int start = _end[next];
+                    if (start < _end[next + 1]) {
+                        final int index = _resultIndex[start];
+                        final String key = _keywords[index];
+                        final WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                        result.add(r);
+                    }
+                }
+                p = next;
+            }
+            return result;
+        }
+    }
 
     public static String[] getPyShow() throws NumberFormatException, IOException {
         InitPyIndex();
@@ -262,7 +300,7 @@ public class PinyinDict {
                         }
                     }
                     br.close();
-                    WordsSearch search = new WordsSearch();
+                    WordsSearchEx2 search = new WordsSearchEx2();
                     search.SetKeywords(keywords);
                     Integer[] wp = new Integer[wordPy.size()];
                     _wordPy = wordPy.toArray(wp);
