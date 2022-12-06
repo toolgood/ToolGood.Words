@@ -48,8 +48,9 @@ public class PinyinDict {
                     final int start = _end[next];
                     if (start < _end[next + 1]) {
                         final int index = _resultIndex[start];
-                        final String key = _keywords[index];
-                        final WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                        int len=_keywordLengths[index];
+                        int st=i+1-len;
+                        final WordsSearchResult r = new WordsSearchResult(null, st, len, index);
                         result.add(r);
                     }
                 }
@@ -74,7 +75,7 @@ public class PinyinDict {
 
         for (WordsSearchResult p : pos) {
             if (p.Start > pindex) {
-                for (int i = 0; i < p.Keyword.length(); i++) {
+                for (int i = 0; i < p.End; i++) {
                     list[i + p.Start] = _pyShow[_wordPy[i + _wordPyIndex[p.Index]] + tone];
                 }
                 pindex = p.End;

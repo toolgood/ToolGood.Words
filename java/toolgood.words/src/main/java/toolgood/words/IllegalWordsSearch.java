@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import toolgood.words.internals.BaseSearchEx;
+import toolgood.words.internals.BaseSearchEx3;
 
 /**
  * 最新版本的IllegalWordsSearch， 与2020.05.24以前的版本不兼容, IllegalWordsSearch类太费精力了，头发稀疏了。
@@ -17,7 +17,7 @@ import toolgood.words.internals.BaseSearchEx;
  * IllegalWordsSearch修复了2020-10-8日前所有bug。
  */
 @Deprecated
-public class IllegalWordsSearch extends BaseSearchEx {
+public class IllegalWordsSearch extends BaseSearchEx3 {
     public class SkipWordFilterHandler {
         public char c;
         public String text;

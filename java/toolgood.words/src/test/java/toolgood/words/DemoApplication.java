@@ -34,14 +34,14 @@ public class DemoApplication {
 		test_StringMatch();
 		test_WordsMatch();
 
+		test_Pinyin();
+		test_words();
+
 		test_StringMatchEx();
 		test_WordsMatchEx();
 
 		test_PinyinMatch();
 		test_PinyinMatch2();
-
-		test_Pinyin();
-		test_words();
 
 		// try {
 		// test_save_load();
@@ -115,15 +115,15 @@ public class DemoApplication {
 		}
 
 		String f = iwords.FindFirst(test);
-		if (f != "中国") {
+		if (f.equals("中国")==false ) {
 			System.out.println("FindFirst is Error.");
 		}
 
 		List<String> all = iwords.FindAll(test);
-		if (all.get(0) != "中国") {
+		if (all.get(0).equals("中国")==false ) {
 			System.out.println("FindAll is Error.");
 		}
-		if (all.get(1) != "国人") {
+		if (all.get(1).equals("国人")==false) {
 			System.out.println("FindAll is Error.");
 		}
 		if (all.size() != 2) {
@@ -191,15 +191,15 @@ public class DemoApplication {
 		}
 
 		WordsSearchResult f = iwords.FindFirst(test);
-		if (f.Keyword != "中国") {
+		if (f.Keyword.equals("中国")==false ) {
 			System.out.println("FindFirst is Error.");
 		}
 
 		List<WordsSearchResult> all = iwords.FindAll(test);
-		if (all.get(0).Keyword != "中国") {
+		if (all.get(0).Keyword.equals("中国")==false ) {
 			System.out.println("FindAll is Error.");
 		}
-		if (all.get(1).Keyword != "国人") {
+		if (all.get(1).Keyword.equals("国人")==false ) {
 			System.out.println("FindAll is Error.");
 		}
 		if (all.size() != 2) {

@@ -37,8 +37,10 @@ public class WordsSearchEx extends BaseSearchEx {
             if (next != 0) {
                 for (int j = _end[next]; j < _end[next + 1]; j++) {
                     final int index = _resultIndex[j];
-                    final String key = _keywords[index];
-                    final WordsSearchResult r = new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                    int len=_keywordLengths[index];
+                    int st=i+1-len;
+                    final String key=text.substring(st,i+1);
+                    final WordsSearchResult r = new WordsSearchResult(key, st, i, index);
                     result.add(r);
                 }
             }
@@ -77,8 +79,10 @@ public class WordsSearchEx extends BaseSearchEx {
                 final int start = _end[next];
                 if (start < _end[next + 1]) {
                     final int index = _resultIndex[start];
-                    final String key = _keywords[index];
-                    return new WordsSearchResult(key, i + 1 - key.length(), i, index);
+                    int len=_keywordLengths[index];
+                    int st=i+1-len;
+                    final String key=text.substring(st,i+1);
+                    return new WordsSearchResult(key, st, i, index);
                 }
             }
             p = next;
@@ -163,11 +167,10 @@ public class WordsSearchEx extends BaseSearchEx {
             if (next != 0) {
                 final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    final int maxLength = _keywords[_resultIndex[start]].length();
+                    final int maxLength = _keywordLengths[_resultIndex[start]];
                     for (int j = i + 1 - maxLength; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
                     }
-
                 }
             }
             p = next;

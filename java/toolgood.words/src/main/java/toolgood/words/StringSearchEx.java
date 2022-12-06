@@ -36,7 +36,10 @@ public class StringSearchEx extends BaseSearchEx {
             }
             if (next != 0) {
                 for (int j = _end[next]; j < _end[next + 1]; j++) {
-                    result.add(_keywords[_resultIndex[j]]);
+                    int len=_keywordLengths[_resultIndex[j]];
+                    int st=i+1-len;
+                    String keyword=text.substring(st,i+1);
+                    result.add(keyword);
                 }
             }
             p = next;
@@ -73,7 +76,9 @@ public class StringSearchEx extends BaseSearchEx {
             if (next != 0) {
                 final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    return _keywords[_resultIndex[start]];
+                    int len=_keywordLengths[_resultIndex[start]];
+                    int st=i+1-len;
+                    return text.substring(st,i+1);
                 }
             }
             p = next;
@@ -159,11 +164,10 @@ public class StringSearchEx extends BaseSearchEx {
             if (next != 0) {
                 final int start = _end[next];
                 if (start < _end[next + 1]) {
-                    final int maxLength = _keywords[_resultIndex[start]].length();
+                    final int maxLength = _keywordLengths[_resultIndex[start]];
                     for (int j = i + 1 - maxLength; j <= i; j++) {
                         result.setCharAt(j, replaceChar);
                     }
-
                 }
             }
             p = next;

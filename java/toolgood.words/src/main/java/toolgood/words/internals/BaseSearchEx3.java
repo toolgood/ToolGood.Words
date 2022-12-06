@@ -13,14 +13,14 @@ import java.util.TreeMap;
 
 import toolgood.words.NumHelper;
 
-public class BaseSearchEx {
+public class BaseSearchEx3 {
     protected int[] _dict;
     protected int[] _first;
 
     protected IntDictionary[] _nextIndex;
     protected int[] _end;
     protected int[] _resultIndex;
-    protected int[] _keywordLengths;
+    protected String[] _keywords;
 
     /**
      * 保存, 修改于2020-08-06，使用utf-8保存，与以前数据可能会不同
@@ -36,9 +36,11 @@ public class BaseSearchEx {
     }
 
     protected void Save(FileOutputStream bw) throws IOException {
-        bw.write(NumHelper.serialize(_keywordLengths.length));
-        for (int item : _keywordLengths) {
-            bw.write(NumHelper.serialize(item));
+        bw.write(NumHelper.serialize(_keywords.length));
+        for (String item : _keywords) {
+            byte[] bytes = item.getBytes("utf-8");
+            bw.write(NumHelper.serialize(bytes.length));
+            bw.write(bytes);
         }
 
         bw.write(NumHelper.serialize(_dict.length));
@@ -91,9 +93,12 @@ public class BaseSearchEx {
 
     public void Load(InputStream br) throws IOException {
         int length = NumHelper.read(br);
-        _keywordLengths = new int[length];
+        _keywords = new String[length];
         for (int i = 0; i < length; i++) {
-            _keywordLengths[i] = NumHelper.read(br);
+            int l = NumHelper.read(br);
+            byte[] bytes = new byte[l];
+            br.read(bytes, 0, l);
+            _keywords[i] = new String(bytes, "utf-8");
         }
 
         length = NumHelper.read(br);
@@ -145,16 +150,16 @@ public class BaseSearchEx {
      * @param keywords
      */
     public void SetKeywords(List<String> keywords) {
-        _keywordLengths=new int[keywords.size()];
-        int index2=0;
-        for (String key:keywords ) {
-            _keywordLengths[index2++]=key.length();
-        }
+        _keywords = keywords.toArray(new String[0]);
+        SetKeywords();
+    }
 
+
+    private void SetKeywords() {
         TrieNode root = new TrieNode();
         Map<Integer, List<TrieNode>> allNodeLayers = new TreeMap<Integer, List<TrieNode>>();
-        for (int i = 0; i < keywords.size(); i++) {
-            String p = keywords.get(i);
+        for (int i = 0; i < _keywords.length; i++) {
+            String p = _keywords[i];
             TrieNode nd = root;
             for (int j = 0; j < p.length(); j++) {
                 nd = nd.Add(p.charAt(j));
