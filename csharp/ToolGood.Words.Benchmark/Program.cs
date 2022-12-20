@@ -13,32 +13,31 @@ namespace ToolGood.Words.Benchmark
         }
 
 //BenchmarkDotNet=v0.13.2, OS=Windows 10 (10.0.18363.1556/1909/November2019Update/19H2)
-//Intel Core i5-8500 CPU 3.00GHz(Coffee Lake), 1 CPU, 6 logical and 6 physical cores
-//.NET SDK= 7.0.100
-//  [Host]     : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
-//  DefaultJob : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+//Intel Core i5-8500 CPU 3.00GHz (Coffee Lake), 1 CPU, 6 logical and 6 physical cores
+//.NET SDK=7.0.101
+//  [Host]     : .NET 7.0.1 (7.0.122.56804), X64 RyuJIT AVX2
+//  DefaultJob : .NET 7.0.1 (7.0.122.56804), X64 RyuJIT AVX2
 
-//|                            Method |       Mean |    Error |   StdDev |
-//|---------------------------------- |-----------:|---------:|---------:|
-//|          stringSearchEx_FindFirst |   205.6 ns |  1.78 ns |  1.66 ns |
-//|    stringSearchExUnsafe_FindFirst |   192.0 ns |  1.30 ns |  1.22 ns |
-//|   stringSearchExUnsafe2_FindFirst |   203.3 ns |  0.73 ns |  0.61 ns |
-//|            stringSearchEx_FindAll | 5,410.8 ns | 90.17 ns | 84.34 ns |
-//|      stringSearchExUnsafe_FindAll | 4,908.2 ns | 37.72 ns | 31.49 ns |
-//|     stringSearchExUnsafe2_FindAll | 4,925.4 ns | 52.46 ns | 46.51 ns |
-//|           wordsSearchEx_FindFirst |   207.4 ns |  1.59 ns |  1.41 ns |
-//|     wordsSearchExUnsafe_FindFirst |   202.1 ns |  0.67 ns |  0.56 ns |
-//|    wordsSearchExUnsafe2_FindFirst |   207.7 ns |  0.84 ns |  0.79 ns |
-//|             wordsSearchEx_FindAll | 5,601.4 ns | 33.20 ns | 29.43 ns |
-//|       wordsSearchExUnsafe_FindAll | 5,334.7 ns | 35.98 ns | 31.89 ns |
-//|      wordsSearchExUnsafe2_FindAll | 5,833.3 ns | 24.62 ns | 21.83 ns |
-//|            stringSearchEx_Replace | 5,186.5 ns | 30.58 ns | 27.11 ns |
-//|      stringSearchExUnsafe_Replace | 5,440.4 ns | 31.11 ns | 27.58 ns |
-//|     stringSearchExUnsafe2_Replace | 6,008.5 ns | 83.80 ns | 74.29 ns |
-//|        stringSearchEx_ContainsAny |   191.4 ns |  1.16 ns |  1.02 ns |
-//|  stringSearchExUnsafe_ContainsAny |   176.2 ns |  0.63 ns |  0.59 ns |
-//| stringSearchExUnsafe2_ContainsAny |   165.9 ns |  0.57 ns |  0.51 ns |
-
+//|                            Method |       Mean |     Error |    StdDev |     Median |
+//|---------------------------------- |-----------:|----------:|----------:|-----------:|
+//|          stringSearchEx_FindFirst |   202.6 ns |   1.06 ns |   0.99 ns |   202.4 ns |
+//|    stringSearchExUnsafe_FindFirst |   186.3 ns |   1.48 ns |   1.38 ns |   186.0 ns |
+//|   stringSearchExUnsafe2_FindFirst |   201.0 ns |   0.91 ns |   0.85 ns |   200.9 ns |
+//|            stringSearchEx_FindAll | 5,225.2 ns |  73.65 ns |  68.89 ns | 5,232.7 ns |
+//|      stringSearchExUnsafe_FindAll | 5,505.1 ns |  59.54 ns |  55.69 ns | 5,520.9 ns |
+//|     stringSearchExUnsafe2_FindAll | 4,816.7 ns |  88.84 ns |  78.76 ns | 4,786.7 ns |
+//|           wordsSearchEx_FindFirst |   216.3 ns |   0.74 ns |   0.58 ns |   216.4 ns |
+//|     wordsSearchExUnsafe_FindFirst |   191.0 ns |   2.05 ns |   1.92 ns |   190.5 ns |
+//|    wordsSearchExUnsafe2_FindFirst |   186.6 ns |   1.37 ns |   1.21 ns |   186.9 ns |
+//|             wordsSearchEx_FindAll | 4,973.3 ns |  31.06 ns |  27.54 ns | 4,965.8 ns |
+//|       wordsSearchExUnsafe_FindAll | 5,000.1 ns |  46.89 ns |  41.57 ns | 4,999.0 ns |
+//|      wordsSearchExUnsafe2_FindAll | 5,279.5 ns |  89.92 ns |  84.12 ns | 5,290.6 ns |
+//|            stringSearchEx_Replace | 5,499.2 ns | 103.59 ns |  96.90 ns | 5,496.5 ns |
+//|      stringSearchExUnsafe_Replace | 5,583.5 ns | 110.61 ns | 220.90 ns | 5,470.7 ns |
+//|     stringSearchExUnsafe2_Replace | 6,076.9 ns |  73.81 ns |  69.04 ns | 6,048.8 ns |
+//|        stringSearchEx_ContainsAny |   191.0 ns |   1.04 ns |   0.97 ns |   191.0 ns |
+//|  stringSearchExUnsafe_ContainsAny |   176.2 ns |   0.44 ns |   0.37 ns |   176.1 ns |
+//| stringSearchExUnsafe2_ContainsAny |   167.3 ns |   1.32 ns |   1.17 ns |   167.4 ns |
     }
 
     public class Test

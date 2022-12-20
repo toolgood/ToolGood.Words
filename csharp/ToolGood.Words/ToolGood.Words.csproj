@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>一款高性能敏感词(非法词/脏字)检测过滤组件，附带繁体简体互换，支持全角半角互换，汉字转拼音，模糊搜索等功能。</Description>
-    <Copyright>Copyright 2017-2020 ToolGood</Copyright>
+    <Copyright>Copyright 2017-2022 ToolGood</Copyright>
     <AssemblyTitle>ToolGood.Words</AssemblyTitle>
     <VersionPrefix>2.0.0</VersionPrefix>
     <Authors>ToolGood</Authors>
@@ -18,7 +18,7 @@
     <RootNamespace>ToolGood.Words</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>3.1.0.0</Version>
+    <Version>3.1.0.1</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -35,8 +35,7 @@ namespace ToolGood.Words.Benchmark.SearchExs
                             var index = resultIndex[j];
                             var len = keywordLengths[index];
                             var st = i + 1 - len;
-                            var key = txt.Slice(st, len).ToString();
-                            var r = new WordsSearchResult(key, st, i, index);
+                            var r = new WordsSearchResult(ref text, st, i, index);
                             result.Add(r);
                         }
                     }
@@ -77,8 +76,7 @@ namespace ToolGood.Words.Benchmark.SearchExs
                             var index = resultIndex[start];
                             var len = keywordLengths[index];
                             var st = i + 1 - len;
-                            var key = txt.Slice(st, len).ToString();
-                            return new WordsSearchResult(key, st, i, index);
+                            return new WordsSearchResult(ref text, st, i, index);
                         }
                     }
                     p = next;
