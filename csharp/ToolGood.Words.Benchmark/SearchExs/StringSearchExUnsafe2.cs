@@ -48,6 +48,70 @@ namespace ToolGood.Words.Benchmark.SearchExs
             }
             return result;
         }
+        public unsafe List<string> FindAll2(string text)
+        {
+            List<string> result = new List<string>();
+            var p = 0;
+            fixed (int* first = &_first[0])
+            fixed (int* end = &_end[0])
+            fixed (ushort* dict = &_dict[0])
+            fixed (int* resultIndex = &_resultIndex[0])
+            fixed (int* keywordLengths = &_keywordLengths[0]) {
+                for (int i = 0; i < text.Length; i++) {
+                    var t = dict[text[i]];
+                    if (t == 0) {
+                        p = 0;
+                        continue;
+                    }
+                    int next;
+                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                        next = first[t];
+                    }
+                    if (next != 0) {
+                        for (int j = end[next]; j < end[next + 1]; j++) {
+                            var index = resultIndex[j];
+                            var len = keywordLengths[index];
+                            var key = text.AsSpan(i + 1 - len, len).ToString();
+                            result.Add(key);
+                        }
+                    }
+                    p = next;
+                }
+            }
+            return result;
+        }
+        public unsafe List<string> FindAll3(string text)
+        {
+            List<string> result = new List<string>();
+            var p = 0;
+            fixed (int* first = &_first[0])
+            fixed (int* end = &_end[0])
+            fixed (ushort* dict = &_dict[0])
+            fixed (int* resultIndex = &_resultIndex[0])
+            fixed (int* keywordLengths = &_keywordLengths[0]) {
+                for (int i = 0; i < text.Length; i++) {
+                    var t = dict[text[i]];
+                    if (t == 0) {
+                        p = 0;
+                        continue;
+                    }
+                    int next;
+                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                        next = first[t];
+                    }
+                    if (next != 0) {
+                        for (int j = end[next]; j < end[next + 1]; j++) {
+                            var index = resultIndex[j];
+                            var len = keywordLengths[index];
+                            var key = text.Substring(i + 1 - len, len);
+                            result.Add(key);
+                        }
+                    }
+                    p = next;
+                }
+            }
+            return result;
+        }
 
         /// <summary>
         /// 在文本中查找第一个关键字
@@ -86,7 +150,69 @@ namespace ToolGood.Words.Benchmark.SearchExs
             }
             return null;
         }
-         
+        public unsafe string FindFirst2(string text)
+        {
+            fixed (int* first = &_first[0])
+            fixed (int* end = &_end[0])
+            fixed (ushort* dict = &_dict[0])
+            fixed (int* resultIndex = &_resultIndex[0])
+            fixed (int* keywordLengths = &_keywordLengths[0]) {
+                var p = 0;
+                for (int i = 0; i < text.Length; i++) {
+                    var t = _dict[text[i]];
+                    if (t == 0) {
+                        p = 0;
+                        continue;
+                    }
+                    int next;
+                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                        next = first[t];
+                    }
+                    if (next != 0) {
+                        var start = end[next];
+                        if (start < end[next + 1]) {
+                            var index = resultIndex[start];
+                            var len = keywordLengths[index];
+                            return text.AsSpan(i + 1 - len, len).ToString();
+                        }
+                    }
+                    p = next;
+                }
+            }
+            return null;
+        }
+        public unsafe string FindFirst3(string text)
+        {
+            fixed (int* first = &_first[0])
+            fixed (int* end = &_end[0])
+            fixed (ushort* dict = &_dict[0])
+            fixed (int* resultIndex = &_resultIndex[0])
+            fixed (int* keywordLengths = &_keywordLengths[0]) {
+                var p = 0;
+                for (int i = 0; i < text.Length; i++) {
+                    var t = _dict[text[i]];
+                    if (t == 0) {
+                        p = 0;
+                        continue;
+                    }
+                    int next;
+                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                        next = first[t];
+                    }
+                    if (next != 0) {
+                        var start = end[next];
+                        if (start < end[next + 1]) {
+                            var index = resultIndex[start];
+                            var len = keywordLengths[index];
+                            return text.Substring(i + 1 - len, len);
+                        }
+                    }
+                    p = next;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// 判断文本是否包含关键字
         /// </summary>

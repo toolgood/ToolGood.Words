@@ -21,7 +21,6 @@ namespace ToolGood.Words
         public unsafe List<string> FindAll(string text)
         {
             List<string> result = new List<string>();
-            var txt = text.AsSpan();
             var p = 0;
             fixed (int* first = &_first[0])
             fixed (int* end = &_end[0])
@@ -29,8 +28,8 @@ namespace ToolGood.Words
             fixed (int* resultIndex = &_resultIndex[0])
             fixed (IntDictionary* nextIndex = &_nextIndex[0])
             fixed (int* keywordLengths = &_keywordLengths[0]) {
-                for (int i = 0; i < txt.Length; i++) {
-                    var t = dict[txt[i]];
+                for (int i = 0; i < text.Length; i++) {
+                    var t = dict[text[i]];
                     if (t == 0) {
                         p = 0;
                         continue;
@@ -43,7 +42,7 @@ namespace ToolGood.Words
                         for (int j = end[next]; j < end[next + 1]; j++) {
                             var index = resultIndex[j];
                             var len = keywordLengths[index];
-                            var key = txt.Slice(i + 1 - len, len).ToString();
+                            var key = text.Substring(i + 1 - len, len);
                             result.Add(key);
                         }
                     }
@@ -60,7 +59,6 @@ namespace ToolGood.Words
         /// <returns></returns>
         public unsafe string FindFirst(string text)
         {
-            var txt = text.AsSpan();
             fixed (int* first = &_first[0])
             fixed (int* end = &_end[0])
             fixed (ushort* dict = &_dict[0])
@@ -68,8 +66,8 @@ namespace ToolGood.Words
             fixed (IntDictionary* nextIndex = &_nextIndex[0])
             fixed (int* keywordLengths = &_keywordLengths[0]) {
                 var p = 0;
-                for (int i = 0; i < txt.Length; i++) {
-                    var t = _dict[txt[i]];
+                for (int i = 0; i < text.Length; i++) {
+                    var t = _dict[text[i]];
                     if (t == 0) {
                         p = 0;
                         continue;
@@ -83,7 +81,7 @@ namespace ToolGood.Words
                         if (start < end[next + 1]) {
                             var index = resultIndex[start];
                             var len = keywordLengths[index];
-                            return txt.Slice(i + 1 - len, len).ToString();
+                            return text.Substring(i + 1 - len, len);
                         }
                     }
                     p = next;

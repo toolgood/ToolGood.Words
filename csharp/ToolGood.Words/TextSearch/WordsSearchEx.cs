@@ -18,31 +18,36 @@ namespace ToolGood.Words
         /// </summary>
         /// <param name="text">文本</param>
         /// <returns></returns>
-        public List<WordsSearchResult> FindAll(string text)
+        public unsafe List<WordsSearchResult> FindAll(string text)
         {
             List<WordsSearchResult> result = new List<WordsSearchResult>();
             var p = 0;
-            var txt = text.AsSpan();
-            for (int i = 0; i < txt.Length; i++) {
-                var t = _dict[txt[i]];
-                if (t == 0) {
-                    p = 0;
-                    continue;
-                }
-                int next;
-                if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
-                    next = _first[t];
-                }
-                if (next != 0) {
-                    for (int j = _end[next]; j < _end[next + 1]; j++) {
-                        var index = _resultIndex[j];
-                        var len = _keywordLengths[index];
-                        var st = i + 1 - len;
-                        var r = new WordsSearchResult(ref text, st, i, index);
-                        result.Add(r);
+            fixed (int* first = &_first[0])
+            fixed (int* end = &_end[0])
+            fixed (ushort* dict = &_dict[0])
+            fixed (int* resultIndex = &_resultIndex[0])
+            fixed (int* keywordLengths = &_keywordLengths[0]) {
+                for (int i = 0; i < text.Length; i++) {
+                    var t = dict[text[i]];
+                    if (t == 0) {
+                        p = 0;
+                        continue;
                     }
+                    int next;
+                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                        next = first[t];
+                    }
+                    if (next != 0) {
+                        for (int j = end[next]; j < end[next + 1]; j++) {
+                            var index = resultIndex[j];
+                            var len = keywordLengths[index];
+                            var st = i + 1 - len;
+                            var r = new WordsSearchResult(ref text, st, i, index);
+                            result.Add(r);
+                        }
+                    }
+                    p = next;
                 }
-                p = next;
             }
             return result;
         }
@@ -55,20 +60,20 @@ namespace ToolGood.Words
         public unsafe WordsSearchResult FindFirst(string text)
         {
             var p = 0;
-            var txt = text.AsSpan();
             fixed (int* first = &_first[0])
             fixed (int* end = &_end[0])
             fixed (ushort* dict = &_dict[0])
             fixed (int* resultIndex = &_resultIndex[0])
+            fixed (IntDictionary* nextIndex = &_nextIndex[0])
             fixed (int* keywordLengths = &_keywordLengths[0]) {
-                for (int i = 0; i < txt.Length; i++) {
-                    var t = dict[txt[i]];
+                for (int i = 0; i < text.Length; i++) {
+                    var t = dict[text[i]];
                     if (t == 0) {
                         p = 0;
                         continue;
                     }
                     int next;
-                    if (p == 0 || _nextIndex[p].TryGetValue(t, out next) == false) {
+                    if (p == 0 || nextIndex[p].TryGetValue(t, out next) == false) {
                         next = first[t];
                     }
                     if (next != 0) {
