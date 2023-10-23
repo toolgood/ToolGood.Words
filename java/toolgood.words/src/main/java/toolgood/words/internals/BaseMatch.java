@@ -180,7 +180,7 @@ public class BaseMatch {
         String keywordFmt = stringBuilder.toString();
         List<String> list = new ArrayList<String>();
 
-        String z = ((Character) (char) 0).toString();
+        String z = ((Character) (char) 1).toString();
         for (int i = 0; i < parameters.size(); i++) {
             String item = parameters.get(i);
             String[] items = item.split(z);
@@ -329,7 +329,7 @@ public class BaseMatch {
 
     private static void KeywordBuild(Map<Integer, List<String>> parameterDict, int index, int end, String keyword,
             List<String> result) {
-        Character span = (char) 0;
+        Character span = (char) 1;
         List<String> list = parameterDict.get(index);
         if (index == end) {
             for (int i = 0; i < list.size(); i++) {

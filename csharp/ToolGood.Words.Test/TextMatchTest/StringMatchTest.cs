@@ -90,6 +90,30 @@ namespace ToolGood.Words.Test
         }
 
 
+        [Test]
+        public void test4()
+        {
+            string s = "[ab][cd]";
+            string test = "kac";
+
+            StringMatch iwords = new StringMatch();
+            iwords.SetKeywords(s.Split('|'));
+
+
+
+            var f = iwords.FindFirst(test);
+            Assert.AreEqual("ac", f);
+
+            f = iwords.FindFirst("ad");
+            Assert.AreEqual("ad", f);
+
+            f = iwords.FindFirst("bc");
+            Assert.AreEqual("bc", f);
+
+            f = iwords.FindFirst("bd");
+            Assert.AreEqual("bd", f);
+
+        }
 
 
     }
