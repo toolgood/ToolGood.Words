@@ -341,6 +341,7 @@ public class DemoApplication {
 		list.add("[中美]国");
 		list.add("国人");
 		list.add("zg人");
+		list.add("[ab][cd]");
 		System.out.println("StringMatch run Test.");
 
 		StringMatch iwords = new StringMatch();
@@ -353,6 +354,14 @@ public class DemoApplication {
 
 		String f = iwords.FindFirst(test);
 		if (!f.equals("中国")) {
+			System.out.println("FindFirst is Error.");
+		}
+		f = iwords.FindFirst("ac");
+		if (!f.equals("ac")) {
+			System.out.println("FindFirst is Error.");
+		}
+		f = iwords.FindFirst("bd");
+		if (!f.equals("bd")) {
 			System.out.println("FindFirst is Error.");
 		}
 
@@ -371,6 +380,9 @@ public class DemoApplication {
 		if (str.equals("我是***") == false) {
 			System.out.println("Replace is Error.");
 		}
+
+
+
 	}
 
 	private static void test_StringMatchEx() throws Exception {

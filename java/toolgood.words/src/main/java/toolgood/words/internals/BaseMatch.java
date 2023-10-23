@@ -329,7 +329,7 @@ public class BaseMatch {
 
     private static void KeywordBuild(Map<Integer, List<String>> parameterDict, int index, int end, String keyword,
             List<String> result) {
-        Character span = (char) 1;
+        Character span = (char) 0;
         List<String> list = parameterDict.get(index);
         if (index == end) {
             for (int i = 0; i < list.size(); i++) {
