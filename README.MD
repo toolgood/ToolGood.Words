@@ -180,19 +180,13 @@ ToolGood.Words:                 本项目源代码
 
 
 
-## 广告一下
+## 推荐一下
 
-《ToolGood 内容审核系统》正式发布，Windows、Linux双平台，内存占用小于100M。
+《ToolGood 内容审核系统》正式开源，Windows、Linux双平台，内存占用小于100M。
 
 官网：https://toolgood.com/
 
 开源代码：https://github.com/toolgood/ToolGood.TextFilter
-
-SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Linux双平台。
-
-源码：https://github.com/toolgood/ToolGood.SqlOnline
-
-## 探讨敏感信息过滤：
 
 敏感信息过滤研究会，Q群：128994346（已满）
 
@@ -216,6 +210,17 @@ SqlOnline 正式发布，SQL在线编辑器，主打数据安全，Windows、Lin
 7、[正则转DFA算法（C#版、JAVA版）](https://mbd.pub/o/bread/Y5ubl5w=) （收费30元，一顿KFC）
 ToolGood.TextFilter的一个核心算法就使用到正则转DFA。
 
-8、JAVA版ToolGood.TextFilter
+8、[C#版图片鉴黄](https://mbd.pub/o/bread/mbd-YZ2Yk5hw)（收费30元，一顿KFC）
 
-9、[C#版图片鉴黄](https://mbd.pub/o/bread/mbd-YZ2Yk5hw)（收费30元，一顿KFC）
+## 超级广告（不玩股票请忽略）
+本人已研究股票三年，2023年8月突然灵感爆发，设计出一个指标，没有未来函数，在抄底、支撑/阻力效果比较好。于是死嗑C++代码一个月，改成通达信DLL类库。效果如下图：
+![股票指标演示](股票指标演示.png)
+
+可以免费申请体验7天。
+
+网络短线抄底-体验群，Q群：923735351
+
+想了解指标更多信息，请进入[https://github.com/toolgood/StockFoot](https://github.com/toolgood/StockFoot)
+
+ 
+
