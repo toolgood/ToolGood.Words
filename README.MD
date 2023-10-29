@@ -216,11 +216,9 @@ ToolGood.TextFilter的一个核心算法就使用到正则转DFA。
 本人已研究股票三年，2023年8月突然灵感爆发，设计出一个指标，没有未来函数，在抄底、支撑/阻力效果比较好。于是死嗑C++代码一个月，改成通达信DLL类库。效果如下图：
 ![股票指标演示](股票指标演示.png)
 
-可以免费申请体验7天。
+网络短线抄底-体验群，Q群：923735351，可以免费申请体验7天。
 
-网络短线抄底-体验群，Q群：923735351
-
-想了解指标更多信息，请进入[https://github.com/toolgood/StockFoot](https://github.com/toolgood/StockFoot)
+>想了解指标更多信息，请进入[https://github.com/toolgood/StockFoot](https://github.com/toolgood/StockFoot)
 
  
 
