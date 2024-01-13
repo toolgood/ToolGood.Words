@@ -212,4 +212,9 @@ ToolGood.TextFilter的一个核心算法就使用到正则转DFA。
 
 8、[C#版图片鉴黄](https://mbd.pub/o/bread/mbd-YZ2Yk5hw)（收费30元，一顿KFC）
 
+## 比特币私钥碰撞机
+比特币私钥碰撞机，利用电脑空闲性能(3G内存)，搏25万枚比特币。
+[比特币私钥碰撞机](https://mbd.pub/o/bread/ZZmal5Zw)（收费50元）
 
+[比特币私钥碰撞机源码](https://mbd.pub/o/bread/ZZmal5dt)（收费500元）
+ 
