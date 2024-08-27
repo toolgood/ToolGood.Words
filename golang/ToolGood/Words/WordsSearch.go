@@ -24,7 +24,8 @@ func (this *WordsSearch) SetKeywords(keywords []string) {
 		if length > 0 {
 			var nd *TrieNode
 			nd = root
-			for i, ch := range p {
+			i:=0
+			for _, ch := range p {
 				nd = nd.Add(int(ch))
 				if nd.Layer == 0 {
 					nd.Layer = i + 1
@@ -36,6 +37,7 @@ func (this *WordsSearch) SetKeywords(keywords []string) {
 						trieNodes.Items = append(trieNodes.Items, nd)
 					}
 				}
+				i++
 			}
 			nd.SetResults(r)
 		}
