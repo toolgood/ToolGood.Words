@@ -1,13 +1,19 @@
 ﻿#pragma
+#pragma warning(disable:4996)
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "IntDictionary.cpp"
 #include <map>
 #include <vector>
 #include <string>
 #include "TrieNode.h"
+#include <iostream>
+#include <codecvt>
 using std::map;
 using std::vector;
 using std::string;
+using std::wstring;
 
 class BaseSearchEx
 {
@@ -21,32 +27,50 @@ protected:
 	int* _keywordLengths;
 
 protected:
-	virtual void SetKeywords2(string _keywords[])
+
+	wstring s2ws(string& s)
+	{
+		setlocale(LC_ALL, "chs");
+
+		const char* _Source = s.c_str();
+		size_t _Dsize = s.size() + 1;
+		wchar_t* _Dest = new wchar_t[_Dsize];
+		wmemset(_Dest, 0, _Dsize);
+		mbstowcs(_Dest, _Source, _Dsize);
+		wstring result = _Dest;
+		delete[]_Dest;
+
+		setlocale(LC_ALL, "C");
+		return result;
+	}
+
+	virtual void SetKeywords2(vector<string> _keywords)
 	{
 		TrieNode root;
-		map<int, vector<TrieNode>> allNodeLayers;
+		vector<vector<TrieNode>> allNodeLayers;
+		vector<TrieNode> fristLayer;
+		allNodeLayers.push_back(fristLayer);
 		int kindex = 0;
 
-		for (size_t i = 0; i < _keywords->size(); i++) /// _keywords->size() 这个值有问题
+		for (size_t i = 0; i < _keywords.size(); i++)
 		{
 			string p = _keywords[i];
+			wstring	wcs = s2ws(p);/// to_wide_string 这个有问题
 
 			TrieNode nd = root;
-			for (size_t j = 0; j < p.length(); j++)   //  这个 p.length() 对中文有问题
+			for (size_t j = 0; j < wcs.size(); j++)   //  这个 p.length() 对中文有问题
 			{
-				nd = nd.Add((char)p.c_str()[j]);   // 返回是byte 不是char
+				nd = nd.Add(wcs[j]);   // 返回是byte 不是char
 				if (nd.Layer == 0) {
 					nd.Layer = j + 1;
-					auto find = allNodeLayers.find(nd.Layer);
-					if (find == allNodeLayers.end())
+					if (nd.Layer <allNodeLayers.size())
 					{
+						allNodeLayers[nd.Layer].push_back(nd);
+					}
+					else {
 						vector<TrieNode> trieNodes;
 						trieNodes.push_back(nd);
-						allNodeLayers[nd.Layer] = trieNodes;
-					}
-					else
-					{
-						find->second.push_back(nd);
+						allNodeLayers.push_back(trieNodes);
 					}
 				}
 			}
@@ -55,7 +79,7 @@ protected:
 		allNode.push_back(root);
 		for (size_t i = 0; i < allNodeLayers.size(); i++)
 		{
-			auto item = allNodeLayers.at(i);
+			vector<TrieNode> item = allNodeLayers[i];
 			for (size_t j = 0; j < item.size(); j++)
 			{
 				allNode.push_back(item[j]);
@@ -63,11 +87,11 @@ protected:
 		}
 		allNodeLayers.clear();
 
-		for (size_t i = 0; i < allNode.size(); i++)
+		for (size_t i = 1; i < allNode.size(); i++)
 		{
 			TrieNode nd = allNode[i];
 			nd.Index = i;
-			TrieNode r = *(nd.Parent->Failure);
+			TrieNode r = *(nd.Parent->Failure);// 这里有bug
 			char c = nd.Char;
 			while (&r != NULL && (r.m_values.size() == 0 || r.m_values.find(c) == r.m_values.end())) r = *r.Failure;
 			if (&r == NULL)
@@ -211,7 +235,7 @@ protected:
 private:
 	int CreateDict(string keywords) {
 		_dict = new unsigned short[0x10000];
-		map<char, unsigned int> dictionary;
+		map<wchar_t, unsigned int> dictionary;
 		int index = 1;
 		for (size_t i = 0; i < keywords.size(); i++)
 		{

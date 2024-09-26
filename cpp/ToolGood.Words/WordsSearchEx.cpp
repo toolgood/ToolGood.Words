@@ -10,7 +10,7 @@ class WordsSearchEx :BaseSearchEx
 public:
 	WordsSearchEx() = default;
 
-	void SetKeywords(string _keywords[]) {
+	void SetKeywords(vector<string> _keywords) {
 		this->SetKeywords2(_keywords);
 	}
 

@@ -8,9 +8,9 @@ class TrieNode
 public:
 	int Index;
 	int Layer;
-	char Char;
+	wchar_t Char;
 	vector<int> Results;
-	map<char, TrieNode> m_values;
+	map<wchar_t, TrieNode> m_values;
 	TrieNode* Failure;
 	TrieNode* Parent;
 	bool IsWildcard;
@@ -22,7 +22,7 @@ public:
 		Parent = NULL;
 	}
 
-	TrieNode Add(char c)
+	TrieNode Add(wchar_t c)
 	{
 		auto find = m_values.find(c);
 		if (find != m_values.end())

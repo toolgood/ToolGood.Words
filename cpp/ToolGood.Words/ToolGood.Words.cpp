@@ -7,10 +7,10 @@
 int main()
 {
 	WordsSearchEx search;
-	auto ks = new string[2];
-	ks[0] = "中国";
-	ks[1] = "国人";
-	ks[2] = "zg人";
+	vector<string> ks;
+	ks.push_back("中国");
+	ks.push_back("国人");
+	ks.push_back("zg人");
 
 	search.SetKeywords(ks);
 	auto r = search.FindFirst("我是中国人");
