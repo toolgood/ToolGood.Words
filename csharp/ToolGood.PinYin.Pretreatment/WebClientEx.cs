@@ -282,61 +282,61 @@ namespace System.Net
             }
         }
 
-        /// <summary>
-        /// 导出Cookie 类型
-        /// </summary>
-        /// <returns></returns>
-        public byte[] GetCookieBytes()
-        {
-            using (MemoryStream ms = new MemoryStream()) {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(ms, Cookies);
-                return ms.ToArray();
-            }
-        }
+        ///// <summary>
+        ///// 导出Cookie 类型
+        ///// </summary>
+        ///// <returns></returns>
+        //public byte[] GetCookieBytes()
+        //{
+        //    using (MemoryStream ms = new MemoryStream()) {
+        //        BinaryFormatter formatter = new BinaryFormatter();
+        //        formatter.Serialize(ms, Cookies);
+        //        return ms.ToArray();
+        //    }
+        //}
 
-        /// <summary>
-        /// cookie 为 GetCookieBytes（）导出Cookie类型
-        /// </summary>
-        /// <param name="cookie"></param>
-        public void SetCookieBytes(byte[] cookie)
-        {
-            using (MemoryStream ms = new MemoryStream()) {
-                ms.Write(cookie, 0, cookie.Length);
-                BinaryFormatter formatter = new BinaryFormatter();
-                Cookies = (CookieContainer)formatter.Deserialize(ms);
-            }
-        }
+        ///// <summary>
+        ///// cookie 为 GetCookieBytes（）导出Cookie类型
+        ///// </summary>
+        ///// <param name="cookie"></param>
+        //public void SetCookieBytes(byte[] cookie)
+        //{
+        //    using (MemoryStream ms = new MemoryStream()) {
+        //        ms.Write(cookie, 0, cookie.Length);
+        //        BinaryFormatter formatter = new BinaryFormatter();
+        //        Cookies = (CookieContainer)formatter.Deserialize(ms);
+        //    }
+        //}
 
-        /// <summary>
-        /// 保存  Cookie 
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void SaveCookies(string fileName)
-        {
-            using (Stream stream = File.Create(fileName)) {
-                try {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, Cookies);
-                } catch (Exception) { }
-            }
-        }
+        ///// <summary>
+        ///// 保存  Cookie 
+        ///// </summary>
+        ///// <param name="fileName"></param>
+        //public void SaveCookies(string fileName)
+        //{
+        //    using (Stream stream = File.Create(fileName)) {
+        //        try {
+        //            BinaryFormatter formatter = new BinaryFormatter();
+        //            formatter.Serialize(stream, Cookies);
+        //        } catch (Exception) { }
+        //    }
+        //}
 
-        /// <summary>
-        /// 加载 Cookie
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void LoadCookies(string fileName)
-        {
-            try {
-                using (Stream stream = File.Open(fileName, FileMode.Open)) {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    Cookies = (CookieContainer)formatter.Deserialize(stream);
-                }
-            } catch (Exception) {
-                Cookies = new CookieContainer();
-            }
-        }
+        ///// <summary>
+        ///// 加载 Cookie
+        ///// </summary>
+        ///// <param name="fileName"></param>
+        //public void LoadCookies(string fileName)
+        //{
+        //    try {
+        //        using (Stream stream = File.Open(fileName, FileMode.Open)) {
+        //            BinaryFormatter formatter = new BinaryFormatter();
+        //            Cookies = (CookieContainer)formatter.Deserialize(stream);
+        //        }
+        //    } catch (Exception) {
+        //        Cookies = new CookieContainer();
+        //    }
+        //}
 
         #endregion 04 Cookie 操作
     }
